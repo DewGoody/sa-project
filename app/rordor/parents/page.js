@@ -7,12 +7,12 @@ const RD = () => {
             <main className="flex justify-center items-center py-10">
                 <div className="bg-white p-8 rounded shadow-md w-full max-w-4xl">
                     <h2 className="text-2xl font-bold text-center mb-4 text-pink-400">
-                        การรับนิสิตใหม่และรายงานตัวนักศึกษาวิชาทหาร รด. ชั้นปีที่ ๑ (I)
+                        การรับนิสิตใหม่และรายงานตัวนักศึกษาวิชาทหาร รด. ชั้นปีที่ ๑ (I) 
                     </h2>
                     <h1 className="text-xl text-gray-700 mb-6 text-center">
                         New Recruit and Reporting Unit-Military Studies, Royal Thai Armed Forces.
                     </h1>
-                    {/* Parental Consent Section */}
+                    {/* Parental Consent Section d*/}
                     <section>
                         <h3 className="text-lg font-semibold mb-4 text-center">คำยินยอมจากผู้ปกครอง (Parental consent)</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
