@@ -1,11 +1,84 @@
 // pages/form.js
+"use client";
 import React from 'react';
-import header from '../components/header/page.js';
+import { useState } from 'react';
+
+import PrakanService from '../../api/prakanService/prakanService.js';
 
 export default function Form() {
-  return (
+  const [prakanData,setPrakanData] = useState({});
+  const prakanService = new PrakanService();
+
+
+  const handleChangeName = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, name: event.target.value});
+  }
+  
+  const handleChangeId = (event) => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, id: event.target.value});
+  }
+
+  const handleChangePhone = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, phone: event.target.value});
+  }
+  const handleChangeFaculty= (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, faculty: event.target.value});
+  }
+  const handleChangeDesAcc = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, desAcc: event.target.value});
+  }
+  const handleChangeEmail = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, email: event.target.value});
+  }
+  const handleChangeDesInj = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, desInj: event.target.value});
+  }
+  const handleChangeDateAcc = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, dateAcc: event.target.value});
+  }
+  const handleChangePlaceAcc = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, placeAcc: event.target.value});
+  }
+  const handleChangePlaceTreat = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, placeTreat: event.target.value});
+  }
+  const handleChangeTypeHos = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, typeHos: event.target.value});
+  }
+  const handleChangeMedicalFeeNum = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, medicalFeeNum: event.target.value});
+  }
+  const handleChangeBankAcc = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, bankAcc: event.target.value});
+  }
+  const handleChangeMedicalFeeText = (event)  => {
+    console.log(event.target.value);
+    setPrakanData({...prakanData, medicalFeeText: event.target.value});
+  }
+
+  const handleSubmit = (event) => {
+    console.log(prakanData);
+    prakanService.createPrakanForm(prakanData);
+  }
+  
+  
+  
+  
+    return (
     <div className="min-h-screen bg-gray-100">
-      <header />
       <main className="flex justify-center items-center py-10">
         <div className="bg-white p-8 rounded shadow-md w-full max-w-4xl">
           <h2 className="text-lg font-bold mb-4">Accidental Compensation Claim Form</h2>
@@ -19,6 +92,7 @@ export default function Form() {
                     type="text"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Name-Surname"
+                    onChange={handleChangeName}
                   />
                 </div>
                 <div>
@@ -27,6 +101,7 @@ export default function Form() {
                     type="text"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Phone Number"
+                    onChange={handleChangePhone}
                   />
                 </div>
                 <div>
@@ -35,6 +110,7 @@ export default function Form() {
                     type="text"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Faculty"
+                    onChange={handleChangeFaculty}
                   />
                 </div>
                 <div>
@@ -43,6 +119,7 @@ export default function Form() {
                     type="email"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Email"
+                    onChange={handleChangeEmail}
                   />
                 </div>
                 <div>
@@ -51,6 +128,7 @@ export default function Form() {
                     type="text"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Student ID"
+                    onChange={handleChangeId}
                   />
                 </div>
               </div>
@@ -65,6 +143,7 @@ export default function Form() {
                     type="text"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Description of Injury"
+                    onChange={handleChangeDesInj}
                   />
                 </div>
                 <div>
@@ -73,6 +152,15 @@ export default function Form() {
                     type="text"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Place of Treatment"
+                    onChange={handleChangePlaceTreat}
+                  />
+                </div>
+                <div>
+                <input
+                    type="text"
+                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    placeholder="dessAcc"
+                    onChange={handleChangeDesAcc}
                   />
                 </div>
                 <div>
@@ -80,6 +168,8 @@ export default function Form() {
                   <input
                     type="date"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    placeholder="Date of Accident"
+                    onChange={handleChangeDateAcc}
                   />
                 </div>
                 <div>
@@ -88,6 +178,7 @@ export default function Form() {
                     type="text"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Type of Hospital"
+                    onChange={handleChangeTypeHos}
                   />
                 </div>
                 <div>
@@ -96,6 +187,7 @@ export default function Form() {
                     type="text"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Place of Accident"
+                    onChange={handleChangePlaceAcc}
                   />
                 </div>
                 <div>
@@ -104,6 +196,7 @@ export default function Form() {
                     type="text"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Bank Account Number"
+                    onChange={handleChangeBankAcc}
                   />
                 </div>
               </div>
@@ -117,13 +210,24 @@ export default function Form() {
                   type="number"
                   className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder="Amount"
+                  onChange={handleChangeMedicalFeeNum}
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700">Text</label>
+                <input
+                  type="text"
+                  className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  placeholder="Text"
+                  onChange={handleChangeMedicalFeeText}
                 />
               </div>
             </section>
 
             <button
-              type="submit"
+              onClick={handleSubmit}
               className="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600"
+              
             >
               Submit
             </button>

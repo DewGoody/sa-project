@@ -32,3 +32,20 @@ app.get('/api', (req, res, next) => {
 });
 
 app.listen(1337, () => console.log("Server is running at port 1337"))
+
+// {
+//     "id":"1",
+//     "name":"kuy",
+//     "faculty":"sus",
+//     "phone":"0",
+//     "desAcc":"1",
+//     "email":"kwqh",
+//     "desInj":"qwe",
+//     "dateAcc":"asedwqe",
+//     "placeAcc":"alwkd",
+//     "placeTreat":"sdfqwf",
+//     "typeHos":"akdj",
+//     "medicalFeeNum":"aefaef",
+//     "bankAcc":"awdlk",
+//     "medicalFeeText":"aekfj"
+// }
