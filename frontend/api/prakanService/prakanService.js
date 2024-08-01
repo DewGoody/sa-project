@@ -11,6 +11,7 @@ class PrakanService {
     }
   }
 
+
   async cunex(data) {
     try {
       let response = await axios.get('http://localhost:1337/api/cunex', { params: data })
@@ -25,4 +26,3 @@ class PrakanService {
 }
 
 export default PrakanService;
-//edit
