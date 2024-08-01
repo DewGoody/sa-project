@@ -3,27 +3,41 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import Header from '../../components/header/page.js';
+import Dropdown from '../../components/header/dropdown.js';
 import PrakanService from '../../../api/prakanService/prakanService.js';
+import numberToThaiText from '../../components/numberToThaiText.js';
 
 export default function Form() {
   const [prakanData,setPrakanData] = useState({});
   const prakanService = new PrakanService();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    prakanService.cunex();
-    // const cunexUrl = 'https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token='+token;
-    // try {
-    //   console.log(cunexUrl,{headers : { 'Content-Type': 'application/json','ClientId' : 'cuserv','ClientSecret' : '25a4b9d2efb6b16cc75ed6786c92526c'}});
-    //   const response = await axios.get(cunexUrl);
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error('Error creating form:', error);
-    //   throw error; // Rethrow the error to be handled by the caller
-    // }
+  const [inputNumber, setInputNumber] = useState('');
+    const [thaiText, setThaiText] = useState('');
+
+    const handleChangeThai = (e) => {
+        const value = e.target.value;
+        if (/^\d*$/.test(value)) {
+            setInputNumber(value);
+            setThaiText(numberToThaiText(parseInt(value)));
+            console.log(thaiText);
+        }
+    };
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   prakanService.cunex();
+  //   // const cunexUrl = 'https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token='+token;
+  //   // try {
+  //   //   console.log(cunexUrl,{headers : { 'Content-Type': 'application/json','ClientId' : 'cuserv','ClientSecret' : '25a4b9d2efb6b16cc75ed6786c92526c'}});
+  //   //   const response = await axios.get(cunexUrl);
+  //   //   console.log(response.data);
+  //   // } catch (error) {
+  //   //   console.error('Error creating form:', error);
+  //   //   throw error; // Rethrow the error to be handled by the caller
+  //   // }
     
-  })
+  // })
 
 
   const handleChangeName = (event)  => {
@@ -94,162 +108,153 @@ export default function Form() {
   
   
     return (
-    <div className="min-h-screen bg-gray-100">
-      <main className="flex justify-center items-center py-10">
-        <div className="bg-white p-8 rounded shadow-md w-full max-w-4xl">
-          <h2 className="text-lg font-bold mb-4">Accidental Compensation Claim Form</h2>
-          <form className="space-y-6">
-            <section>
-              <h3 className="text-md font-semibold mb-2">Personal & Contact Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-700">Name-Surname</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Name-Surname"
-                    onChange={handleChangeName}
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Phone Number</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Phone Number"
-                    onChange={handleChangePhone}
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Faculty</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Faculty"
-                    onChange={handleChangeFaculty}
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Email"
-                    onChange={handleChangeEmail}
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Student ID</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Student ID"
-                    onChange={handleChangeId}
-                  />
-                </div>
-              </div>
-            </section>
+    <div className=" bg-white min-h-screen">
+      <Header />
+      <div className='mx-24'>
+      <main className="flex justify-center bg-white w-full">
+        <div className="bg-white  w-full min-w-screen-6xl">
+        <h3 className="text-md font-semibold mt-8 ml-3">ข้อมูลส่วนตัว (Personal & Contact Information)</h3>
+        <div>
+        <form className='grid grid-cols-2 gap-7 m-6 bg-white'>
+          <div className='flex'>
+          <label>
+            ชื่อและนามสกุล (Name-Surname):
+          </label>
+          <div>
+          <input type="text" name="name" onChange={handleChangeName} 
+            className='ml-2 w-full border border-solid rounded-md border-gray-800'
+            />
+          </div>
+          </div>
+          <div className='flex'>
+          <label>
+            หมายเลขโทรศัพท์ (Phone Number):
+          </label>
+          <div>
+          <input type="text" name="phone" onChange={handleChangePhone} 
+            className='ml-2 border border-solid rounded-md border-gray-800 w-full'/>
+          </div>
+          </div>
 
-            <section>
-              <h3 className="text-md font-semibold mb-2">Accident & Treatments Details</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-700">Description of Injury</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Description of Injury"
-                    onChange={handleChangeDesInj}
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Place of Treatment</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Place of Treatment"
-                    onChange={handleChangePlaceTreat}
-                  />
-                </div>
-                <div>
-                <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="dessAcc"
-                    onChange={handleChangeDesAcc}
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Date of Accident</label>
-                  <input
-                    type="date"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Date of Accident"
-                    onChange={handleChangeDateAcc}
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Type of Hospital</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Type of Hospital"
-                    onChange={handleChangeTypeHos}
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Place of Accident</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Place of Accident"
-                    onChange={handleChangePlaceAcc}
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Bank Account Number</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Bank Account Number"
-                    onChange={handleChangeBankAcc}
-                  />
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h3 className="text-md font-semibold mb-2">Net of Medical Fee Total Amount</h3>
-              <div>
-                <label className="block text-gray-700">Amount</label>
-                <input
-                  type="number"
-                  className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  placeholder="Amount"
-                  onChange={handleChangeMedicalFeeNum}
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Text</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  placeholder="Text"
-                  onChange={handleChangeMedicalFeeText}
-                />
-              </div>
-            </section>
-
-            <button
-              onClick={handleSubmit}
-              className="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600"
+          <div className='flex'>
+          <label>
+            คณะ (Faculty):
+          </label>
+          <div className=''>
+          <input type="text" name="faculty" onChange={handleChangeFaculty} 
+            className='ml-2 border border-solid rounded-md border-gray-800 w-56'/>
+          </div>
+          </div>
+          <div>
+          <label>
+            อีเมลล์ (Email):
+            <input type="email" name="email" onChange={handleChangeEmail} 
+            className='ml-2 border border-solid rounded-md border-gray-800'/>
+          </label>
+          </div>
+          <div className='flex'>
+          <label>
+            รหัสนิสิต (Student ID):
+          </label>
+          <div >
+            <input type="text" name="id" onChange={handleChangeId} 
+            className='ml-2 border border-solid rounded-md border-gray-800 w-full' />
+          </div>
+          </div>
+        </form>
+      </div>
               
-            >
-              Submit
-            </button>
-          </form>
         </div>
       </main>
+
+
+      <main className="flex justify-center bg-white w-full">
+        <div className="bg-white   w-full min-w-screen-6xl">
+        <h3 className="text-md font-semibold mt-8 ml-3"> ข้อมุลการเกิดอุบัติเหตุและการรักษาพาบาล (Accident & Treatment(s) Details)</h3>
+        <div>
+        <form className='grid grid-cols-2 gap-7 m-6 bg-white'>
+          <div className=''>
+          <label>
+          อาการบาดเจ็บ (Description of injury):
+            <input type="text" name="name" onChange={handleChangeName} 
+            className='ml-2 w-fit border border-solid rounded-md border-gray-800'
+            />
+          </label>
+          </div>
+          <div>
+          <label>
+          ชื่อสถานพยาบาลที่เข้ารับการรักษา (Place of treatment(s)):
+            <input type="text" name="phone" onChange={handleChangePhone} 
+            className='ml-2 border border-solid rounded-md border-gray-800'/>
+          </label>
+          </div>
+          <div>
+          <label>
+          วันที่เกิดอุบัติเหตุ (Date of accident) :
+            <input type="date" name="faculty" onChange={handleChangeFaculty} 
+            className='ml-2 border border-solid rounded-md border-gray-800'/>
+          </label>
+          </div>
+          <div className='flex'>
+          <label>
+          ประเภทสถานพยาบาล (Type of Hospital) :
+            {/* <select type="text" name="email" onChange={handleChangeEmail} 
+            className='ml-2 border border-solid rounded-md border-gray-800'/> */}
+          </label>
+          <div className='ml-2'>
+              <Dropdown />
+            </div>
+          </div>
+          <div>
+          <label>
+          สถานที่เกิดอุบัติเหตุ (Place of accident):
+            <input type="text" name="id" onChange={handleChangeId} 
+            className='ml-2 border border-solid rounded-md border-gray-800' />
+          </label>
+          </div>
+          <div>
+          <label>
+          เลขบัญชีธนาคารนิสิต (Bank account number) :
+            <input type="text" name="id" onChange={handleChangeId} 
+            className='ml-2 border border-solid rounded-md border-gray-800' />
+          </label>
+          </div>
+        </form>
+      </div>
+              
+        </div>
+      </main>
+
+      <main className="flex justify-center bg-white w-full">
+        <div className="bg-white  w-full min-w-screen-6xl">
+        <h3 className="text-md font-semibold mt-8 ml-3">ค่ารักษาพยาบาลรวมสุทธิ (Net of medical fee total amount)</h3>
+        <div>
+        <form className='grid grid-cols-2 gap-7 m-6 bg-white'>
+          <div className=''>
+          <label>
+          ตัวเลข (in numbers):
+            <input type="num" name="name" onChange={handleChangeThai} 
+            className='ml-2 w-fit border border-solid  rounded-md border-gray-800'
+           />
+          </label>
+          </div>
+          
+        </form>
+      </div>
+              
+        </div>
+      </main>
+      <div className='flex justify-end'>
+        <button onClick={handleSubmit} className='bg-pink-300 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11'>
+          ส่งฟอร์ม
+        </button>
+      </div>
+      </div>
+    
+
+      
+
+
     </div>
   );
 }
