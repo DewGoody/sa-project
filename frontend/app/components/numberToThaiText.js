@@ -24,17 +24,24 @@ function numberToThaiText(num) {
     for (let i = 0; i < len; i++) {
         const digit = parseInt(numStr[i]);
         const placeValue = len - i - 1;
+
         if (digit === 0) continue;
 
-        if (placeValue > 0 && digit === 1 && placeValue % 6 === 1) {
-            result += (placeValue % 6 === 0 ? thaiNumbers[1] : 'เอ็ด');
-        } else if (placeValue % 6 === 1 && digit === 2) {
-            result += 'ยี่';
+        if (placeValue === 1 && digit === 1) {
+            // Special case for numbers in the 'สิบ' range
+            result += 'สิบ';
+        } else if (placeValue === 1 && digit === 2) {
+            // Special case for numbers like 'ยี่สิบ'
+            result += 'ยี่สิบ';
         } else {
             result += thaiNumbers[digit];
+            result += thaiUnits[placeValue % 6];
         }
 
-        result += thaiUnits[placeValue % 6];
+        if (placeValue === 0 && digit === 1 && len > 1) {
+            // Special case for 'เอ็ด' in numbers like 21, 31, etc.
+            result = result.slice(0, -thaiNumbers[1].length) + 'เอ็ด';
+        }
     }
 
     return result;
