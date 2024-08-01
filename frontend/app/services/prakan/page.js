@@ -1,4 +1,4 @@
-// pages/form.js
+
 "use client";
 import React from 'react';
 import { useState, useEffect } from 'react';
@@ -11,6 +11,7 @@ import numberToThaiText from '../../components/numberToThaiText.js';
 export default function Form() {
   const [prakanData, setPrakanData] = useState({});
   const prakanService = new PrakanService();
+  const [studentInfo, setStudentInfo] = useState({});
 
    const [inputNumber, setInputNumber] = useState('');
     const [thaiText, setThaiText] = useState('');
@@ -30,9 +31,11 @@ export default function Form() {
       token : tokens
     }
     prakanService.cunex(params).then(response => {
+      setStudentInfo(response);
       console.log(response);
     })
-  })
+  },[])
+
 
 
 
@@ -100,7 +103,37 @@ export default function Form() {
     prakanService.createPrakanForm(prakanData);
   }
 
-  
+  const [bankAccount, setBankAccount] = useState('');
+  const [error, setError] = useState('');
+
+  const validateBankAccount = (account) => {
+    const regex = /^\d{4}-\d{4}-\d{2}$/; // Format: xxxx-xxxx-xx
+    return regex.test(account);
+  };
+
+  const formatBankAccount = (value) => {
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, '');
+    
+    // Format the digits to xxxx-xxxx-xx
+    const formattedValue = digits.replace(/(\d{4})(\d{4})(\d{0,2})/, '$1-$2-$3');
+    return formattedValue;
+  };
+
+  const handleChangeAcc = (e) => {
+    const { value } = e.target;
+    const formattedValue = formatBankAccount(value);
+    
+    if (validateBankAccount(formattedValue)) {
+      setError('');
+    } else if (formattedValue.length === 14) {
+      setError('Invalid bank account number');
+    } else {
+      setError('');
+    }
+    
+    setBankAccount(formattedValue);
+  };
   
   
   
@@ -120,6 +153,7 @@ export default function Form() {
           <div>
           <input type="text" name="name" onChange={handleChangeName} 
             className='ml-2 w-full border border-solid rounded-md border-gray-800'
+            value={studentInfo.firstNameTH + ' ' + studentInfo.lastNameTH}
             />
           </div>
           </div>
@@ -139,14 +173,18 @@ export default function Form() {
           </label>
           <div className=''>
           <input type="text" name="faculty" onChange={handleChangeFaculty} 
-            className='ml-2 border border-solid rounded-md border-gray-800 w-56'/>
+            className='ml-2 border border-solid rounded-md border-gray-800 w-56'
+            value={studentInfo.facultyNameTH}
+            />
           </div>
           </div>
           <div>
           <label>
             อีเมลล์ (Email):
             <input type="email" name="email" onChange={handleChangeEmail} 
-            className='ml-2 border border-solid rounded-md border-gray-800'/>
+            className='ml-2 border border-solid rounded-md border-gray-800'
+            value={studentInfo.email}
+            />
           </label>
           </div>
           <div className='flex'>
@@ -155,7 +193,9 @@ export default function Form() {
           </label>
           <div >
             <input type="text" name="id" onChange={handleChangeId} 
-            className='ml-2 border border-solid rounded-md border-gray-800 w-full' />
+            className='ml-2 border border-solid rounded-md border-gray-800 w-full' 
+            value={studentInfo.studentId}
+            />
           </div>
           </div>
         </form>
@@ -211,7 +251,10 @@ export default function Form() {
           <div>
           <label>
           เลขบัญชีธนาคารนิสิต (Bank account number) :
-            <input type="text" name="id" onChange={handleChangeId} 
+            <input  type="text"
+          id="bankAccount"
+          value={bankAccount}
+          onChange={handleChangeAcc} 
             className='ml-2 border border-solid rounded-md border-gray-800' />
           </label>
           </div>
