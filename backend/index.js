@@ -15,7 +15,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
 const createPrakanPdf = async () => {
-    const pdfPath = path.resolve(__dirname, '/Users/detrit/Downloads/prakanform.pdf');
+
+    const pdfPath = path.resolve(__dirname, '/Users/patcharapolsohheng/sa-frontend/backend/models/prakanform.pdf');
     console.log(pdfPath);
     const existingPdfBytes = fs.readFileSync(pdfPath);
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -117,6 +118,7 @@ const createPrakanPdf = async () => {
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
+    })
    
     firstPage.drawText('ยี่สิบบาท', {
         x: 143,
@@ -136,11 +138,11 @@ app.post('/api/create', (req, res, next) => {
 
     createPrakanPdf()
 
-     db.query("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [data.studentId, data.firstNameTH+' '+data.lastNameTH, data.facultyNameTH, data.phone, data.desAcc, data.email, data.desInj, data.dateAcc, data.placeAcc, data.placeTreat, data.typeHos, data.medicalFeeNum, data.bankAcc, data.thaiText],(err, result) => {
-        if(err){
-            console.log(err);
-        }
-    })
+    //  db.query("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [data.studentId, data.firstNameTH+' '+data.lastNameTH, data.facultyNameTH, data.phone, data.desAcc, data.email, data.desInj, data.dateAcc, data.placeAcc, data.placeTreat, data.typeHos, data.medicalFeeNum, data.bankAcc, data.thaiText],(err, result) => {
+    //     if(err){
+    //         console.log(err);
+    //     }
+    // })
 
     res.status(200).send({
         msg: "ok"
