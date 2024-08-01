@@ -7,93 +7,88 @@ import axios from 'axios';
 import PrakanService from '../../../api/prakanService/prakanService.js';
 
 export default function Form() {
-  const [prakanData,setPrakanData] = useState({});
+  const [prakanData, setPrakanData] = useState({});
   const prakanService = new PrakanService();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    prakanService.cunex();
-    // const cunexUrl = 'https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token='+token;
-    // try {
-    //   console.log(cunexUrl,{headers : { 'Content-Type': 'application/json','ClientId' : 'cuserv','ClientSecret' : '25a4b9d2efb6b16cc75ed6786c92526c'}});
-    //   const response = await axios.get(cunexUrl);
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error('Error creating form:', error);
-    //   throw error; // Rethrow the error to be handled by the caller
-    // }
-    
+    let tokens = localStorage.getItem("token");
+    const params = {
+      token : tokens
+    }
+    prakanService.cunex(params).then(response => {
+      console.log(response);
+    })
   })
 
 
-  const handleChangeName = (event)  => {
+  const handleChangeName = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, name: event.target.value});
-  }
-  
-  const handleChangeId = (event) => {
-    console.log(event.target.value);
-    setPrakanData({...prakanData, id: event.target.value});
+    setPrakanData({ ...prakanData, name: event.target.value });
   }
 
-  const handleChangePhone = (event)  => {
+  const handleChangeId = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, phone: event.target.value});
+    setPrakanData({ ...prakanData, id: event.target.value });
   }
-  const handleChangeFaculty= (event)  => {
+
+  const handleChangePhone = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, faculty: event.target.value});
+    setPrakanData({ ...prakanData, phone: event.target.value });
   }
-  const handleChangeDesAcc = (event)  => {
+  const handleChangeFaculty = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, desAcc: event.target.value});
+    setPrakanData({ ...prakanData, faculty: event.target.value });
   }
-  const handleChangeEmail = (event)  => {
+  const handleChangeDesAcc = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, email: event.target.value});
+    setPrakanData({ ...prakanData, desAcc: event.target.value });
   }
-  const handleChangeDesInj = (event)  => {
+  const handleChangeEmail = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, desInj: event.target.value});
+    setPrakanData({ ...prakanData, email: event.target.value });
   }
-  const handleChangeDateAcc = (event)  => {
+  const handleChangeDesInj = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, dateAcc: event.target.value});
+    setPrakanData({ ...prakanData, desInj: event.target.value });
   }
-  const handleChangePlaceAcc = (event)  => {
+  const handleChangeDateAcc = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, placeAcc: event.target.value});
+    setPrakanData({ ...prakanData, dateAcc: event.target.value });
   }
-  const handleChangePlaceTreat = (event)  => {
+  const handleChangePlaceAcc = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, placeTreat: event.target.value});
+    setPrakanData({ ...prakanData, placeAcc: event.target.value });
   }
-  const handleChangeTypeHos = (event)  => {
+  const handleChangePlaceTreat = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, typeHos: event.target.value});
+    setPrakanData({ ...prakanData, placeTreat: event.target.value });
   }
-  const handleChangeMedicalFeeNum = (event)  => {
+  const handleChangeTypeHos = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, medicalFeeNum: event.target.value});
+    setPrakanData({ ...prakanData, typeHos: event.target.value });
   }
-  const handleChangeBankAcc = (event)  => {
+  const handleChangeMedicalFeeNum = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, bankAcc: event.target.value});
+    setPrakanData({ ...prakanData, medicalFeeNum: event.target.value });
   }
-  const handleChangeMedicalFeeText = (event)  => {
+  const handleChangeBankAcc = (event) => {
     console.log(event.target.value);
-    setPrakanData({...prakanData, medicalFeeText: event.target.value});
+    setPrakanData({ ...prakanData, bankAcc: event.target.value });
+  }
+  const handleChangeMedicalFeeText = (event) => {
+    console.log(event.target.value);
+    setPrakanData({ ...prakanData, medicalFeeText: event.target.value });
   }
 
   const handleSubmit = (event) => {
     console.log(prakanData);
     prakanService.createPrakanForm(prakanData);
   }
-  
-  
-  
-  
-    return (
+
+
+
+
+  return (
     <div className="min-h-screen bg-gray-100">
       <main className="flex justify-center items-center py-10">
         <div className="bg-white p-8 rounded shadow-md w-full max-w-4xl">
@@ -172,7 +167,7 @@ export default function Form() {
                   />
                 </div>
                 <div>
-                <input
+                  <input
                     type="text"
                     className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="dessAcc"
@@ -243,7 +238,7 @@ export default function Form() {
             <button
               onClick={handleSubmit}
               className="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600"
-              
+
             >
               Submit
             </button>

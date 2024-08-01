@@ -1,3 +1,4 @@
+const axios = require('axios')
 const express = require('express')
 const cors = require('cors');
 const db = require('./db');
@@ -32,8 +33,19 @@ app.get('/api', (req, res, next) => {
 });
 
 app.get('/api/cunex', (req, res, next) => {
-    const url = 'https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token=d3750ec900dd4a01ac3f4706986ae4c9'
-    res.redirect(url)
+    const headers = {
+        'Content-Type': 'application/json',
+        'ClientId': 'cuserv',
+        'ClientSecret': '25a4b9d2efb6b16cc75ed6786c92526c'
+    }
+    let params = req.query
+    let url = 'https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile'
+    axios.get(url,{params : params, headers : headers}).then(response => {
+        res.status(200).send({
+            data : response.data
+        })
+    })
+    
 });
 
 app.listen(1337, () => console.log("Server is running at port 1337"))
