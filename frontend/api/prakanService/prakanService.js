@@ -10,6 +10,15 @@ class PrakanService {
         throw error; // Rethrow the error to be handled by the caller
       }
     }
+
+    cunex() {
+      try {
+        axios.get('http://localhost:1337/api/cunex' );
+      } catch (error) {
+        console.error('Error creating form:', error);
+        throw error; // Rethrow the error to be handled by the caller
+      }
+    }
   
     // Add other service methods here
   }
