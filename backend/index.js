@@ -97,7 +97,6 @@ const createPrakanPdf = async () => {
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    
     firstPage.drawText('โรงพยาบาลเอกชน', {
         x: 304,
         y: height-475,
@@ -118,7 +117,7 @@ const createPrakanPdf = async () => {
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
-    })
+   
     firstPage.drawText('ยี่สิบบาท', {
         x: 143,
         y: height-578,
@@ -137,11 +136,11 @@ app.post('/api/create', (req, res, next) => {
 
     createPrakanPdf()
 
-    // db.query("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [data.id, data.name, data.faculty, data.phone, data.desAcc, data.email, data.desInj, data.dateAcc, data.placeAcc, data.placeTreat, data.typeHos, data.medicalFeeNum, data.bankAcc, data.medicalFeeText], (err, result) => {
-    //     if (err) {
-    //         console.log(err);
-    //     }
-    // })
+     db.query("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [data.studentId, data.firstNameTH+' '+data.lastNameTH, data.facultyNameTH, data.phone, data.desAcc, data.email, data.desInj, data.dateAcc, data.placeAcc, data.placeTreat, data.typeHos, data.medicalFeeNum, data.bankAcc, data.thaiText],(err, result) => {
+        if(err){
+            console.log(err);
+        }
+    })
 
     res.status(200).send({
         msg: "ok"
