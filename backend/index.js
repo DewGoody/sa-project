@@ -31,10 +31,10 @@ app.get('/api', (req, res, next) => {
     })
 });
 
-app.get('/api/cunex', (req, res, next) => {
-    const url = 'https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token=d3750ec900dd4a01ac3f4706986ae4c9'
-    res.redirect(url)
-});
+// app.get('/api/cunex', (req, res, next) => {
+//     const url = 'https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token=d3750ec900dd4a01ac3f4706986ae4c9'
+//     res.redirect(url)
+// });
 
 app.listen(1337, () => console.log("Server is running at port 1337"))
 
