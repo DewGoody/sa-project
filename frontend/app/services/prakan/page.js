@@ -99,8 +99,8 @@ export default function Form() {
   }
 
   const handleSubmit = (event) => {
-    console.log(prakanData);
-    prakanService.createPrakanForm(prakanData);
+    let allData = {...prakanData, ...studentInfo};
+    prakanService.createPrakanForm(allData);
   }
 
   const [bankAccount, setBankAccount] = useState('');
