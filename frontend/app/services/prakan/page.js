@@ -14,13 +14,14 @@ export default function Form() {
   const [studentInfo, setStudentInfo] = useState({});
 
    const [inputNumber, setInputNumber] = useState('');
-    const [thaiText, setThaiText] = useState('');
+    const [thaiText, setThaiText] = useState({});
 
     const handleChangeThai = (e) => {
         const value = e.target.value;
         if (/^\d*$/.test(value)) {
             setInputNumber(value);
-            setThaiText(numberToThaiText(parseInt(value)));
+            setThaiText({ 'thaiText' : (numberToThaiText(parseInt(value)))});
+            console.log(typeof thaiText);
             console.log(thaiText);
         }
     };
@@ -99,7 +100,7 @@ export default function Form() {
   }
 
   const handleSubmit = (event) => {
-    let allData = {...prakanData, ...studentInfo};
+    let allData = {...prakanData, ...studentInfo,...thaiText};
     prakanService.createPrakanForm(allData);
   }
 
