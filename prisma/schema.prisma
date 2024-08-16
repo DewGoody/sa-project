@@ -8,26 +8,62 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Address {
-  id                                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  created_at                         DateTime             @default(now()) @db.Timestamptz(6)
-  hourse_num                         Int?
-  moo                                Int?
-  subdistrict                        String?
-  district                           String?
-  province                           String?
-  post_code                          Int?
-  User_User_bora_addressToAddress    User[]               @relation("User_bora_addressToAddress")
-  User_User_contact_addressToAddress User[]               @relation("User_contact_addressToAddress")
-  contactable_info                   contactable_info[]
-  father_mother_info                 father_mother_info[]
-  military_course                    military_course[]
-  parent_info                        parent_info[]
+  id           Decimal      @db.Decimal
+  address_type String
+  created_at   DateTime     @default(now()) @db.Timestamptz(6)
+  house_num    String?
+  house_moo    String?
+  soi          String?
+  street       String?
+  subdistrict  String?
+  district     String?
+  province     String?
+  postal_code  Int?
+  address_id   String       @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  Address_Desc Address_Desc @relation(fields: [address_type], references: [type])
+  Student      Student      @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@id([id, address_type])
+}
+
+model Address_Desc {
+  type    String    @id
+  desc    String
+  Address Address[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Student {
+  id                 Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
+  lnameTH            String
+  fnameTH            String
+  lnameEN            String
+  fnameEN            String
+  fac_id             String
+  fac_name           String
+  dept               String
+  year               String
+  bd                 DateTime             @db.Date
+  tel_num            String?
+  title              String?
+  major              String?              @default("")
+  nationality        String?
+  race               String?
+  religion           String?              @db.VarChar
+  thai_id            String?
+  Address            Address[]
+  UHC_reg_info       UHC_reg_info?
+  accident_info      accident_info[]
+  education_record   education_record[]
+  father_mother_info father_mother_info[]
+  military_course    military_course?
+  parent_info        parent_info?
+  promoted_record    promoted_record?
+  reserve_info       reserve_info?
+  training_record    training_record[]
+}
+
 model UHC_reg_info {
   id                    Decimal   @id @db.Decimal
   last_update           DateTime  @default(now()) @db.Timestamptz(6)
@@ -38,38 +74,40 @@ model UHC_reg_info {
   frequence_uses        String?
   is_been               Boolean?
   is_congenital_disease Boolean?
-  User                  User      @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student               Student   @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model User {
-  id                                    Decimal           @id @unique @db.Decimal
-  lnameTH                               String
-  fnameTH                               String
-  lnameEN                               String
-  fnameEN                               String
-  fac_id                                String
-  fac_name                              String
-  dept                                  String
-  year                                  String
-  bd                                    DateTime
-  tel_num                               String?
-  bora_address                          String?           @db.Uuid
-  contact_address                       String?           @db.Uuid
-  UHC_reg_info                          UHC_reg_info?
-  Address_User_bora_addressToAddress    Address?          @relation("User_bora_addressToAddress", fields: [bora_address], references: [id])
-  Address_User_contact_addressToAddress Address?          @relation("User_contact_addressToAddress", fields: [contact_address], references: [id])
-  education_record                      education_record?
-  military_course                       military_course?
-  parent_info                           parent_info?
-  promoted_record                       promoted_record?
-  reserve_info                          reserve_info?
-  training_record                       training_record?
+model accident_claim_info {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  acc_desc        String
+  acc_date        DateTime @db.Timestamp(6)
+  acc_place       DateTime @db.Time(6)
+  email           String
+  treatment_place String
+  hospital_type   String
+  stu_bank_acc    Decimal  @db.Decimal
+  stu_bank_name   String
+  med_fee         Decimal  @db.Decimal
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model accident_info {
+  id                  BigInt    @id @default(autoincrement())
+  created_at          DateTime  @default(now()) @db.Timestamptz(6)
+  stu_id              Decimal?  @db.Decimal
+  acc_desc            String?
+  acc_date            DateTime? @db.Date
+  accident_place      String?
+  treatment_place     String?
+  hospital_type       String?
+  stu_bank_acc_name   DateTime? @db.Time(6)
+  stu_bank_acc_number Int?
+  medical_fee         Int?      @map("medical fee")
+  Student             Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
 model contactable_info {
-  id         BigInt   @id @default(autoincrement())
+  id         BigInt   @default(autoincrement())
   created_at DateTime @default(now()) @db.Timestamptz(6)
   fname      String
   lname      String
@@ -77,73 +115,66 @@ model contactable_info {
   address    String?  @db.Uuid
   tel_num    String?
   phont_num  String?
-  Address    Address? @relation(fields: [address], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  uuid       String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  @@id([id, uuid])
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model education_record {
-  id         Decimal  @id @db.Decimal
+  id         Decimal  @db.Decimal
   created_at DateTime @default(now()) @db.Timestamptz(6)
   grade      String
   class      String
   major      String?
   school     String
-  User       User     @relation(fields: [id], references: [id], onDelete: Cascade)
+  Student    Student  @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@id([id, grade])
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model father_mother_info {
-  id                                                              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  created_at                                                      DateTime          @default(now()) @db.Timestamptz(6)
-  fname                                                           String
-  lname                                                           String
-  nationality                                                     String
-  occupation                                                      String
-  working_place                                                   String
-  address                                                         String            @db.Uuid
-  tel_num                                                         String
-  Address                                                         Address           @relation(fields: [address], references: [id], onDelete: SetNull)
-  military_course_military_course_father_infoTofather_mother_info military_course[] @relation("military_course_father_infoTofather_mother_info")
-  military_course_military_course_mother_infoTofather_mother_info military_course[] @relation("military_course_mother_infoTofather_mother_info")
+  id            Decimal  @db.Decimal
+  relation      String
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  title         String?
+  fname         String?
+  lname         String?
+  working_place String?
+  phone_num     String?
+  tel_num       String?
+  mf_occupation String?
+  Student       Student  @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@id([id, relation])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model military_course {
-  id                                                                 Decimal             @id @db.Decimal
-  military_id                                                        Decimal?            @db.Decimal
-  military_class                                                     Int?                @db.SmallInt
-  military_address                                                   String?             @db.Uuid
-  grade9_gpax                                                        Decimal             @db.Decimal
-  grade9_school                                                      String?
-  family_background                                                  String?
-  economy_background                                                 String?
-  father_mother_relationship                                         String?
-  father_info                                                        String?             @db.Uuid
-  mother_info                                                        String?             @db.Uuid
-  father_mother_info_military_course_father_infoTofather_mother_info father_mother_info? @relation("military_course_father_infoTofather_mother_info", fields: [father_info], references: [id])
-  User                                                               User                @relation(fields: [id], references: [id], onDelete: Cascade)
-  Address                                                            Address?            @relation(fields: [military_address], references: [id])
-  father_mother_info_military_course_mother_infoTofather_mother_info father_mother_info? @relation("military_course_mother_infoTofather_mother_info", fields: [mother_info], references: [id])
+  id                         Decimal  @id @db.Decimal
+  military_id                Decimal? @db.Decimal
+  military_class             Int?     @db.SmallInt
+  military_address           String?  @db.Uuid
+  grade9_gpax                Decimal  @db.Decimal
+  grade9_school              String?
+  family_background          String?
+  economy_background         String?
+  father_mother_relationship String?
+  grade9_province            String?
+  Student                    Student  @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model parent_info {
   parent_fname    String?
   parent_lname    String?
   occupation      String?
   age             Int?
   parent_relation String?
-  parent_address  String?  @db.Uuid
-  id              Decimal  @id @db.Decimal
-  User            User     @relation(fields: [id], references: [id], onDelete: Cascade)
-  Address         Address? @relation(fields: [parent_address], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parent_address  String?
+  id              Decimal @id @db.Decimal
+  title           String?
+  Student         Student @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model promoted_record {
   id         Decimal   @id @db.Decimal
   created_at DateTime  @default(now()) @db.Timestamptz(6)
@@ -151,26 +182,53 @@ model promoted_record {
   corp       String?
   order_num  String?
   ordered_at DateTime? @db.Date
-  User       User      @relation(fields: [id], references: [id], onDelete: Cascade)
+  Student    Student   @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model reserve_info {
-  id   Decimal @id @db.Decimal
-  army String?
-  corp String?
-  User User    @relation(fields: [id], references: [id], onDelete: Cascade)
+  id      Decimal @id @db.Decimal
+  army    String?
+  corp    String?
+  Student Student @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model training_record {
-  id         Decimal  @id @db.Decimal
+  id         Decimal  @db.Decimal
   created_at DateTime @default(now()) @db.Timestamptz(6)
   class      Int
   year       Int
   major      String?
   school     String
-  User       User     @relation(fields: [id], references: [id], onDelete: Cascade)
+  Student    Student  @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@id([id, year])
+}
+
+model District {
+  id          Int    @id(map: "Amphure_pkey") @default(autoincrement())
+  code        String @db.VarChar(4)
+  name_th     String @db.VarChar(150)
+  name_en     String @db.VarChar(150)
+  province_id Int    @default(0)
+}
+
+model Geography {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(255)
+}
+
+model Province {
+  id           Int    @id @default(autoincrement())
+  code         String @db.VarChar(2)
+  name_th      String @db.VarChar(150)
+  name_en      String @db.VarChar(150)
+  geography_id Int    @default(0)
+}
+
+model Subdistrict {
+  id        String @id(map: "District_pkey") @db.VarChar(6)
+  zipCode   Int
+  nameTh    String @db.VarChar(150)
+  nameEn    String @db.VarChar(150)
+  amphureId Int    @default(0)
 }
