@@ -2,7 +2,9 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from '@prisma/client'
-import { check } from "prisma";
+import { serialize } from 'cookie';
+import { SignJWT } from "jose";
+
 
 const prisma = new PrismaClient()
 
@@ -16,8 +18,6 @@ function convertToDate(dateString) {
     }
     return null;
 }
-
-
 
 // GET api
 async function handler(token) {
@@ -34,7 +34,6 @@ async function handler(token) {
                 'ClientSecret': '25a4b9d2efb6b16cc75ed6786c92526c'
             }
         });
-
         if (!response.ok) {
             throw new Error(`Failed to fetch user profile: ${response.statusText}`);
         }
@@ -42,12 +41,13 @@ async function handler(token) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error("Error processing callback:", error);
-        throw new Error("Internal Server Error");
+        console.error("Error fetching user profile:", error);
+        NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
 
-export async function GET(req) {
+export async function GET(req,res) {
+    console.log(`Callback route: ${req.url}`);
     const url = new URL(req.url);
     const token = url.searchParams.get('token');
     const lang = url.searchParams.get('lang');
@@ -63,9 +63,6 @@ export async function GET(req) {
         if (!info) {
             return NextResponse.json({ error: 'Failed to fetch user profile' }, { status: 400 });
         }
-
-        console.log('Fetched Info:', info);
-
         const bd = convertToDate(info.birthDate);
         const date = Date.now();
 
@@ -87,16 +84,36 @@ export async function GET(req) {
             id: info.studentId || ''
         };
 
-        console.log('Constructed Student Object:', Student);
 
-        // Upsert student into the database
-        await prisma.Student.upsert({
-            where: { id: Student.id },
-            update: Student,
-            create: Student
+        // PUT student object to the database
+        await fetch('http://localhost:3000/api/profile', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Student)
         });
+        const key = new TextEncoder().encode(process.env.JWT_SECRET);
+        const accessToken = await new SignJWT({id: Student.id}).setProtectedHeader({alg: 'HS256'}).setIssuedAt().setIssuer('http://localhost:3000').setExpirationTime('15m').sign(key);
+         // Set token as a cookie in the response header
+         const response = NextResponse.redirect('http://localhost:3000/home');
+         response.headers.set('Set-Cookie', serialize('token', accessToken, { 
+             httpOnly: true, 
+             secure: process.env.NODE_ENV === 'production',
+             maxAge: 60 * 15, // 15 minutes
+             path: '/', 
+         }));
+ 
+         return response;
 
-        return NextResponse.json({ message: "Student data processed successfully" });
+
+
+        
+
+
+
+
+
 
     } catch (error) {
         console.error("Error processing callback:", error);

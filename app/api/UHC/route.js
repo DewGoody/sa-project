@@ -6,12 +6,7 @@ import { NextResponse } from 'next/server'
 const prisma = new PrismaClient()
 
 export async function GET(req) {
-    // Get token from request headers
-
-    // Assume token is valid and get user ID from token
-
-    // Assume user ID is 6512345678
-    const id = 6512345678
+    const id =  await getID(req)
 
     const UHC_reg_info = await prisma.UHC_reg_info.findFirst({
         where: {

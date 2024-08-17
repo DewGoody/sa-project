@@ -6,9 +6,25 @@ import { militaryRD1 } from '@/document_build/militaryRD1'
 
 const prisma = new PrismaClient()
 
-export async function POST(req) {
+export async function GET() {
   try {
-    const data = await req.json()
+    // get token from request headers
+    //const token = req.headers.get('Authorization')
+
+    // Assume token is valid and get user ID from token
+    const id = 6512345678
+    // assume token
+
+    // fetch data from database using route
+    let data = await fetch("http://localhost:3000/api/military", {
+      method: "GET",
+      headers: {
+      "Content-Type": "application/json",
+      },
+    })
+    data = await data.json()
+
+  
     const pdfBytes = await militaryRD1(data)
 
     const response = new NextResponse(pdfBytes, {

@@ -2,7 +2,8 @@
 
 import { NextResponse } from "next/server"
 import { PrismaClient } from "@prisma/client"
-import { headers } from "next/headers"
+import { cookies, headers } from "next/headers"
+import { getID } from "../../../lib/session"
 
 const prisma = new PrismaClient()
 
@@ -10,12 +11,12 @@ export async function GET(req, res) { // in sameple code, it
 
     try {
 
-        // Get token from request headers
+        // Get token from cookie with Next.js API
+        const cookies = req.headers.cookie ? parse(req.headers.cookie) : {};
 
-        // Assume token is valid and get user ID from token
+        // Example: Get a specific cookie named "token"
+        const token = cookies.token || null;
 
-        // Assume user ID is 6512345678
-        const id = 6512345678
         const profiles = await prisma.Student.findUnique({
             where: {
                 id:id
@@ -34,14 +35,7 @@ export async function GET(req, res) { // in sameple code, it
 export async function POST(req, res) {
     const body = await req.json()
     try {
-        // Get token from request headers
-
-
-        // Assume token is valid and get user ID from token
-
-
-        // Assume user ID is 6512345678
-        const id = 6512345678
+        const id =  await getID(req)
 
 
         const profile = await prisma.Student.upsert({
@@ -65,30 +59,26 @@ export async function POST(req, res) {
     }
 }
 
-export async function PUT(req, res) {
-    const body = await req.json()
+export async function PUT(req) {
+    const id = await getID(req); // Ensure this function returns an ID
+    const body = await req.json();
+
+    console.log('PUT Request Body:', body);
+    console.log('Extracted ID:', id);
+
     try {
-        // Get token from request headers
-
-        // Assume token is valid and get user ID from token
-
-        // Assume user ID is 6512345678
-        const id = 6512345678
-
         const profile = await prisma.Student.update({
             where: {
-                id: id
+                id: id || body.id // No need to await here
             },
             data: {
                 ...body
             }
-        })
+        });
 
-        return NextResponse.json({ message: "Profile edited successfully" })
-
-    }
-    catch (error) {
-        console.log(error)
-        return NextResponse.error(new Error("An error occurred while creating the profile"))
+        return NextResponse.json({ message: "Profile edited successfully" });
+    } catch (error) {
+        console.error('Error:', error);
+        return NextResponse.error(new Error("An error occurred while updating the profile"));
     }
 }

@@ -8,9 +8,15 @@ import { uhc } from '@/document_build/uhc.js'
 
 const prisma = new PrismaClient()
 
-export async function POST(req) {
+export async function GET() {
   try {
-    const data = await req.json()
+    let data = await fetch("http://localhost:3000/api/UHC", {
+      method: "GET",
+      headers: {
+      "Content-Type": "application/json",
+      },
+    })
+    data = await data.json()
     const pdfBytes = await uhc(data)
 
     const response = new NextResponse(pdfBytes, {

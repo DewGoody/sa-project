@@ -1,17 +1,13 @@
 'use server'
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from "next/server"
+import { getID } from "../../../lib/session"
 
 const prisma = new PrismaClient()
 
 export async function GET(req, res) {
 
-    // Get token from request headers
-
-    // Assume token is valid and get user ID from token
-
-    // Assume user ID is 6512345678
-    const id = 6512345678
+    const id =  await getID(req)
 
     let data = {
         student: null,
@@ -107,23 +103,39 @@ export async function GET(req, res) {
 }
 
 export async function PUT(req, res) {
+    
     const body = await req.json();
-    console.log(body);
 
     try {
-        const id = 6512345678;
-
+        const id =  await getID(req)
         if (body.student) {
-            const student = await prisma.Student.upsert({
-                where: {
-                    id: id,
-                },
-                update: {
-                    ...body.student,
-                },
-                create: {
-                    ...body.student,
-                },
+            console.log(body.student);
+            const student = await prisma.Student.update({
+            where: {
+                id: id,
+            },
+            data: {
+                id: id,
+                ...body.student
+            },
+            });
+        }
+
+        if (body.partial_info) {
+            // fillter Id out
+            let partial_info = body.partial_info;
+            delete partial_info.id;
+            const partial_info_1 = await prisma.partial_info.upsert({
+            where: {
+                id: id,
+            },
+            update: {
+                ...body.partial_info,
+            },
+            create: {
+                ...body.partial_info,
+                id: id,
+            },
             });
         }
 
@@ -165,9 +177,6 @@ export async function PUT(req, res) {
                 },
                 create: {
                     ...body.military_course,
-                    Student: {
-                        connect: { id: id }
-                    },
                 },
             });
         }
@@ -212,7 +221,9 @@ export async function PUT(req, res) {
           }
 
         if (body.parent_info) {
-            const parent_info = await prisma.parent_info.upsert({
+            let parent_info = body.parent_info;
+            delete parent_info.id;
+            const _parent_info = await prisma.parent_info.upsert({
                 where: {
                     id: id,
                 },
@@ -229,7 +240,9 @@ export async function PUT(req, res) {
         }
         // BUG:
         if (body.father_info) {
-            const father_info = await prisma.father_mother_info.upsert({
+            let father_info = body.father_info;
+            delete father_info.id;
+            const _father_info = await prisma.father_mother_info.upsert({
                 where: {
                     id_relation: {
                         id: id,
@@ -249,8 +262,9 @@ export async function PUT(req, res) {
         }
 
         if (body.mother_info) {
-            console.log(body.mother_info);
-            const mother_info = await prisma.father_mother_info.upsert({
+            let mother_info = body.mother_info;
+            delete mother_info.id;
+            const _mother_info = await prisma.father_mother_info.upsert({
                 where: {
                     id_relation: {
                         id: id,
