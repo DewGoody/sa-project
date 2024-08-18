@@ -1,7 +1,7 @@
 const axios = require('axios')
 const express = require('express')
 const cors = require('cors');
-const { PDFDocument, rgb, StandardFonts} = require('pdf-lib');
+const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
 const fontkit = require('fontkit');
@@ -20,7 +20,7 @@ const createPrakanPdf = async () => {
     const existingPdfBytes = fs.readFileSync(pdfPath);
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
     pdfDoc.registerFontkit(fontkit);
-    
+
     const fontBytes = fs.readFileSync('/Users/detrit/Downloads/THSarabunNew/THSarabunNew.ttf');
     const thSarabunFont = await pdfDoc.embedFont(fontBytes);
     const pages = pdfDoc.getPages()
@@ -28,100 +28,100 @@ const createPrakanPdf = async () => {
     const { width, height } = firstPage.getSize()
     firstPage.drawText('เดชฤทธิ์ อารยะกิตติพงศ์', {
         x: 204,
-        y: height-223.3,
-        size: 14,   
+        y: height - 223.3,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('6434455723', {
         x: 460,
-        y: height-223.3,
-        size: 14,   
+        y: height - 223.3,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('สำนักวิทยทรัพยากรการเกษตร', {
         x: 124,
-        y: height-249,
-        size: 14,   
+        y: height - 249,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('0955570646', {
         x: 231,
-        y: height-275,
-        size: 14,   
+        y: height - 275,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('6434455723@student.chula.ac.th.dsgsr', {
         x: 360,
-        y: height-274.6,
-        size: 14,   
+        y: height - 274.6,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('โดนรถสิบล้อทับขาข้างขวาเจ็บมากๆทำไรไม่ได้เลย', {
         x: 239,
-        y: height-346,
-        size: 14,   
+        y: height - 346,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('เจ็บมากเจ็บชิบหายไอเหี้ยสัสนรกสิบล้อพ่อตาย', {
         x: 220,
-        y: height-372.3,
-        size: 14,   
+        y: height - 372.3,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('2024-08-20', {
         x: 206,
-        y: height-397.3,
-        size: 14,   
+        y: height - 397.3,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('รถไฟฟ้าเฉลิมพระเกียรติ 6 รอบพระชนมพรรษา สาย 1', {
         x: 225,
-        y: height-422.6,
-        size: 14,   
+        y: height - 422.6,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
 
     firstPage.drawText('โรงพยาบาลนมะรักษ์ เฉพาะทางศัลยศาสตร์มะเร็ง ขนาดเล็ก', {
         x: 299,
-        y: height-449,
-        size: 14,   
+        y: height - 449,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('โรงพยาบาลเอกชน', {
         x: 304,
-        y: height-475,
-        size: 14,   
+        y: height - 475,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('101-3-24537-1', {
         x: 255,
-        y: height-500.4,
-        size: 14,   
+        y: height - 500.4,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('9013231 บาท', {
         x: 143,
-        y: height-552.5,
-        size: 14,   
+        y: height - 552.5,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText('ยี่สิบบาท', {
         x: 143,
-        y: height-578,
-        size: 14,   
+        y: height - 578,
+        size: 14,
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
@@ -136,11 +136,11 @@ app.post('/api/create', (req, res, next) => {
 
     createPrakanPdf()
 
-     db.query("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [data.studentId, data.firstNameTH+' '+data.lastNameTH, data.facultyNameTH, data.phone, data.desAcc, data.email, data.desInj, data.dateAcc, data.placeAcc, data.placeTreat, data.typeHos, data.medicalFeeNum, data.bankAcc, data.thaiText],(err, result) => {
-        if(err){
-            console.log(err);
-        }
-    })
+    //  db.query("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [data.studentId, data.firstNameTH+' '+data.lastNameTH, data.facultyNameTH, data.phone, data.desAcc, data.email, data.desInj, data.dateAcc, data.placeAcc, data.placeTreat, data.typeHos, data.medicalFeeNum, data.bankAcc, data.thaiText],(err, result) => {
+    //     if(err){
+    //         console.log(err);
+    //     }
+    // })
 
     res.status(200).send({
         msg: "ok"
@@ -167,6 +167,20 @@ app.get('/api/cunex', (req, res, next) => {
         })
     })
 
+});
+
+app.get('/api/download-pdf', (req, res) => {
+    const filePath = path.join(__dirname,'prakanformfilled.pdf');
+    console.log(filePath);
+
+    res.contentType("application/pdf");
+
+    res.download(filePath, (err) => {
+        if (err) {
+            console.error("Error downloading the file:", err);
+            res.status(500).send("Failed to download the file.");
+        }
+    });
 });
 
 app.listen(1337, () => console.log("Server is running at port 1337"))
