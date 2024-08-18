@@ -1,58 +1,55 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getSession } from './lib/session'
-import { cookie } from 'request';
+import { NextRequest, NextResponse } from 'next/server';
+import { getSession } from './lib/session';
+import { setCookie, removeCookie } from 'cookies-next';
 
-// Specify protected and public routes
-const protectedRoutes = ['/home','/profile', '/rordor', '/api'];
+const protectedRoutes = ['/home', '/profile', '/rordor', '/api'];
+const publicRoutes = []; // Define your public routes if needed
 
 export default async function middleware(req) {
-    
     const path = req.nextUrl.pathname;
-    console.log(path);
+    console.log(`Request path: ${path}`);
 
-    // Bypass middleware for /callback route
     if (path === '/callback') {
+        console.log('Bypassing middleware for /callback');
         return NextResponse.next();
     }
-    
-    console.log('Protected:', protectedRoutes.includes(path));
 
     const isProtectedRoute = protectedRoutes.includes(path);
-    console.log('Protected:', isProtectedRoute);
     const isPublicRoute = publicRoutes.includes(path);
 
-    // Pass the req object to getSession
+    console.log(`Is Protected Route: ${isProtectedRoute}`);
 
     const { session, newToken } = await getSession(req);
     const id = session?.id;
 
+    console.log(`Session ID: ${id}`);
+    console.log(`New Token: ${newToken}`);
+
     if (newToken) {
-        // Set the new token as a cookie
-        cookie.set('token', newToken, {
+        const response = NextResponse.next();
+        response.cookies.set('token', newToken, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'strict',});
-        }
-    
+            sameSite: 'strict',
+            path: '/',
+        });
+        console.log('New token set in cookie.');
+        return response;
+    }
 
     if (!session) {
+        console.log('No session found, redirecting to login...');
         return NextResponse.redirect('https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv');
     }
 
-
-    
-
-
     if (isProtectedRoute && !id) {
-        // remove token cookie
-        cookie.remove('token');
+        console.log('No session ID found for protected route, redirecting...');
+        removeCookie('token');
         return NextResponse.redirect('https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv');
     }
 
     return NextResponse.next();
 }
 
-// Routes Middleware should not run on
 export const config = {
     matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-}
+};

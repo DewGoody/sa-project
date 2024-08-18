@@ -14,6 +14,7 @@ function convertToDate(dateString) {
         const year = parseInt(dateString.substring(0, 4), 10);
         const month = parseInt(dateString.substring(4, 6), 10) - 1; // Months are 0-based in JavaScript
         const day = parseInt(dateString.substring(6, 8), 10);
+        console.log(year, month, day);
         return new Date(year, month, day);
     }
     return null;
@@ -63,7 +64,7 @@ export async function GET(req,res) {
         if (!info) {
             return NextResponse.json({ error: 'Failed to fetch user profile' }, { status: 400 });
         }
-        const bd = convertToDate(info.birthDate);
+        const bd = await convertToDate(info.birthdate);
         const date = Date.now();
 
         // Construct student object
@@ -79,7 +80,7 @@ export async function GET(req,res) {
             fac_id: info.facultyId || '',
             dept: info.departmentNameTH || '',
             religion: '', // Default value; modify as needed
-            bd: convertToDate(info.birthDate) || new Date(date), // Default value; modify as needed
+            bd: convertToDate(info.birthdate) || bd, // Default value; modify as needed
             year: info.studentId.substring(info.studentId.length - 2) || '',
             id: info.studentId || ''
         };
@@ -93,15 +94,17 @@ export async function GET(req,res) {
             },
             body: JSON.stringify(Student)
         });
+    
 
         const key = new TextEncoder().encode(process.env.JWT_SECRET);
-        const accessToken = await new SignJWT({id: Student.id}).setProtectedHeader({alg: 'HS256'}).setIssuedAt().setIssuer('http://localhost:3000').setExpirationTime('15m').sign(key);
+        const accessToken = await new SignJWT({id: Student.id}).setProtectedHeader({alg: 'HS256'}).setIssuedAt().setIssuer('http://localhost:3000').setExpirationTime(process.env.JWT_TIMEOUT).sign(key);
          // Set token as a cookie in the response header
-         const response = NextResponse.redirect('http://localhost:3000/home');
+        const response = NextResponse.redirect('http://localhost:3000/home');
+
          response.headers.set('Set-Cookie', serialize('token', accessToken, { 
              httpOnly: true, 
              secure: process.env.NODE_ENV === 'production',
-             maxAge: 60 * 15, // 15 minutes
+             maxAge: 60 * 1, // 15 minutes
              path: '/', 
          }));
  
