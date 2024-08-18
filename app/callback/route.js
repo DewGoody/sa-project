@@ -87,19 +87,24 @@ export async function GET(req,res) {
 
 
         // PUT student object to the database
-        await fetch('http://localhost:3000/api/profile', {
+        console.log(Student);
+        console.log(process.env.WEB_URL);
+        // check if the student is already in the database
+        const req = await fetch(`${process.env.WEB_URL}/api/profile`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(Student)
         });
+        const res = await req.json();
+        console.log(res);
     
 
         const key = new TextEncoder().encode(process.env.JWT_SECRET);
-        const accessToken = await new SignJWT({id: Student.id}).setProtectedHeader({alg: 'HS256'}).setIssuedAt().setIssuer('http://localhost:3000').setExpirationTime(process.env.JWT_TIMEOUT).sign(key);
+        const accessToken = await new SignJWT({id: Student.id}).setProtectedHeader({alg: 'HS256'}).setIssuedAt().setIssuer(`${process.env.WEB_URL}`).setExpirationTime(process.env.JWT_TIMEOUT).sign(key);
          // Set token as a cookie in the response header
-        const response = NextResponse.redirect('http://localhost:3000/home');
+        const response = NextResponse.redirect(`${process.env.WEB_URL}/home`);
 
          response.headers.set('Set-Cookie', serialize('token', accessToken, { 
              httpOnly: true, 

@@ -15,7 +15,7 @@ export async function GET(req) {
     if (!id) {
       return NextResponse.json({ error: 'Session is expired' }, { status: 401 })
     }
-    let data = await fetch("http://localhost:3000/api/UHC", {
+    let data = await fetch(`${process.env.WEB_URL}/api/UHC`, {
       method: "GET",
       headers: {
       "Content-Type": "application/json",

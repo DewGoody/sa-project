@@ -11,7 +11,7 @@ const prisma = new PrismaClient()
 export async function GET() {
   try {
 
-    let data = await fetch("http://localhost:3000/api/military", {
+    let data = await fetch(`${process.env.WEB_URL}/api/military`, {
       method: "GET",
       headers: {
       "Content-Type": "application/json",

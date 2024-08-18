@@ -36,17 +36,20 @@ export async function GET(req) {
 
 
 export async function POST(req, res) {
-    const body = await req.json()
+    
+    
     try {
         const id = await getID(req)
-        if (!id) {
-            return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
+        const body = await req.json()
+
+        if (!body.id) {
+            return NextResponse.json({ error: "ID is required" }, { status: 401 });
         }
 
 
         const profile = await prisma.Student.upsert({
             where: {
-                id: id
+                id: id || body.id
             },
             update: {
                 ...body
@@ -71,10 +74,14 @@ export async function PUT(req) {
 
     try {
         const id = await getID(req); // Ensure this function returns an ID
-        if (!id) {
+        const body = await req.json();
+        console.log('body',body.id);
+        console.log('id', id)
+
+        if (!id && !body.id) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
         }
-        const body = await req.json();
+        //const body = await req.json();
         const profile = await prisma.Student.upsert({
             where: {
                 id: id || body.id // No need to await here
