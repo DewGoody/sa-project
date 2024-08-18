@@ -15,6 +15,9 @@ export default function Form() {
   const [inputNumber, setInputNumber] = useState("");
   const [thaiText, setThaiText] = useState({});
 
+  const [formattedDate, setFormattedDate] = useState('');
+
+
   const handleChangeThai = (e) => {
     handleChangeMedicalFeeNum(e);
     const value = e.target.value;
@@ -69,7 +72,15 @@ export default function Form() {
   };
   const handleChangeDateAcc = (event) => {
     console.log(event.target.value);
-    setPrakanData({ ...prakanData, dateAcc: event.target.value });
+    const dateValue = event.target.value; // YYYY-MM-DD format
+    if (dateValue) {
+      const [year, month, day] = dateValue.split('-');
+      setFormattedDate(`${day}/${month}/${year}`);
+    } else {
+      setFormattedDate('');
+    }
+    console.log(formattedDate);
+    setPrakanData({ ...prakanData, dateAcc: formattedDate });
   };
   const handleChangePlaceAcc = (event) => {
     console.log(event.target.value);
@@ -133,7 +144,7 @@ export default function Form() {
   return (
     <div className=" bg-white min-h-screen">
       <Header />
-      <div className="mx-24">
+      <div className=" mx-24">
         <main className="flex justify-center bg-white w-full">
           <div className="bg-white  w-full min-w-screen-6xl">
             <h3 className="text-md font-semibold mt-8 ml-3">
@@ -142,7 +153,7 @@ export default function Form() {
             <div>
               <form className="grid grid-cols-2 gap-7 m-6 bg-white">
                 <div className="flex">
-                  <label>ชื่อและนามสกุล (Name-Surname):</label>
+                  <label>ชื่อและนามสกุล (Name-Surname) :</label>
                   <div>
                     <input
                       type="text"
@@ -156,19 +167,20 @@ export default function Form() {
                   </div>
                 </div>
                 <div className="flex">
-                  <label>หมายเลขโทรศัพท์ (Phone Number):</label>
+                <label>รหัสนิสิต (Student ID) :</label>
                   <div>
                     <input
                       type="text"
-                      name="phone"
-                      onChange={handleChangePhone}
+                      name="id"
+                      onChange={handleChangeId}
                       className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                      value={studentInfo.studentId}
                     />
                   </div>
                 </div>
 
                 <div className="flex">
-                  <label>คณะ (Faculty):</label>
+                  <label>คณะ (Faculty) :</label>
                   <div className="">
                     <input
                       type="text"
@@ -180,8 +192,22 @@ export default function Form() {
                   </div>
                 </div>
                 <div>
-                  <label>
-                    อีเมลล์ (Email):
+                  
+                </div>
+                <div className="flex">
+                  <label>หมายเลขโทรศัพท์ (Phone Number) :</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="phone"
+                      onChange={handleChangePhone}
+                      className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                    />
+                  </div>
+                </div>
+                <div>
+                <label>
+                    อีเมลล์ (Email) :
                     <input
                       type="email"
                       name="email"
@@ -189,18 +215,6 @@ export default function Form() {
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>
-                </div>
-                <div className="flex">
-                  <label>รหัสนิสิต (Student ID):</label>
-                  <div>
-                    <input
-                      type="text"
-                      name="id"
-                      onChange={handleChangeId}
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-full"
-                      value={studentInfo.studentId}
-                    />
-                  </div>
                 </div>
               </form>
             </div>
@@ -215,31 +229,23 @@ export default function Form() {
               Details)
             </h3>
             <div>
-              <form className="grid grid-cols-2 gap-7 m-6 bg-white">
-                <div className="">
-                  <label>
-                    อาการบาดเจ็บ (Description of injury):
-                    <input
+              <form className="grid grid-cols-2  gap-y-12 gap-x-7 m-6 bg-white">
+                <div>
+                  <label className="flex">
+                    <div>
+                    อาการบาดเจ็บ (Description of injury) :
+                    </div>
+                    {/* <input
                       type="text"
                       name="name"
                       onChange={handleChangeDesInj}
-                      className="ml-2 w-fit border border-solid rounded-md border-gray-800"
-                    />
+                      className="ml-2 w-fit border border-solid rounded-md border-gray-800 "
+                    /> */}
+                    <textarea className="ml-2 border border-solid rounded-md border-black" cols="32" rows="2" onChange={handleChangeDesInj}></textarea>
                   </label>
                 </div>
                 <div>
-                  <label>
-                    ชื่อสถานพยาบาลที่เข้ารับการรักษา (Place of treatment(s)):
-                    <input
-                      type="text"
-                      name="phone"
-                      onChange={handleChangePlaceTreat}
-                      className="ml-2 border border-solid rounded-md border-gray-800"
-                    />
-                  </label>
-                </div>
-                <div>
-                  <label>
+                <label>
                     การเกิดอุบัติเหตุ (Description of accident) :
                     <input
                       type="text"
@@ -250,7 +256,39 @@ export default function Form() {
                   </label>
                 </div>
                 <div>
-                  <label>
+                <label>
+                    ชื่อสถานพยาบาลที่เข้ารับการรักษา (Place of treatment(s)) :
+                    <input
+                      type="text"
+                      name="phone"
+                      onChange={handleChangePlaceTreat}
+                      className="ml-2 border border-solid rounded-md border-gray-800"
+                    />
+                  </label>
+                </div>
+                <div className="flex">
+                <label>
+                    ประเภทสถานพยาบาล (Type of Hospital) :
+                  </label>
+                  <div className="ml-2">
+                    <select
+                      onChange={handleChangeTypeHos}
+                      className="border border-solid rounded-md border-gray-800 text-gray-800 "
+                      defaultValue="เลือกประเภทสถานพยาบาล"
+                      
+                      
+                    >
+                      <option value="เลือกประเภทสถานพยาบาล" disabled>
+                        เลือกประเภทสถานพยาบาล
+                       </option>
+                      <option value="โรงพยาบาลรัฐ" className="text-gray-800">โรงพยาบาลรัฐ</option>
+                      <option value="โรงพยาบาลเอกชน">โรงพยาบาลเอกชน</option>
+                      <option value="คลินิก">คลินิก</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="flex">
+                <label>
                     วันที่เกิดอุบัติเหตุ (Date of accident) :
                     <input
                       type="date"
@@ -260,32 +298,9 @@ export default function Form() {
                     />
                   </label>
                 </div>
-                <div className="flex">
-                  <label>
-                    ประเภทสถานพยาบาล (Type of Hospital) :
-                    {/* <select type="text" name="email" onChange={handleChangeEmail} 
-            className='ml-2 border border-solid rounded-md border-gray-800'/> */}
-                  </label>
-                  <div className="ml-2">
-                    <select
-                      onChange={handleChangeTypeHos}
-                      className="border border-solid rounded-md border-gray-800 text-gray-500 "
-                      defaultValue="เลือกประเภทสถานพยาบาล"
-                      
-                      
-                    >
-                      <option value="เลือกประเภทสถานพยาบาล" disabled>
-                        เลือกประเภทสถานพยาบาล
-                       </option>
-                      <option value="โรงพยาบาลรัฐ">โรงพยาบาลรัฐ</option>
-                      <option value="โรงพยาบาลเอกชน">โรงพยาบาลเอกชน</option>
-                      <option value="คลินิก">คลินิก</option>
-                    </select>
-                  </div>
-                </div>
                 <div>
                   <label>
-                    สถานที่เกิดอุบัติเหตุ (Place of accident):
+                    สถานที่เกิดอุบัติเหตุ (Place of accident) :
                     <input
                       type="text"
                       name="id"
@@ -319,7 +334,7 @@ export default function Form() {
               <form className="grid grid-cols-2 gap-7 m-6 bg-white">
                 <div className="">
                   <label>
-                    ตัวเลข (in numbers):
+                    ตัวเลข (in numbers) :
                     <input
                       type="num"
                       name="name"
@@ -337,7 +352,7 @@ export default function Form() {
             onClick={handleSubmit}
             className="bg-pink-300 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
           >
-            ส่งฟอร์ม
+            ถัดไป
           </button>
         </div>
       </div>
