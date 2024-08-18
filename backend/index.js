@@ -117,7 +117,7 @@ const createPrakanPdf = async () => {
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
-   
+    })
     firstPage.drawText('ยี่สิบบาท', {
         x: 143,
         y: height-578,
