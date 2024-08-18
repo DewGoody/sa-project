@@ -1,12 +1,10 @@
 import React from 'react';
-import { Header } from '../components/Header';
 
 const RD = () => {
     return (
-        <div className="min-h-screen bg-gray-100">
-            <Header /> {/* Assuming this is your header component */}
+        <div className="min-h-screen bg-white">
             <main className="flex justify-center items-center ">
-                <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl">
+                <div className="bg-white p-8  w-full max-w-4xl">
                     <h2 className="text-2xl font-bold text-center mb-4 text-pink-400">
                         การรับนิสิตใหม่และรายงานตัวนักศึกษาวิชาทหาร รด. 
                     </h2>
@@ -21,7 +19,7 @@ const RD = () => {
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="flex justify-center">
-                                <a href="/rordor/RD_YEAR1">
+                                <a href="/rordor/checkData">
                                     <button className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300">
                                        เข้ารับการฝึกวิชาทหาร ปี 1 (Enter military training in Year 1.)
                                     </button>

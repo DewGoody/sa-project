@@ -1,50 +1,71 @@
 'use client'; // This marks the component as a Client Component
 
-import React, { useState } from 'react';
-import { Header } from '@/app/components/Header';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
-
+import { useFormData } from '@/app/contexts/FormDataContext';
 
 const RD = () => {
+  const { formData, updateFormData } = useFormData();
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    fatherName: '',
-    citizenId: '',
-    birthDate: '',
-    religion: '',
-    ethnicity: '',
-    nationality: '',
-    motherName: '',
-    occupation: '',
-    domicileNumber: '',
-    road: '',
-    province: '',
-    district: '',
-    subdistrict: '',
-    zipCode: ''
-  });
+  const [provinces, setProvinces] = useState([]);
+  const [amphures, setAmphures] = useState([]);
+  const [districts, setDistricts] = useState([]);
+
+  const fetchProvinces = async () => {
+    try {
+      const response = await axios.get("/api/Province");
+      setProvinces(response.data);
+    } catch (err) {
+      console.log("Error fetching provinces: " + err);
+    }
+  };
+
+  const fetchAmphuresById = async (id) => {
+    try {
+      const response = await axios.get(`/api/Amphure/${id}`);
+      setAmphures(response.data);
+    } catch (err) {
+      console.log("Error fetching amphures: " + err);
+    }
+  };
+
+  const fetchDistrictsById = async (id) => {
+    try {
+      const response = await axios.get(`/api/District/${id}`);
+      setDistricts(response.data);
+    } catch (err) {
+      console.log("Error fetching districts: " + err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProvinces();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  
+    updateFormData({ [name]: value });
+
+    if (name === "province") {
+      const id = e.target.selectedOptions[0]?.dataset.id;
+      fetchAmphuresById(id);
+    } else if (name === "amphure") {
+      const id = e.target.selectedOptions[0]?.dataset.id;
+      fetchDistrictsById(id);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
     console.log(formData);
-    router.push('/rordor/RD_YEAR1/military')
+    router.push('/rordor/RD_YEAR1/military');
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="min-h-screen bg-gray-100">
-        <Header />
-        <main className="flex justify-center items-center ">
+        <main className="flex justify-center items-center">
           <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-4xl">
             <h2 className="text-2xl font-bold text-center mb-4 text-pink-400">
               การรับนิสิตใหม่และรายงานตัวนักศึกษาวิชาทหาร รด. ชั้นปีที่ ๑ (I)
@@ -59,15 +80,41 @@ const RD = () => {
                 ข้อมูลส่วนตัวและภูมิลำเนา (Personal & Contact Information)
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div className="flex space-x-4">
+                  <div>
+                    <label className="block text-gray-700 mb-2">คำนำหน้า (Nametitle)</label>
+                    <input
+                      type="text"
+                      name="Nametitle"
+                      value={formData.Nametitle}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Nametitle"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">ชื่อ (Name)</label>
+                    <input
+                      type="text"
+                      name="Name"
+                      value={formData.Name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Name"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-gray-700 mb-2">ชื่อและนามสกุล (Name-Surname)</label>
+                  <label className="block text-gray-700 mb-2">นามสกุล (Surname)</label>
                   <input
                     type="text"
-                    name="fatherName"
-                    value={formData.fatherName}
+                    name="Surname"
+                    value={formData.Surname}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Name-Surname"
+                    placeholder="Surname"
                   />
                 </div>
                 <div>
@@ -127,6 +174,7 @@ const RD = () => {
                     />
                   </div>
                 </div>
+                
                 <div>
                   <label className="block text-gray-700 mb-2">ชื่อบิดา (Father's name)</label>
                   <input
@@ -139,6 +187,17 @@ const RD = () => {
                   />
                 </div>
                 <div>
+                  <label className="block text-gray-700 mb-2">นามสกุลบิดา (Father's surname)</label>
+                  <input
+                    type="text"
+                    name="fatherSurname"
+                    value={formData.fatherSurname}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    placeholder="Father's surname"
+                  />
+                </div>
+                <div>
                   <label className="block text-gray-700 mb-2">ชื่อมารดา (Mother's name)</label>
                   <input
                     type="text"
@@ -147,6 +206,17 @@ const RD = () => {
                     onChange={handleChange}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Mother's name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">นามสกุลมารดา (Mother's surname)</label>
+                  <input
+                    type="text"
+                    name="motherSurname"
+                    value={formData.motherSurname}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    placeholder="Mother's surname"
                   />
                 </div>
                 <div>
@@ -192,9 +262,9 @@ const RD = () => {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
                       <option value="">กรุณาเลือกจังหวัด</option>
-                      <option value="Bangkok">กรุงเทพมหานคร</option>
-                      <option value="Chiang Mai">เชียงใหม่</option>
-                      <option value="Phuket">ภูเก็ต</option>
+                      {provinces.map((item, index) => (
+                        <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -202,23 +272,29 @@ const RD = () => {
                   <div>
                     <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
                     <select
-                      name="district"
-                      value={formData.district}
+                      name="amphure"
+                      value={formData.amphure}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
                       <option value="">กรุณาเลือกเขต</option>
+                      {amphures.map((amphure, index) => (
+                        <option key={index} data-id={amphure.id} value={amphure.name_th}>{amphure.name_th}</option>
+                      ))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
                     <select
-                      name="subdistrict"
-                      value={formData.subdistrict}
+                      name="district"
+                      value={formData.district}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
                       <option value="">กรุณาเลือกแขวง</option>
+                      {districts.map((district, index) => (
+                        <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -231,6 +307,9 @@ const RD = () => {
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
                     <option value="">กรุณาเลือกรหัสไปรษณีย์</option>
+                    {districts.map((district, index) => (
+                      <option key={index} value={district.zipCode}>{district.zipCode}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -243,9 +322,9 @@ const RD = () => {
                   หน้าก่อนหน้า
                 </button>
               </a>
-                <button type='submit' className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300">
-                  หน้าถัดไป
-                </button>
+              <button type='submit' className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300">
+                หน้าถัดไป
+              </button>
             </div>
           </div>
         </main>

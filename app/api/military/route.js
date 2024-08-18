@@ -6,8 +6,11 @@ import { getID } from "../../../lib/session"
 const prisma = new PrismaClient()
 
 export async function GET(req, res) {
-
+    try{
     const id =  await getID(req)
+    if (!id) {
+        return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
+    }
 
     let data = {
         student: null,
@@ -72,23 +75,16 @@ export async function GET(req, res) {
         }
     }
     )
-    // for (i in address) {
-    //     if(i.address_type == "Current_address") {
-    //         data.current_address = i
-    //     } else if(i.address_type == "DOPA_address") {
-    //         data.house_address = i
-    //     }
-    // }
-
     const father_mother_info = await prisma.father_mother_info.findMany({
         where: {
             id: id,
         }
     })
+    console.log(father_mother_info);
     data.father_info = father_mother_info.find(i => i.relation == "father")
     data.mother_info = father_mother_info.find(i => i.relation == "mother")
 
-    data.mf_occupation = data.father_info.mf_occupation || data.mother_info.mf_occupation || ''
+    data.mf_occupation = data.father_info?.mf_occupation || data.mother_info?.mf_occupation || ''
 
     const parent_info = await prisma.parent_info.findFirst({
         where: {
@@ -100,14 +96,24 @@ export async function GET(req, res) {
 
 
     return NextResponse.json(data)
+    }
+    catch (error) {
+        console.log(error)
+        return NextResponse.message({ error: "An error occurred while fetching the profile" }, { status: 500 })
+    }
 }
 
 export async function PUT(req, res) {
     
-    const body = await req.json();
-
     try {
+
         const id =  await getID(req)
+        const body = await req.json();
+
+        if (!id) {
+            return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
+        }
+
         if (body.student) {
             console.log(body.student);
             const student = await prisma.Student.update({
@@ -287,6 +293,6 @@ export async function PUT(req, res) {
 
     } catch (error) {
         console.log(error);
-        return NextResponse.error(new Error("An error occurred while updating the profile"));
+        return NextResponse.json({ error: "An error occurred while updating the profile" }, { status: 500 });
     }
 }

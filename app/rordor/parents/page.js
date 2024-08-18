@@ -1,39 +1,28 @@
+// pages/rordor/parents.js
 'use client';
+import React from 'react';
+import { useFormData } from '../../contexts/FormDataContext'; // Adjust the import path as necessary
+import { useRouter } from 'next/navigation';
 
-import React, { useState } from 'react';
-import { Header } from '@/app/components/Header';
-import { useRouter } from 'next/navigation'; // Use next/navigation for routing in app directory
 
-const RD = () => {
+const ParentsForm = () => {
+  const { formData, updateFormData } = useFormData();
   const router = useRouter();
-  
-  const [formData, setFormData] = useState({
-    Name: '',
-    age: '',
-    job: '',
-    workAddress: '',
-    related: ''
-  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    updateFormData({ [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
     console.log(formData);
-    // Navigate to the next page after form submission
-    router.push('/rordor/parents');
+    router.push('/rordor/checkData');
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Header />
+
       <main className="flex justify-center items-center py-10">
         <div className="bg-white p-8 rounded shadow-md w-full max-w-4xl">
           <h2 className="text-2xl font-bold text-center mb-4 text-pink-400">
@@ -42,17 +31,40 @@ const RD = () => {
           <h1 className="text-xl text-gray-700 mb-6 text-center">
             New Recruit and Reporting Unit-Military Studies, Royal Thai Armed Forces.
           </h1>
-          {/* Parental Consent Section */}
           <section>
             <h3 className="text-lg font-semibold mb-4 text-center">คำยินยอมจากผู้ปกครอง (Parental consent)</h3>
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex space-x-4">
+                  <div>
+                    <label className="block text-gray-700 mb-2">คำนำหน้า (Nametitle)</label>
+                    <input
+                      type="text"
+                      name="Parenttitle"
+                      value={formData.Parenttitle}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Nametitle"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">ชื่อ (Name)</label>
+                    <input
+                      type="text"
+                      name="ParentName"
+                      value={formData.ParentName}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Name"
+                    />
+                  </div>
+                </div>
                 <div>
-                  <label className="block text-gray-700 mb-2">ข้าพเจ้า (Name-Surname)</label>
+                  <label className="block text-gray-700 mb-2">นามสกุล (Surname)</label>
                   <input
                     type="text"
-                    name="Name"
-                    value={formData.Name}
+                    name="ParentSurname"
+                    value={formData.ParentSurname}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Name-Surname"
@@ -62,8 +74,8 @@ const RD = () => {
                   <div>
                     <label className="block text-gray-700 mb-2">อายุ (Age)</label>
                     <select
-                      name="age"
-                      value={formData.age}
+                      name="Parentage"
+                      value={formData.Parentage}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
@@ -77,8 +89,8 @@ const RD = () => {
                     <label className="block text-gray-700 mb-2">อาชีพ (Job)</label>
                     <input
                       type="text"
-                      name="job"
-                      value={formData.job}
+                      name="Parentjob"
+                      value={formData.Parentjob}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Job"
@@ -89,8 +101,8 @@ const RD = () => {
                   <label className="block text-gray-700 mb-2">ที่อยู่ที่ทำงาน (Work address)</label>
                   <input
                     type="text"
-                    name="workAddress"
-                    value={formData.workAddress}
+                    name="ParentworkAddress"
+                    value={formData.ParentworkAddress}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Work address"
@@ -100,15 +112,14 @@ const RD = () => {
                   <label className="block text-gray-700 mb-2">เกี่ยวข้องเป็น (Related)</label>
                   <input
                     type="text"
-                    name="related"
-                    value={formData.related}
+                    name="Parentrelated"
+                    value={formData.Parentrelated}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Related"
                   />
                 </div>
               </div>
-              {/* Navigation Buttons */}
               <div className="flex justify-between mt-8">
                 <a href="/rordor/RD_YEAR1/military">
                   <button
@@ -133,4 +144,4 @@ const RD = () => {
   );
 }
 
-export default RD;
+export default ParentsForm;

@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from './lib/session'
+import { cookie } from 'request';
 
 // Specify protected and public routes
-const protectedRoutes = ['/home','/profile', '/rordor'];
-const publicRoutes = ['/login', '/signup', '/'];
+const protectedRoutes = ['/home','/profile', '/rordor', '/api'];
 
 export default async function middleware(req) {
+    
     const path = req.nextUrl.pathname;
     console.log(path);
 
@@ -16,18 +17,26 @@ export default async function middleware(req) {
     
     console.log('Protected:', protectedRoutes.includes(path));
 
-
     const isProtectedRoute = protectedRoutes.includes(path);
+    console.log('Protected:', isProtectedRoute);
     const isPublicRoute = publicRoutes.includes(path);
 
     // Pass the req object to getSession
 
     const { session, newToken } = await getSession(req);
     const id = session?.id;
-  
+
+    if (newToken) {
+        // Set the new token as a cookie
+        cookie.set('token', newToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',});
+        }
+    
 
     if (!session) {
-        return NextResponse.redirect(new URL('https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv', req.nextUrl));
+        return NextResponse.redirect('https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv');
     }
 
 
@@ -35,11 +44,9 @@ export default async function middleware(req) {
 
 
     if (isProtectedRoute && !id) {
-        return NextResponse.redirect(new URL('/', req.nextUrl));
-    }
-
-    if (isPublicRoute && id && !req.nextUrl.pathname.startsWith('/dashboard')) {
-        return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+        // remove token cookie
+        cookie.remove('token');
+        return NextResponse.redirect('https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv');
     }
 
     return NextResponse.next();

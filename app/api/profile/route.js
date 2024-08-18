@@ -7,27 +7,30 @@ import { getID } from "../../../lib/session"
 
 const prisma = new PrismaClient()
 
-export async function GET(req, res) { // in sameple code, it
-
+export async function GET(req) {
     try {
+        const id = await getID(req);
 
-        // Get token from cookie with Next.js API
-        const cookies = req.headers.cookie ? parse(req.headers.cookie) : {};
+        // If unauthorized, return error
+        if (!id) {
+            return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
+        }
 
-        // Example: Get a specific cookie named "token"
-        const token = cookies.token || null;
-
-        const profiles = await prisma.Student.findUnique({
+        // Fetch the profile using the ID
+        const profile = await prisma.Student.findUnique({
             where: {
-                id:id
+                id: id || ''
             }
-        })
+        });
 
-        return NextResponse.json(profiles)
-    }
-    catch (error) {
-        console.log(error)
-        return NextResponse.error(new Error("An error occurred while fetching the profile"))
+        if (!profile) {
+            return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+        }
+
+        return NextResponse.json(profile);
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({ error: "An error occurred while fetching the profile" }, { status: 500 });
     }
 }
 
@@ -35,7 +38,10 @@ export async function GET(req, res) { // in sameple code, it
 export async function POST(req, res) {
     const body = await req.json()
     try {
-        const id =  await getID(req)
+        const id = await getID(req)
+        if (!id) {
+            return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
+        }
 
 
         const profile = await prisma.Student.upsert({
@@ -60,25 +66,32 @@ export async function POST(req, res) {
 }
 
 export async function PUT(req) {
-    const id = await getID(req); // Ensure this function returns an ID
-    const body = await req.json();
 
-    console.log('PUT Request Body:', body);
-    console.log('Extracted ID:', id);
+
 
     try {
-        const profile = await prisma.Student.update({
+        const id = await getID(req); // Ensure this function returns an ID
+        if (!id) {
+            return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
+        }
+        const body = await req.json();
+        const profile = await prisma.Student.upsert({
             where: {
                 id: id || body.id // No need to await here
             },
-            data: {
+            update: {
                 ...body
+            },
+            create: {
+                ...body,
+                id: id || body.id // No need to await here
             }
+
         });
 
         return NextResponse.json({ message: "Profile edited successfully" });
     } catch (error) {
         console.error('Error:', error);
-        return NextResponse.error(new Error("An error occurred while updating the profile"));
+        return NextResponse.json({ error: "An error occurred while updating the profile" }, { status: 500 });
     }
 }

@@ -2,14 +2,19 @@
 
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
+import { getID } from '@/lib/session'
 // not implemented yet
 import { uhc } from '@/document_build/uhc.js'
 //import { militaryRD2 } from '@/document_build/militaryRD2'
 
 const prisma = new PrismaClient()
 
-export async function GET() {
+export async function GET(req) {
   try {
+    const id = await getID(req)
+    if (!id) {
+      return NextResponse.json({ error: 'Session is expired' }, { status: 401 })
+    }
     let data = await fetch("http://localhost:3000/api/UHC", {
       method: "GET",
       headers: {
@@ -28,6 +33,6 @@ export async function GET() {
     return response
   } catch (error) {
     console.error(error)
-    return NextResponse.error(new Error('An error occurred while fetching the profile'))
+    return NextResponse.json({ error: 'An error occurred while fetching the profile' }, { status: 500 })
   }
 }

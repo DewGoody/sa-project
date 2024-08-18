@@ -93,6 +93,7 @@ export async function GET(req,res) {
             },
             body: JSON.stringify(Student)
         });
+
         const key = new TextEncoder().encode(process.env.JWT_SECRET);
         const accessToken = await new SignJWT({id: Student.id}).setProtectedHeader({alg: 'HS256'}).setIssuedAt().setIssuer('http://localhost:3000').setExpirationTime('15m').sign(key);
          // Set token as a cookie in the response header
