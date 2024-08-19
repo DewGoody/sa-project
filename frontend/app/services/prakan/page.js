@@ -25,7 +25,7 @@ export default function Form() {
       setInputNumber(value);
       setThaiText({ thaiText: numberToThaiText(parseInt(value)) });
       console.log(typeof thaiText);
-      console.log(thaiText);
+      console.log(thaiText + 'บาท');
     }
   };
 
@@ -71,14 +71,10 @@ export default function Form() {
     setPrakanData({ ...prakanData, desInj: event.target.value });
   };
   const handleChangeDateAcc = (event) => {
-    console.log(event.target.value);
-    const dateValue = event.target.value; // YYYY-MM-DD format
-    if (dateValue) {
-      const [year, month, day] = dateValue.split('-');
-      setFormattedDate(`${day}/${month}/${year}`);
-    } else {
-      setFormattedDate('');
-    }
+    // console.log(event.target.value);
+    // const dateValue = event.target.value; // YYYY-MM-DD format
+    const [year, month, day] = (event.target.value).split('-');
+    setFormattedDate(`${day}/${month}/${year}`);
     console.log(formattedDate);
     setPrakanData({ ...prakanData, dateAcc: formattedDate });
   };
@@ -96,7 +92,7 @@ export default function Form() {
   };
   const handleChangeMedicalFeeNum = (event) => {
     console.log(event.target.value);
-    setPrakanData({ ...prakanData, medicalFeeNum: event.target.value });
+    setPrakanData({ ...prakanData, medicalFeeNum: (event.target.value) + ' บาท' });
   };
   const handleChangeBankAcc = (event) => {
     console.log(event.target.value);
@@ -104,7 +100,7 @@ export default function Form() {
   };
   const handleChangeMedicalFeeText = (event) => {
     console.log(event.target.value);
-    setPrakanData({ ...prakanData, medicalFeeText: event.target.value });
+    setPrakanData({ ...prakanData, medicalFeeText: (event.target.value) + ' บาท' });
   };
 
   const handleSubmit = (event) => {
@@ -295,6 +291,7 @@ export default function Form() {
                       name="faculty"
                       onChange={handleChangeDateAcc}
                       className="ml-2 border border-solid rounded-md border-gray-800"
+                      defaultValue={formattedDate}
                     />
                   </label>
                 </div>
@@ -348,12 +345,15 @@ export default function Form() {
           </div>
         </main>
         <div className="flex justify-end">
+          <a href="/services/checkPrakan">
           <button
             onClick={handleSubmit}
+            
             className="bg-pink-300 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
           >
             ถัดไป
           </button>
+          </a>
         </div>
       </div>
     </div>

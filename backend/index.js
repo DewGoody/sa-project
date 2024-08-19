@@ -120,7 +120,7 @@ const createPrakanPdf = async (data) => {
         color: rgb(0, 0, 0),
     })
    
-    firstPage.drawText(data.thaiText, {
+    firstPage.drawText(data.thaiText + " บาท", {
         x: 143,
         y: height-578,
         size: 14,   
@@ -130,7 +130,7 @@ const createPrakanPdf = async (data) => {
 
     const pdfBytes = await pdfDoc.save()
     const savePath = "/backend/prakanfilled.pdf"
-    fs.writeFileSync('/Users/patcharapolsohheng/sa-frontend/backend/prakanformfilled.pdf', pdfBytes);
+    fs.writeFileSync('/Users/patcharapolsohheng/sa-frontend/frontend/public/prakanformfilled.pdf', pdfBytes);
 }
 
 app.post('/api/create', (req, res, next) => {
