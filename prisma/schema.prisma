@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DIRECT_URL")
 }
 
 model Address {
@@ -33,7 +32,27 @@ model Address_Desc {
   Address Address[]
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model District {
+  id          Int    @id(map: "Amphure_pkey") @default(autoincrement())
+  code        String @db.VarChar(4)
+  name_th     String @db.VarChar(150)
+  name_en     String @db.VarChar(150)
+  province_id Int    @default(0)
+}
+
+model Geography {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(255)
+}
+
+model Province {
+  id           Int    @id @default(autoincrement())
+  code         String @db.VarChar(2)
+  name_th      String @db.VarChar(150)
+  name_en      String @db.VarChar(150)
+  geography_id Int    @default(0)
+}
+
 model Student {
   id                 Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
   lnameTH            String
@@ -62,6 +81,14 @@ model Student {
   promoted_record    promoted_record?
   reserve_info       reserve_info?
   training_record    training_record[]
+}
+
+model Subdistrict {
+  id        String @id(map: "District_pkey") @db.VarChar(6)
+  zipCode   Int
+  nameTh    String @db.VarChar(150)
+  nameEn    String @db.VarChar(150)
+  amphureId Int    @default(0)
 }
 
 model UHC_reg_info {
@@ -148,7 +175,6 @@ model father_mother_info {
   @@id([id, relation])
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model military_course {
   id                         Decimal  @id @db.Decimal
   military_id                Decimal? @db.Decimal
@@ -202,33 +228,4 @@ model training_record {
   Student    Student  @relation(fields: [id], references: [id], onDelete: Cascade)
 
   @@id([id, year])
-}
-
-model District {
-  id          Int    @id(map: "Amphure_pkey") @default(autoincrement())
-  code        String @db.VarChar(4)
-  name_th     String @db.VarChar(150)
-  name_en     String @db.VarChar(150)
-  province_id Int    @default(0)
-}
-
-model Geography {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255)
-}
-
-model Province {
-  id           Int    @id @default(autoincrement())
-  code         String @db.VarChar(2)
-  name_th      String @db.VarChar(150)
-  name_en      String @db.VarChar(150)
-  geography_id Int    @default(0)
-}
-
-model Subdistrict {
-  id        String @id(map: "District_pkey") @db.VarChar(6)
-  zipCode   Int
-  nameTh    String @db.VarChar(150)
-  nameEn    String @db.VarChar(150)
-  amphureId Int    @default(0)
 }

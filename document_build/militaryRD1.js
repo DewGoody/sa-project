@@ -41,7 +41,7 @@ async function militaryRD1(data) {
     mf_occupation,
   } = data;
 
-  console.log(student.db);
+  console.log(data);
 
 
 
@@ -68,7 +68,12 @@ async function militaryRD1(data) {
   // Draw a string of text on the first page
   // Date setion
   let currentDate = new Date();
-  firstPage.drawText(thaiDigits[currentDate.getDay().toString()], {
+  let thaidatenum ='';
+  for (let i = 0; i < currentDate.getDate().toString().length; i++) {
+    thaidatenum += thaiDigits[currentDate.getDate().toString()[i]];
+  }
+  console.log(thaidatenum);
+  firstPage.drawText(thaidatenum, {
     x: 220,
     y: height - 90,
     size: 14,
@@ -117,7 +122,7 @@ async function militaryRD1(data) {
   // next row 
 
   // birthdate
-  const birthdate = new Date(student.bd).toLocaleDateString('th-TH', { dateStyle: 'long' }) || '';
+  const birthdate = new Date(student?.bd).toLocaleDateString('th-TH', { dateStyle: 'long' }) || '';
   firstPage.drawText(birthdate, {
     x: 240,
     y: height - 143,
@@ -126,7 +131,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const race = student.race || '';
+  const race = student?.race || '';
   firstPage.drawText(race, {
     x: 375,
     y: height - 143,
@@ -135,7 +140,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   })
 
-  const nationality = student.nationality || '';
+  const nationality = student?.nationality || '';
   firstPage.drawText(nationality, {
     x: 450,
     y: height - 143,
@@ -144,7 +149,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   })
 
-  const religion = student.religion || '';
+  const religion = student?.religion || '';
   firstPage.drawText(religion, {
     x: 530,
     y: height - 143,
@@ -154,7 +159,7 @@ async function militaryRD1(data) {
   })
 
   // next row
-  const father_name = `${father_info.fname || ''} ${father_info.fname || ''}`;
+  const father_name = `${father_info?.fname || ''} ${father_info?.fname || ''}`;
   firstPage.drawText(father_name, {
     x: 200,
     y: height - 166,
@@ -183,7 +188,8 @@ async function militaryRD1(data) {
 
   // next row
   // DOPA address
-  const DOPA_house_num = `${DOPA_address.house_num || ''} ${DOPA_address.house_moo ? "ม.": ""}${DOPA_address.house_moo || ''}`;
+
+  const DOPA_house_num = `${DOPA_address?.house_num || ''} ${DOPA_address?.house_moo ? "ม.": ""}${DOPA_address?.house_moo || ''}`;
   firstPage.drawText(DOPA_house_num, {
     x: 255,
     y: height - 189,
@@ -192,7 +198,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const DOPA_steet = `${DOPA_address.street || '-'}`;
+  const DOPA_steet = `${DOPA_address?.street || '-'}`;
   firstPage.drawText(DOPA_steet, {
     x: 350,
     y: height - 189,
@@ -201,7 +207,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const DOPA_subdistrict = `${DOPA_address.subdistrict || ''}`;
+  const DOPA_subdistrict = `${DOPA_address?.subdistrict || ''}`;
   firstPage.drawText(DOPA_subdistrict, {
     x: 500,
     y: height - 189,
@@ -211,7 +217,7 @@ async function militaryRD1(data) {
   });
 
   // next row
-  const DOPA_district = `${DOPA_address.district || ''}`;
+  const DOPA_district = `${DOPA_address?.district || ''}`;
   firstPage.drawText(DOPA_district, {
     x: 220,
     y: height - 210,
@@ -220,7 +226,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const DOPA_province = `${DOPA_address.province || ''}`;
+  const DOPA_province = `${DOPA_address?.province || ''}`;
   firstPage.drawText(DOPA_province, {
     x: 350,
     y: height - 210,
@@ -229,7 +235,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const DOPA_postal_code = `${DOPA_address.postal_code || ''}`;
+  const DOPA_postal_code = `${DOPA_address?.postal_code || ''}`;
   firstPage.drawText(DOPA_postal_code, {
     x: 500,
     y: height - 210,
@@ -240,7 +246,7 @@ async function militaryRD1(data) {
 
   // next row
   // military address
-  const military_house_num = `${military_address.house_num || ''} ${military_address.house_moo ? "ม.": ""}${military_address.house_moo || ''}`;
+  const military_house_num = `${military_address?.house_num || ''} ${military_address?.house_moo ? "ม.": ""}${military_address?.house_moo || ''}`;
   firstPage.drawText(military_house_num, {
     x: 250,
     y: height - 230,
@@ -249,7 +255,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const military_subdistrict = `${military_address.subdistrict || ''}`;
+  const military_subdistrict = `${military_address?.subdistrict || ''}`;
   firstPage.drawText(military_subdistrict, {
     x: 320,
     y: height - 230,
@@ -258,7 +264,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const military_district = `${military_address.district || ''}`;
+  const military_district = `${military_address?.district || ''}`;
   firstPage.drawText(military_district, {
     x: 410,
     y: height - 230,
@@ -267,7 +273,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const military_province = `${military_address.province || ''}`;
+  const military_province = `${military_address?.province || ''}`;
   firstPage.drawText(military_province, {
     x: 510,
     y: height - 230,
@@ -277,7 +283,7 @@ async function militaryRD1(data) {
   });
 
   // next row
-  const grade9_gpax = military_course.grade9_gpax || '';
+  const grade9_gpax = military_course?.grade9_gpax || '';
   firstPage.drawText(grade9_gpax, {
     x: 285,
     y: height - 250,
@@ -286,7 +292,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const grade9_school = military_course.grade9_school || '';
+  const grade9_school = military_course?.grade9_school || '';
   firstPage.drawText(grade9_school, {
     x: 420,
     y: height - 250,
@@ -296,7 +302,7 @@ async function militaryRD1(data) {
   });
 
   // next row
-  const grade9_province = military_course.grade9_province || '';
+  const grade9_province = military_course?.grade9_province || '';
   firstPage.drawText(grade9_province, {
     x: 185,
     y: height - 270,
@@ -316,7 +322,7 @@ async function militaryRD1(data) {
   });
 
   //parent section
-  const parent_name = `${parent_info.title || ''}${parent_info.parent_fname || ''} ${parent_info.parent_lname || ''}`;
+  const parent_name = `${parent_info?.title || ''}${parent_info?.parent_fname || ''} ${parent_info?.parent_lname || ''}`;
   firstPage.drawText(parent_name, {
     x: 350,
     y: height - 373,
@@ -326,7 +332,7 @@ async function militaryRD1(data) {
   });
 
   // next row
-  const parent_age = `${parent_info.age || ''}`;
+  const parent_age = `${parent_info?.age || ''}`;
   firstPage.drawText(parent_age, {
     x: 335,
     y: height - 392,
@@ -335,7 +341,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const parent_occupation = `${parent_info.occupation || ''}`;
+  const parent_occupation = `${parent_info?.occupation || ''}`;
   firstPage.drawText(parent_occupation, {
     x: 460,
     y: height - 392,
@@ -345,7 +351,7 @@ async function militaryRD1(data) {
   });
 
   // next row
-  const parent_address = `${parent_info.parent_address || ''}`;
+  const parent_address = `${parent_info?.parent_address || ''}`;
   firstPage.drawText(parent_address, {
     x: 400,
     y: height - 412,
@@ -354,7 +360,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const parent_relation = `${parent_info.parent_relation || ''}`;
+  const parent_relation = `${parent_info?.parent_relation || ''}`;
   firstPage.drawText(parent_relation, {
     x: 380,
     y: height - 452,
@@ -386,7 +392,7 @@ async function militaryRD1(data) {
   });
 
   //parent section
-  const parent_name_untitle = `${parent_info.parent_fname || ''} ${parent_info.parent_lname || ''}`;
+  const parent_name_untitle = `${parent_info?.parent_fname || ''} ${parent_info?.parent_lname || ''}`;
   secondPage.drawText(parent_name_untitle, {
     x: 230,
     y: height - 535,

@@ -13,6 +13,7 @@ export default async function middleware(req) {
         console.log('Bypassing middleware for /callback');
         return NextResponse.next();
     }
+    try{
 
     const isProtectedRoute = protectedRoutes.includes(path);
     const isPublicRoute = publicRoutes.includes(path);
@@ -20,36 +21,35 @@ export default async function middleware(req) {
     console.log(`Is Protected Route: ${isProtectedRoute}`);
 
     const { session, newToken } = await getSession(req);
-    const id = session?.id;
+    const { payload, protectedHeader } = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
+    const expTime = payload.exp;
+    
+    const timeRemaining = expTime - currentTime;
+    const id = payload?.id;
 
-    console.log(`Session ID: ${id}`);
-    console.log(`New Token: ${newToken}`);
+    if (timeRemaining < JWT_REFRESH / 1000) {
+        const newToken = await new SignJWT(payload)
+            .setProtectedHeader({ alg: 'HS256' })
+            .setExpirationTime(JWT_TIMEOUT)
+            .sign(new TextEncoder().encode(JWT_SECRET));
 
-    if (newToken) {
         const response = NextResponse.next();
         response.cookies.set('token', newToken, {
             httpOnly: true,
-            sameSite: 'strict',
-            path: '/',
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: JWT_TIMEOUT,
         });
-        console.log('New token set in cookie.');
+
         return response;
-    }
 
-    if (!session) {
-        console.log('No session found, redirecting to login...');
-        return NextResponse.redirect('https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv');
     }
-
-    if (isProtectedRoute && !id) {
-        console.log('No session ID found for protected route, redirecting...');
-        removeCookie('token');
-        return NextResponse.redirect('https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv');
-    }
-
-    return NextResponse.next();
+} catch (error) {
+    console.error(error);
+    return NextResponse.redirect('');
 }
 
-export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-};
+}
+
+    export const config = {
+        matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+    };

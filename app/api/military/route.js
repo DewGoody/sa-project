@@ -1,13 +1,15 @@
 'use server'
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from "next/server"
-import { getID } from "../../../lib/session"
+import { getID, getIDbyToken } from "../../../lib/session"
 
 const prisma = new PrismaClient()
 
 export async function GET(req, res) {
     try{
-    const id =  await getID(req)
+    // read cookie header
+    const cookie = req.headers.get('cookie') || '';
+    const id =  await getID(req) || getIDbyToken(cookie)
     if (!id) {
         return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
     }
@@ -40,6 +42,7 @@ export async function GET(req, res) {
             nationality: student.nationality || '',
             religion: student.religion || '',
             bd: student.bd || '',
+            thai_id: student.thai_id || '',
         }
     }
 
@@ -48,6 +51,7 @@ export async function GET(req, res) {
             id: id
         }
     })
+
     const training_record = await prisma.training_record.findFirst({
         where: {
             id: id
@@ -92,9 +96,7 @@ export async function GET(req, res) {
         }
     })
     data.parent_info = parent_info
-
-
-
+    console.log("RD",data)
     return NextResponse.json(data)
     }
     catch (error) {

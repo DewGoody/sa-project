@@ -86,9 +86,7 @@ export async function GET(req,res) {
         };
 
 
-        // PUT student object to the database
-        console.log(Student);
-        console.log(process.env.WEB_URL);
+
         // check if the student is already in the database
         const req = await fetch(`${process.env.WEB_URL}/api/profile`, {
             method: 'PUT',
@@ -106,13 +104,11 @@ export async function GET(req,res) {
          // Set token as a cookie in the response header
         const response = NextResponse.redirect(`${process.env.WEB_URL}/home`);
 
-         response.headers.set('Set-Cookie', serialize('token', accessToken, { 
-             httpOnly: true, 
-             secure: process.env.NODE_ENV === 'production',
-             maxAge: 60 * 1, // 15 minutes
-             path: '/', 
+         response.headers.set('Set-Cookie', serialize('token', accessToken, {
+            httpOnly: true,
+            sameSite: 'strict',
+            maxAge: process.env.JWT_TIMEOUT,
          }));
- 
          return response;
 
 

@@ -12,19 +12,31 @@ export async function GET(req) {
     if (!id) {
       return NextResponse.json({ error: 'Session is expired' }, { status: 401 })
     }
-
-
-
-    // fetch data from database using route
-    let data = await fetch(`${process.env.WEB_URL}/api/military`, {
-      method: "GET",
-      headers: {
-      "Content-Type": "application/json",
-      },
-    })
-    data = await data.json()
-
+    //fetch data from database using route use another method such as axios
+    // let data = await fetch(`${process.env.WEB_URL}/api/military`,{
+    //   method: 'GET',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    // Forward the cookies from the request to the API
+    const cookie = req.headers.get('token') || '';
+    console.log("COOKIE:", cookie)
   
+    let data = await fetch(`${process.env.WEB_URL}/api/military`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': cookie // Forward cookies
+      }
+    })
+
+    // convert data to json
+    data = await data.json()
+    console.log("DATA:", data)
+
+
+
     const pdfBytes = await militaryRD1(data)
 
     const response = new NextResponse(pdfBytes, {
