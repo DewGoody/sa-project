@@ -1,26 +1,22 @@
-'use server'
+'use server';
 
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from '@prisma/client'
-import { serialize } from 'cookie';
+import { PrismaClient } from '@prisma/client';
 import { SignJWT } from "jose";
-
-
-const prisma = new PrismaClient()
+import { TextEncoder } from "util";
+import { cookies } from 'next/headers';
+const prisma = new PrismaClient();
 
 function convertToDate(dateString) {
-    // Ensure the dateString is a string and has the correct length
     if (typeof dateString === 'string' && dateString.length === 8) {
         const year = parseInt(dateString.substring(0, 4), 10);
-        const month = parseInt(dateString.substring(4, 6), 10) - 1; // Months are 0-based in JavaScript
+        const month = parseInt(dateString.substring(4, 6), 10) - 1;
         const day = parseInt(dateString.substring(6, 8), 10);
-        console.log(year, month, day);
         return new Date(year, month, day);
     }
     return null;
 }
 
-// GET api
 async function handler(token) {
     if (!token) {
         throw new Error("Token is required");
@@ -35,6 +31,7 @@ async function handler(token) {
                 'ClientSecret': '25a4b9d2efb6b16cc75ed6786c92526c'
             }
         });
+
         if (!response.ok) {
             throw new Error(`Failed to fetch user profile: ${response.statusText}`);
         }
@@ -43,31 +40,39 @@ async function handler(token) {
         return data;
     } catch (error) {
         console.error("Error fetching user profile:", error);
-        NextResponse.json({ error: error.message }, { status: 500 });
+        throw new Error("Failed to fetch user profile");
     }
 }
 
-export async function GET(req,res) {
-    console.log(`Callback route: ${req.url}`);
+async function setTOKEN(token) {
+    const cookieStore = cookies()
+    cookieStore.set('token', token, {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Strict',
+        path: '/'
+        
+    })
+    // refresh the web and set the new token but not redirect 
+
+}
+
+export async function GET(req) {
     const url = new URL(req.url);
     const token = url.searchParams.get('token');
-    const lang = url.searchParams.get('lang');
 
     if (!token) {
         return NextResponse.json({ error: "Token is required" }, { status: 400 });
     }
 
     try {
-        // Fetch user profile using the token
         const info = await handler(token);
 
         if (!info) {
             return NextResponse.json({ error: 'Failed to fetch user profile' }, { status: 400 });
         }
-        const bd = await convertToDate(info.birthdate);
-        const date = Date.now();
+        
 
-        // Construct student object
         const Student = {
             title: info.prefix || '',
             lnameTH: info.lastNameTH || '',
@@ -79,47 +84,39 @@ export async function GET(req,res) {
             fac_name: info.facultyNameTH || '',
             fac_id: info.facultyId || '',
             dept: info.departmentNameTH || '',
-            religion: '', // Default value; modify as needed
-            bd: convertToDate(info.birthdate) || bd, // Default value; modify as needed
+            religion: '',
+            bd: convertToDate(info.birthdate),
             year: info.studentId.substring(info.studentId.length - 2) || '',
             id: info.studentId || ''
         };
 
-
-
-        // check if the student is already in the database
-        const req = await fetch(`${process.env.WEB_URL}/api/profile`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(Student)
-        });
-        const res = await req.json();
-        console.log(res);
-    
-
         const key = new TextEncoder().encode(process.env.JWT_SECRET);
-        const accessToken = await new SignJWT({id: Student.id}).setProtectedHeader({alg: 'HS256'}).setIssuedAt().setIssuer(`${process.env.WEB_URL}`).setExpirationTime(process.env.JWT_TIMEOUT).sign(key);
-         // Set token as a cookie in the response header
-        const response = NextResponse.redirect(`${process.env.WEB_URL}/home`);
+        const accessToken = await new SignJWT({ id: Student.id })
+            .setProtectedHeader({ alg: 'HS256' })
+            .setIssuedAt()
+            .setIssuer(`${process.env.WEB_URL}`)
+            .setExpirationTime(process.env.JWT_TIMEOUT)
+            .sign(key);
 
-         response.headers.set('Set-Cookie', serialize('token', accessToken, {
-            httpOnly: true,
-            sameSite: 'strict',
-            maxAge: process.env.JWT_TIMEOUT,
-         }));
-         return response;
-
-
-
+        await setTOKEN(accessToken).then(() => {console.log('token set')}).catch((err) => {console.log(err)});
         
+        // Set the token as a cookie using NextResponse
+        const response = NextResponse.redirect(`${process.env.WEB_URL}/home`);
+        response.cookies.set('token', accessToken, {
+            httpOnly: false, // Prevent JavaScript access
+            secure: process.env.NODE_ENV === 'production', // Only send over HTTPS in production
+            sameSite: 'none', // Prevents sending with cross-origin requests
+            path: '/', // Available to the entire site
+        });
 
+        await prisma.student.upsert({
+            where: { id: Student.id },
+            update: Student,
+            create: Student
+        });
 
-
-
-
-
+        console.log(`User ${Student.id} logged in`);
+        return response;
     } catch (error) {
         console.error("Error processing callback:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
