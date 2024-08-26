@@ -16,7 +16,7 @@ app.use(express.json());
 
 const createPrakanPdf = async (data) => {
 
-    const pdfPath = path.resolve(__dirname, '/Users/patcharapolsohheng/sa-frontend/backend/models/prakanform.pdf');
+    const pdfPath = path.resolve(__dirname, '/Users/patcharapolsohheng/sa-frontend/backend/models/prakanform1.pdf');
     console.log(pdfPath);
     const existingPdfBytes = fs.readFileSync(pdfPath);
     const pdfDoc = await PDFDocument.load(existingPdfBytes)

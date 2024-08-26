@@ -100,7 +100,7 @@ export default function Form() {
   };
   const handleChangeMedicalFeeText = (event) => {
     console.log(event.target.value);
-    setPrakanData({ ...prakanData, medicalFeeText: (event.target.value) + ' บาท' });
+    setPrakanData({ ...prakanData, medicalFeeText: (event.target.value) + 'บาท' });
   };
 
   const handleSubmit = (event) => {
@@ -253,7 +253,7 @@ export default function Form() {
                 </div>
                 <div>
                 <label>
-                    ชื่อสถานพยาบาลที่เข้ารับการรักษา (Place of treatment(s)) :
+                    ชื่อสถานพยาบาลที่เข้ารับการรักษา (Place of Treatment) :
                     <input
                       type="text"
                       name="phone"
@@ -302,17 +302,6 @@ export default function Form() {
                       type="text"
                       name="id"
                       onChange={handleChangePlaceAcc}
-                      className="ml-2 border border-solid rounded-md border-gray-800"
-                    />
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    เลขบัญชีธนาคารนิสิต (Bank account number) :
-                    <input
-                      type="text"
-                      value={accountNumber}
-                      onChange={handleChangeAcc}
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>

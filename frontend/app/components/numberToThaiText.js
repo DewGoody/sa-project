@@ -18,7 +18,21 @@ function numberToThaiText(num) {
     if (num === 0) return thaiNumbers[0];
 
     let result = '';
-    const numStr = num.toString();
+    let [integerPart, fractionPart] = num.toString().split('.');
+
+    result += convertIntegerToThaiText(integerPart);
+
+    if (fractionPart && parseInt(fractionPart) !== 0) {
+        result += 'บาท' + convertFractionToThaiText(fractionPart);
+    } else {
+        result += 'บาทถ้วน';
+    }
+
+    return result;
+}
+
+function convertIntegerToThaiText(numStr) {
+    let result = '';
     const len = numStr.length;
 
     for (let i = 0; i < len; i++) {
@@ -28,23 +42,50 @@ function numberToThaiText(num) {
         if (digit === 0) continue;
 
         if (placeValue === 1 && digit === 1) {
-            // Special case for numbers in the 'สิบ' range
             result += 'สิบ';
         } else if (placeValue === 1 && digit === 2) {
-            // Special case for numbers like 'ยี่สิบ'
             result += 'ยี่สิบ';
+        } else if (placeValue === 1 && digit === 0) {
+            // Skip 'zero' in the tens place
+            continue;
         } else {
             result += thaiNumbers[digit];
             result += thaiUnits[placeValue % 6];
         }
 
-        if (placeValue === 0 && digit === 1 && len > 1) {
-            // Special case for 'เอ็ด' in numbers like 21, 31, etc.
+        if (placeValue === 0 && digit === 1 && len > 1 && result[result.length - 1] !== 'สิบ') {
             result = result.slice(0, -thaiNumbers[1].length) + 'เอ็ด';
         }
     }
 
     return result;
+}
+
+function convertFractionToThaiText(fractionStr) {
+    let result = '';
+    const len = fractionStr.length;
+
+    for (let i = 0; i < len; i++) {
+        const digit = parseInt(fractionStr[i]);
+        const placeValue = len - i - 1;
+
+        if (digit === 0) continue;
+
+        if (placeValue === 1 && digit === 1) {
+            result += 'สิบ';
+        } else if (placeValue === 1 && digit === 2) {
+            result += 'ยี่สิบ';
+        } else {
+            result += thaiNumbers[digit];
+            if (placeValue > 0) result += thaiUnits[placeValue % 6];
+        }
+
+        if (placeValue === 0 && digit === 1 && len > 1 && result[result.length - 1] !== 'สิบ') {
+            result = result.slice(0, -thaiNumbers[1].length) + 'เอ็ด';
+        }
+    }
+
+    return result + 'สตางค์';
 }
 
 export default numberToThaiText;
