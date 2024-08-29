@@ -12,7 +12,7 @@ const Header = () => {
             
         />
         </div>
-        <div className='ml-12'>
+        <div className='ml-12 rounded-md'>
           <h1 className="font-bold text-2xl text-gray-800">ฝ่ายทุนการศึกษาและบริการนิสิต สำนักบริหารกิจการนิสิต จุฬาลงกรณ์มหาวิทยาลัย</h1>
           <h1 className="texl-ms text-gray-800">Departmet of Schorships & Students Service. Office of the Student Affairs. Chulalongkorn University</h1>
           <h1 className="font-bold text-2xl text-gray-800"> แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ</h1>

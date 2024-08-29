@@ -16,7 +16,7 @@ app.use(express.json());
 
 const createPrakanPdf = async (data) => {
 
-    const pdfPath = path.resolve(__dirname, '/Users/patcharapolsohheng/sa-frontend/backend/models/prakanform1.pdf');
+    const pdfPath = path.resolve(__dirname, '/Users/patcharapolsohheng/sa-frontend/backend/models/prakanform.pdf');
     console.log(pdfPath);
     const existingPdfBytes = fs.readFileSync(pdfPath);
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -27,6 +27,15 @@ const createPrakanPdf = async (data) => {
     const pages = pdfDoc.getPages()
     const firstPage = pages[0]
     const { width, height } = firstPage.getSize()
+    const convertDateFormat = (dateString) => {
+        // Split the input date string by the hyphen (-) to get year, month, and day
+        const [year, month, day] = dateString.split('-');
+        
+        // Return the date in the desired format
+        return `${day}/${month}/${year}`;
+      };
+    const dataDateAcc = convertDateFormat(data.dateAcc)
+
     firstPage.drawText(data.firstNameTH + ' ' + data.lastNameTH, {
         x: 204,
         y: height-223.3,
@@ -76,7 +85,7 @@ const createPrakanPdf = async (data) => {
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.dateAcc, {
+    firstPage.drawText(dataDateAcc, {
         x: 206,
         y: height-397.3,
         size: 14,   
@@ -105,14 +114,7 @@ const createPrakanPdf = async (data) => {
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.bankAcc, {
-        x: 255,
-        y: height-500.4,
-        size: 14,   
-        font: thSarabunFont,
-        color: rgb(0, 0, 0),
-    })
-    firstPage.drawText(data.medicalFeeNum, {
+    firstPage.drawText(data.medicalFeeNum + ' บาท', {
         x: 143,
         y: height-552.5,
         size: 14,   
@@ -120,9 +122,17 @@ const createPrakanPdf = async (data) => {
         color: rgb(0, 0, 0),
     })
    
-    firstPage.drawText(data.thaiText + " บาท", {
+    firstPage.drawText(data.thaiText, {
         x: 143,
         y: height-578,
+        size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+
+    firstPage.drawText(data.firstNameTH + ' ' + data.lastNameTH, {
+        x: 397,
+        y: height-710,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
@@ -138,7 +148,7 @@ app.post('/api/create', (req, res, next) => {
     console.log(data);
     createPrakanPdf(data)
 
-     db.query("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [data.studentId, data.firstNameTH+' '+data.lastNameTH, data.facultyNameTH, data.phone, data.desAcc, data.emailType, data.desInj, data.dateAcc, data.placeAcc, data.placeTreat, data.typeHos, data.medicalFeeNum, data.bankAcc, data.thaiText],(err, result) => {
+     db.query("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [data.studentId, data.firstNameTH+' '+data.lastNameTH, data.facultyNameTH, data.phone, data.desAcc, data.emailType, data.desInj, data.dateAcc, data.placeAcc, data.placeTreat, data.typeHos, data.medicalFeeNum, data.thaiText],(err, result) => {
         if(err){
             console.log(err);
         }

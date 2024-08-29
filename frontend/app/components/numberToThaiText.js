@@ -1,4 +1,5 @@
 // utils/numberToThaiText.js
+
 const thaiNumbers = {
     0: 'ศูนย์',
     1: 'หนึ่ง',
@@ -18,12 +19,14 @@ function numberToThaiText(num) {
     if (num === 0) return thaiNumbers[0];
 
     let result = '';
-    let [integerPart, fractionPart] = num.toString().split('.');
 
-    result += convertIntegerToThaiText(integerPart);
+    const numStr = num.toFixed(2);  // Ensure two decimal places
+    const [integerPart, decimalPart] = numStr.split('.');
 
-    if (fractionPart && parseInt(fractionPart) !== 0) {
-        result += 'บาท' + convertFractionToThaiText(fractionPart);
+    result += convertToThaiText(parseInt(integerPart));
+
+    if (parseInt(decimalPart) > 0) {
+        result += 'บาท' + convertToThaiText(parseInt(decimalPart)) + 'สตางค์';
     } else {
         result += 'บาทถ้วน';
     }
@@ -31,8 +34,11 @@ function numberToThaiText(num) {
     return result;
 }
 
-function convertIntegerToThaiText(numStr) {
+function convertToThaiText(num) {
+    if (num === 0) return '';
+    
     let result = '';
+    const numStr = num.toString();
     const len = numStr.length;
 
     for (let i = 0; i < len; i++) {
@@ -42,50 +48,23 @@ function convertIntegerToThaiText(numStr) {
         if (digit === 0) continue;
 
         if (placeValue === 1 && digit === 1) {
+            // Special case for numbers in the 'สิบ' range
             result += 'สิบ';
         } else if (placeValue === 1 && digit === 2) {
+            // Special case for numbers like 'ยี่สิบ'
             result += 'ยี่สิบ';
-        } else if (placeValue === 1 && digit === 0) {
-            // Skip 'zero' in the tens place
-            continue;
         } else {
             result += thaiNumbers[digit];
             result += thaiUnits[placeValue % 6];
         }
 
-        if (placeValue === 0 && digit === 1 && len > 1 && result[result.length - 1] !== 'สิบ') {
+        if (placeValue === 0 && digit === 1 && len > 1) {
+            // Special case for 'เอ็ด' in numbers like 21, 31, etc.
             result = result.slice(0, -thaiNumbers[1].length) + 'เอ็ด';
         }
     }
 
     return result;
-}
-
-function convertFractionToThaiText(fractionStr) {
-    let result = '';
-    const len = fractionStr.length;
-
-    for (let i = 0; i < len; i++) {
-        const digit = parseInt(fractionStr[i]);
-        const placeValue = len - i - 1;
-
-        if (digit === 0) continue;
-
-        if (placeValue === 1 && digit === 1) {
-            result += 'สิบ';
-        } else if (placeValue === 1 && digit === 2) {
-            result += 'ยี่สิบ';
-        } else {
-            result += thaiNumbers[digit];
-            if (placeValue > 0) result += thaiUnits[placeValue % 6];
-        }
-
-        if (placeValue === 0 && digit === 1 && len > 1 && result[result.length - 1] !== 'สิบ') {
-            result = result.slice(0, -thaiNumbers[1].length) + 'เอ็ด';
-        }
-    }
-
-    return result + 'สตางค์';
 }
 
 export default numberToThaiText;

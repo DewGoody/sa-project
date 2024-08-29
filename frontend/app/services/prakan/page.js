@@ -12,21 +12,31 @@ export default function Form() {
   const prakanService = new PrakanService();
   const [studentInfo, setStudentInfo] = useState({});
 
-  const [inputNumber, setInputNumber] = useState("");
-  const [thaiText, setThaiText] = useState({});
+  const [inputValue, setInputValue] = useState('');
+    const [thaiText, setThaiText] = useState('');
 
-  const [formattedDate, setFormattedDate] = useState('');
 
 
   const handleChangeThai = (e) => {
-    handleChangeMedicalFeeNum(e);
     const value = e.target.value;
-    if (/^\d*$/.test(value)) {
-      setInputNumber(value);
-      setThaiText({ thaiText: numberToThaiText(parseInt(value)) });
-      console.log(typeof thaiText);
-      console.log(thaiText + 'บาท');
-    }
+        // Allow only numbers and decimal point
+        if (!/^(\d+(\.\d{0,2})?)?$/.test(value)) {
+            return;
+        }
+
+        setInputValue(value);
+
+        // Convert to Thai text only if it's a valid number
+        if (value !== '') {
+            const number = parseFloat(value);
+            const thaiText = numberToThaiText(number);
+            setThaiText(thaiText);
+            setPrakanData({ ...prakanData, thaiText: thaiText , medicalFeeNum: value});
+            console.log(thaiText);
+        } else {
+            setThaiText('');
+            console.log(thaiText);
+        }
   };
 
   useEffect(() => {
@@ -73,10 +83,8 @@ export default function Form() {
   const handleChangeDateAcc = (event) => {
     // console.log(event.target.value);
     // const dateValue = event.target.value; // YYYY-MM-DD format
-    const [year, month, day] = (event.target.value).split('-');
-    setFormattedDate(`${day}/${month}/${year}`);
-    console.log(formattedDate);
-    setPrakanData({ ...prakanData, dateAcc: formattedDate });
+   
+    setPrakanData({ ...prakanData, dateAcc: event.target.value  });
   };
   const handleChangePlaceAcc = (event) => {
     console.log(event.target.value);
@@ -92,15 +100,7 @@ export default function Form() {
   };
   const handleChangeMedicalFeeNum = (event) => {
     console.log(event.target.value);
-    setPrakanData({ ...prakanData, medicalFeeNum: (event.target.value) + ' บาท' });
-  };
-  const handleChangeBankAcc = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, bankAcc: event.target.value });
-  };
-  const handleChangeMedicalFeeText = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, medicalFeeText: (event.target.value) + 'บาท' });
+    setPrakanData({ ...prakanData, medicalFeeNum: (event.target.value)});
   };
 
   const handleSubmit = (event) => {
@@ -109,38 +109,11 @@ export default function Form() {
     console.log(allData);
     prakanService.createPrakanForm(allData);
   };
-  const [accountNumber, setAccountNumber] = useState('');
-
-  const formatAccountNumber = (value) => {
-    // Remove all non-numeric characters
-    const numericValue = value.replace(/\D/g, '');
-
-    // Format the number according to the pattern "101-2-23456-1"
-    const part1 = numericValue.slice(0, 3);
-    const part2 = numericValue.slice(3, 4);
-    const part3 = numericValue.slice(4, 9);
-    const part4 = numericValue.slice(9, 10);
-
-    let formattedValue = part1;
-    if (part2) formattedValue += `-${part2}`;
-    if (part3) formattedValue += `-${part3}`;
-    if (part4) formattedValue += `-${part4}`;
-
-    return formattedValue;
-  };
-
-  const handleChangeAcc = (e) => {
-    const { value } = e.target;
-    if (/^\d*$/.test(value.replace(/-/g, ''))) {
-      setAccountNumber(formatAccountNumber(value));
-      setPrakanData({ ...prakanData, bankAcc: formatAccountNumber(value) });
-    }
-  };
 
   return (
     <div className=" bg-white min-h-screen">
       <Header />
-      <div className=" mx-24">
+      <div className=" mx-24 ">
         <main className="flex justify-center bg-white w-full">
           <div className="bg-white  w-full min-w-screen-6xl">
             <h3 className="text-md font-semibold mt-8 ml-3">
@@ -239,6 +212,9 @@ export default function Form() {
                     /> */}
                     <textarea className="ml-2 border border-solid rounded-md border-black" cols="32" rows="2" onChange={handleChangeDesInj}></textarea>
                   </label>
+                  <div className="text text-sm text-red-600 mt-2">
+                  * โปรดระบุตามใบรับรองแพทย์ (Please specify according to the doctor's certificate)
+                  </div>
                 </div>
                 <div>
                 <label>
@@ -250,6 +226,9 @@ export default function Form() {
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>
+                  <div className="text text-sm text-red-600 mt-2">
+                  * โปรดระบุตามใบรับรองแพทย์ (Please specify according to the doctor's certificate)
+                  </div>
                 </div>
                 <div>
                 <label>
@@ -262,6 +241,7 @@ export default function Form() {
                     />
                   </label>
                 </div>
+                
                 <div className="flex">
                 <label>
                     ประเภทสถานพยาบาล (Type of Hospital) :
@@ -275,11 +255,11 @@ export default function Form() {
                       
                     >
                       <option value="เลือกประเภทสถานพยาบาล" disabled>
-                        เลือกประเภทสถานพยาบาล
+                        เลือกประเภท (Select type)
                        </option>
-                      <option value="โรงพยาบาลรัฐ" className="text-gray-800">โรงพยาบาลรัฐ</option>
-                      <option value="โรงพยาบาลเอกชน">โรงพยาบาลเอกชน</option>
-                      <option value="คลินิก">คลินิก</option>
+                      <option value="โรงพยาบาลรัฐ" className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>
+                      <option value="โรงพยาบาลเอกชน">โรงพยาบาลเอกชน (private hospital)</option>
+                      <option value="คลินิก">คลินิก (clinic)</option>
                     </select>
                   </div>
                 </div>
@@ -288,10 +268,8 @@ export default function Form() {
                     วันที่เกิดอุบัติเหตุ (Date of accident) :
                     <input
                       type="date"
-                      name="faculty"
                       onChange={handleChangeDateAcc}
                       className="ml-2 border border-solid rounded-md border-gray-800"
-                      defaultValue={formattedDate}
                     />
                   </label>
                 </div>
@@ -323,7 +301,6 @@ export default function Form() {
                     ตัวเลข (in numbers) :
                     <input
                       type="num"
-                      name="name"
                       onChange={handleChangeThai}
                       className="ml-2 w-fit border border-solid  rounded-md border-gray-800"
                     />
