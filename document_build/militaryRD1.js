@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { PDFDocument, rgb } = require('pdf-lib');
-const fontPath  = path.resolve(process.cwd(), 'public/fonts/THSarabunNew/THSarabunNew.ttf');
+const fontPath = path.resolve(process.cwd(), 'public/fonts/THSarabunNew/THSarabunNew.ttf');
 const fontkit = require('fontkit');
 // Read font file
 let font;
@@ -30,6 +30,7 @@ try {
 }
 
 async function militaryRD1(data) {
+  console.log(data);
   const {
     student,
     military_course,
@@ -40,8 +41,6 @@ async function militaryRD1(data) {
     mother_info,
     mf_occupation,
   } = data;
-
-  console.log(data);
 
 
 
@@ -68,7 +67,7 @@ async function militaryRD1(data) {
   // Draw a string of text on the first page
   // Date setion
   let currentDate = new Date();
-  let thaidatenum ='';
+  let thaidatenum = '';
   for (let i = 0; i < currentDate.getDate().toString().length; i++) {
     thaidatenum += thaiDigits[currentDate.getDate().toString()[i]];
   }
@@ -159,23 +158,27 @@ async function militaryRD1(data) {
   })
 
   // next row
-  const father_name = `${father_info?.fname || ''} ${father_info?.fname || ''}`;
-  firstPage.drawText(father_name, {
-    x: 200,
-    y: height - 166,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (father_info) {
+    const father_name = `${father_info?.fname || ''} ${father_info?.lname || ''}`;
+    firstPage.drawText(father_name, {
+      x: 200,
+      y: height - 166,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
-  const mother_name = `${father_info.fname || ''} ${father_info.lname || ''}`;
-  firstPage.drawText(mother_name, {
-    x: 330,
-    y: height - 166,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (mother_info) {
+    const mother_name = `${mother_info.fname || ''} ${mother_info.lname || ''}`;
+    firstPage.drawText(mother_name, {
+      x: 330,
+      y: height - 166,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   const mf_occupation_text = mf_occupation || '';
   firstPage.drawText(mf_occupation_text, {
@@ -189,7 +192,7 @@ async function militaryRD1(data) {
   // next row
   // DOPA address
 
-  const DOPA_house_num = `${DOPA_address?.house_num || ''} ${DOPA_address?.house_moo ? "ม.": ""}${DOPA_address?.house_moo || ''}`;
+  const DOPA_house_num = `${DOPA_address?.house_num || ''} ${DOPA_address?.house_moo ? "ม." : ""}${DOPA_address?.house_moo || ''}`;
   firstPage.drawText(DOPA_house_num, {
     x: 255,
     y: height - 189,
@@ -246,7 +249,7 @@ async function militaryRD1(data) {
 
   // next row
   // military address
-  const military_house_num = `${military_address?.house_num || ''} ${military_address?.house_moo ? "ม.": ""}${military_address?.house_moo || ''}`;
+  const military_house_num = `${military_address?.house_num || ''} ${military_address?.house_moo ? "ม." : ""}${military_address?.house_moo || ''}`;
   firstPage.drawText(military_house_num, {
     x: 250,
     y: height - 230,
@@ -283,7 +286,8 @@ async function militaryRD1(data) {
   });
 
   // next row
-  const grade9_gpax = military_course?.grade9_gpax || '';
+  
+  const grade9_gpax = String(military_course?.grade9_gpax) || '';
   firstPage.drawText(grade9_gpax, {
     x: 285,
     y: height - 250,

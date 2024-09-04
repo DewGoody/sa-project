@@ -6,104 +6,78 @@ import { getID, getIDbyToken } from "../../../lib/session"
 const prisma = new PrismaClient()
 
 export async function GET(req, res) {
-    try{
-    // read cookie header
-    const cookie = req.headers.get('cookie') || '';
-    const id =  await getID(req) || getIDbyToken(cookie)
-    if (!id) {
-        return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
-    }
+    try {
+        // read cookie header
+        const cookie = req.headers.get('cookie') || '';
+        const id =  await getID(req) || getIDbyToken(cookie)
+        if (!id) {
+            return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
+        }
 
-    let data = {
-        student: null,
-        reserver_info: null,
-        training_record: null,
-        military_course: null,
-        DOPA_address: null,
-        military_address: null,
-        parent_info: null,
-        father_info: null,
-        mother_info: null,
-        mf_occupation: '',
-    }
+        // Fetch all related data in a single query
+        const studentData = await prisma.Student.findFirst({
+            where: { id },
+            include: {
+                reserve_info: true,
+                training_record: true,
+                military_course: true,
+                Address: true,
+                father_mother_info: true,
+                parent_info: true,
+            }
+        });
 
-    const student = await prisma.Student.findFirst({
-        where: {
-            id: id
-        }
-    })
-    if (student) {
-        data.student = {
-            title: student.title || '',
-            fnameTH: student.fnameTH || '',
-            lnameTH: student.lnameTH || '',
-            thai_id: student.thai_id || '',
-            race: student.race || '',
-            nationality: student.nationality || '',
-            religion: student.religion || '',
-            bd: student.bd || '',
-            thai_id: student.thai_id || '',
-        }
-    }
+        console.log("STUDENT", studentData);
 
-    const reserver_info = await prisma.reserve_info.findFirst({
-        where: {
-            id: id
+        if (!studentData) {
+            return NextResponse.json({ error: "Student not found" }, { status: 404 });
         }
-    })
 
-    const training_record = await prisma.training_record.findFirst({
-        where: {
-            id: id
-        }
-    })
-    const military_course = await prisma.military_course.findFirst({
-        where: {
-            id: id
-        }
-    })
-    data.reserver_info = reserver_info
-    data.training_record = training_record
-    data.military_course = military_course
+        const data = {
+            student: {
+                title: studentData.title || '',
+                fnameTH: studentData.fnameTH || '',
+                lnameTH: studentData.lnameTH || '',
+                thai_id: studentData.thai_id || '',
+                race: studentData.race || '',
+                nationality: studentData.nationality || '',
+                religion: studentData.religion || '',
+                bd: studentData.bd || '',
+            },
+            reserver_info: studentData.reserve_info || null,
+            training_record: studentData.training_record || null,
+            military_course: studentData.military_course || null,
+            DOPA_address: null,
+            military_address: null,
+            parent_info: studentData.parent_info || null,
+            father_info: null,
+            mother_info: null,
+            mf_occupation: '',
+        };
 
-    const address = await prisma.Address.findMany({
-        where: {
-            id: id
-        }
-    })
-    address.forEach(i => {
-        if (i.address_type == "DOPA_address") {
-            data.DOPA_address = i
-        } else if (i.address_type == "Military_address") {
-            data.military_address = i
-        }
-    }
-    )
-    const father_mother_info = await prisma.father_mother_info.findMany({
-        where: {
-            id: id,
-        }
-    })
-    console.log(father_mother_info);
-    data.father_info = father_mother_info.find(i => i.relation == "father")
-    data.mother_info = father_mother_info.find(i => i.relation == "mother")
+        // Handle addresses
+        studentData.Address.forEach(i => {
+            if (i.address_type == "DOPA_address") {
+                data.DOPA_address = i
+            } else if (i.address_type == "Military_address") {
+                data.military_address = i
+            }
+        });
 
-    data.mf_occupation = data.father_info?.mf_occupation || data.mother_info?.mf_occupation || ''
+        // Handle father and mother info
+        data.father_info = studentData.father_mother_info.find(i => i.relation == "father") || null;
+        data.mother_info = studentData.father_mother_info.find(i => i.relation == "mother") || null;
 
-    const parent_info = await prisma.parent_info.findFirst({
-        where: {
-            id: id
-        }
-    })
-    data.parent_info = parent_info
-    console.log("RD",data)
-    return NextResponse.json(data)
-    }
-    catch (error) {
-        console.log(error)
-        return NextResponse.message({ error: "An error occurred while fetching the profile" }, { status: 500 })
+        data.mf_occupation = data.father_info?.mf_occupation || data.mother_info?.mf_occupation || '';
+
+        console.log("RD", data);
+        return NextResponse.json(data);
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json({ error: "An error occurred while fetching the profile" }, { status: 500 });
     }
 }
+
 
 export async function PUT(req, res) {
     
