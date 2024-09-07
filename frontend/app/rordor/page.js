@@ -1,154 +1,48 @@
-// pages/military-form.js
 import React from 'react';
-import header from '../components/header/page.js';
+import { Header } from '../components/Header';
 
-export default function MilitaryForm() {
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <header />
-      <main className="flex justify-center items-center py-10">
-        <div className="bg-white p-8 rounded shadow-md w-full max-w-4xl">
-          <form className="space-y-6">
-            <section>
-              <h3 className="text-md font-semibold mb-2">Personal & Contact Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-700">Name-Surname</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Name-Surname"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Faculty</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Faculty"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Student ID</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Student ID"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Date of Birth</label>
-                  <input
-                    type="date"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Department</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Department"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Phone Number</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Phone Number"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Current Address</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Current Address"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Email"
-                  />
-                </div>
-              </div>
-            </section>
+const RD = () => {
+    return (
+        <div className="min-h-screen bg-white">
+            <Header req1="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" req2="" />
+            <main className="flex justify-center items-center ">
+                <div className="bg-white p-8  w-full max-w-4xl">
 
-            <section>
-              <h3 className="text-md font-semibold mb-2">Military Domicile</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-700">Military domicile number</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Military domicile number"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Village (Province)</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Village (Province)"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Sena Service Rank</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Sena Service Rank"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Type of Military</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Type of Military"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">District</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="District"
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-700">Address</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Address"
-                  />
-                </div>
-              </div>
-            </section>
+                    {/* Personal & Contact Information Section */}
+                    <section>
+                        <h3 className="text-lg font-semibold mb-4 text-center">
+                            เลือกชั้นปี (Choose Year)
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="flex justify-center">
+                                <a href="/rordor/checkData">
+                                    <button className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300">
+                                        การสมัครเป็น นศท. ปี 1 (ผู้ไม่เคยศึกษาวิชาทหาร) (Application for first-year territorial defense student (never studied military science))
+                                    </button>
+                                </a>
+                            </div>
+                            <div className="flex justify-center">
+                                <a href="/rordor/checkData2">
+                                    <button className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300">
+                                        การรายงานตัว นศท. ปี 2 เป็นต้นไป (Enrollment for territorial defense students year 2 and beyond)
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
 
-            <div className="flex justify-between mt-6">
-              <button
-                type="submit"
-                className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-500"
-              >
-                Save Draft
-              </button>
-              <button
-                type="submit"
-                className="bg-pink-500 text-white py-2 px-4 rounded hover:bg-pink-600"
-              >
-                Submit
-              </button>
-            </div>
-          </form>
+                    {/* Navigation Buttons */}
+                    <div className="flex justify-between mt-8">
+                        <a href="/home">
+                            <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                หน้าก่อนหน้า
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </main>
         </div>
-      </main>
-    </div>
-  );
+    );
 }
+
+export default RD;
