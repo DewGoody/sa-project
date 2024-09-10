@@ -2,8 +2,8 @@
 
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
-import { militaryRD1 } from '@/document_build/militaryRD1'
-import { getID } from '@/lib/session'
+import { militaryRD1 } from '../../../../document_build/militaryRD1'
+import { getID } from '../../../../lib/session'
 const prisma = new PrismaClient()
 const axios = require('axios');
 
