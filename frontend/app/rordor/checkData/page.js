@@ -145,22 +145,20 @@ const CheckData = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
         const id = formData.id
         console.log(id)
         try {
             notifyinprocess()
             await axios.put(`/api/profile`, {
-                title: formData.Nametitle,
                 fnameTH: formData.Name,
                 lnameTH: formData.Surname,
                 fnameEN: formData.fnameEN || "", // Ensure fnameEN is provided
                 lnameEN: formData.lnameEN || "",
                 fac_id: '',
+                title: formData.Nametitle,
                 fac_name: '',
                 dept: '',
                 tel_num: '',
-                title: '',
                 year: '',
                 tel_num: '',
                 thai_id: formData.citizenId,
@@ -181,6 +179,8 @@ const CheckData = () => {
                 DOPA_address: {
                     id: id,
                     address_type: "DOPA_address",
+                    house_num:formData.domicileNumber,
+                    street:formData.road,
                     district: formData.amphure,
                     province: formData.province,
                     postal_code: parseInt(formData.zipCode),
@@ -205,14 +205,13 @@ const CheckData = () => {
                     parent_relation: formData.Parentrelated,
                     parent_address: formData.ParentworkAddress
                 },
-                father_into: {
+                father_info: {
                     id: id,
-
                     relation: "father",
                     fname: formData.fatherName,
-                    fname: formData.fatherSurname,
+                    lname: formData.fatherSurname,
                 },
-                mother_into: {
+                mother_info: {
                     id: id,
                     relation: "mother",
                     fname: formData.motherName,
@@ -227,7 +226,6 @@ const CheckData = () => {
             notifyerror()
             console.log(formData)
             console.error('Form submission error:', error);
-            router.push("/rordor/Doc")
 
 
         }
