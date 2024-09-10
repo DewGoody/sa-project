@@ -28,10 +28,11 @@ export default async function middleware(req: NextRequest) {
 
   try {
     const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET));
-    const currentTime = Math.floor(Date.now() / 1000);
+    const currentTime = Math.floor(Date.now()/ 1000);
     const expTime = payload.exp;
 
     // Check if the token is already expired
+    console.log('Time left:', expTime - currentTime);
     if (expTime <= currentTime) {
       console.log('Token has expired, redirecting to login');
       return NextResponse.redirect(`https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv`);
@@ -39,6 +40,7 @@ export default async function middleware(req: NextRequest) {
 
     // Check if the token needs to be refreshed
     const timeRemaining = expTime - currentTime;
+    console.log(timeRemaining)
     if (timeRemaining < JWT_REFRESH) {
       console.log('Token is close to expiration, refreshing');
       const newToken = await new SignJWT({ id: payload.id })

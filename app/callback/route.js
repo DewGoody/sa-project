@@ -44,18 +44,18 @@ async function handler(token) {
     }
 }
 
-async function setTOKEN(token) {
-    const cookieStore = cookies()
-    cookieStore.set('token', token, {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Strict',
-        path: '/'
+// async function setTOKEN(token) {
+//     const cookieStore = cookies()
+//     cookieStore.set('token', token, {
+//         httpOnly: false,
+//         secure: process.env.NODE_ENV === 'production',
+//         sameSite: 'Strict',
+//         path: '/'
         
-    })
-    // refresh the web and set the new token but not redirect 
+//     })
+//     // refresh the web and set the new token but not redirect 
 
-}
+// }
 
 export async function GET(req) {
     const url = new URL(req.url);
@@ -98,14 +98,14 @@ export async function GET(req) {
             .setExpirationTime(process.env.JWT_TIMEOUT)
             .sign(key);
 
-        await setTOKEN(accessToken).then(() => {console.log('token set')}).catch((err) => {console.log(err)});
+        // await setTOKEN(accessToken).then(() => {console.log('token set')}).catch((err) => {console.log(err)});
         
         // Set the token as a cookie using NextResponse
         const response = NextResponse.redirect(`${process.env.WEB_URL}/home`);
         response.cookies.set('token', accessToken, {
-            httpOnly: false, // Prevent JavaScript access
-            secure: process.env.NODE_ENV === 'production', // Only send over HTTPS in production
-            sameSite: 'none', // Prevents sending with cross-origin requests
+            httpOnly: true, // Prevent JavaScript access
+            // secure: process.env.NODE_ENV === 'production', // Only send over HTTPS in production
+            // sameSite: 'none', // Prevents sending with cross-origin requests
             path: '/', // Available to the entire site
         });
 
