@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^5.19.1",
     "axios": "^1.7.2",
     "jspdf": "^2.5.1",
     "next": "14.2.4",
@@ -17,6 +18,7 @@
   },
   "devDependencies": {
     "postcss": "^8",
+    "prisma": "^5.19.1",
     "tailwindcss": "^3.4.1"
   }
 }
