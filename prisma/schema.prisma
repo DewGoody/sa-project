@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Address {
@@ -26,18 +27,16 @@ model Address {
   @@id([id, address_type])
 }
 
-model Address_Desc {
-  type    String    @id
-  desc    String
-  Address Address[]
-}
-
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model District {
-  id          Int    @id(map: "Amphure_pkey") @default(autoincrement())
-  code        String @db.VarChar(4)
-  name_th     String @db.VarChar(150)
-  name_en     String @db.VarChar(150)
-  province_id Int    @default(0)
+  id          String?
+  code        String?
+  name_th     String?
+  name_en     String?
+  province_id String?
+
+  @@ignore
 }
 
 model Geography {
@@ -57,10 +56,10 @@ model Student {
   id                 Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
   lnameTH            String
   fnameTH            String
-  lnameEN            String?
-  fnameEN            String?
+  lnameEN            String
+  fnameEN            String
   fac_id             String
-  fac_name           String
+  facultyNameTH      String
   dept               String
   year               String
   bd                 DateTime             @db.Date
@@ -71,6 +70,7 @@ model Student {
   race               String?
   religion           String?              @db.VarChar
   thai_id            String?
+  facultyNameEN      String?
   Address            Address[]
   UHC_reg_info       UHC_reg_info?
   accident_info      accident_info[]
@@ -83,12 +83,13 @@ model Student {
   training_record    training_record[]
 }
 
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Subdistrict {
-  id        String @id(map: "District_pkey") @db.VarChar(6)
-  zipCode   Int
-  nameTh    String @db.VarChar(150)
-  nameEn    String @db.VarChar(150)
-  amphureId Int    @default(0)
+  id        String  @id @db.VarChar
+  zipCode   BigInt?
+  nameTh    String? @db.VarChar
+  nameEn    String? @db.VarChar
+  amphureId BigInt?
 }
 
 model UHC_reg_info {
@@ -169,7 +170,7 @@ model father_mother_info {
   working_place String?
   phone_num     String?
   tel_num       String?
-  mf_occupation String?
+  occupation    String?
   Student       Student  @relation(fields: [id], references: [id], onDelete: Cascade)
 
   @@id([id, relation])
@@ -195,7 +196,6 @@ model parent_info {
   occupation      String?
   age             Int?
   parent_relation String?
-  parent_address  String?
   id              Decimal @id @db.Decimal
   title           String?
   Student         Student @relation(fields: [id], references: [id], onDelete: Cascade)
@@ -228,4 +228,10 @@ model training_record {
   Student    Student  @relation(fields: [id], references: [id], onDelete: Cascade)
 
   @@id([id, year])
+}
+
+model Address_Desc {
+  type    String    @id
+  desc    String
+  Address Address[]
 }

@@ -103,23 +103,6 @@ export async function PUT(req, res) {
             });
         }
 
-        if (body.partial_info) {
-            // fillter Id out
-            let partial_info = body.partial_info;
-            delete partial_info.id;
-            const partial_info_1 = await prisma.partial_info.upsert({
-            where: {
-                id: id,
-            },
-            update: {
-                ...body.partial_info,
-            },
-            create: {
-                ...body.partial_info,
-                id: id,
-            },
-            });
-        }
 
         if (body.reserve_info) {
             const reserve_info = await prisma.reserve_info.upsert({
@@ -135,19 +118,26 @@ export async function PUT(req, res) {
             });
         }
 
-        if (body.training_record) {
-            const training_record = await prisma.training_record.upsert({
-                where: {
-                    id: id,
-                },
-                update: {
-                    ...body.training_record,
-                },
-                create: {
-                    ...body.training_record,
-                },
-            });
+        if (body.training_record && body.training_record.length > 0) {
+            for (const record of body.training_record) {
+                await prisma.training_record.upsert({
+                    where: {
+                        id_year: { // Use compound unique constraint
+                            id: id,
+                            year: record.year, // Assuming `year` is part of the unique key
+                        },
+                    },
+                    update: {
+                        ...record, // Update fields in `training_record`
+                    },
+                    create: {
+                        ...record, // Create new `training_record`
+                        id: id,
+                    },
+                });
+            }
         }
+        
 
         if (body.military_course) {
             const military_course = await prisma.military_course.upsert({
@@ -165,6 +155,7 @@ export async function PUT(req, res) {
 
         console.log(body.DOPA_address);
         if (body.DOPA_address) {
+
             await prisma.Address.upsert({
                 where: {
                     id_address_type: {
@@ -176,7 +167,6 @@ export async function PUT(req, res) {
                     ...body.DOPA_address,
                 },
                 create: {
-                    id: id,
                     address_type: body.DOPA_address.address_type,
                     ...body.DOPA_address,
                 },
@@ -221,49 +211,59 @@ export async function PUT(req, res) {
             });
         }
         // BUG:
+        console.log(body.father_info);
         if (body.father_info) {
             let father_info = body.father_info;
             delete father_info.id;
-            const _father_info = await prisma.father_mother_info.upsert({
+        
+            await prisma.father_mother_info.upsert({
                 where: {
                     id_relation: {
-                        id: id,
-                        relation: "father",
+                        id: id,  // Student ID
+                        relation: "father",  // Parent relation
                     },
                 },
                 update: {
-                    ...body.father_info,
+                    ...father_info,  // Update with new data
                 },
                 create: {
-                    ...body.father_info,
+                    relation: "father",  // Parent relation
+                    ...father_info,  // Create if it doesn't exist
+                    
+                    
                     Student: {
                         connect: { id: id }
                     }
                 },
             });
         }
-
+        
+        
         if (body.mother_info) {
             let mother_info = body.mother_info;
             delete mother_info.id;
+        
             const _mother_info = await prisma.father_mother_info.upsert({
                 where: {
                     id_relation: {
-                        id: id,
-                        relation: "mother",
+                        id: id, // Unique student ID
+                        relation: "mother", // The relation to the student
                     },
                 },
                 update: {
-                    ...body.mother_info,
+                    ...mother_info, // Update with new data
                 },
                 create: {
-                    ...body.mother_info,
+                    ...mother_info, // Create if it doesn't exist
+                    relation: "mother", // Parent relation
                     Student: {
                         connect: { id: id }
-                    },
+                    }
                 },
             });
         }
+        
+        
 
         return NextResponse.json({ message: "Profile updated successfully" });
 
