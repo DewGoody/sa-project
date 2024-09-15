@@ -130,7 +130,7 @@ const createPrakanPdf = async (data) => {
         color: rgb(0, 0, 0),
     })
 
-    firstPage.drawText(data.firstNameTH + ' ' + data.lastNameTH, {
+    firstPage.drawText("( "+data.firstNameTH + ' ' + data.lastNameTH+" )", {
         x: 397,
         y: height-710,
         size: 14,   

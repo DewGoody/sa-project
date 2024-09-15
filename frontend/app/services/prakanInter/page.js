@@ -8,116 +8,32 @@ import PrakanService from "../../../api/prakanService/prakanService.js";
 import numberToThaiText from "../../components/numberToThaiText.js";
 
 export default function Form() {
-  const [prakanData, setPrakanData] = useState({});
-  const prakanService = new PrakanService();
-  const [studentInfo, setStudentInfo] = useState({});
-
-  const [inputValue, setInputValue] = useState('');
-    const [thaiText, setThaiText] = useState('');
-
-
-
-  const handleChangeThai = (e) => {
-    const value = e.target.value;
-        // Allow only numbers and decimal point
-        if (!/^(\d+(\.\d{0,2})?)?$/.test(value)) {
-            return;
-        }
-
-        setInputValue(value);
-
-        // Convert to Thai text only if it's a valid number
-        if (value !== '') {
-            const number = parseFloat(value);
-            const thaiText = numberToThaiText(number);
-            setThaiText(thaiText);
-            setPrakanData({ ...prakanData, thaiText: thaiText , medicalFeeNum: value});
-            console.log(thaiText);
-        } else {
-            setThaiText('');
-            console.log(thaiText);
-        }
-  };
-
-  useEffect(() => {
-    let tokens = localStorage.getItem("token");
-    const params = {
-      token: tokens,
-    };
-    prakanService.cunex(params).then((response) => {
-      setStudentInfo(response);
-      console.log(response);
-    });
-  }, []);
-
-  const handleChangeName = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, name: event.target.value });
-  };
-
-  const handleChangeId = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, id: event.target.value });
-  };
-
-  const handleChangePhone = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, phone: event.target.value });
-  };
-  const handleChangeFaculty = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, faculty: event.target.value });
-  };
-  const handleChangeDesAcc = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, desAcc: event.target.value });
-  };
-  const handleChangeEmail = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, emailType: event.target.value });
-  };
-  const handleChangeDesInj = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, desInj: event.target.value });
-  };
-  const handleChangeDateAcc = (event) => {
-    // console.log(event.target.value);
-    // const dateValue = event.target.value; // YYYY-MM-DD format
-   
-    setPrakanData({ ...prakanData, dateAcc: event.target.value  });
-  };
-  const handleChangePlaceAcc = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, placeAcc: event.target.value });
-  };
-  const handleChangePlaceTreat = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, placeTreat: event.target.value });
-  };
-  const handleChangeTypeHos = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, typeHos: event.target.value });
-  };
-  const handleChangeMedicalFeeNum = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, medicalFeeNum: (event.target.value)});
-  };
-
-  const handleSubmit = (event) => {
-    let allData = { ...prakanData, ...studentInfo, ...thaiText };
-    console.log(prakanData);
-    console.log(allData);
-    prakanService.createPrakanForm(allData);
-  };
 
   return (
     <div className=" bg-white min-h-screen">
-      <Header />
+      <header className="bg-gray-100 p-8">
+      <div className='flex justify-start'>
+        <div>
+        <img src="https://www.car.chula.ac.th/carweb2/images/chula_logo.png" alt="profile" 
+            className=" h-26 w-16 mx-auto " 
+            
+        />
+        </div>
+        <div className='ml-12 rounded-md'>
+          <h1 className="font-bold text-2xl text-gray-800">ฝ่ายทุนการศึกษาและบริการนิสิต สำนักบริหารกิจการนิสิต จุฬาลงกรณ์มหาวิทยาลัย</h1>
+          <h1 className="texl-ms text-gray-800">Departmet of Schorships & Students Service. Office of the Student Affairs. Chulalongkorn University</h1>
+          <h1 className="font-bold text-2xl text-gray-800"> แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ</h1>
+          <h1 className="text-ms text-gray-800">Accidental Compensation Claim Form</h1>
+        </div>
+      </div>
+    </header>
+    <div className='bg-black h-px '>
+    </div>
       <div className=" mx-24 ">
         <main className="flex justify-center bg-white w-full">
           <div className="bg-white  w-full min-w-screen-6xl">
             <h3 className="text-md font-semibold mt-8 ml-3">
-              ข้อมูลส่วนตัว (Personal & contact information)
+              Personal & Contact Information
             </h3>
             <div>
               <form className="grid grid-cols-2 gap-7 m-6 bg-white">
@@ -127,11 +43,7 @@ export default function Form() {
                     <input
                       type="text"
                       name="name"
-                      onChange={handleChangeName}
                       className="ml-2 w-full border border-solid rounded-md border-gray-800"
-                      value={
-                        studentInfo.firstNameTH + " " + studentInfo.lastNameTH
-                      }
                     />
                   </div>
                 </div>
@@ -141,9 +53,7 @@ export default function Form() {
                     <input
                       type="text"
                       name="id"
-                      onChange={handleChangeId}
                       className="ml-2 border border-solid rounded-md border-gray-800 w-full"
-                      value={studentInfo.studentId}
                     />
                   </div>
                 </div>
@@ -154,9 +64,7 @@ export default function Form() {
                     <input
                       type="text"
                       name="faculty"
-                      onChange={handleChangeFaculty}
                       className="ml-2 border border-solid rounded-md border-gray-800 w-56"
-                      value={studentInfo.facultyNameTH}
                     />
                   </div>
                 </div>
@@ -164,12 +72,11 @@ export default function Form() {
                   
                 </div>
                 <div className="flex">
-                  <label>หมายเลขโทรศัพท์ (Phone number) :</label>
+                  <label>หมายเลขโทรศัพท์ (Phone Number) :</label>
                   <div>
                     <input
                       type="text"
                       name="phone"
-                      onChange={handleChangePhone}
                       className="ml-2 border border-solid rounded-md border-gray-800 w-full"
                     />
                   </div>
@@ -180,7 +87,6 @@ export default function Form() {
                     <input
                       type="email"
                       name="email"
-                      onChange={handleChangeEmail}
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>
@@ -194,7 +100,8 @@ export default function Form() {
           <div className="bg-white   w-full min-w-screen-6xl">
             <h3 className="text-md font-semibold mt-8 ml-3">
               {" "}
-              ข้อมุลการเกิดอุบัติเหตุและการรักษาพาบาล (Accident & treatment details)
+              ข้อมุลการเกิดอุบัติเหตุและการรักษาพาบาล (Accident & Treatment(s)
+              Details)
             </h3>
             <div>
               <form className="grid grid-cols-2  gap-y-12 gap-x-7 m-6 bg-white">
@@ -209,7 +116,7 @@ export default function Form() {
                       onChange={handleChangeDesInj}
                       className="ml-2 w-fit border border-solid rounded-md border-gray-800 "
                     /> */}
-                    <textarea className="ml-2 border border-solid rounded-md border-black" cols="32" rows="2" onChange={handleChangeDesInj}></textarea>
+                    <textarea className="ml-2 border border-solid rounded-md border-black" cols="32" rows="2" ></textarea>
                   </label>
                   <div className="text text-sm text-red-600 mt-2">
                   * โปรดระบุตามใบรับรองแพทย์ (Please specify according to the doctor's certificate)
@@ -221,7 +128,6 @@ export default function Form() {
                     <input
                       type="text"
                       name="faculty"
-                      onChange={handleChangeDesAcc}
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>
@@ -231,11 +137,10 @@ export default function Form() {
                 </div>
                 <div>
                 <label>
-                    ชื่อสถานพยาบาลที่เข้ารับการรักษา (Place of treatment) :
+                    ชื่อสถานพยาบาลที่เข้ารับการรักษา (Place of Treatment) :
                     <input
                       type="text"
                       name="phone"
-                      onChange={handleChangePlaceTreat}
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>
@@ -243,11 +148,10 @@ export default function Form() {
                 
                 <div className="flex">
                 <label>
-                    ประเภทสถานพยาบาล (Type of hospital) :
+                    ประเภทสถานพยาบาล (Type of Hospital) :
                   </label>
                   <div className="ml-2">
                     <select
-                      onChange={handleChangeTypeHos}
                       className="border border-solid rounded-md border-gray-800 text-gray-800 "
                       defaultValue="เลือกประเภทสถานพยาบาล"
                       
@@ -267,7 +171,6 @@ export default function Form() {
                     วันที่เกิดอุบัติเหตุ (Date of accident) :
                     <input
                       type="date"
-                      onChange={handleChangeDateAcc}
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>
@@ -278,7 +181,6 @@ export default function Form() {
                     <input
                       type="text"
                       name="id"
-                      onChange={handleChangePlaceAcc}
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>
@@ -300,7 +202,6 @@ export default function Form() {
                     ตัวเลข (in numbers) :
                     <input
                       type="num"
-                      onChange={handleChangeThai}
                       className="ml-2 w-fit border border-solid  rounded-md border-gray-800"
                     />
                   </label>
@@ -310,9 +211,8 @@ export default function Form() {
           </div>
         </main>
         <div className="flex justify-end">
-          <a href="../services/checkPrakan">
+          <a href="/services/checkPrakan">
           <button
-            onClick={handleSubmit}
             
             className="bg-pink-300 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
           >
