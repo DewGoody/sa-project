@@ -228,7 +228,7 @@ const CheckData = () => {
                 fnameEN: formData.fnameEN || "", // Ensure fnameEN is provided
                 lnameEN: formData.lnameEN || "",
                 fac_id: '',
-                fac_name: '',
+                facultyNameTH: '',
                 dept: '',
                 tel_num: '',
                 title: '',

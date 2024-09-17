@@ -33,15 +33,37 @@ model Address_Desc {
   Address Address[]
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model District {
+  id          BigInt  @id @default(autoincrement())
+  code        String  @db.VarChar
+  name_th     String? @db.VarChar
+  name_en     String? @db.VarChar
+  province_id BigInt?
+}
+
+model Geography {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(255)
+}
+
+model Province {
+  id           Int    @id @default(autoincrement())
+  code         String @db.VarChar(2)
+  name_th      String @db.VarChar(150)
+  name_en      String @db.VarChar(150)
+  geography_id Int    @default(0)
+}
+
 model Student {
   id                 Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
   lnameTH            String
   fnameTH            String
-  lnameEN            String?
-  fnameEN            String?
+  lnameEN            String
+  fnameEN            String
   fac_id             String
-  fac_name           String
+  facultyNameTH      String
   dept               String
   year               String
   bd                 DateTime             @db.Date
@@ -52,6 +74,7 @@ model Student {
   race               String?
   religion           String?              @db.VarChar
   thai_id            String?
+  facultyNameEN      String?
   Address            Address[]
   UHC_reg_info       UHC_reg_info?
   accident_info      accident_info[]
@@ -62,6 +85,15 @@ model Student {
   promoted_record    promoted_record?
   reserve_info       reserve_info?
   training_record    training_record[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Subdistrict {
+  id        String  @id @db.VarChar
+  zipCode   BigInt
+  nameTh    String? @db.VarChar
+  nameEn    String? @db.VarChar
+  amphureId BigInt?
 }
 
 model UHC_reg_info {
@@ -92,18 +124,16 @@ model accident_claim_info {
 }
 
 model accident_info {
-  id                  BigInt    @id @default(autoincrement())
-  created_at          DateTime  @default(now()) @db.Timestamptz(6)
-  stu_id              Decimal?  @db.Decimal
-  acc_desc            String?
-  acc_date            DateTime? @db.Date
-  accident_place      String?
-  treatment_place     String?
-  hospital_type       String?
-  stu_bank_acc_name   DateTime? @db.Time(6)
-  stu_bank_acc_number Int?
-  medical_fee         Int?      @map("medical fee")
-  Student             Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id              BigInt    @id @default(autoincrement())
+  created_at      DateTime  @default(now()) @db.Timestamptz(6)
+  stu_id          Decimal?  @db.Decimal
+  acc_desc        String?
+  acc_date        DateTime? @db.Date
+  accident_place  String?
+  treatment_place String?
+  hospital_type   String?
+  medical_fee     Int?
+  Student         Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model contactable_info {
@@ -142,13 +172,12 @@ model father_mother_info {
   working_place String?
   phone_num     String?
   tel_num       String?
-  mf_occupation String?
+  occupation    String?
   Student       Student  @relation(fields: [id], references: [id], onDelete: Cascade)
 
   @@id([id, relation])
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model military_course {
   id                         Decimal  @id @db.Decimal
   military_id                Decimal? @db.Decimal
@@ -169,9 +198,9 @@ model parent_info {
   occupation      String?
   age             Int?
   parent_relation String?
-  parent_address  String?
   id              Decimal @id @db.Decimal
   title           String?
+  parent_address  String?
   Student         Student @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
@@ -203,33 +232,3 @@ model training_record {
 
   @@id([id, year])
 }
-
-model District {
-  id          Int    @id(map: "Amphure_pkey") @default(autoincrement())
-  code        String @db.VarChar(4)
-  name_th     String @db.VarChar(150)
-  name_en     String @db.VarChar(150)
-  province_id Int    @default(0)
-}
-
-model Geography {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255)
-}
-
-model Province {
-  id           Int    @id @default(autoincrement())
-  code         String @db.VarChar(2)
-  name_th      String @db.VarChar(150)
-  name_en      String @db.VarChar(150)
-  geography_id Int    @default(0)
-}
-
-model Subdistrict {
-  id        String @id(map: "District_pkey") @db.VarChar(6)
-  zipCode   Int
-  nameTh    String @db.VarChar(150)
-  nameEn    String @db.VarChar(150)
-  amphureId Int    @default(0)
-}
-
