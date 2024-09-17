@@ -1,4 +1,5 @@
 // utils/numberToThaiText.js
+
 const thaiNumbers = {
     0: 'ศูนย์',
     1: 'หนึ่ง',
@@ -17,6 +18,25 @@ const thaiUnits = ['', 'สิบ', 'ร้อย', 'พัน', 'หมื่�
 function numberToThaiText(num) {
     if (num === 0) return thaiNumbers[0];
 
+    let result = '';
+
+    const numStr = num.toFixed(2);  // Ensure two decimal places
+    const [integerPart, decimalPart] = numStr.split('.');
+
+    result += convertToThaiText(parseInt(integerPart));
+
+    if (parseInt(decimalPart) > 0) {
+        result += 'บาท' + convertToThaiText(parseInt(decimalPart)) + 'สตางค์';
+    } else {
+        result += 'บาทถ้วน';
+    }
+
+    return result;
+}
+
+function convertToThaiText(num) {
+    if (num === 0) return '';
+    
     let result = '';
     const numStr = num.toString();
     const len = numStr.length;
