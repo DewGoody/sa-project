@@ -2,6 +2,7 @@ const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
 const fontkit = require('fontkit');
+const fontPath = path.resolve(process.cwd(), 'public/fonts/THSarabunNew/THSarabunNew.ttf');
 
 let font
 
@@ -13,25 +14,38 @@ try {
 }
 
 async function prakan(data){
-    const pdfPath = path.resolve(__dirname, '/Users/patcharapolsohheng/sa-frontend/backend/models/prakanform.pdf');
+    console.log(data);
+    
+
+    const pdfPath = path.resolve(process.cwd(), 'public/documents/accident/prakanform.pdf');
     console.log(pdfPath);
     const existingPdfBytes = fs.readFileSync(pdfPath);
     const pdfDoc = await PDFDocument.load(existingPdfBytes)
     pdfDoc.registerFontkit(fontkit);
     
-    const fontBytes = fs.readFileSync('/Users/patcharapolsohheng/sa-frontend/backend/font/THSarabunNew.ttf');
+    const fontBytes = fs.readFileSync(fontPath);
     const thSarabunFont = await pdfDoc.embedFont(fontBytes);
+
     const pages = pdfDoc.getPages()
     const firstPage = pages[0]
     const { width, height } = firstPage.getSize()
-    firstPage.drawText(data.firstNameTH + ' ' + data.lastNameTH, {
+    const convertDateFormat = (dateString) => {
+        // Split the input date string by the hyphen (-) to get year, month, and day
+        const [year, month, day] = dateString.split('-');
+        
+        // Return the date in the desired format
+        return `${day}/${month}/${year}`;
+      };
+    const dataDateAcc = convertDateFormat(data.acc_date)
+
+    firstPage.drawText(data.fnameTH + ' ' + data.lnameTH, {
         x: 204,
         y: height-223.3,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.studentId, {
+    firstPage.drawText(data.id, {
         x: 460,
         y: height-223.3,
         size: 14,   
@@ -45,7 +59,7 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.phone, {
+    firstPage.drawText(data.tel_num, {
         x: 231,
         y: height-275,
         size: 14,   
@@ -59,7 +73,7 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.desAcc, {
+    firstPage.drawText(data.acc_desc, {
         x: 239,
         y: height-346,
         size: 14,   
@@ -73,14 +87,14 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.dateAcc, {
+    firstPage.drawText(dataDateAcc, {
         x: 206,
         y: height-397.3,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.placeAcc, {
+    firstPage.drawText(data.accident_place, {
         x: 225,
         y: height-422.6,
         size: 14,   
@@ -88,28 +102,21 @@ async function prakan(data){
         color: rgb(0, 0, 0),
     })
 
-    firstPage.drawText(data.placeTreat, {
+    firstPage.drawText(data.treatment_place, {
         x: 299,
         y: height-449,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.typeHos, {
+    firstPage.drawText(data.hospital_type, {
         x: 304,
         y: height-475,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.bankAcc, {
-        x: 255,
-        y: height-500.4,
-        size: 14,   
-        font: thSarabunFont,
-        color: rgb(0, 0, 0),
-    })
-    firstPage.drawText(data.medicalFeeNum, {
+    firstPage.drawText(data.medical_fee + ' บาท', {
         x: 143,
         y: height-552.5,
         size: 14,   
@@ -125,10 +132,16 @@ async function prakan(data){
         color: rgb(0, 0, 0),
     })
 
+    firstPage.drawText("( "+data.fnameTH + ' ' + data.lnameTH+" )", {
+        x: 397,
+        y: height-710,
+        size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+
     const pdfBytes = await pdfDoc.save()
-    const savePath = "/backend/prakanfilled.pdf"
-    fs.writeFileSync('/Users/patcharapolsohheng/sa-frontend/backend/prakanformfilled.pdf', pdfBytes);
-    return pdfBytes
+    fs.writeFileSync('public/documents/accident/prakanformfilled.pdf', pdfBytes);
 }
 
 module.exports = { prakan };

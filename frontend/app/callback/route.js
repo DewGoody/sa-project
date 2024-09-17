@@ -37,6 +37,7 @@ async function handler(token) {
         }
 
         const data = await response.json();
+        console.log("User profile:", data);
         return data;
     } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -81,7 +82,8 @@ export async function GET(req) {
             lnameEN: info.lastNameEN || '',
             thai_id: info.thai_id || '',
             nationality: info.nationality || '',
-            fac_name: info.facultyNameTH || '',
+            facultyNameTH: info.facultyNameTH || '',
+            facultyNameEN: info.facultyNameEN || '',
             fac_id: info.facultyId || '',
             dept: info.departmentNameTH || '',
             religion: '',
