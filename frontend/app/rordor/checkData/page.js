@@ -156,7 +156,7 @@ const CheckData = () => {
                 lnameEN: formData.lnameEN || "",
                 fac_id: '',
                 title: formData.Nametitle,
-                fac_name: '',
+                facultyNameTH: '',
                 dept: '',
                 tel_num: '',
                 year: '',
@@ -210,13 +210,14 @@ const CheckData = () => {
                     relation: "father",
                     fname: formData.fatherName,
                     lname: formData.fatherSurname,
+                    occupation: formData.occupation
                 },
                 mother_info: {
                     id: id,
                     relation: "mother",
                     fname: formData.motherName,
                     lname: formData.motherSurname,
-                    mf_occupation: formData.occupation
+                    occupation: formData.occupation
                 }
 
             })

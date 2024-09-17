@@ -23,7 +23,7 @@ const Form = () => {
 
 
             <a  href="/rordor"><ServiceCard title="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)" icon={<FaPlus />} /></a>
-            <ServiceCard title="การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)" icon={<FaEye />} />
+            <a  href="/prakan"><ServiceCard title="การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)" icon={<FaEye />} /></a>
             <ServiceCard title="การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)" icon={<FaCheck />} />
             <ServiceCard title="โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)" icon={<FaRegHospital />} />
           </div>

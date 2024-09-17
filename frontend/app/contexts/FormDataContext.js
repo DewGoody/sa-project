@@ -63,7 +63,7 @@ export const FormDataProvider = ({ children }) => {
         motherName: datafromapimilitary.mother_info?.fname,
         motherSurname: datafromapimilitary.mother_info?.lname,
 
-        occupation: datafromapimilitary.mother_info?.mf_occupation,
+        occupation: datafromapimilitary.father_info?.occupation,
         domicileNumber: datafromapimilitary.DOPA_address?.house_num,
         road: datafromapimilitary.DOPA_address?.street,
         province: datafromapimilitary.DOPA_address?.province,
