@@ -33,7 +33,29 @@ model Address_Desc {
   Address Address[]
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model District {
+  id          BigInt  @id @default(autoincrement())
+  code        String  @db.VarChar
+  name_th     String? @db.VarChar
+  name_en     String? @db.VarChar
+  province_id BigInt?
+}
+
+model Geography {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(255)
+}
+
+model Province {
+  id           Int    @id @default(autoincrement())
+  code         String @db.VarChar(2)
+  name_th      String @db.VarChar(150)
+  name_en      String @db.VarChar(150)
+  geography_id Int    @default(0)
+}
+
 model Student {
   id                 Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
   lnameTH            String
@@ -63,6 +85,15 @@ model Student {
   promoted_record    promoted_record?
   reserve_info       reserve_info?
   training_record    training_record[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Subdistrict {
+  id        String  @id @db.VarChar
+  zipCode   BigInt
+  nameTh    String? @db.VarChar
+  nameEn    String? @db.VarChar
+  amphureId BigInt?
 }
 
 model UHC_reg_info {
@@ -147,7 +178,6 @@ model father_mother_info {
   @@id([id, relation])
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model military_course {
   id                         Decimal  @id @db.Decimal
   military_id                Decimal? @db.Decimal
@@ -170,6 +200,7 @@ model parent_info {
   parent_relation String?
   id              Decimal @id @db.Decimal
   title           String?
+  parent_address  String?
   Student         Student @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
@@ -200,36 +231,4 @@ model training_record {
   Student    Student  @relation(fields: [id], references: [id], onDelete: Cascade)
 
   @@id([id, year])
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model District {
-  id          String?
-  code        String?
-  name_th     String?
-  name_en     String?
-  province_id String?
-
-  @@ignore
-}
-
-model Geography {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255)
-}
-
-model Province {
-  id           Int    @id @default(autoincrement())
-  code         String @db.VarChar(2)
-  name_th      String @db.VarChar(150)
-  name_en      String @db.VarChar(150)
-  geography_id Int    @default(0)
-}
-
-model Subdistrict {
-  id        String  @id @db.VarChar
-  zipCode   BigInt?
-  nameTh    String? @db.VarChar
-  nameEn    String? @db.VarChar
-  amphureId BigInt?
 }
