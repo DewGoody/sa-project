@@ -1,6 +1,8 @@
 "use client"
 import React, { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import Header from '../../components/header/page';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RD = () => {
     // State to manage checkbox status
@@ -31,6 +33,13 @@ const RD = () => {
     const allChecked = () => {
         return Object.values(checkboxes).every((isChecked) => isChecked);
     };
+    const handleAllCheck = () => {
+        const newState = Object.values(checkboxes).some(value => !value);
+        setCheckboxes(Object.keys(checkboxes).reduce((acc, key) => {
+            acc[key] = newState;
+            return acc;
+        }, {}));
+    };
 
     // Function to handle navigation attempt
     const handleNavigation = (event, targetUrl) => {
@@ -56,12 +65,100 @@ const RD = () => {
                         Students, please prepare the following documents to submit to the staff 
                         </h3>
                         <div className="grid grid-cols-1 gap-6">
-                            <fieldset>
-                                <legend className="sr-only">Checkboxes</legend>
+                                <fieldset>
+                                    <legend className="sr-only">Checkboxes</legend>
 
-                                <div className="divide-y divide-gray-200">
+                                    <div className="divide-y divide-gray-200">
+                                        <label
+                                            htmlFor="Option1"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+                                            <div>
+                                                <strong className="font-medium text-gray-900 ">1. ติดรูป ชุดนิสิต ขนาด 1.5 นิ้ว</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option2"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">2. สำเนาหลักฐานผลการศึกษาชั้น ม.6</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option3"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">3. ใบรับรองแพทย์ โดยแพทย์ปริญญา (ใบรับรองแพทย์มีอายุ 1 เดือนนับจากวันที่ตรวจร่างกาย) รอเติม link</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option4"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">4. สำเนาใบสำคัญทหารกองเกิน (สด.9) กรณีเป็นผู้สมัครชายอายุ 17 ปีขึ้นไป (ถ้ามี)</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option5"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">5. สำเนาหมายเรียกเข้ารับราชการทหาร (สด.35) กรณีเป็นผู้สมัครชายอายุ 20 ปีขึ้นไป (ถ้ามี)</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option6"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">6. สำเนาใบรับรองผลการตรวจเลือกเข้ารับราชการทหาร (สด.43) กรณีผู้สมัครชายอายุ 21 ปีขึ้นไป (ถ้ามี)</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option7"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">7. สำเนาบัตรประจำตัวประชาชน (copy of citizen ID)</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option8"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">8. สำเนาใบเปลี่ยนชื่อ-สกุล (ถ้ามี)</strong>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                                <div className="flex space-x-4">
                                     <label
-                                        htmlFor="Option1"
+                                        htmlFor="Option9"
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
                                         <div className="flex items-center">
@@ -69,20 +166,20 @@ const RD = () => {
                                             <input
                                                 type="checkbox"
                                                 className="size-4 rounded border-gray-300"
-                                                id="Option1"
-                                                required
-                                                checked={checkboxes.Option1}
+                                                id="Option9"
+                                                checked={checkboxes.Option9}
                                                 onChange={handleCheckboxChange}
                                             />
                                         </div>
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">ใบรับรองแพทย์ฉบับจริง</strong>
+                                            <strong className="font-medium text-gray-900">รับทราบรายการเอกสาร</strong>
                                         </div>
                                     </label>
 
+
                                     <label
-                                        htmlFor="Option2"
+
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
                                         <div className="flex items-center">
@@ -90,68 +187,50 @@ const RD = () => {
                                             <input
                                                 type="checkbox"
                                                 className="size-4 rounded border-gray-300"
-                                                id="Option2"
-                                                checked={checkboxes.Option2}
-                                                onChange={handleCheckboxChange}
+                                                id="allCheck"
+                                                checked={allChecked()}
+                                                onChange={handleAllCheck}
                                             />
                                         </div>
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">ใบเสร็จฉบับจริง</strong>
-                                        </div>
-                                    </label>
-
-                                    <label
-                                        htmlFor="Option3"
-                                        className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                    >
-                                        <div className="flex items-center">
-                                            &#8203;
-                                            <input
-                                                type="checkbox"
-                                                className="size-4 rounded border-gray-300"
-                                                id="Option3"
-                                                checked={checkboxes.Option3}
-                                                onChange={handleCheckboxChange}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <strong className="font-medium text-gray-900">สำเนาบัญชีธนาคาร</strong>
+                                            <strong className="font-medium text-gray-900">ดาวน์โหลดไฟล์และตรวจสอบข้อมูลแล้ว</strong>
                                         </div>
                                     </label>
                                 </div>
-                            </fieldset>
-                        </div>
+                            </div>
                     </section>
 
                     {/* Navigation Buttons */}
-                    <div className="flex justify-between mt-56">
-                        <a
-                            href="/services/prakan"
-                            onClick={(event) => handleNavigation(event, "/services/prakan")}
-                        >
-                            <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                หน้าก่อนหน้า
-                            </button>
-                        </a>
-                        <button onClick={handleDownload} className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300">
-                            ดาวน์โหลดฟอร์ม
-                        </button>
-                          
+                    <div className="flex justify-between mt-8">
+                            <a
+                                href="/rordor/checkData"
 
-                        <a
-                            href="/home"
-                            onClick={(event) => handleNavigation(event, "/home")}
-                        >
-                            <button
-                                type="submit"
-                                className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                             >
-                                ยืนยันข้อมูล
+                                <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                Back
+                                </button>
+                            </a>
+
+                            <button
+                                onClick={handleDownload}
+                                className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300">
+                                Download
                             </button>
-                        </a>
-                    </div>
+
+                            <a
+                                href="/home"
+                                onClick={(event) => handleNavigation(event, "/home")}
+                            >
+                                <button
+                                    type="submit"
+                                    className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                >
+                                    Confrim
+                                    <ToastContainer />
+                                </button>
+                            </a>
+                        </div>
                 </div>
             </main>
         </div>
