@@ -2,7 +2,7 @@ import React from 'react';
 import { Header } from '../components/Header';
 import { FaUser, FaPlus, FaEye, FaCheck, FaRegHospital } from 'react-icons/fa';
 
-const Form = () => {
+export const Form = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header req1="" req2="" />
