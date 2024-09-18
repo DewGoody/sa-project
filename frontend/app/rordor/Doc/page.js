@@ -192,7 +192,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">7. สำเนาบัตรประจำตัวประชาชน (copy of citizenId)</strong>
+                                                <strong className="font-medium text-gray-900">7. สำเนาบัตรประจำตัวประชาชน (copy of citizen ID)</strong>
                                             </div>
                                         </label>
 
@@ -262,14 +262,14 @@ const RD = () => {
 
                             >
                                 <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                    หน้าก่อนหน้า
+                                Back
                                 </button>
                             </a>
 
                             <button
                                 onClick={handleDownload}
                                 className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300">
-                                ดาวน์โหลดฟอร์ม
+                                Download
                             </button>
 
                             <a
@@ -280,7 +280,7 @@ const RD = () => {
                                     type="submit"
                                     className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                 >
-                                    หน้าแรก
+                                    Confrim
                                     <ToastContainer />
                                 </button>
                             </a>
