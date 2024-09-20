@@ -74,7 +74,7 @@ const RD = () => {
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
-                                                <strong className="font-medium text-gray-900 ">1. ติดรูป ชุดนิสิต ขนาด 1.5 นิ้ว</strong>
+                                                <strong className="font-medium text-gray-900 ">1. ใบรับรองแพทย์ฉบับจริง</strong>
                                             </div>
                                         </label>
 
@@ -85,7 +85,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">2. สำเนาหลักฐานผลการศึกษาชั้น ม.6</strong>
+                                                <strong className="font-medium text-gray-900">2. ใบรับรองเสร็จฉบับจริง</strong>
                                             </div>
                                         </label>
 
@@ -96,7 +96,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">3. ใบรับรองแพทย์ โดยแพทย์ปริญญา (ใบรับรองแพทย์มีอายุ 1 เดือนนับจากวันที่ตรวจร่างกาย) รอเติม link</strong>
+                                                <strong className="font-medium text-gray-900">3. สำเนาบัญชีธนาคาร</strong>
                                             </div>
                                         </label>
 
