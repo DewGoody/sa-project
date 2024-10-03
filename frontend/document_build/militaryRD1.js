@@ -180,7 +180,7 @@ async function militaryRD1(data) {
     });
   }
 
-  const mf_occupation_text = mf_occupation || '';
+  const mf_occupation_text = father_info?.occupation && mother_info?.occupation ? father_info.occupation + '/'+ mother_info.occupation: '';
   firstPage.drawText(mf_occupation_text, {
     x: 500,
     y: height - 166,
