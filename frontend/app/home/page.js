@@ -1,55 +1,32 @@
-"use client"
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React from 'react';
 import { Header } from '../components/Header';
 import { FaUser, FaPlus, FaEye, FaCheck, FaRegHospital } from 'react-icons/fa';
-import axios from 'axios';
 
 export const Form = () => {
-  const [datafromapiprofile, setdatafromapiprofile] = useState({});
-  const fetchdataapi = async () => {
-    try {
-      const response = await axios.get("/api/profile");
-      setdatafromapiprofile(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  useEffect(() => {
-    fetchdataapi();
-
-  }, [])
-  useEffect(() => {
-
-  }, [datafromapiprofile])
-
   return (
     <div className="min-h-screen bg-white">
-
       <Header req1="" req2="" />
-      <div className="min-h-screen bg-whites 2xl:mx-24 xl:mx-24 lg:mx-24 md:mx-24 ">
-        <main className="flex justify-center items-center ">
-          <div className="bg-white p-8 min-h-screen bg-whites 2xl:mx-24 xl:mx-24 lg:mx-24 md:mx-24">
-            <div className="">
-              <ServiceCard title={datafromapiprofile.title + " " + datafromapiprofile.fnameTH + " " + datafromapiprofile.lnameTH} icon={<FaUser />} />
-            </div>
+      <main className="flex justify-center items-center ">
+        <div className="bg-white p-8  w-full mx-72">
+          <div className="">
+            <ServiceCard title="ตรวจสอบข้อมูลส่วนตัวของคุณ (Verify your personal information)" icon={<FaUser />} />
+          </div>
 
-            <div className=" py-8">
-              <div className="flex justify-between items-center">
-                <p className="text-lg font-bold">Status</p>
-              </div>
-            </div>
-
-            <p className="text-lg font-bold py-4">Service</p>
-            <div className="space-y-8 ">
-              <a href="/rordor" ><ServiceCard title="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)" icon={<FaPlus />} /></a>
-
-              <a href="/prakan" className="p-4"><ServiceCard title="การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)" icon={<FaCheck />} /></a>
-              <a href="/golden_card"><ServiceCard title="ย้ายสิทธ์บัตรทองมาที่โรงพยาบาลจุฬาลงกรณ์" icon={<FaRegHospital />} /></a>
-              <ServiceCard title="การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)" icon={<FaEye />} />
+          <div className=" py-8">
+            <div className="flex justify-between items-center">
+              <p className="text-lg font-bold">Status</p>
             </div>
           </div>
-        </main>
-      </div>
+
+          <p className="text-lg font-bold py-4">Service</p>
+          <div className="space-y-8 py-4">
+            <a  href="/rordor"  className="p-4" ><ServiceCard title="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)" icon={<FaPlus />} /></a>
+            <a  href="/prakan"><ServiceCard title="การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)" icon={<FaEye />} /></a>
+            <ServiceCard title="การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)" icon={<FaCheck />} />
+            <ServiceCard title="โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)" icon={<FaRegHospital />} />
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

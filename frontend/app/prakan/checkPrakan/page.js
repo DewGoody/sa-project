@@ -100,6 +100,60 @@ const RD = () => {
                                             </div>
                                         </label>
 
+                                        <label
+                                            htmlFor="Option4"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">4. สำเนาใบสำคัญทหารกองเกิน (สด.9) กรณีเป็นผู้สมัครชายอายุ 17 ปีขึ้นไป (ถ้ามี)</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option5"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">5. สำเนาหมายเรียกเข้ารับราชการทหาร (สด.35) กรณีเป็นผู้สมัครชายอายุ 20 ปีขึ้นไป (ถ้ามี)</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option6"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">6. สำเนาใบรับรองผลการตรวจเลือกเข้ารับราชการทหาร (สด.43) กรณีผู้สมัครชายอายุ 21 ปีขึ้นไป (ถ้ามี)</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option7"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">7. สำเนาบัตรประจำตัวประชาชน (copy of citizen ID)</strong>
+                                            </div>
+                                        </label>
+
+                                        <label
+                                            htmlFor="Option8"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">8. สำเนาใบเปลี่ยนชื่อ-สกุล (ถ้ามี)</strong>
+                                            </div>
+                                        </label>
                                     </div>
                                 </fieldset>
                                 <div className="flex space-x-4">
