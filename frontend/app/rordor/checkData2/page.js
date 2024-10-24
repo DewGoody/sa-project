@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Header } from '../../components/Header';
-import { useFormData } from '../../contexts/RDDataContext';
+import { useFormData } from '../../contexts/FormDataContext';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -299,6 +299,8 @@ const CheckData = () => {
             console.log(formData)
             console.error('Form submission error:', error);
             // router.push("/rordor/Doc")
+
+
         }
     };
     return (
@@ -573,7 +575,7 @@ const CheckData = () => {
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                             placeholder="Current address, house number"
                                         />
-                                    </div>-
+                                    </div>
 
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
@@ -898,8 +900,6 @@ const CheckData = () => {
                                                                 placeholder="Educational institution"
                                                             />
                                                         </div>
-
-                                                        
                                                         <div className="w-1/12">
                                                             {inputlist_education.length !== 1 && ( // !== 1 แต่บัคแดก
                                                                 <button
@@ -1000,7 +1000,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div className="flex space-x-4 w-full">
-                                        <div className="w-1/2">
+                                        <div >
                                             <label className="block text-gray-700 mb-2">หมู่ที่ (Moo no)</label>
                                             <input
                                                 type="text"
@@ -1011,7 +1011,7 @@ const CheckData = () => {
                                                 placeholder="Military Domicile Number"
                                             />
                                         </div>
-                                        <div className="w-1/2">
+                                        <div>
                                             <label className="block text-gray-700 mb-2">ซอย (Soi)</label>
                                             <input
                                                 type="text"
@@ -1069,131 +1069,23 @@ const CheckData = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold mb-4  py-10">
-                                        การเป็นทหารกองหนุน (Being a military reservist)
-                                    </h3>
-                                </div>
-                                <h3 className="pl-8 pb-8 text-lg">ได้ขึ้นทะเบียนกองประจําการและนําปลดเป็นทหารกองหนุน (Registered for active duty and discharged to become a military reservist.)</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div >
-                                        <label className="block text-gray-700 mb-2">เหล่าทัพ (Branches of the military)</label>
-                                        <input
-                                            type="text"
-                                            name="Branches"
-                                            value={formData.Branches}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Branches of the military"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">เหล่า (corps)</label>
-                                        <input
-                                            type="text"
-                                            name="corps"
-                                            value={formData.corps}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="corps"
-                                        />
-                                    </div>
-                                </div>
-                                {/* ยังไม่เสร็จ รอตุยรงยศ */}
-
-                                <div>
                                     <h3 className="text-lg font-semibold mb-4 py-10 ">
-                                        ที่อยู่ที่ติดต่อได้สะดวก หรือ ที่อยู่ปัจจุบัน (Current address or convenient contact address)
+                                        ภูมิลำเนาทหาร (Military domicile)
                                     </h3>
                                 </div>
-
-
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">เลขที่บ้าน (Domicile number)</label>
+                                    {/* <div>
+                                        <label className="block text-gray-700 mb-2">ภูมิลำเนาทหารเลขที่ (Military domicile number)</label>
                                         <input
                                             type="text"
-                                            name="domicileNumber"
-                                            value={formData.domicileNumber}
+                                            name="militaryDomicileNumber"
+                                            value={formData.militaryDomicileNumber}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Domicile Number"
+                                            placeholder="Military Domicile Number"
                                         />
-                                    </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">ถนน (Road)</label>
-                                        <input
-                                            type="text"
-                                            name="road"
-                                            value={formData.road}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Road"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
-                                        <select
-                                            name="province"
-                                            value={formData.province}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.province}>{formData.province}</option>
-                                            {provinces.map((item, index) => (
-                                                <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
-                                        <select
-                                            name="amphure"
-                                            value={formData.amphure}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.amphure}>{formData.amphure}</option>
-                                            {amphures.map((amphure, index) => (
-                                                <option key={index} data-id={amphure.id} value={amphure.name_th}>{amphure.name_th}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
-                                        <select
-                                            name="district"
-                                            value={formData.district}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.district}>{formData.district}</option>
-                                            {districts.map((district, index) => (
-                                                <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">รหัสไปรษณีย์ (Zip code)</label>
-                                        <select
-                                            name="zipCode"
-                                            value={formData.zipCode}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.zipCode}>{formData.zipCode}</option>
-                                            {districts.map((district, index) => (
-                                                <option key={index} value={district.zipCode}>{district.zipCode}</option>
-                                            ))}
-                                        </select>
-                                    </div>
+                                    </div> */}
                                 </div>
-
-                                <div>
-                                    <h3 className="text-lg font-semibold mb-4 py-10 ">
-                                        บุคคลที่ใกล้ชิดสามารถติดตามได้ (A close person who can be contacted)
-                                    </h3>
-                                </div>
-
 
                                 <div className="flex justify-between mt-8">
                                     <a href="/rordor">
