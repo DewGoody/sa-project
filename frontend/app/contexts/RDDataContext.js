@@ -40,9 +40,6 @@ export const FormDataProvider = ({ children }) => {
 
 
   useEffect(() => {
-    console.log(datafromapiprofile.title)
-    console.log(datafromapiprofile.thai_id)
-    console.log(datafromapiprofile.religion)
 
     if (datafromapiprofile.bd) {
       const formattedBirthDate = formatDate(datafromapiprofile.bd);
@@ -171,7 +168,21 @@ export const FormDataProvider = ({ children }) => {
         RD2_ProvinceRD3: '',
         RD2_ProvinceRD4: '',
 
-        //RD2 ภูมิลำเนาทหาร
+        //RD2 ภูมิลำเนาทหาร ใช่อันเดิม
+        
+        // การเป็นทหารกองหนุน
+        Branches:'',
+        crops:'',
+        military_rank:"",
+        military_rank1:"",
+        crops_rank:'',
+        crops_rank1:'',
+        command_rank:'',
+        command_rank1:'',
+        date_rank1:"",
+        date_rank:"",
+
+
 
       }));
     }
