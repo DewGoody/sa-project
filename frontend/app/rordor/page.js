@@ -35,7 +35,7 @@ const RD = () => {
                     <div className="flex justify-between mt-8">
                         <a href="/home">
                             <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                หน้าก่อนหน้า
+                                Back
                             </button>
                         </a>
                     </div>

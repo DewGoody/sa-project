@@ -213,3 +213,35 @@ model parent_info {
   parent_address  String?
   Student         Student @relation(fields: [id], references: [id], onDelete: Cascade)
 }
+<<<<<<< HEAD
+=======
+
+model promoted_record {
+  id         Decimal   @id @db.Decimal
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  rank       String?
+  corp       String?
+  order_num  String?
+  ordered_at DateTime? @db.Date
+  Student    Student   @relation(fields: [id], references: [id], onDelete: Cascade)
+}
+
+model reserve_info {
+  id      Decimal @id @db.Decimal
+  army    String?
+  corp    String?
+  Student Student @relation(fields: [id], references: [id], onDelete: Cascade)
+}
+
+model training_record {
+  id         Decimal  @db.Decimal
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  class      Int
+  year       Int
+  major      String?
+  school     String
+  Student    Student  @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@id([id, year])
+}
+>>>>>>> refs/remotes/origin/main

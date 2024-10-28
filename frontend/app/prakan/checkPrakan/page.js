@@ -1,61 +1,25 @@
 "use client"
+import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { useFormData } from '../../contexts/FormDataContext'; // Adjust the import path as necessary
+import Header from '../../components/header/page';
 import 'react-toastify/dist/ReactToastify.css';
-import { Header } from '../../components/Header';
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-
-
 
 const RD = () => {
-    const { formData, updateFormData } = useFormData();
-
-    useEffect(() => {
-        console.log(formData);
-    }, [formData]);
-
-    const filepdf = async () => {
-        try {
-            const response = await axios.get("/api/export/RD1", { responseType: 'blob' });
-            return response.data;
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const handleDownload = async () => {
-        const pdfBlob = await filepdf();
-        if (pdfBlob) {
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(pdfBlob);
-            link.download = 'RD1.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    };
-
-    // const handleDownload = () => {
-    //     const link = document.createElement('a');
-    //     link.href = '/test.pdf';
-    //     link.download = 'sample.pdf';
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-    // };
-
+    // State to manage checkbox status
     const [checkboxes, setCheckboxes] = useState({
         Option1: false,
         Option2: false,
         Option3: false,
-        Option4: false,
-        Option5: false,
-        Option6: false,
-        Option7: false,
-        Option8: false,
-        Option9: false,
     });
+    
+    const handleDownload = () => {
+        const link = document.createElement('a');
+        link.href = '../../documents/accident/prakanformfilled.pdf';
+        link.download = 'prakan.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
 
     // Function to handle checkbox change
     const handleCheckboxChange = (event) => {
@@ -69,28 +33,6 @@ const RD = () => {
     const allChecked = () => {
         return Object.values(checkboxes).every((isChecked) => isChecked);
     };
-    const notifyerror = () => {
-        toast.error('👆🏻 ติ๊กให้ครบทุกช่อง', {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            // transition: Bounce,
-        });
-    }
-    // Function to handle navigation attempt
-    const handleNavigation = (event, targetUrl) => {
-        if (!allChecked()) {
-            event.preventDefault();
-            notifyerror()
-        } else {
-            window.location.href = targetUrl;
-        }
-    };
     const handleAllCheck = () => {
         const newState = Object.values(checkboxes).some(value => !value);
         setCheckboxes(Object.keys(checkboxes).reduce((acc, key) => {
@@ -99,24 +41,30 @@ const RD = () => {
         }, {}));
     };
 
+    // Function to handle navigation attempt
+    const handleNavigation = (event, targetUrl) => {
+        if (!allChecked()) {
+            event.preventDefault();
+            alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
+        } else {
+            window.location.href = targetUrl;
+        }
+    };
 
     return (
-        <div>
-            <Header req1="การสมัครเป็น นศท. ปี 1 (ผู้ไม่เคยศึกษาวิชาทหาร) " req2="" />
-            <div className="min-h-screen bg-white">
-                <main className="flex justify-center items-center">
-                    <div className="bg-white p-8 w-full max-w-4xl">
-                        <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
-                            นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
-                        </h2>
-                        <h1 className="text-mb text-gray-700 mb-6 text-center">
-                            Students, please prepare the following documents to submit to the staff
-                        </h1>
-
-                        {/* Personal & Contact Information Section */}
-                        <section>
-
-                            <div className="grid grid-cols-1 gap-6">
+        <div className="min-h-screen bg-white">
+            <Header/>
+            <main className="flex justify-center items-center">
+                <div className="bg-white p-8 w-full max-w-4xl">
+                    {/* Personal & Contact Information Section */}
+                    <section>
+                        <h3 className="text-lg font-semibold mb-4 text-center">
+                            นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่ 
+                        </h3>
+                        <h3 className="text-lg font-normal mb-4 text-center">
+                        Students, please prepare the following documents to submit to the staff 
+                        </h3>
+                        <div className="grid grid-cols-1 gap-6">
                                 <fieldset>
                                     <legend className="sr-only">Checkboxes</legend>
 
@@ -126,7 +74,7 @@ const RD = () => {
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
-                                                <strong className="font-medium text-gray-900 ">1. ติดรูป ชุดนิสิต ขนาด 1.5 นิ้ว</strong>
+                                                <strong className="font-medium text-gray-900 ">1. ใบรับรองแพทย์ฉบับจริง</strong>
                                             </div>
                                         </label>
 
@@ -137,7 +85,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">2. สำเนาหลักฐานผลการศึกษาชั้น ม.6</strong>
+                                                <strong className="font-medium text-gray-900">2. ใบรับรองเสร็จฉบับจริง</strong>
                                             </div>
                                         </label>
 
@@ -148,7 +96,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">3. ใบรับรองแพทย์ โดยแพทย์ปริญญา (ใบรับรองแพทย์มีอายุ 1 เดือนนับจากวันที่ตรวจร่างกาย) รอเติม link</strong>
+                                                <strong className="font-medium text-gray-900">3. สำเนาบัญชีธนาคาร</strong>
                                             </div>
                                         </label>
 
@@ -251,12 +199,10 @@ const RD = () => {
                                     </label>
                                 </div>
                             </div>
+                    </section>
 
-
-                        </section>
-
-                        {/* Navigation Buttons */}
-                        <div className="flex justify-between mt-8">
+                    {/* Navigation Buttons */}
+                    <div className="flex justify-between mt-8">
                             <a
                                 href="/rordor/checkData"
 
@@ -285,9 +231,8 @@ const RD = () => {
                                 </button>
                             </a>
                         </div>
-                    </div>
-                </main>
-            </div>
+                </div>
+            </main>
         </div>
     );
 };

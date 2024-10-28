@@ -2,7 +2,7 @@ import React from 'react';
 import { Header } from '../components/Header';
 import { FaUser, FaPlus, FaEye, FaCheck, FaRegHospital } from 'react-icons/fa';
 
-const Form = () => {
+export const Form = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header req1="" req2="" />
@@ -20,9 +20,7 @@ const Form = () => {
 
           <p className="text-lg font-bold py-4">Service</p>
           <div className="space-y-8 py-4">
-
-
-            <a  href="/rordor"><ServiceCard title="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)" icon={<FaPlus />} /></a>
+            <a  href="/rordor"  className="p-4" ><ServiceCard title="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)" icon={<FaPlus />} /></a>
             <a  href="/prakan"><ServiceCard title="การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)" icon={<FaEye />} /></a>
             <ServiceCard title="การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)" icon={<FaCheck />} />
             <ServiceCard title="โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)" icon={<FaRegHospital />} />
