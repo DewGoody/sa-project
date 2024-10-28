@@ -169,56 +169,58 @@ const CheckData = () => {
             })
 
             await axios.put(`/api/military`, {
-                military_course: {
+                Military_info: {
                     id: id,
                     grade9_gpax: formData.grade9GPAX,
                     grade9_school: formData.school,
                     grade9_province: formData.schoolProvince,
-                    father_mother_relationship: formData.Parentrelated,
                 },
-                DOPA_address: {
-                    id: id,
-                    address_type: "DOPA_address",
-                    house_num:formData.domicileNumber,
-                    street:formData.road,
-                    district: formData.amphure,
-                    province: formData.province,
-                    postal_code: parseInt(formData.zipCode),
-                    subdistrict: formData.district
+                addresses: {
+                    DOPA_address: {
+                        id: id,
+                        house_num: formData.domicileNumber,
+                        street: formData.road,
+                        district: formData.amphure,
+                        province: formData.province,
+                        postal_code: parseInt(formData.zipCode),
+                        subdistrict: formData.district
 
+                    },
+                    military_address: {
+                        id: id,
+                        district: formData.militaryDistrict,
+                        province: formData.militaryProvince,
+                        subdistrict: formData.militaryAmphure,
+                        house_num: formData.militaryDomicileNumber
+                    },
                 },
-                military_address: {
+                guardian_info: {
                     id: id,
-                    address_type: "Military_address",
-                    district: formData.militaryDistrict,
-                    province: formData.militaryProvince,
-                    subdistrict: formData.militaryAmphure,
-                    house_num: formData.militaryDomicileNumber
+                    guardian_fname: formData.ParentName,
+                    guardian_lname: formData.ParentSurname,
+                    guardian_title: formData.Parenttitle,
+                    guardian_occupation: formData.Parentjob,
+                    guardian_age: parseInt(formData.Parentage),
+                    guardian_relation: formData.Parentrelated,
+                    guardian_address: formData.ParentworkAddress
                 },
-                parent_info: {
-                    id: id,
-                    parent_fname: formData.ParentName,
-                    parent_lname: formData.ParentSurname,
-                    title: formData.Parenttitle,
-                    occupation: formData.Parentjob,
-                    age: parseInt(formData.Parentage),
-                    parent_relation: formData.Parentrelated,
-                    parent_address: formData.ParentworkAddress
+                father_mother_info: {
+                    father_info: {
+                        id: id,
+                        relation: "father",
+                        fname: formData.fatherName,
+                        lname: formData.fatherSurname,
+                        occupation: formData.occupation
+                    },
+                    mother_info: {
+                        id: id,
+                        relation: "mother",
+                        fname: formData.motherName,
+                        lname: formData.motherSurname,
+                        occupation: formData.occupation
+                    }
                 },
-                father_info: {
-                    id: id,
-                    relation: "father",
-                    fname: formData.fatherName,
-                    lname: formData.fatherSurname,
-                    occupation: formData.occupation
-                },
-                mother_info: {
-                    id: id,
-                    relation: "mother",
-                    fname: formData.motherName,
-                    lname: formData.motherSurname,
-                    occupation: formData.occupation
-                }
+
 
             })
             notifysuccess()
@@ -393,14 +395,25 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อาชีพ (Occupation)</label>
+                                        <label className="block text-gray-700 mb-2">อาชีพของพ่อ (Father's occupation)</label>
                                         <input
                                             type="text"
-                                            name="occupation"
-                                            value={formData.occupation}
+                                            name="occupationfather"
+                                            value={formData.occupationfather}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Occupation"
+                                            placeholder="Father's occupation"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 mb-2">อาชีพของแม่ (Mother's occupation)</label>
+                                        <input
+                                            type="text"
+                                            name="occupationmother"
+                                            value={formData.occupationmother}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            placeholder="Mother's occupation"
                                         />
                                     </div>
 

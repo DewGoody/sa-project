@@ -293,12 +293,12 @@ const CheckData = () => {
 
             })
             notifysuccess()
-            router.push("/rordor/Doc")
+            router.push("/rordor/Doc2")
         } catch (error) {
             notifyerror()
             console.log(formData)
             console.error('Form submission error:', error);
-            // router.push("/rordor/Doc")
+            router.push("/rordor/Doc2")
         }
     };
     return (

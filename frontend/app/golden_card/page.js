@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Header } from '../components/Header';
-import { useRouter } from 'next/navigation';
 import { useGoldenContext } from '../contexts/GoldenData';
+import { useRouter } from 'next/navigation';
 
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -49,13 +49,11 @@ const notifysuccess = () => {
     });
 }
 const page = () => {
+    const router = useRouter();
     const { Data, updateData } = useGoldenContext();
     const [provinces, setProvinces] = useState([]);
     const [amphures, setAmphures] = useState([]);
     const [districts, setDistricts] = useState([]);
-    const handleSubmit = async (e) => {
-        console.log(Data)
-    }
     const handleChange = (e) => {
         const { name, value } = e.target;
         updateData({ [name]: value });
@@ -112,6 +110,22 @@ const page = () => {
     useEffect(() => {
         console.log(Data)
     }, [Data])
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            notifyinprocess()
+
+            notifysuccess()
+            router.push("/golden_card/Doc")
+        } catch (error) {
+            notifyerror()
+
+            console.error('Form submission error:', error);
+            router.push("/golden_card/Doc")
+        }
+    };
+
 
     return (
         <div>
@@ -214,6 +228,18 @@ const page = () => {
                                                 placeholder="Job"
                                             />
                                         </div>
+                                    </div>
+
+                                    <div >
+                                        <label className="block text-gray-700 mb-2">โทรศัพท์มือถือ (Phone number)</label>
+                                        <input
+                                            type="text"
+                                            name="Phonenumber"
+                                            value={Data.Phonenumber}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            placeholder="Phone number"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">หมายเลขโทรศัพท์ที่ติดต่อได้ (Contact phone number)</label>
@@ -332,17 +358,7 @@ const page = () => {
                                             placeholder="Tell number"
                                         />
                                     </div>
-                                    <div >
-                                        <label className="block text-gray-700 mb-2">โทรศัพท์มือถือ (Phone number)</label>
-                                        <input
-                                            type="text"
-                                            name="Phonenumber"
-                                            value={Data.Phonenumber}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Phone number"
-                                        />
-                                    </div>
+
                                 </div>
 
 
@@ -437,7 +453,7 @@ const page = () => {
                                             type="checkbox"
                                             id="CiticenidforDoc"
                                             name="CiticenidforDoc"
-                                            value= "true"
+                                            value="true"
                                             onChange={handleChange}
                                             checked={Data.CiticenidforDoc === "true"}
                                         />
@@ -453,7 +469,7 @@ const page = () => {
                                             name="house"
                                             value="true"
                                             onChange={handleChange}
-                                            checked={Data.house ==="true"}
+                                            checked={Data.house === "true"}
                                         />
                                         <label htmlFor="house" className="block text-gray-700">
                                             สำเนาทะเบียนที่ผู้ขอมีชื่ออยู่
@@ -467,7 +483,7 @@ const page = () => {
                                             name="Studentcard"
                                             value="true"
                                             onChange={handleChange}
-                                            checked ={Data.Studentcard === "true"}
+                                            checked={Data.Studentcard === "true"}
                                         />
                                         <label htmlFor="Studentcard" className="block text-gray-700">
                                             สำเนาบัตรประจำตัวนิสิต

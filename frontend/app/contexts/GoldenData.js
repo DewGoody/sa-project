@@ -9,11 +9,14 @@ export const useGoldenContext = () => useContext(Golden);
 export const GoldenDataProvider = ({ children }) => {
   const [Data, setData] = useState({});
   const [datafromapiprofile, setdatafromapiprofile] = useState({});
+  const [datafromaddresses, setdatafromaddresses] = useState({});
 
   const fetchdataapi = async () => {
     try {
       const response = await axios.get("/api/profile");
       setdatafromapiprofile(response.data);
+      const response2 = await axios.get("")
+      setdatafromaddresses(response2.data)
     } catch (err) {
       console.log(err);
     }
@@ -43,7 +46,7 @@ export const GoldenDataProvider = ({ children }) => {
         Surname: datafromapiprofile.lnameTH,
         citizenId: datafromapiprofile.thai_id,
         birthDate: formattedBirthDate,
-        hospitalName: "",
+        
 
       }));
     }

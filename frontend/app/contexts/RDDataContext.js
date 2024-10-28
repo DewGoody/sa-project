@@ -38,7 +38,9 @@ export const FormDataProvider = ({ children }) => {
     fetchdataapi();
   }, []);
 
-
+  useEffect(() =>{
+ console.log(datafromapimilitary.Military_info)
+  },[datafromapimilitary])
   useEffect(() => {
 
     if (datafromapiprofile.bd) {
@@ -55,28 +57,30 @@ export const FormDataProvider = ({ children }) => {
         ethnicity: datafromapiprofile.race,
         nationality: datafromapiprofile.nationality,
 
-        fatherName: datafromapimilitary.father_info?.fname,
-        fatherSurname: datafromapimilitary.father_info?.lname,
-        motherName: datafromapimilitary.mother_info?.fname,
-        motherSurname: datafromapimilitary.mother_info?.lname,
+        fatherName: datafromapimilitary.father_mother_info?.father.fname,
+        fatherSurname: datafromapimilitary.father_mother_info?.father.lname,
+        motherName: datafromapimilitary.father_mother_info?.mother.fname,
+        motherSurname: datafromapimilitary.father_mother_info?.mother.lname,
+        occupationfather: datafromapimilitary.father_mother_info?.father.occupation,
+        occupationmother: datafromapimilitary.father_mother_info?.mother.occupation,
 
-        occupation: datafromapimilitary.father_info?.occupation,
-        domicileNumber: datafromapimilitary.DOPA_address?.house_num,
-        road: datafromapimilitary.DOPA_address?.street,
-        province: datafromapimilitary.DOPA_address?.province,
-        amphure: datafromapimilitary.DOPA_address?.subdistrict,
-        district: datafromapimilitary.DOPA_address?.district,
-        zipCode: datafromapimilitary.DOPA_address?.postal_code,
+        domicileNumber: datafromapimilitary.addresses?.DOPA_address.house_num,
+        road: datafromapimilitary.addresses?.DOPA_address.street,
+        province: datafromapimilitary.addresses?.DOPA_address.province,
+        amphure: datafromapimilitary.addresses?.DOPA_address.subdistrict,
+        district: datafromapimilitary.addresses?.DOPA_address.district,
+        zipCode: datafromapimilitary.addresses?.DOPA_address.postal_code,
 
-        militaryDomicileNumber: datafromapimilitary.military_address?.house_num, //RD1&2 
+        militaryDomicileNumber: datafromapimilitary.addresses?.Military_address.house_num, //RD1&2 
         militaryMoo: '', //RD2
         militarySoi: '', //RD2
-        militaryProvince: datafromapimilitary.military_address?.province, //RD1&2
-        militaryDistrict: datafromapimilitary.military_address?.district, //RD1&2
-        militaryAmphure: datafromapimilitary.military_address?.subdistrict, //RD1&2
-        grade9GPAX: datafromapimilitary.military_course?.grade9_gpax,
-        school: datafromapimilitary.military_course?.grade9_school,
-        schoolProvince: datafromapimilitary.military_course?.grade9_province,
+        militaryProvince: datafromapimilitary.addresses?.Military_address.province, //RD1&2
+        militaryDistrict: datafromapimilitary.addresses?.Military_address.district, //RD1&2
+        militaryAmphure: datafromapimilitary.addresses?.Military_address.subdistrict, //RD1&2
+
+        grade9GPAX: datafromapimilitary.Military_info?.grade9_gpax,
+        school: datafromapimilitary.Military_info?.grade9_school,
+        schoolProvince: datafromapimilitary.Military_info?.grade9_province,
         // military 2
         citizenRD: '',
         BeforeMilitartYear: '',
@@ -96,14 +100,14 @@ export const FormDataProvider = ({ children }) => {
         FristMonth_in_U: "",
         in_Year: "",
 
-        Parenttitle: datafromapimilitary.parent_info?.title,
-        ParentName: datafromapimilitary.parent_info?.parent_fname,
-        ParentSurname: datafromapimilitary.parent_info?.parent_lname,
+        Parenttitle: datafromapimilitary.guardian_info?.guardian_title,
+        ParentName: datafromapimilitary.guardian_info?.guardian_fname,
+        ParentSurname: datafromapimilitary.guardian_info?.guardian_lname,
 
-        Parentage: datafromapimilitary.parent_info?.age,
-        Parentjob: datafromapimilitary.parent_info?.occupation,
-        ParentworkAddress: datafromapimilitary.parent_info?.parent_address,
-        Parentrelated: datafromapimilitary.parent_info?.parent_relation,
+        Parentage: datafromapimilitary.guardian_info?.guardian_age,
+        Parentjob: datafromapimilitary.guardian_info?.guardian_occupation,
+        ParentworkAddress: datafromapimilitary.guardian_info?.guardian_address,
+        Parentrelated: datafromapimilitary.guardian_info?.guardian_relation,
 
         // rd2
         fatherNationality: '',

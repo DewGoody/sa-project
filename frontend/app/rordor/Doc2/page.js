@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 
 
 
+
 const RD = () => {
     const { formData, updateFormData } = useFormData();
 
@@ -258,7 +259,7 @@ const RD = () => {
                         {/* Navigation Buttons */}
                         <div className="flex justify-between mt-8">
                             <a
-                                href="/rordor/checkData"
+                                href="/rordor/checkData2"
 
                             >
                                 <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">

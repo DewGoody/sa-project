@@ -1,20 +1,26 @@
+
 "use client"
 import { ToastContainer, toast } from 'react-toastify';
-import { useFormData } from '../../contexts/RDDataContext'; // Adjust the import path as necessary
 import 'react-toastify/dist/ReactToastify.css';
 import { Header } from '../../components/Header';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useGoldenContext } from '../../contexts/GoldenData';
+import MultipleFileUploader from "../../components/MutipleFileUploader";
 
-
-
-const RD = () => {
-    const { formData, updateFormData } = useFormData();
-
-    useEffect(() => {
-        console.log(formData);
-    }, [formData]);
-
+const page = () => {
+    const { Data, updateData } = useGoldenContext();
+    const [checkboxes, setCheckboxes] = useState({
+        Option1: false,
+        Option2: false,
+        Option3: false,
+        Option4: false,
+        Option5: false,
+        Option6: false,
+        Option7: false,
+        Option8: false,
+        Option9: false,
+    });
     const filepdf = async () => {
         try {
             const response = await axios.get("/api/export/RD1", { responseType: 'blob' });
@@ -35,54 +41,12 @@ const RD = () => {
             document.body.removeChild(link);
         }
     };
-
-    // const handleDownload = () => {
-    //     const link = document.createElement('a');
-    //     link.href = '/test.pdf';
-    //     link.download = 'sample.pdf';
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-    // };
-
-    const [checkboxes, setCheckboxes] = useState({
-        Option1: false,
-        Option2: false,
-        Option3: false,
-        Option4: false,
-        Option5: false,
-        Option6: false,
-        Option7: false,
-        Option8: false,
-        Option9: false,
-    });
-
-    // Function to handle checkbox change
     const handleCheckboxChange = (event) => {
         setCheckboxes({
             ...checkboxes,
             [event.target.id]: event.target.checked,
         });
     };
-
-    // Function to check if all checkboxes are checked
-    const allChecked = () => {
-        return Object.values(checkboxes).every((isChecked) => isChecked);
-    };
-    const notifyerror = () => {
-        toast.error('👆🏻 ติ๊กให้ครบทุกช่อง', {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            // transition: Bounce,
-        });
-    }
-    // Function to handle navigation attempt
     const handleNavigation = (event, targetUrl) => {
         if (!allChecked()) {
             event.preventDefault();
@@ -100,6 +64,10 @@ const RD = () => {
     };
 
 
+    // Function to check if all checkboxes are checked
+    const allChecked = () => {
+        return Object.values(checkboxes).every((isChecked) => isChecked);
+    };
     return (
         <div>
             <Header req1="การสมัครเป็น นศท. ปี 1 (ผู้ไม่เคยศึกษาวิชาทหาร) " req2="" />
@@ -107,10 +75,10 @@ const RD = () => {
                 <main className="flex justify-center items-center">
                     <div className="bg-white p-8 w-full max-w-4xl">
                         <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
-                            นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
+                            นิสิตโปรดโหลดเอกสารเซ็นสำเนา และ อัพโหลดไฟล์
                         </h2>
                         <h1 className="text-mb text-gray-700 mb-6 text-center">
-                            Students, please prepare the following documents to submit to the staff
+                            Students, please download the document, sign a copy, and upload the file.
                         </h1>
 
                         {/* Personal & Contact Information Section */}
@@ -121,91 +89,18 @@ const RD = () => {
                                     <legend className="sr-only">Checkboxes</legend>
 
                                     <div className="divide-y divide-gray-200">
-                                        <label
+                                        <div>
+                                            <MultipleFileUploader />
+                                        </div>
+                                        {/* <label
                                             htmlFor="Option1"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
                                                 <strong className="font-medium text-gray-900 ">1. ติดรูป ชุดนิสิต ขนาด 1.5 นิ้ว</strong>
                                             </div>
-                                        </label>
+                                        </label> */}
 
-                                        <label
-                                            htmlFor="Option2"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">2. สำเนาหลักฐานผลการศึกษาชั้น ม.6</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option3"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">3. ใบรับรองแพทย์ โดยแพทย์ปริญญา (ใบรับรองแพทย์มีอายุ 1 เดือนนับจากวันที่ตรวจร่างกาย) รอเติม link</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option4"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">4. สำเนาใบสำคัญทหารกองเกิน (สด.9) กรณีเป็นผู้สมัครชายอายุ 17 ปีขึ้นไป (ถ้ามี)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option5"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">5. สำเนาหมายเรียกเข้ารับราชการทหาร (สด.35) กรณีเป็นผู้สมัครชายอายุ 20 ปีขึ้นไป (ถ้ามี)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option6"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">6. สำเนาใบรับรองผลการตรวจเลือกเข้ารับราชการทหาร (สด.43) กรณีผู้สมัครชายอายุ 21 ปีขึ้นไป (ถ้ามี)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option7"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">7. สำเนาบัตรประจำตัวประชาชน (copy of citizen ID)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option8"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">8. สำเนาใบเปลี่ยนชื่อ-สกุล (ถ้ามี)</strong>
-                                            </div>
-                                        </label>
                                     </div>
                                 </fieldset>
                                 <div className="flex space-x-4">
@@ -258,11 +153,11 @@ const RD = () => {
                         {/* Navigation Buttons */}
                         <div className="flex justify-between mt-8">
                             <a
-                                href="/rordor/checkData"
+                                href="/golden_card"
 
                             >
                                 <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                Back
+                                    Back
                                 </button>
                             </a>
 
@@ -292,4 +187,4 @@ const RD = () => {
     );
 };
 
-export default RD;
+export default page;
