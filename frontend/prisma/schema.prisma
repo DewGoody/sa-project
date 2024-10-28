@@ -33,7 +33,6 @@ model Address_Desc {
   Address Address[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model District {
   id          BigInt  @id @default(autoincrement())
@@ -46,6 +45,61 @@ model District {
 model Geography {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(255)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Military_info {
+  id                  Decimal   @id @db.Decimal
+  military_id         Decimal?  @db.Decimal
+  military_class      Decimal?  @db.Decimal
+  register_type       Int?      @db.SmallInt
+  grade9_gpax         Decimal?  @db.Decimal
+  grade9_school       String?
+  prev_military_class String?
+  prev_school         String?
+  academic_grade1     String?
+  academic_class1     String?
+  academic_major1     String?
+  academic_school1    String?
+  academic_grade2     String?
+  academic_class2     String?
+  academic_major2     String?
+  academic_school2    String?
+  academic_grade3     String?
+  academic_class3     String?
+  academic_major3     String?
+  academic_school3    String?
+  academic_grade4     String?
+  academic_class4     String?
+  academic_major4     String?
+  academic_school4    String?
+  military_grade1     Int?
+  military_year1      Int?
+  military_school1    String?
+  military_province   String?
+  military_grade2     Int?
+  military_year2      Int?
+  military_school2    String?
+  military_province2  String?
+  military_grade3     Int?
+  military_year3      Int?
+  military_school3    String?
+  military_province3  String?
+  military_grade4     Int?
+  military_year4      Int?
+  military_school4    String?
+  military_province4  String?
+  reg_army            String?
+  reg_corp            String?
+  promo_title1        String?
+  promo_corp1         String?
+  promo_order1        String?
+  promo_date1         DateTime? @db.Date
+  promo_title2        String?
+  promo_corp2         String?
+  promo_order2        String?
+  promo_date2         DateTime? @db.Date
+  Student             Student   @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model Province {
@@ -76,15 +130,11 @@ model Student {
   thai_id            String?
   facultyNameEN      String?
   Address            Address[]
+  Military_info      Military_info?
   UHC_reg_info       UHC_reg_info?
   accident_info      accident_info[]
-  education_record   education_record[]
   father_mother_info father_mother_info[]
-  military_course    military_course?
   parent_info        parent_info?
-  promoted_record    promoted_record?
-  reserve_info       reserve_info?
-  training_record    training_record[]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -136,32 +186,6 @@ model accident_info {
   Student         Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model contactable_info {
-  id         BigInt   @default(autoincrement())
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  fname      String
-  lname      String
-  school     String
-  address    String?  @db.Uuid
-  tel_num    String?
-  phont_num  String?
-  uuid       String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-
-  @@id([id, uuid])
-}
-
-model education_record {
-  id         Decimal  @db.Decimal
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  grade      String
-  class      String
-  major      String?
-  school     String
-  Student    Student  @relation(fields: [id], references: [id], onDelete: Cascade)
-
-  @@id([id, grade])
-}
-
 model father_mother_info {
   id            Decimal  @db.Decimal
   relation      String
@@ -178,20 +202,6 @@ model father_mother_info {
   @@id([id, relation])
 }
 
-model military_course {
-  id                         Decimal  @id @db.Decimal
-  military_id                Decimal? @db.Decimal
-  military_class             Int?     @db.SmallInt
-  military_address           String?  @db.Uuid
-  grade9_gpax                Decimal  @db.Decimal
-  grade9_school              String?
-  family_background          String?
-  economy_background         String?
-  father_mother_relationship String?
-  grade9_province            String?
-  Student                    Student  @relation(fields: [id], references: [id], onDelete: Cascade)
-}
-
 model parent_info {
   parent_fname    String?
   parent_lname    String?
@@ -202,33 +212,4 @@ model parent_info {
   title           String?
   parent_address  String?
   Student         Student @relation(fields: [id], references: [id], onDelete: Cascade)
-}
-
-model promoted_record {
-  id         Decimal   @id @db.Decimal
-  created_at DateTime  @default(now()) @db.Timestamptz(6)
-  rank       String?
-  corp       String?
-  order_num  String?
-  ordered_at DateTime? @db.Date
-  Student    Student   @relation(fields: [id], references: [id], onDelete: Cascade)
-}
-
-model reserve_info {
-  id      Decimal @id @db.Decimal
-  army    String?
-  corp    String?
-  Student Student @relation(fields: [id], references: [id], onDelete: Cascade)
-}
-
-model training_record {
-  id         Decimal  @db.Decimal
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  class      Int
-  year       Int
-  major      String?
-  school     String
-  Student    Student  @relation(fields: [id], references: [id], onDelete: Cascade)
-
-  @@id([id, year])
 }
