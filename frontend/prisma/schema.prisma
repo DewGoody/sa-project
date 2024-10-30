@@ -19,7 +19,7 @@ model Address {
   subdistrict  String?
   district     String?
   province     String?
-  postal_code  Int?
+  postal_code  String?      @default("")
   address_id   String       @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   Address_Desc Address_Desc @relation(fields: [address_type], references: [type])
   Student      Student      @relation(fields: [id], references: [id], onDelete: Cascade)
@@ -33,7 +33,6 @@ model Address_Desc {
   Address Address[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model District {
   id          BigInt  @id @default(autoincrement())
@@ -48,6 +47,74 @@ model Geography {
   name String @db.VarChar(255)
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Military_info {
+  military_id         Decimal?  @db.Decimal
+  military_class      Decimal?  @db.Decimal
+  register_type       Int?      @db.SmallInt
+  grade9_gpax         Decimal?  @db.Decimal
+  grade9_school       String?   @default("")
+  prev_military_class String?   @default("")
+  prev_school         String?   @default("")
+  academic_grade1     String?   @default("")
+  academic_class1     String?   @default("")
+  academic_major1     String?   @default("")
+  academic_school1    String?   @default("")
+  academic_grade2     String?   @default("")
+  academic_class2     String?   @default("")
+  academic_major2     String?   @default("")
+  academic_school2    String?
+  academic_grade3     String?
+  academic_class3     String?
+  academic_major3     String?
+  academic_school3    String?
+  academic_grade4     String?
+  academic_class4     String?
+  academic_major4     String?
+  academic_school4    String?
+  military_grade1     String?   @default("")
+  military_year1      String?
+  military_school1    String?   @default("")
+  military_province1  String?   @default("")
+  military_grade2     String?   @default("")
+  military_year2      String?
+  military_school2    String?   @default("")
+  military_province2  String?   @default("")
+  military_grade3     String?   @default("")
+  military_year3      String?
+  military_school3    String?   @default("")
+  military_province3  String?   @default("")
+  military_grade4     String?   @default("")
+  military_year4      String?
+  military_school4    String?   @default("")
+  military_province4  String?   @default("")
+  reg_army            String?   @default("")
+  reg_corp            String?   @default("")
+  promo_title1        String?   @default("")
+  promo_corp1         String?   @default("")
+  promo_order1        String?   @default("")
+  promo_date1         DateTime? @db.Date
+  promo_title2        String?   @default("")
+  promo_corp2         String?   @default("")
+  promo_order2        String?   @default("")
+  promo_date2         DateTime? @db.Date
+  id                  Decimal   @id @db.Decimal
+  grade9_province     String?
+  follower_name1      String?   @default("")
+  follower_school1    String?   @default("")
+  follower_telnum1    String?   @default("")
+  follower_phonenum1  String?   @default("")
+  follower_name2      String?   @default("")
+  follower_school2    String?   @default("")
+  follower_telnum2    String?   @default("")
+  follower_phonenum2  String?   @default("")
+  prev_province       String?   @default("")
+  date_of_study       DateTime? @db.Date
+  prev_year           String?   @default("")
+  Student             Student   @relation(fields: [id], references: [id], onDelete: Cascade)
+}
+
 model Province {
   id           Int    @id @default(autoincrement())
   code         String @db.VarChar(2)
@@ -56,31 +123,37 @@ model Province {
   geography_id Int    @default(0)
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model Student {
-  id                 Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
-  lnameTH            String
-  fnameTH            String
-  lnameEN            String
-  fnameEN            String
-  fac_id             String
-  facultyNameTH      String
-  dept               String
-  year               String
-  bd                 DateTime             @db.Date
-  tel_num            String?
-  title              String?
-  major              String?              @default("")
-  nationality        String?
-  race               String?
-  religion           String?              @db.VarChar
-  thai_id            String?
-  facultyNameEN      String?
-  Address            Address[]
-  Military_info      Military_info?
-  UHC_reg_info       UHC_reg_info?
-  accident_info      accident_info[]
-  father_mother_info father_mother_info[]
-  guardian_info      guardian_info?
+  id                   Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
+  lnameTH              String
+  fnameTH              String
+  lnameEN              String
+  fnameEN              String
+  fac_id               String
+  facultyNameTH        String
+  dept                 String
+  year                 String
+  bd                   DateTime             @db.Date
+  tel_num              String?
+  title                String?
+  major                String?              @default("")
+  nationality          String?
+  race                 String?
+  religion             String?              @db.VarChar
+  thai_id              String?
+  facultyNameEN        String?
+  contactable_tel      String?
+  thai_id_card_issured DateTime?            @db.Date
+  thai_id_card_expired DateTime?            @db.Date
+  personal_email       String?
+  phone_num            String?              @default("")
+  Address              Address[]
+  Military_info        Military_info?
+  UHC_reg_info         UHC_reg_info?
+  accident_info        accident_info[]
+  father_mother_info   father_mother_info[]
+  guardian_info        guardian_info?
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -143,65 +216,11 @@ model father_mother_info {
   phone_num     String?
   tel_num       String?
   occupation    String?
+  nationality   String?  @default("")
+  home_tel      String?
   Student       Student  @relation(fields: [id], references: [id], onDelete: Cascade)
 
   @@id([id, relation])
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Military_info {
-  military_id         Decimal?  @db.Decimal
-  military_class      Decimal?  @db.Decimal
-  register_type       Int?      @db.SmallInt
-  grade9_gpax         Decimal?  @db.Decimal
-  grade9_school       String?   @default("")
-  prev_military_class String?   @default("")
-  prev_school         String?   @default("")
-  academic_grade1     String?   @default("")
-  academic_class1     String?   @default("")
-  academic_major1     String?   @default("")
-  academic_school1    String?   @default("")
-  academic_grade2     String?   @default("")
-  academic_class2     String?   @default("")
-  academic_major2     String?   @default("")
-  academic_school2    String?
-  academic_grade3     String?
-  academic_class3     String?
-  academic_major3     String?
-  academic_school3    String?
-  academic_grade4     String?
-  academic_class4     String?
-  academic_major4     String?
-  academic_school4    String?
-  military_grade1     Int?
-  military_year1      Int?
-  military_school1    String?   @default("")
-  military_province   String?   @default("")
-  military_grade2     Int?
-  military_year2      Int?
-  military_school2    String?   @default("")
-  military_province2  String?   @default("")
-  military_grade3     Int?
-  military_year3      Int?
-  military_school3    String?   @default("")
-  military_province3  String?   @default("")
-  military_grade4     Int?
-  military_year4      Int?
-  military_school4    String?   @default("")
-  military_province4  String?   @default("")
-  reg_army            String?   @default("")
-  reg_corp            String?   @default("")
-  promo_title1        String?   @default("")
-  promo_corp1         String?   @default("")
-  promo_order1        String?   @default("")
-  promo_date1         DateTime? @db.Date
-  promo_title2        String?   @default("")
-  promo_corp2         String?   @default("")
-  promo_order2        String?   @default("")
-  promo_date2         DateTime? @db.Date
-  id                  Decimal   @id @db.Decimal
-  grade9_province     String?
-  Student             Student   @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model guardian_info {

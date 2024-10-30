@@ -3,21 +3,25 @@
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
 // not implemented yet
-import { militaryRD2 } from '@/document_build/militaryRD1'
-//import { militaryRD2 } from '@/document_build/militaryRD2'
+import { militaryRD2 } from '../../../../document_build/militaryRD2'
+import { getMilitaryInfo } from '../../../../lib/prisma/prisma'
+import { getID } from '../../../../lib/session'
+
 
 const prisma = new PrismaClient()
 
-export async function GET() {
+export async function GET(req) {
   try {
 
-    let data = await fetch(`${process.env.WEB_URL}/api/military`, {
-      method: "GET",
-      headers: {
-      "Content-Type": "application/json",
-      },
-    })
-    data = await data.json()
+    const cookie = req.headers.get('cookie') || '';
+    const id = await getID(req) || getIDbyToken(cookie);
+    if (!id) {
+      return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
+    }
+    const data = await getMilitaryInfo(id);
+    if (!data) {
+      return NextResponse.json({ error: "Student data not found" }, { status: 404 });
+    }
 
     const pdfBytes = await militaryRD2(data)
 

@@ -30,7 +30,7 @@ try {
 }
 
 async function militaryRD1(data) {
-  console.log(data);
+  //console.log(data);
   const {
     student,
     addresses,
