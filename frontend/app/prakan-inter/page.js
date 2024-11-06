@@ -22,8 +22,8 @@ function page() {
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                  <div className="flex space-x-4 w-full  ">
-                    <div className="w-1/2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 md:space-x-4  w-full  ">
+                    <div className="">
                       <label className="block text-gray-700 mb-2">Prefix</label>
                       <input
                         type="text"
@@ -35,7 +35,7 @@ function page() {
                       />
                     </div>
 
-                    <div className="w-1/2">
+                    <div className="pt-4 md:pt-0">
                       <label className="block text-gray-700 mb-2">Name</label>
                       <input
                         type="text"
@@ -218,7 +218,7 @@ function page() {
                 <a href="./prakan/checkPrakan">
                   <button
                     //onClick={handleSubmit}
-                    className="bg-pink-300 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                    className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
                   >
                     Next
                   </button>
