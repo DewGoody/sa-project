@@ -8,10 +8,57 @@ import AccidentForm from "./AccidentForm.js";
 import IllnessForm from "./IllnessForm.js";
 function page() {
   const [prakanData, setPrakanData] = useState({});
+  const [claimType, setClaimType] = useState("null");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [profileData, setProfileData] = useState(null);
+
   const handleChange = (event, field) => {
-    console.log(event.target.value);
+    console.log(field + " : " + event.target.value);
     setPrakanData({ ...prakanData, [field]: event.target.value });
   };
+
+  const handleCiaimTypeChange = (event) => {
+    setClaimType(event.target.value);
+    handleChange(event, "claimType");
+  };
+
+  const handleSubmit = (event) => {
+    console.log(prakanData);
+    // TODO Write a function to send data to backend
+    //axios.post('/api/prakanService', allData)
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/profile"); // Example API
+        console.log(response.data);
+
+        setProfileData(response.data);
+        setLoading(false);
+
+        //console.log(response.data);
+        // Create a new object to hold the updated state
+        const updatedData = {};
+        Object.keys(response.data).forEach((key) => {
+          updatedData[key] = response.data[key];
+        });
+
+        // Update the state once with the new object
+        setPrakanData(updatedData);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <>
       <div className=" bg-white min-h-screen">
@@ -35,12 +82,14 @@ function page() {
                     <div className="">
                       <label className="block text-gray-700 mb-2">Prefix</label>
                       <input
+                        required
                         type="text"
                         name="title"
                         //value={formData.Nametitle}
                         onChange={(event) => handleChange(event, "title")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Nametitle"
+                        defaultValue={profileData.title}
                       />
                     </div>
 
@@ -53,6 +102,7 @@ function page() {
                         onChange={(event) => handleChange(event, "fnameTH")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Name"
+                        defaultValue={profileData.fnameTH}
                       />
                     </div>
                   </div>
@@ -65,6 +115,7 @@ function page() {
                       onChange={(event) => handleChange(event, "lnameTH")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                       placeholder="Surname"
+                      defaultValue={profileData.lnameTH}
                     />
                   </div>
                   <div>
@@ -78,6 +129,7 @@ function page() {
                       onChange={(event) => handleChange(event, "id")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Student ID"
+                      defaultValue={profileData.id}
                     />
                   </div>
                   <div>
@@ -86,11 +138,12 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="phone_num"
+                      name="tel_num"
                       //value={formData.religion}
                       onChange={(event) => handleChange(event, "phone_num")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Phone number"
+                      defaultValue={profileData.tel_num}
                     />
                   </div>
                   <div>
@@ -117,6 +170,11 @@ function page() {
                       name="bd"
                       //value={formData.religion}
                       onChange={(event) => handleChange(event, "bd")}
+                      defaultValue={
+                        profileData.bd
+                          ? new Date(profileData.bd).toISOString().split("T")[0]
+                          : ""
+                      }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Birthdate"
                     />
@@ -158,7 +216,7 @@ function page() {
                   <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
                     2
                   </span>
-                  select an Claim Type
+                  Select an Claim Type
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                   <div>
@@ -168,6 +226,7 @@ function page() {
                     <select
                       id="claimType"
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      onChange={handleCiaimTypeChange}
                     >
                       <option defaultValue value="null">
                         Select an Claim Type
@@ -178,7 +237,12 @@ function page() {
                   </div>
                   <div></div>
                 </div>
-                <IllnessForm />
+                {claimType === "accident" ? (
+                  <AccidentForm handleChange={handleChange} />
+                ) : null}
+                {claimType === "illness" ? (
+                  <IllnessForm handleChange={handleChange} />
+                ) : null}
               </section>
 
               <div className="flex justify-between mt-8">
@@ -188,14 +252,13 @@ function page() {
                     Back
                   </button>
                 </a>
-                <a href="./prakan/checkPrakan">
-                  <button
-                    //onClick={handleSubmit}
-                    className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
-                  >
-                    Next
-                  </button>
-                </a>
+
+                <button
+                  onClick={handleSubmit}
+                  className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                >
+                  Next
+                </button>
               </div>
             </div>
           </main>
