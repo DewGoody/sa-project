@@ -5,7 +5,13 @@ import axios from "axios";
 import { Header } from "../components/Header.js";
 import numberToThaiText from "../components/numberToThaiText.js";
 import AccidentForm from "./AccidentForm.js";
+import IllnessForm from "./IllnessForm.js";
 function page() {
+  const [prakanData, setPrakanData] = useState({});
+  const handleChange = (event, field) => {
+    console.log(event.target.value);
+    setPrakanData({ ...prakanData, [field]: event.target.value });
+  };
   return (
     <>
       <div className=" bg-white min-h-screen">
@@ -18,7 +24,7 @@ function page() {
             <div className="bg-white  w-full min-w-screen-6xl">
               <section className="ml-5 py-4">
                 <h3 className="text-lg font-semibold my-4 flex gap-4">
-                  <span class=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
+                  <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
                     1
                   </span>
                   Personal & contact information
@@ -30,9 +36,9 @@ function page() {
                       <label className="block text-gray-700 mb-2">Prefix</label>
                       <input
                         type="text"
-                        name="Nametitle"
+                        name="title"
                         //value={formData.Nametitle}
-                        //onChange={handleChange}
+                        onChange={(event) => handleChange(event, "title")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Nametitle"
                       />
@@ -42,9 +48,9 @@ function page() {
                       <label className="block text-gray-700 mb-2">Name</label>
                       <input
                         type="text"
-                        name="Name"
+                        name="fnameTH"
                         //value={formData.Name}
-                        //onChange={handleChange}
+                        onChange={(event) => handleChange(event, "fnameTH")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Name"
                       />
@@ -54,9 +60,9 @@ function page() {
                     <label className="block text-gray-700 mb-2 ">Surname</label>
                     <input
                       type="text"
-                      name="Surname"
+                      name="lnameTH"
                       //value={formData.Surname}
-                      //onChange={handleChange}
+                      onChange={(event) => handleChange(event, "lnameTH")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                       placeholder="Surname"
                     />
@@ -67,9 +73,9 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="studentId"
+                      name="id"
                       //value={formData.citizenId}
-                      // onChange={handleChange}
+                      onChange={(event) => handleChange(event, "id")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Student ID"
                     />
@@ -80,9 +86,9 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="phoneNumber"
+                      name="phone_num"
                       //value={formData.religion}
-                      //onChange={handleChange}
+                      onChange={(event) => handleChange(event, "phone_num")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Phone number"
                     />
@@ -95,7 +101,9 @@ function page() {
                       type="text"
                       name="presentAddress"
                       //value={formData.religion}
-                      //onChange={handleChange}
+                      onChange={(event) =>
+                        handleChange(event, "presentAddress")
+                      }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Present address"
                     />
@@ -106,9 +114,9 @@ function page() {
                     </label>
                     <input
                       type="date"
-                      name="birthDate"
+                      name="bd"
                       //value={formData.religion}
-                      //onChange={handleChange}
+                      onChange={(event) => handleChange(event, "bd")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Birthdate"
                     />
@@ -121,10 +129,12 @@ function page() {
                       type="text"
                       name="businessAddress"
                       //value={formData.religion}
-                      //onChange={handleChange}
+                      onChange={(event) =>
+                        handleChange(event, "businessAddress")
+                      }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                       placeholder="Business Address"
-                      value="254 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 10330"
+                      value="[Check With Staff] 254 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 10330"
                       disabled
                     />
                   </div>
@@ -136,16 +146,16 @@ function page() {
                       type="text"
                       name="occupation"
                       //value={formData.religion}
-                      //onChange={handleChange}
+                      onChange={(event) => handleChange(event, "occupation")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
-                      value="College student"
+                      value="[Check With Staff] College student"
                       disabled
                     />
                   </div>
                 </div>
 
                 <h3 className="text-lg font-semibold my-4 flex gap-4">
-                  <span class=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
+                  <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
                     2
                   </span>
                   select an Claim Type
@@ -159,14 +169,16 @@ function page() {
                       id="claimType"
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
-                      <option defaultValue>Select an Claim Type</option>
+                      <option defaultValue value="null">
+                        Select an Claim Type
+                      </option>
                       <option value="accident">Accident</option>
                       <option value="illness">Illness</option>
                     </select>
                   </div>
                   <div></div>
                 </div>
-                <AccidentForm />
+                <IllnessForm />
               </section>
 
               <div className="flex justify-between mt-8">
