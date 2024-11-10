@@ -20,6 +20,7 @@ export async function getMilitaryInfo(id) {
     // Build the response data
     let data = {
         student: {
+            student_id: studentData.id || '',
             title: studentData.title || '',
             fnameTH: studentData.fnameTH || '',
             lnameTH: studentData.lnameTH || '',
@@ -74,6 +75,7 @@ export async function getMilitaryInfo(id) {
             guardian_occupation: "",
             guardian_age: "",
             guardian_address: "",
+            guardian_natinality: "",
          },
         Military_info: studentData.Military_info || { id: id ,
                 "military_id": "",
