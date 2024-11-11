@@ -40,8 +40,10 @@ async function prakanFormBuilder(data) {
     // Split the input date string by the hyphen (-) to get year, month, and day
     const [year, month, day] = dateString.split("-");
 
+    const buddhistYear = Number(year) + 543;
+
     // Return the date in the desired format
-    return `${day}/${month}/${year}`;
+    return `${day}/${month}/${buddhistYear}`;
   };
 
   let stdAge = new AgeFromDateString(data.bd).age;
@@ -74,10 +76,51 @@ async function prakanFormBuilder(data) {
   );
 
   drawTextOnPage(firstPage, String(stdAge), 490, height - 135);
-  drawTextOnPage(firstPage, data.presentAddress, 137, height - 155);
+  drawTextOnPage(firstPage, data.presentAddress, 123, height - 155);
   // drawTextOnPage(firstPage, data.businessAddress, 140, height - 173);
   drawTextOnPage(firstPage, data.occupation, 396, height - 173);
   drawTextOnPage(firstPage, data.phone_num, 454, height - 192);
+  drawTextOnPage(firstPage, data.hospitalName, 196, height - 303);
+  drawTextOnPage(firstPage, data.hospitalProvince, 350, height - 303);
+  drawTextOnPage(firstPage, data.hospitalPhoneNumber, 462, height - 303);
+
+  if (data.claimType === "accident") {
+    drawTextOnPage(
+      firstPage,
+      convertDateFormat(data.accidentDate),
+      155,
+      height - 342
+    );
+    drawTextOnPage(firstPage, data.accidentTime, 253, height - 342);
+    //TODO แจ้งความ
+    drawTextOnPage(firstPage, data.accidentCause, 165, height - 363);
+    drawTextOnPage(
+      firstPage,
+      convertDateFormat(data.hospitalAmittedDate),
+      270,
+      height - 386
+    );
+    drawTextOnPage(
+      firstPage,
+      convertDateFormat(data.hospitalDischargedDate),
+      435,
+      height - 386
+    );
+  } else if (data.claimType === "illness") {
+    drawTextOnPage(
+      firstPage,
+      convertDateFormat(data.hospitalAmittedDate),
+      270,
+      height - 420
+    );
+    drawTextOnPage(
+      firstPage,
+      convertDateFormat(data.hospitalDischargedDate),
+      435,
+      height - 420
+    );
+  }
+
   const pdfBytes = await pdfDoc.save();
   fs.writeFileSync(
     "public/documents/prakan-inter/Health-claim-form-filled.pdf",
