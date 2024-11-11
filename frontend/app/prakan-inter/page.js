@@ -24,9 +24,77 @@ function page() {
   };
 
   const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    // List of required fields
+    const requiredFields = [
+      "title",
+      "lnameTH",
+      "fnameTH",
+      "id",
+      "phone_num",
+      "presentAddress",
+      "bd",
+      "businessAddress",
+      "occupation",
+    ];
+
+    // Check if all required fields are present and not empty
+    for (let field of requiredFields) {
+      if (!prakanData[field] || prakanData[field].trim() === "") {
+        alert(`Please fill in the "${field}" field.`);
+        return;
+      }
+    }
+
+    if (claimType === "accident") {
+      const accidentRequiredFields = [
+        "accidentDate",
+        "accidentTime",
+        "accidentCause",
+        "hospitalName",
+        "hospitalProvince",
+        "hospitalPhoneNumber",
+        "hospitalAmittedDate",
+        "hospitalDischargedDate",
+      ];
+
+      for (let field of accidentRequiredFields) {
+        if (!prakanData[field] || prakanData[field].trim() === "") {
+          alert(`Please fill in the "${field}" field.`);
+          return;
+        }
+      }
+    } else if (claimType === "illness") {
+      const illnessRequiredFields = [
+        "hospitalName",
+        "hospitalProvince",
+        "hospitalPhoneNumber",
+        "hospitalAmittedDate",
+        "hospitalDischargedDate",
+      ];
+
+      for (let field of illnessRequiredFields) {
+        if (!prakanData[field] || prakanData[field].trim() === "") {
+          alert(`Please fill in the "${field}" field.`);
+          return;
+        }
+      }
+    } else {
+      alert(`Please Select an Claim Type.`);
+    }
+
     console.log(prakanData);
-    let allData = { ...prakanData, ...studentInfo };
-    axios.post("/api/prakanService", allData);
+    let allData = { ...prakanData };
+    axios
+      .post("/api/prakanInterService", allData)
+      .then((response) => {
+        console.log("Form submitted successfully:", response.data);
+        window.location.href = "/prakan-inter/checkPrakan";
+      })
+      .catch((error) => {
+        console.error("Error submitting form:", error);
+      });
   };
 
   useEffect(() => {
@@ -47,6 +115,12 @@ function page() {
 
         // Update the state once with the new object
         setPrakanData(updatedData);
+        setPrakanData((prakanData) => ({
+          ...prakanData,
+          businessAddress:
+            "254 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 10330",
+          occupation: "College student",
+        }));
       } catch (error) {
         setError(error.message);
         setLoading(false);
@@ -177,6 +251,7 @@ function page() {
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Birthdate"
+                      max={new Date()?.toISOString()?.slice(0, 10)}
                     />
                   </div>
                   <div>
@@ -247,19 +322,18 @@ function page() {
 
               <div className="flex justify-between mt-8">
                 {/*TODO Edit Link*/}
-                <a href="/home">
+                <a href="./">
                   <button className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11">
                     Back
                   </button>
                 </a>
-                <a href="./prakan-inter/checkPrakan">
-                  <button
-                    onClick={handleSubmit}
-                    className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
-                  >
-                    Next
-                  </button>
-                </a>
+
+                <button
+                  onClick={handleSubmit}
+                  className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                >
+                  Next
+                </button>
               </div>
             </div>
           </main>

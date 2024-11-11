@@ -19,6 +19,7 @@ function AccidentForm({ handleChange }) {
             onChange={(event) => handleChange(event, "accidentDate")}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Date of Accident"
+            max={new Date()?.toISOString()?.slice(0, 10)}
           />
         </div>
         <div>
@@ -90,6 +91,7 @@ function AccidentForm({ handleChange }) {
             onChange={(event) => handleChange(event, "hospitalAmittedDate")}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Date Amitted"
+            max={new Date()?.toISOString()?.slice(0, 10)}
           />
         </div>
         <div>
