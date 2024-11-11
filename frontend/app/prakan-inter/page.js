@@ -137,7 +137,7 @@ function page() {
     <>
       <div className=" bg-white min-h-screen">
         <Header
-          req1="Claim Form For Injury/Illness (For International Students)"
+          req1="Health Insurance For Foreigner Student (Claim Injury/Illness)"
           req2=""
         />
         <div className=" mx-24 ">

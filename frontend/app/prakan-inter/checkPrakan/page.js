@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import Header from "../../components/header/page";
+import { Header } from "../../components/Header";
 import "react-toastify/dist/ReactToastify.css";
 
 const RD = () => {
@@ -14,7 +14,7 @@ const RD = () => {
 
   const handleDownload = () => {
     const link = document.createElement("a");
-    link.href = "../../documents/prakan-inter/Health-claim-form.pdf";
+    link.href = "../../documents/prakan-inter/Health-claim-form-filled.pdf";
     link.download = "Health-claim-form.pdf";
     document.body.appendChild(link);
     link.click();
@@ -57,7 +57,10 @@ const RD = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      <Header
+        req1="Health Insurance For Foreigner Student (Claim Injury/Illness)"
+        req2=""
+      />
       <main className="flex justify-center items-center">
         <div className="bg-white p-8 w-full max-w-4xl">
           {/* Personal & Contact Information Section */}
@@ -92,6 +95,46 @@ const RD = () => {
                     <div>
                       <strong className="font-medium text-gray-900">
                         2. Attending Physician's Report (Included in Claim Form)
+                      </strong>
+                    </div>
+                  </label>
+                  <label
+                    htmlFor="Option2"
+                    className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                  >
+                    <div>
+                      <strong className="font-medium text-gray-900">
+                        3. Original receipt
+                      </strong>
+                    </div>
+                  </label>
+                  <label
+                    htmlFor="Option2"
+                    className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                  >
+                    <div>
+                      <strong className="font-medium text-gray-900">
+                        4. Medical certificate
+                      </strong>
+                    </div>
+                  </label>
+                  <label
+                    htmlFor="Option2"
+                    className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                  >
+                    <div>
+                      <strong className="font-medium text-gray-900">
+                        5. Copy of student card
+                      </strong>
+                    </div>
+                  </label>
+                  <label
+                    htmlFor="Option2"
+                    className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                  >
+                    <div>
+                      <strong className="font-medium text-gray-900">
+                        6. Your copy of bank account passbook
                       </strong>
                     </div>
                   </label>
