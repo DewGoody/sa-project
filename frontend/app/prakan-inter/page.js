@@ -25,8 +25,8 @@ function page() {
 
   const handleSubmit = (event) => {
     console.log(prakanData);
-    // TODO Write a function to send data to backend
-    //axios.post('/api/prakanService', allData)
+    let allData = { ...prakanData, ...studentInfo };
+    axios.post("/api/prakanService", allData);
   };
 
   useEffect(() => {
@@ -192,7 +192,7 @@ function page() {
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                       placeholder="Business Address"
-                      value="[Check With Staff] 254 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 10330"
+                      value="254 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 10330"
                       disabled
                     />
                   </div>
@@ -206,7 +206,7 @@ function page() {
                       //value={formData.religion}
                       onChange={(event) => handleChange(event, "occupation")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
-                      value="[Check With Staff] College student"
+                      value="College student"
                       disabled
                     />
                   </div>
@@ -252,13 +252,14 @@ function page() {
                     Back
                   </button>
                 </a>
-
-                <button
-                  onClick={handleSubmit}
-                  className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
-                >
-                  Next
-                </button>
+                <a href="./prakan-inter/checkPrakan">
+                  <button
+                    onClick={handleSubmit}
+                    className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                  >
+                    Next
+                  </button>
+                </a>
               </div>
             </div>
           </main>
