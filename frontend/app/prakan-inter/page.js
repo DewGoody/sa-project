@@ -29,8 +29,8 @@ function page() {
     // List of required fields
     const requiredFields = [
       "title",
-      "lnameTH",
-      "fnameTH",
+      "lnameEN",
+      "fnameEN",
       "id",
       "phone_num",
       "presentAddress",
@@ -119,7 +119,7 @@ function page() {
           ...prakanData,
           businessAddress:
             "254 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 10330",
-          occupation: "College student",
+          occupation: "University Student",
         }));
       } catch (error) {
         setError(error.message);
@@ -162,7 +162,7 @@ function page() {
                         //value={formData.Nametitle}
                         onChange={(event) => handleChange(event, "title")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Nametitle"
+                        placeholder="Mr. / Mrs. / Miss"
                         defaultValue={profileData.title}
                       />
                     </div>
@@ -171,12 +171,12 @@ function page() {
                       <label className="block text-gray-700 mb-2">Name</label>
                       <input
                         type="text"
-                        name="fnameTH"
+                        name="fnameEN"
                         //value={formData.Name}
                         onChange={(event) => handleChange(event, "fnameTH")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Name"
-                        defaultValue={profileData.fnameTH}
+                        defaultValue={profileData.fnameEN}
                       />
                     </div>
                   </div>
@@ -184,12 +184,12 @@ function page() {
                     <label className="block text-gray-700 mb-2 ">Surname</label>
                     <input
                       type="text"
-                      name="lnameTH"
+                      name="lnameEN"
                       //value={formData.Surname}
                       onChange={(event) => handleChange(event, "lnameTH")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                       placeholder="Surname"
-                      defaultValue={profileData.lnameTH}
+                      defaultValue={profileData.lnameEN}
                     />
                   </div>
                   <div>
@@ -281,7 +281,7 @@ function page() {
                       //value={formData.religion}
                       onChange={(event) => handleChange(event, "occupation")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
-                      value="College student"
+                      value="University Student"
                       disabled
                     />
                   </div>
