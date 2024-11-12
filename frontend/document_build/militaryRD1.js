@@ -30,13 +30,16 @@ try {
 }
 
 async function militaryRD1(data) {
-  //console.log(data);
+  console.log(data);
   const {
     student,
-    addresses,
-    father_mother_info,
-    guardian_info,
-    Military_info
+    military_course,
+    DOPA_address,
+    military_address,
+    parent_info,
+    father_info,
+    mother_info,
+    mf_occupation,
   } = data;
 
 
@@ -118,7 +121,7 @@ async function militaryRD1(data) {
   // next row 
 
   // birthdate
-  const birthdate = new Date(student?.birthdate).toLocaleDateString('th-TH', { dateStyle: 'long' }) || '';
+  const birthdate = new Date(student?.bd).toLocaleDateString('th-TH', { dateStyle: 'long' }) || '';
   firstPage.drawText(birthdate, {
     x: 240,
     y: height - 143,
@@ -155,7 +158,6 @@ async function militaryRD1(data) {
   })
 
   // next row
-  const father_info = father_mother_info?.father;
   if (father_info) {
     const father_name = `${father_info?.fname || ""} ${father_info?.lname || ''}`;
     firstPage.drawText(father_name, {
@@ -166,8 +168,8 @@ async function militaryRD1(data) {
       color: rgb(0, 0, 0), // black
     });
   }
-  const mother_info = father_mother_info?.mother;
-  if (father_mother_info) {
+
+  if (mother_info) {
     const mother_name = `${mother_info.fname || ''} ${mother_info.lname || ''}`;
     firstPage.drawText(mother_name, {
       x: 330,
@@ -189,7 +191,6 @@ async function militaryRD1(data) {
 
   // next row
   // DOPA address
-  const DOPA_address = addresses?.DOPA_address;
 
   const DOPA_house_num = `${DOPA_address?.house_num || ''} ${DOPA_address?.house_moo ? "ม." : ""}${DOPA_address?.house_moo || ''}`;
   firstPage.drawText(DOPA_house_num, {
@@ -248,7 +249,6 @@ async function militaryRD1(data) {
 
   // next row
   // military address
-  const military_address = addresses?.Military_address;
   const military_house_num = `${military_address?.house_num || ''} ${military_address?.house_moo ? "ม." : ""}${military_address?.house_moo || ''}`;
   firstPage.drawText(military_house_num, {
     x: 250,
@@ -286,12 +286,8 @@ async function militaryRD1(data) {
   });
 
   // next row
-  let g9_gpax;
-  if (!Military_info?.grade9_gpax){
-    g9_gpax = '';
-  }
-  else g9_gpax = Military_info?.grade9_gpax;
-  const grade9_gpax = String(g9_gpax) || '';
+  
+  const grade9_gpax = String(military_course?.grade9_gpax) || '';
   firstPage.drawText(grade9_gpax, {
     x: 285,
     y: height - 250,
@@ -300,7 +296,7 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const grade9_school = Military_info?.grade9_school || '';
+  const grade9_school = military_course?.grade9_school || '';
   firstPage.drawText(grade9_school, {
     x: 420,
     y: height - 250,
@@ -310,7 +306,7 @@ async function militaryRD1(data) {
   });
 
   // next row
-  const grade9_province = Military_info?.grade9_province || '';
+  const grade9_province = military_course?.grade9_province || '';
   firstPage.drawText(grade9_province, {
     x: 185,
     y: height - 270,
@@ -324,14 +320,14 @@ async function militaryRD1(data) {
   firstPage.drawText(name, {
     x: 370,
     y: height - 315,
-    size: fontsize2,
+    size: fontsize,
     font: thSarabunFont,
     color: rgb(0, 0, 0), // black
   });
 
-  //guardian section
-  const guardian_name = `${guardian_info?.guardian_title || ''}${guardian_info?.guardian_fname || ''} ${guardian_info?.guardian_lname || ''}`;
-  firstPage.drawText(guardian_name, {
+  //parent section
+  const parent_name = `${parent_info?.title || ''}${parent_info?.parent_fname || ''} ${parent_info?.parent_lname || ''}`;
+  firstPage.drawText(parent_name, {
     x: 350,
     y: height - 373,
     size: 14,
@@ -340,8 +336,8 @@ async function militaryRD1(data) {
   });
 
   // next row
-  const guardian_age = `${guardian_info?.guardian_age || ''}`;
-  firstPage.drawText(guardian_age, {
+  const parent_age = `${parent_info?.age || ''}`;
+  firstPage.drawText(parent_age, {
     x: 335,
     y: height - 392,
     size: 14,
@@ -349,8 +345,8 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const guardian_occupation = `${guardian_info?.guardian_occupation || ''}`;
-  firstPage.drawText(guardian_occupation, {
+  const parent_occupation = `${parent_info?.occupation || ''}`;
+  firstPage.drawText(parent_occupation, {
     x: 460,
     y: height - 392,
     size: 14,
@@ -359,8 +355,8 @@ async function militaryRD1(data) {
   });
 
   // next row
-  const guardian_address = `${guardian_info?.guardian_address || ''}`;
-  firstPage.drawText(guardian_address, {
+  const parent_address = `${parent_info?.parent_address || ''}`;
+  firstPage.drawText(parent_address, {
     x: 400,
     y: height - 412,
     size: 14,
@@ -368,8 +364,8 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  const guardian_relation = `${guardian_info?.guardian_relation || ''}`;
-  firstPage.drawText(guardian_relation, {
+  const parent_relation = `${parent_info?.parent_relation || ''}`;
+  firstPage.drawText(parent_relation, {
     x: 380,
     y: height - 452,
     size: 14,
@@ -377,8 +373,8 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  // guardian signature section
-  firstPage.drawText(guardian_name, {
+  // parent signature section
+  firstPage.drawText(parent_name, {
     x: 390,
     y: height - 548,
     size: 14,
@@ -399,9 +395,9 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  //guardian section
-  const guardian_name_untitle = `${guardian_info?.guardian_fname || ''} ${guardian_info?.guardian_lname || ''}`;
-  secondPage.drawText(guardian_name_untitle, {
+  //parent section
+  const parent_name_untitle = `${parent_info?.parent_fname || ''} ${parent_info?.parent_lname || ''}`;
+  secondPage.drawText(parent_name_untitle, {
     x: 230,
     y: height - 535,
     size: 14,
@@ -410,7 +406,7 @@ async function militaryRD1(data) {
   });
 
   // next row
-  secondPage.drawText(guardian_relation, {
+  secondPage.drawText(parent_relation, {
     x: 60,
     y: height - 555,
     size: 14,
@@ -436,8 +432,8 @@ async function militaryRD1(data) {
     color: rgb(0, 0, 0), // black
   });
 
-  // guardian signature section
-  secondPage.drawText(guardian_name, {
+  // parent signature section
+  secondPage.drawText(parent_name, {
     x: 335,
     y: height - 770,
     size: 14,

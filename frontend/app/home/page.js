@@ -1,8 +1,13 @@
-import React from 'react';
-import { Header } from '../components/Header';
-import { FaUser, FaPlus, FaEye, FaCheck, FaGlobeAmericas, FaRegHospital } from 'react-icons/fa';
-import axios from 'axios';
-
+import React from "react";
+import { Header } from "../components/Header";
+import {
+  FaUser,
+  FaPlus,
+  FaEye,
+  FaCheck,
+  FaRegHospital,
+  FaGlobeAmericas,
+} from "react-icons/fa";
 
 export const Form = () => {
   return (
@@ -23,23 +28,37 @@ export const Form = () => {
             </div>
           </div>
 
-            <p className="text-lg font-bold py-4">Service</p>
-            <div className="space-y-8 ">
-              <a href="/rordor" ><ServiceCard title="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)" icon={<FaPlus />} /></a>
-
-              <a href="/prakan" className="p-4"><ServiceCard title="การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)" icon={<FaCheck />} /></a>
-              <a href="/golden_card"><ServiceCard title="ย้ายสิทธิ์บัตรทองมาที่โรงพยาบาลจุฬาลงกรณ์" icon={<FaRegHospital />} /></a>
-              <ServiceCard title="การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)" icon={<FaEye />} />
-              <a  className="p-4" href="/prakan-inter">
-                <ServiceCard
-                  title="Health Insurance For Foreigner Student"
-                  icon={<FaGlobeAmericas />}
-                />
-              </a>
-            </div>
+          <p className="text-lg font-bold py-4">Service</p>
+          <div className="space-y-8 py-4">
+            <a href="/rordor" className="p-4">
+              <ServiceCard
+                title="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)"
+                icon={<FaPlus />}
+              />
+            </a>
+            <a href="/prakan">
+              <ServiceCard
+                title="การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)"
+                icon={<FaEye />}
+              />
+            </a>
+            <ServiceCard
+              title="การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)"
+              icon={<FaCheck />}
+            />
+            <ServiceCard
+              title="โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)"
+              icon={<FaRegHospital />}
+            />
+            <a href="/prakan-inter">
+              <ServiceCard
+                title="Health Insurance For Foreigner Student"
+                icon={<FaGlobeAmericas />}
+              />
+            </a>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };
