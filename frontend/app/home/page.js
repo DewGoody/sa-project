@@ -3,6 +3,7 @@ import { Header } from '../components/Header';
 import { FaUser, FaPlus, FaEye, FaCheck, FaGlobeAmericas, FaRegHospital } from 'react-icons/fa';
 import axios from 'axios';
 
+
 export const Form = () => {
   return (
     <div className="min-h-screen bg-white">
@@ -10,7 +11,10 @@ export const Form = () => {
       <main className="flex justify-center items-center ">
         <div className="bg-white p-8  w-full mx-72">
           <div className="">
-            <ServiceCard title="ตรวจสอบข้อมูลส่วนตัวของคุณ (Verify your personal information)" icon={<FaUser />} />
+            <ServiceCard
+              title="ตรวจสอบข้อมูลส่วนตัวของคุณ (Verify your personal information)"
+              icon={<FaUser />}
+            />
           </div>
 
           <div className=" py-8">
@@ -38,7 +42,7 @@ export const Form = () => {
       </div>
     </div>
   );
-}
+};
 
 const ServiceCard = ({ title, icon }) => {
   return (
@@ -50,7 +54,6 @@ const ServiceCard = ({ title, icon }) => {
       </div>
     </div>
   );
-}
-
+};
 
 export default Form;

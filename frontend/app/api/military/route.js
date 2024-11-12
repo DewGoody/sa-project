@@ -17,6 +17,96 @@ export async function GET(req, res) {
 
         const data = await getMilitaryInfo(id);
 
+        // Fetch all related data in a single query
+        const studentData = await prisma.Student.findFirst({
+            where: { id },
+            include: {
+                Military_info: true,
+                Address: true,
+                father_mother_info: true,
+                parent_info: true,
+            }
+        });
+
+        if (!studentData) {
+            return NextResponse.json({ error: "Student not found" }, { status: 404 });
+        }
+
+        // Build the response data
+        const data = {
+            student: {
+                title: studentData.title || '',
+                fnameTH: studentData.fnameTH || '',
+                lnameTH: studentData.lnameTH || '',
+                thai_id: studentData.thai_id || '',
+                race: studentData.race || '',
+                nationality: studentData.nationality || '',
+                religion: studentData.religion || '',
+                birthdate: studentData.bd || '',
+            },
+            addresses: {
+                DOPA_address: null,
+                Military_address: null
+            },
+            parent_info: {
+                father: null,
+                mother: null
+            },
+            Military_info: studentData.Military_info || { id: id },
+        };
+
+        // Handle addresses
+        studentData.Address.forEach(address => {
+            if (address.address_type === "DOPA_address") {
+                data.addresses.DOPA_address = {
+                    house_num: address.house_num || '',
+                    house_moo: address.house_moo || '',
+                    soi: address.soi || '',
+                    street: address.street || '',
+                    subdistrict: address.subdistrict || '',
+                    district: address.district || '',
+                    province: address.province || '',
+                    postal_code: address.postal_code || '',
+                };
+            } else if (address.address_type === "Military_address") {
+                data.addresses.Military_address = {
+                    house_num: address.house_num || '',
+                    house_moo: address.house_moo || '',
+                    soi: address.soi || '',
+                    street: address.street || '',
+                    subdistrict: address.subdistrict || '',
+                    district: address.district || '',
+                    province: address.province || '',
+                    postal_code: address.postal_code || '',
+                };
+            }
+        });
+
+        // Handle father and mother info
+        const father = studentData.father_mother_info.find(info => info.relation === "father");
+        const mother = studentData.father_mother_info.find(info => info.relation === "mother");
+
+        if (father) {
+            data.parent_info.father = {
+                title: father.title || '',
+                fname: father.fname || '',
+                lname: father.lname || '',
+                working_place: father.working_place || '',
+                phone_num: father.phone_num || '',
+                occupation: father.occupation || '',
+            };
+        }
+
+        if (mother) {
+            data.parent_info.mother = {
+                title: mother.title || '',
+                fname: mother.fname || '',
+                lname: mother.lname || '',
+                working_place: mother.working_place || '',
+                phone_num: mother.phone_num || '',
+                occupation: mother.occupation || '',
+            };
+        }
         return NextResponse.json(data);
     } catch (error) {
         console.error(error);
@@ -154,6 +244,7 @@ export async function PUT(req, res) {
                 create: { id, ...guardian }
             });
         }
+
 
         return NextResponse.json({ message: "Data updated successfully" });
     } catch (error) {

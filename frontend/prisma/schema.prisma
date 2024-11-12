@@ -33,7 +33,6 @@ model Address_Desc {
   Address Address[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model District {
   id          BigInt  @id @default(autoincrement())
@@ -46,6 +45,61 @@ model District {
 model Geography {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(255)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Military_info {
+  id                  Decimal   @id @db.Decimal
+  military_id         Decimal?  @db.Decimal
+  military_class      Decimal?  @db.Decimal
+  register_type       Int?      @db.SmallInt
+  grade9_gpax         Decimal?  @db.Decimal
+  grade9_school       String?
+  prev_military_class String?
+  prev_school         String?
+  academic_grade1     String?
+  academic_class1     String?
+  academic_major1     String?
+  academic_school1    String?
+  academic_grade2     String?
+  academic_class2     String?
+  academic_major2     String?
+  academic_school2    String?
+  academic_grade3     String?
+  academic_class3     String?
+  academic_major3     String?
+  academic_school3    String?
+  academic_grade4     String?
+  academic_class4     String?
+  academic_major4     String?
+  academic_school4    String?
+  military_grade1     Int?
+  military_year1      Int?
+  military_school1    String?
+  military_province   String?
+  military_grade2     Int?
+  military_year2      Int?
+  military_school2    String?
+  military_province2  String?
+  military_grade3     Int?
+  military_year3      Int?
+  military_school3    String?
+  military_province3  String?
+  military_grade4     Int?
+  military_year4      Int?
+  military_school4    String?
+  military_province4  String?
+  reg_army            String?
+  reg_corp            String?
+  promo_title1        String?
+  promo_corp1         String?
+  promo_order1        String?
+  promo_date1         DateTime? @db.Date
+  promo_title2        String?
+  promo_corp2         String?
+  promo_order2        String?
+  promo_date2         DateTime? @db.Date
+  Student             Student   @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model Province {
@@ -221,6 +275,7 @@ model Military_info {
   date_of_study       DateTime? @db.Date
   prev_year           String?   @default("")
   Student             Student   @relation(fields: [id], references: [id], onDelete: Cascade)
+
 }
 
 model guardian_info {
