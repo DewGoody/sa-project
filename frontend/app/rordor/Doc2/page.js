@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 
 
 
+
 const RD = () => {
     const { formData, updateFormData } = useFormData();
 
@@ -17,7 +18,7 @@ const RD = () => {
 
     const filepdf = async () => {
         try {
-            const response = await axios.get("/api/export/RD1", { responseType: 'blob' });
+            const response = await axios.get("/api/export/RD2", { responseType: 'blob' });
             return response.data;
         } catch (error) {
             console.log(error);
@@ -29,7 +30,7 @@ const RD = () => {
         if (pdfBlob) {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(pdfBlob);
-            link.download = 'RD1.pdf';
+            link.download = 'RD2.pdf';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -258,7 +259,7 @@ const RD = () => {
                         {/* Navigation Buttons */}
                         <div className="flex justify-between mt-8">
                             <a
-                                href="/rordor/checkData"
+                                href="/rordor/checkData2"
 
                             >
                                 <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
