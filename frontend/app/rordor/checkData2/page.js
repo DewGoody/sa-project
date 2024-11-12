@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Header } from '../../components/Header';
-import { useFormData } from '../../contexts/RDDataContext';
+import { useFormData } from '../../contexts/FormDataContext';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -783,6 +783,7 @@ const CheckData = () => {
                                             placeholder="Current address, house number"
                                         />
                                     </div>
+                                    </div>
 
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
@@ -1239,7 +1240,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div className="flex space-x-4 w-full">
-                                        <div className="w-1/2">
+                                        <div >
                                             <label className="block text-gray-700 mb-2">หมู่ที่ (Moo no)</label>
                                             <input
                                                 type="text"
@@ -1250,7 +1251,7 @@ const CheckData = () => {
                                                 placeholder="Moo"
                                             />
                                         </div>
-                                        <div className="w-1/2">
+                                        <div>
                                             <label className="block text-gray-700 mb-2">ซอย (Soi)</label>
                                             <input
                                                 type="text"
@@ -1416,14 +1417,12 @@ const CheckData = () => {
 
                                 <div>
                                     <h3 className="text-lg font-semibold mb-4 py-10 ">
-                                        ที่อยู่ที่ติดต่อได้สะดวก หรือ ที่อยู่ปัจจุบัน (Current address or convenient contact address)
+                                        ภูมิลำเนาทหาร (Military domicile)
                                     </h3>
                                 </div>
-
-
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">เลขที่บ้าน (Domicile number)</label>
+                                    {/* <div>
+                                        <label className="block text-gray-700 mb-2">ภูมิลำเนาทหารเลขที่ (Military domicile number)</label>
                                         <input
                                             type="text"
                                             name="domicileNumber_contactable"

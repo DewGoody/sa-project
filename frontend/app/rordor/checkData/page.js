@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Header } from '../../components/Header';
-import { useFormData } from '../../contexts/RDDataContext'; // Adjust the import path as necessary
+import { useFormData } from '../../contexts/FormDataContext'; // Adjust the import path as necessary
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -250,6 +250,8 @@ const CheckData = () => {
                                     ข้อมูลส่วนตัวและภูมิลำเนา (Personal & contact information)
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+
+
                                     <div className="flex space-x-4 w-full  ">
                                         <div className="w-1/2">
                                             <label className="block text-gray-700 mb-2">คำนำหน้า (Prefix)</label>
