@@ -70,7 +70,7 @@ const page = () => {
     };
     return (
         <div>
-            <Header req1="การสมัครเป็น นศท. ปี 1 (ผู้ไม่เคยศึกษาวิชาทหาร) " req2="" />
+            <Header req1="แบบคำขอรับรองคุณสมบัติในการเข้าร่วมโครงการประกันสุขภาพถ้วนหน้า (กรุงเทพมหานคร) สำหรับสินิตจุฬาลงกรณ์มหาวิทยาลัย และ หนังสือข้อตกลงขอขึ้นทะเบียนบัตรประกันสุขภาพถ้วนหน้า โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย" req2="" />
             <div className="min-h-screen bg-white">
                 <main className="flex justify-center items-center">
                     <div className="bg-white p-8 w-full max-w-4xl">
@@ -78,29 +78,20 @@ const page = () => {
                             นิสิตโปรดโหลดเอกสารเซ็นสำเนา และ อัพโหลดไฟล์
                         </h2>
                         <h1 className="text-mb text-gray-700 mb-6 text-center">
-                            Students, please download the document, sign a copy, and upload the file.
+                            Please download, sign and upload the file.
                         </h1>
 
-                        {/* Personal & Contact Information Section */}
+
                         <section>
+                            <div className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300">
+                                <MultipleFileUploader />
+                            </div>
 
                             <div className="grid grid-cols-1 gap-6">
                                 <fieldset>
                                     <legend className="sr-only">Checkboxes</legend>
 
                                     <div className="divide-y divide-gray-200">
-                                        <div>
-                                            <MultipleFileUploader />
-                                        </div>
-                                        {/* <label
-                                            htmlFor="Option1"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-                                            <div>
-                                                <strong className="font-medium text-gray-900 ">1. ติดรูป ชุดนิสิต ขนาด 1.5 นิ้ว</strong>
-                                            </div>
-                                        </label> */}
-
                                     </div>
                                 </fieldset>
                                 <div className="flex space-x-4">

@@ -1,7 +1,7 @@
 "use client"
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Header } from '../components/Header';
-import { FaUser, FaPlus, FaEye, FaCheck, FaRegHospital } from 'react-icons/fa';
+import { FaUser, FaPlus, FaEye, FaCheck, FaGlobeAmericas, FaRegHospital } from 'react-icons/fa';
 import axios from 'axios';
 
 export const Form = () => {
@@ -44,8 +44,14 @@ export const Form = () => {
               <a href="/rordor" ><ServiceCard title="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)" icon={<FaPlus />} /></a>
 
               <a href="/prakan" className="p-4"><ServiceCard title="การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)" icon={<FaCheck />} /></a>
-              <a href="/golden_card"><ServiceCard title="ย้ายสิทธ์บัตรทองมาที่โรงพยาบาลจุฬาลงกรณ์" icon={<FaRegHospital />} /></a>
+              <a href="/golden_card"><ServiceCard title="ย้ายสิทธิ์บัตรทองมาที่โรงพยาบาลจุฬาลงกรณ์" icon={<FaRegHospital />} /></a>
               <ServiceCard title="การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)" icon={<FaEye />} />
+              <a  className="p-4" href="/prakan-inter">
+                <ServiceCard
+                  title="Health Insurance For Foreigner Student"
+                  icon={<FaGlobeAmericas />}
+                />
+              </a>
             </div>
           </div>
         </main>

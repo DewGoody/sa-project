@@ -19,7 +19,7 @@ model Address {
   subdistrict  String?
   district     String?
   province     String?
-  postal_code  Int?
+  postal_code  String?      @default("")
   address_id   String       @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   Address_Desc Address_Desc @relation(fields: [address_type], references: [type])
   Student      Student      @relation(fields: [id], references: [id], onDelete: Cascade)
@@ -57,30 +57,36 @@ model Province {
 }
 
 model Student {
-  id                 Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
-  lnameTH            String
-  fnameTH            String
-  lnameEN            String
-  fnameEN            String
-  fac_id             String
-  facultyNameTH      String
-  dept               String
-  year               String
-  bd                 DateTime             @db.Date
-  tel_num            String?
-  title              String?
-  major              String?              @default("")
-  nationality        String?
-  race               String?
-  religion           String?              @db.VarChar
-  thai_id            String?
-  facultyNameEN      String?
-  Address            Address[]
-  Military_info      Military_info?
-  UHC_reg_info       UHC_reg_info?
-  accident_info      accident_info[]
-  father_mother_info father_mother_info[]
-  guardian_info      guardian_info?
+  id                   Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
+  lnameTH              String
+  fnameTH              String
+  lnameEN              String
+  fnameEN              String
+  fac_id               String
+  facultyNameTH        String
+  dept                 String
+  year                 String
+  bd                   DateTime             @db.Date
+  tel_num              String?
+  title                String?
+  major                String?              @default("")
+  nationality          String?
+  race                 String?
+  religion             String?              @db.VarChar
+  thai_id              String?
+  facultyNameEN        String?
+  contactable_tel      String?
+  thai_id_card_issured DateTime?            @db.Date
+  thai_id_card_expired DateTime?            @db.Date
+  personal_email       String?
+  phone_num            String?              @default("")
+  Address              Address[]
+  Military_info        Military_info?
+  Queue                Queue[]
+  UHC_reg_info         UHC_reg_info?
+  accident_info        accident_info[]
+  father_mother_info   father_mother_info[]
+  guardian_info        guardian_info?
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -143,6 +149,8 @@ model father_mother_info {
   phone_num     String?
   tel_num       String?
   occupation    String?
+  nationality   String?  @default("")
+  home_tel      String?
   Student       Student  @relation(fields: [id], references: [id], onDelete: Cascade)
 
   @@id([id, relation])
@@ -173,20 +181,20 @@ model Military_info {
   academic_class4     String?
   academic_major4     String?
   academic_school4    String?
-  military_grade1     Int?
-  military_year1      Int?
+  military_grade1     String?   @default("")
+  military_year1      String?
   military_school1    String?   @default("")
-  military_province   String?   @default("")
-  military_grade2     Int?
-  military_year2      Int?
+  military_province1  String?   @default("")
+  military_grade2     String?   @default("")
+  military_year2      String?
   military_school2    String?   @default("")
   military_province2  String?   @default("")
-  military_grade3     Int?
-  military_year3      Int?
+  military_grade3     String?   @default("")
+  military_year3      String?
   military_school3    String?   @default("")
   military_province3  String?   @default("")
-  military_grade4     Int?
-  military_year4      Int?
+  military_grade4     String?   @default("")
+  military_year4      String?
   military_school4    String?   @default("")
   military_province4  String?   @default("")
   reg_army            String?   @default("")
@@ -201,17 +209,62 @@ model Military_info {
   promo_date2         DateTime? @db.Date
   id                  Decimal   @id @db.Decimal
   grade9_province     String?
+  follower_name1      String?   @default("")
+  follower_school1    String?   @default("")
+  follower_telnum1    String?   @default("")
+  follower_phonenum1  String?   @default("")
+  follower_name2      String?   @default("")
+  follower_school2    String?   @default("")
+  follower_telnum2    String?   @default("")
+  follower_phonenum2  String?   @default("")
+  prev_province       String?   @default("")
+  date_of_study       DateTime? @db.Date
+  prev_year           String?   @default("")
   Student             Student   @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model guardian_info {
-  guardian_fname      String?
-  guardian_lname      String?
-  guardian_occupation String?
-  guardian_age        Int?
-  guardian_relation   String?
-  id                  Decimal @id(map: "parent_info_pkey") @db.Decimal
-  guardian_title      String?
-  guardian_address    String?
-  Student             Student @relation(fields: [id], references: [id], onDelete: Cascade, map: "parent_info_id_fkey")
+  guardian_fname       String?
+  guardian_lname       String?
+  guardian_occupation  String?
+  guardian_age         Int?
+  guardian_relation    String?
+  id                   Decimal @id(map: "parent_info_pkey") @db.Decimal
+  guardian_title       String?
+  guardian_address     String?
+  guardian_nationality String? @default("")
+  Student              Student @relation(fields: [id], references: [id], onDelete: Cascade, map: "parent_info_id_fkey")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Queue {
+  id          BigInt    @id @default(autoincrement())
+  created_at  DateTime  @default(now()) @db.Timestamptz(6)
+  stu_id      Decimal?  @db.Decimal
+  req_id      BigInt?
+  timeslot_id BigInt?
+  period      BigInt?
+  Request     Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student     Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Timeslot    Timeslot? @relation(fields: [timeslot_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Request {
+  id         BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  type       String?
+  status     String?
+  Queue      Queue[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Timeslot {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  date       DateTime? @db.Date
+  period     Decimal[] @db.Decimal
+  is_full    Boolean[]
+  max_stu    Decimal?  @db.Decimal
+  Queue      Queue[]
 }

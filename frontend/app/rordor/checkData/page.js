@@ -147,6 +147,7 @@ const CheckData = () => {
         e.preventDefault();
         const id = formData.id
         console.log(id)
+        console.log("Yearrrrrrrrrrrrrrr",formData.Collage_Year)
         try {
             notifyinprocess()
             await axios.put(`/api/profile`, {
@@ -159,8 +160,7 @@ const CheckData = () => {
                 facultyNameTH: '',
                 dept: '',
                 tel_num: '',
-                year: '',
-                tel_num: '',
+                year: formData.Collage_Year ||'',
                 thai_id: formData.citizenId,
                 bd: formatDateToISO(formData.birthDate),
                 religion: formData.religion,
@@ -169,6 +169,8 @@ const CheckData = () => {
             })
 
             await axios.put(`/api/military`, {
+                student: {
+                },
                 Military_info: {
                     id: id,
                     grade9_gpax: formData.grade9GPAX,
@@ -182,7 +184,7 @@ const CheckData = () => {
                         street: formData.road,
                         district: formData.amphure,
                         province: formData.province,
-                        postal_code: parseInt(formData.zipCode),
+                        postal_code: (formData.zipCode),
                         subdistrict: formData.district
 
                     },
@@ -200,7 +202,7 @@ const CheckData = () => {
                     guardian_lname: formData.ParentSurname,
                     guardian_title: formData.Parenttitle,
                     guardian_occupation: formData.Parentjob,
-                    guardian_age: parseInt(formData.Parentage),
+                    guardian_age: (formData.Parentage),
                     guardian_relation: formData.Parentrelated,
                     guardian_address: formData.ParentworkAddress
                 },

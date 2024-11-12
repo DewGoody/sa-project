@@ -18,7 +18,7 @@ const RD = () => {
 
     const filepdf = async () => {
         try {
-            const response = await axios.get("/api/export/RD1", { responseType: 'blob' });
+            const response = await axios.get("/api/export/RD2", { responseType: 'blob' });
             return response.data;
         } catch (error) {
             console.log(error);
@@ -30,7 +30,7 @@ const RD = () => {
         if (pdfBlob) {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(pdfBlob);
-            link.download = 'RD1.pdf';
+            link.download = 'RD2.pdf';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
