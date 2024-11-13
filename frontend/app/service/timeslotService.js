@@ -43,3 +43,15 @@ export async function addStuToPeriod(periodIndex, timeslotId) {
     }
     return updatedTimeslot
 }
+
+export async function getTimeslotByDate(date) {
+    const timeslot = await prisma.timeslot.findUnique({
+        where: { date: date}
+    })
+    if(timeslot){
+        return timeslot
+    }
+    else{
+        throw {code: 404,error: new Error("Timeslot not found")}
+    }
+}

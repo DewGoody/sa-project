@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { getTimeslotByDate } from '../../../service/timeslotService'
 
 const prisma = new PrismaClient();
 
@@ -6,16 +7,8 @@ export async function POST(req, res) {
     try {
         let data = await req.json()
         console.log("data", data);
-
-        const createTimeslot = await prisma.timeslot.create({
-            data: {
-                date: data.date,
-                period: [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                is_full: [false,false,false,false,false,false,false,false,false,false,false,false,false,false],
-                max_stu: 5
-            }
-        })
-        return createTimeslot
+        const timeslot = await getTimeslotByDate(data.date)
+        return timeslot
     }
     catch (error) {
         if (!error.code) {
