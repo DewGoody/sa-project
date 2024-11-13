@@ -322,7 +322,7 @@ function page() {
 
               <div className="flex justify-between mt-8">
                 {/*TODO Edit Link*/}
-                <a href="./">
+                <a href="/home">
                   <button className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11">
                     Back
                   </button>
