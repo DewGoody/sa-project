@@ -77,6 +77,7 @@ async function prakanFormBuilder(data) {
 
   drawTextOnPage(firstPage, String(stdAge), 490, height - 135);
   drawTextOnPage(firstPage, data.presentAddress, 123, height - 155);
+  //Ask Staff
   // drawTextOnPage(firstPage, data.businessAddress, 140, height - 173);
   drawTextOnPage(firstPage, data.occupation, 396, height - 173);
   drawTextOnPage(firstPage, data.phone_num, 454, height - 192);
