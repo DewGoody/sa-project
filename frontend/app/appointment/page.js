@@ -1,7 +1,7 @@
 // pages/scholarship.js
 'use client'
 // pages/scholarship.js
-import { useState,useEffect } from 'react';
+import { useState,useEffect, use } from 'react';
 import { Header } from '../components/Header';
 import { UserOutlined } from '@ant-design/icons';
 import axios from "axios";
@@ -13,18 +13,48 @@ export default function ScholarshipPage() {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectFetchDate, setSelectFetchDate] = useState([]);
+  const [convertDate, setConvertDate] = useState('');
+  const [morning, setMorning] = useState(false);
+  const [afternoon, setAfternoon] = useState(false);
+  const [showTimeSlotsMorning, setShowTimeSlotsMorning] = useState(false);
+  const [showTimeSlotsAfterNoon, setShowTimeSlotsAfterNoon] = useState(false);
+  const [morningIdx,setMorningIdx] = useState(0);
+  const [afternoonIdx,setAfternoonIdx] = useState(0);
+  const [timeSlotId, setTimeSlotId] = useState(0);
+  const [byDate, setByDate] = useState({data:{id:4}});
 
-  const dates = ['11/11/2567', '12/11/2567', '13/11/2567', '14/11/2567'];
-  const timeSlots = [
-    '8:00-8:30', '8:30-9:00', '9:30-10:00', '10:30-11:00', '11.30-12.00',
+
+  const timeSlotsMorning = 
+  [
+    '8:00-8:30', '8:30-9:00','9:00-9:30', '9:30-10:00','10:00-10:30', '10:30-11:00','11:00-11:30', '11.30-12.00',
   ];
+  const timeSlotsAfternoon = 
+  [
+    '13:00-13:30', '13:30-14:00','14:00-14:30', '14:30-15:00','15:00-15:30', '15:30-16:00','16:00-16:30', '16.30-17.00',
+  ];
+  
+  const fetchAllDate = async () => {
+    try {
+      const response = await axios.post('/api/timeslot/getAll'); // Example API
+      console.log("getAll : ",response.data);
+      response.data
+      setSelectFetchDate(response.data);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  }
+  
+
+  useEffect(() => {
+    fetchAllDate();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('/api/profile'); // Example API
-        console.log(response.data);
-        
         setProfileData(response.data);
         setLoading(false);
         console.log(response.data);
@@ -34,30 +64,171 @@ export default function ScholarshipPage() {
       }
     };
 
+    
+    const checkAvailability = () => {
+      let morningAvailable = false;
+      let afternoonAvailable = false;
+  
+      selectFetchDate?.data?.forEach((items) => {
+        const [year, month, day] = items.date.split('T')[0].split('-');
+        const buddhistYear = (parseInt(year) + 543).toString();
+        const realDate = `${day}/${month}/${buddhistYear}`;
+        if (realDate === selectedDate) {
+          for (let i = 0; i < items.is_full.length / 2; i++) {
+            if (!items.is_full[i]) {
+              morningAvailable = true;
+            }
+          }
+          for (let i = items.is_full.length / 2; i < items.is_full.length; i++) {
+            if (!items.is_full[i]) {
+              afternoonAvailable = true;
+            }
+          }
+        }
+      });
+  
+      setMorning(morningAvailable);
+      setAfternoon(afternoonAvailable);
+    };
     fetchData();
-  }, []);
+    checkAvailability();
+    
+  }, [morning, afternoon, selectedDate]);
 
+  const createQueue = async () => {
+    try {
+      if(selectedPeriod === 'morning'){
+        const response = await axios.post(`/api/queue/create`, {
+          studentId: parseInt(profileData.id,10),
+          reqId:1,
+          timeslotId: timeSlotId,
+          period: morningIdx,
+        });
+        console.log(response.data);
+      }else if(selectedPeriod === 'afternoon'){
+        const response = await axios.post(`/api/queue/create`, {
+          studentId: profileData.id,
+          reqId:1,
+          timeslotId: timeSlotId,
+          period: afternoonIdx,
+        });
+        console.log(response.data);
+      }
+      console.log(response.data);
+    }catch (err) {
+      console.log("Error fetching amphures: " + err);
+    }
+  }
+  
+  const handleSubmit = () =>{
+    createQueue();
+    
+  }
 
+  const getByDate = async (date) => {
+    try{
+        const response = await axios.post(`/api/timeslot/getByDate`, {date: date});
+      console.log("response.data",response.data);
+      setByDate(response.data);
+    }catch (err) {
+      console.log("Error fetching amphures: " + err);
+    }
+  }
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const handleDateClick = (date) => {
+  const handleDateClick = async (date) => {
     setSelectedDate(date);
     setShowTimeSlots(false);
     setSelectedPeriod('');
     setSelectedTimeSlot('');
-  };
+    const [day, month, thaiYear] = date.split("/");
 
+// Convert the Thai year to the Gregorian year
+  const gregorianYear = parseInt(thaiYear, 10) - 543;
+
+// Format as YYYY-MM-DD
+  const formattedDate = `${gregorianYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  getByDate(formattedDate);
+  console.log("byDate",byDate);
+  setTimeSlotId(byDate.data.id);
+  
+    
+
+  };
+  console.log("timeSlotId",timeSlotId)
+  console.log("selectDate",selectedDate);
+  
+  
+  
+  
   const handlePeriodClick = (period) => {
     setSelectedPeriod(period);
-    setShowTimeSlots(true);
+    if(period === 'morning'){
+      setShowTimeSlotsMorning(true);
+      setShowTimeSlotsAfterNoon(false);
+      
+
+    }
+    else if(period==='afternoon'){
+      setShowTimeSlotsAfterNoon(true);
+      setShowTimeSlotsMorning(false);
+    }
     setSelectedTimeSlot('');
+    
   };
 
   const handleTimeSlotClick = (timeSlot) => {
     setSelectedTimeSlot(timeSlot);
+    if(selectedPeriod === 'morning'){
+      setMorningIdx(timeSlotsMorning.indexOf(timeSlot));
+    }
+    else if(selectedPeriod === 'afternoon'){
+      setAfternoonIdx(timeSlotsAfternoon.indexOf(timeSlot)+8);
+    }
   };
+  console.log("selectedFetch",selectFetchDate)
+
+  
+  const timeSlot = selectFetchDate?.data?.map((items) => {
+    const [year, month, day] = items.date.split('T')[0].split('-');
+    const buddhistYear = (parseInt(year) + 543).toString();
+    const realDate= `${day}/${month}/${buddhistYear}`;
+    if(realDate === selectedDate){
+      items.is_full.forEach((item, index) => {
+        for(let i = 0; i < items.is_full.length/2; i++){
+          if(item){
+            timeSlotsMorning.splice(i, 1);
+          }
+        }
+        for(let i = items.is_full.length/2; i < items.is_full.length; i++){
+          if(item){
+            timeSlotsAfetrnoon.splice(i, 1);
+          }
+        }
+      }
+    )}
+  })
+
+  console.log("timeSlot",timeSlotsAfternoon)
+
+  const newDate = Array.isArray(selectFetchDate?.data)
+    ? selectFetchDate.data
+      .filter(items => !items.is_full.every(item => item === true))
+      .map(items => {
+        const [year, month, day] = items.date.split('T')[0].split('-');
+        const buddhistYear = (parseInt(year) + 543).toString();
+        return `${day}/${month}/${buddhistYear}`;
+      })
+      .sort((a, b) => {
+        const [dayA, monthA, yearA] = a.split('/');
+        const [dayB, monthB, yearB] = b.split('/');
+        return new Date(`${yearA}-${monthA}-${dayA}`) - new Date(`${yearB}-${monthB}-${dayB}`);
+      })
+    : [];
+
+  console.log("newDate::", newDate);
 
   return (
     <>
@@ -74,7 +245,7 @@ export default function ScholarshipPage() {
       <div className="mb-6">
         <h3 className="text-gray-800 font-semibold">เลือกวันเข้ารับบริการ</h3>
         <div className="flex gap-4 mt-3">
-          {dates.map((date, index) => (
+          {newDate.map((date, index) => (
             <button
               key={index}
               onClick={() => handleDateClick(date)}
@@ -88,7 +259,7 @@ export default function ScholarshipPage() {
         </div>
       </div>
 
-      {selectedDate && (
+      {selectedDate && morning && afternoon && (
         <div className="flex gap-8 mb-6">
           <button
             onClick={() => handlePeriodClick('morning')}
@@ -109,9 +280,24 @@ export default function ScholarshipPage() {
         </div>
       )}
 
-      {showTimeSlots && (
+      {showTimeSlotsMorning && (
         <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md">
-          {timeSlots.map((slot, index) => (
+          {timeSlotsMorning.map((slot, index) => (
+            <button
+              key={index}
+              onClick={() => handleTimeSlotClick(slot)}
+              className={`py-2 px-4 rounded-lg ${
+                selectedTimeSlot === slot ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
+              } hover:bg-pink-300`}
+            >
+              {slot}
+            </button>
+          ))}
+        </div>
+      )}
+      {showTimeSlotsAfterNoon && (
+        <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md">
+          {timeSlotsAfternoon.map((slot, index) => (
             <button
               key={index}
               onClick={() => handleTimeSlotClick(slot)}
@@ -140,9 +326,15 @@ export default function ScholarshipPage() {
             >
               back
             </button>
-            <button className="py-2 px-6 bg-green-400 text-white rounded-lg shadow-md hover:bg-green-500">
+           
+          <a href="/home">
+          <button className="py-2 px-6 bg-green-400 text-white rounded-lg shadow-md hover:bg-green-500"
+              onClick={handleSubmit}
+              htmlType="submit"
+            >
               confirm
             </button>
+          </a>
           </div>
         </div>
       )}

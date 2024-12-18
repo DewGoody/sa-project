@@ -1,5 +1,7 @@
-import React from "react";
+'use client'
+import React, { use } from "react";
 import { Header } from "../components/Header";
+
 import {
   FaUser,
   FaPlus,
@@ -8,8 +10,59 @@ import {
   FaRegHospital,
   FaGlobeAmericas,
 } from "react-icons/fa";
+import {useState,useEffect} from 'react';
+import axios from 'axios';
 
 export const Form = () => {
+
+  const [prakanData, setPrakanData] = useState({});
+    const [studentInfo, setStudentInfo] = useState({});
+  
+    const [inputValue, setInputValue] = useState('');
+      const [thaiText, setThaiText] = useState('');
+      const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+  
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get('/api/profile'); // Example API
+            console.log(response.data);
+            
+            setProfileData(response.data);
+            setLoading(false);
+            console.log(response.data);
+          } catch (error) {
+            setError(error.message);
+            setLoading(false);
+          }
+        };
+        fetchData();
+  
+      }, []);
+
+      const fetchQueue = async () => {
+        try {          
+          const response = await axios.post('/api/queue/getByStuId',{studentId: profileData.id}); // Example API
+          console.log("wuw",response.data);
+          setPrakanData(response.data);
+          setLoading(false);
+
+        } catch (error) {
+          setError(error.message);
+          setLoading(false);
+        }
+      }        
+      useEffect(() => {
+        
+          fetchQueue();
+        
+      }
+      , [profileData]);
+
+
   return (
     <div className="min-h-screen bg-white">
       <Header req1="" req2="" />
@@ -25,6 +78,7 @@ export const Form = () => {
           <div className=" py-8">
             <div className="flex justify-between items-center">
               <p className="text-lg font-bold">Status</p>
+              
             </div>
           </div>
 

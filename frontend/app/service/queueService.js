@@ -20,6 +20,10 @@ export async function createQueue(studentId, reqId, timeslotId, period) {
             period: period
         }
     });
+    const changeStatusReq = await prisma.request.update({
+        where: {id: reqId},
+        data: {status: "จองคิวแล้ว"}
+    })
     return createdQueue
 }
 

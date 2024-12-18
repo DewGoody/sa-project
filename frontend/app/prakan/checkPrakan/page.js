@@ -1,8 +1,10 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import Header from '../../components/header/page';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+
 
 const RD = () => {
     // State to manage checkbox status
@@ -11,6 +13,43 @@ const RD = () => {
         Option2: false,
         Option3: false,
     });
+    const [createRequest, setCreateRequest] = useState([]);
+    const [prakanData, setPrakanData] = useState({});
+    const [studentInfo, setStudentInfo] = useState({});
+  
+    const [inputValue, setInputValue] = useState('');
+      const [thaiText, setThaiText] = useState('');
+      const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+  
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get('/api/profile'); // Example API
+            console.log(response.data);
+            
+            setProfileData(response.data);
+            setLoading(false);
+            console.log(response.data);
+          } catch (error) {
+            setError(error.message);
+            setLoading(false);
+          }
+        };
+    
+        fetchData();
+      }, []);
+
+    const createReq = async () => {
+        try {
+            const response = await axios.post(`/api/request/create`, {type: "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id});
+            setCreateRequest(response.data);
+        } catch (err) {
+            console.log("Error fetching amphures: " + err);
+        }
+    };
     
     const handleDownload = () => {
         const link = document.createElement('a');
@@ -43,6 +82,8 @@ const RD = () => {
 
     // Function to handle navigation attempt
     const handleNavigation = (event, targetUrl) => {
+        createReq();
+        console.log("createRequest", createRequest);
         if (!allChecked()) {
             event.preventDefault();
             alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
@@ -86,72 +127,6 @@ const RD = () => {
 
                                             <div>
                                                 <strong className="font-medium text-gray-900">2. ใบรับรองเสร็จฉบับจริง</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option3"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">3. สำเนาบัญชีธนาคาร</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option4"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">4. สำเนาใบสำคัญทหารกองเกิน (สด.9) กรณีเป็นผู้สมัครชายอายุ 17 ปีขึ้นไป (ถ้ามี)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option5"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">5. สำเนาหมายเรียกเข้ารับราชการทหาร (สด.35) กรณีเป็นผู้สมัครชายอายุ 20 ปีขึ้นไป (ถ้ามี)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option6"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">6. สำเนาใบรับรองผลการตรวจเลือกเข้ารับราชการทหาร (สด.43) กรณีผู้สมัครชายอายุ 21 ปีขึ้นไป (ถ้ามี)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option7"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">7. สำเนาบัตรประจำตัวประชาชน (copy of citizen ID)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option8"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">8. สำเนาใบเปลี่ยนชื่อ-สกุล (ถ้ามี)</strong>
                                             </div>
                                         </label>
                                     </div>
@@ -219,8 +194,8 @@ const RD = () => {
                             </button>
 
                             <a
-                                href="/home"
-                                onClick={(event) => handleNavigation(event, "/home")}
+                                href="/appointment"
+                                onClick={(event) => handleNavigation(event, "/appointment")}
                             >
                                 <button
                                     type="submit"
