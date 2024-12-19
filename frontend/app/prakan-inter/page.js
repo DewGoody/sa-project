@@ -35,8 +35,6 @@ function page() {
       "phone_num",
       "presentAddress",
       "bd",
-      "businessAddress",
-      "occupation",
     ];
 
     // Check if all required fields are present and not empty
@@ -102,7 +100,7 @@ function page() {
       try {
         const response = await axios.get("/api/profile"); // Example API
         console.log(response.data);
-
+        response.data.phone_num = response.data.tel_num;
         setProfileData(response.data);
         setLoading(false);
 
@@ -117,9 +115,6 @@ function page() {
         setPrakanData(updatedData);
         setPrakanData((prakanData) => ({
           ...prakanData,
-          businessAddress:
-            "254 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 10330",
-          occupation: "University Student",
         }));
       } catch (error) {
         setError(error.message);
@@ -252,37 +247,6 @@ function page() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Birthdate"
                       max={new Date()?.toISOString()?.slice(0, 10)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Business Address
-                    </label>
-                    <input
-                      type="text"
-                      name="businessAddress"
-                      //value={formData.religion}
-                      onChange={(event) =>
-                        handleChange(event, "businessAddress")
-                      }
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
-                      placeholder="Business Address"
-                      value="254 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 10330"
-                      disabled
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Occupation
-                    </label>
-                    <input
-                      type="text"
-                      name="occupation"
-                      //value={formData.religion}
-                      onChange={(event) => handleChange(event, "occupation")}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
-                      value="University Student"
-                      disabled
                     />
                   </div>
                 </div>

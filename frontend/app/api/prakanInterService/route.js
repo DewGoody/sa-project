@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
-//TODO Edit this import to match the document_build function
+import { parseISO, isValid } from "date-fns";
 import { prakanFormBuilder } from "../../../document_build/prakanFormBuilder.js";
 
 const prisma = new PrismaClient();
@@ -8,27 +8,29 @@ const prisma = new PrismaClient();
 export async function POST(req, res) {
   try {
     let data = await req.json();
-    //TODO Edit this function
+    // Validate and format accidentDate
+    let accidentDate = data.accidentDate ? parseISO(data.accidentDate) : null;
     await prakanFormBuilder(data);
     console.log("data", data);
 
-    //TODO Edit this function
-    /*const createPrakan = await prisma.accident_info.create({
-    data: {
-      stu_id: Number(data.id),
-      acc_desc: data.acc_desc,
-      acc_date: new Date(data.acc_date),
-      accident_place: data.accident_place,
-      treatment_place: data.treatment_place,
-      hospital_type: data.hospital_type,
-      medical_fee: Number(data.medical_fee),
-    },
-  });
-  return createPrakan;*/
-
-    return NextResponse.json({
-      message: "Form submitted successfully",
+    const createPrakan = await prisma.prakan_inter_info.create({
+      data: {
+        stu_id: data.id,
+        phone_num: data.phone_num,
+        claimType: data.claimType,
+        accidentDate: data.accidentDate || null,
+        accidentTime: data.accidentTime || null,
+        accidentCause: data.accidentCause || null,
+        hospitalName: data.hospitalName,
+        hospitalProvince: data.hospitalProvince,
+        hospitalPhoneNumber: data.hospitalPhoneNumber,
+        hospitalAmittedDate: data.hospitalAmittedDate,
+        hospitalDischargedDate: data.hospitalDischargedDate,
+        presentAddress: data.presentAddress,
+        title: data.title,
+      },
     });
+    return NextResponse.json({ message: "success" }, { status: 200 });
   } catch (error) {
     console.error("Error submitting form:", error);
     return NextResponse.json(
