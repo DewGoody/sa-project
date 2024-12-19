@@ -143,7 +143,7 @@ function page() {
                   <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
                     1
                   </span>
-                  Personal & contact information
+                  Personal information
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
