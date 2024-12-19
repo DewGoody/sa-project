@@ -2,6 +2,7 @@
 
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
+import { getID } from '../../../lib/session'
 
 const prisma = new PrismaClient()
 

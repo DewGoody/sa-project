@@ -2,9 +2,9 @@
 
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
-import { getID } from '@/lib/session'
+import { getID } from '../../../../lib/session'
 // not implemented yet
-import { uhc } from '@/document_build/uhc.js'
+import { uhc } from '../../../../document_build/uhc'
 //import { militaryRD2 } from '@/document_build/militaryRD2'
 
 const prisma = new PrismaClient()

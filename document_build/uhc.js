@@ -5,8 +5,6 @@ const fontPath = path.resolve(process.cwd(), 'public/fonts/THSarabunNew/THSarabu
 const fontkit = require('fontkit');
 // Read font file
 
-
-
 let font;
 
 const months = [
@@ -793,6 +791,7 @@ async function uhc(data) {
 
   return await pdfDoc.save();
 }
+
 module.exports = {uhc};
 
 // uhc({
