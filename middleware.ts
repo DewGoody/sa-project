@@ -11,9 +11,9 @@ export default async function middleware(req: NextRequest) {
   const url = new URL(req.url);
   const path = url.pathname;
   const cookieStore = cookies()
-  console.log('Cookies:', cookieStore);
+  // console.log('Cookies:', cookieStore);
   
-  console.log(`Middleware route: ${path}`);
+  // console.log(`Middleware route: ${path}`);
 
   // Skip middleware for the /callback route
   if (path === '/callback') {
