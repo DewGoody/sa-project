@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import Header from '../../components/header/page';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 
 const RD = () => {
@@ -18,10 +19,11 @@ const RD = () => {
     const [studentInfo, setStudentInfo] = useState({});
   
     const [inputValue, setInputValue] = useState('');
-      const [thaiText, setThaiText] = useState('');
-      const [profileData, setProfileData] = useState(null);
+    const [thaiText, setThaiText] = useState('');
+    const [profileData, setProfileData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const router = useRouter();
   
 
     useEffect(() => {
@@ -42,14 +44,14 @@ const RD = () => {
         fetchData();
       }, []);
 
-    const createReq = async () => {
-        try {
-            const response = await axios.post(`/api/request/create`, {type: "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id});
-            setCreateRequest(response.data);
-        } catch (err) {
-            console.log("Error fetching amphures: " + err);
-        }
-    };
+    // const createReq = async () => {
+    //     try {
+    //         const response = await axios.post(`/api/request/create`, {type: "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id});
+    //         setCreateRequest(response.data);
+    //     } catch (err) {
+    //         console.log("Error fetching amphures: " + err);
+    //     }
+    // };
     
     const handleDownload = () => {
         const link = document.createElement('a');
@@ -81,14 +83,19 @@ const RD = () => {
     };
 
     // Function to handle navigation attempt
-    const handleNavigation = (event, targetUrl) => {
-        createReq();
+    const handleNavigation = async (event) => {
+        const response = await axios.post(`/api/request/create`, {type: "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id});
+        setCreateRequest(response.data);
         console.log("createRequest", createRequest);
+        const param = response.data.data.id;
+        console.log("responseRequest", response.data);
+        console.log("param", param);
+        
         if (!allChecked()) {
             event.preventDefault();
             alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
         } else {
-            window.location.href = targetUrl;
+            router.push(`/appointment/${param}`);
         }
     };
 
@@ -194,8 +201,7 @@ const RD = () => {
                             </button>
 
                             <a
-                                href="/appointment"
-                                onClick={(event) => handleNavigation(event, "/appointment")}
+                                onClick={(event) => handleNavigation(event)}
                             >
                                 <button
                                     type="submit"

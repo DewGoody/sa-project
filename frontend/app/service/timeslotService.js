@@ -38,7 +38,7 @@ export async function addStuToPeriod(periodIndex, timeslotId) {
         data: {period: newStuInPeriod}
     })
     
-    if(newStuInPeriod == timeslot.max_stu){
+    if(intStu == timeslot.max_stu){
         let isFull = timeslot.is_full
         isFull[periodIndex] = true
         await prisma.timeslot.update({

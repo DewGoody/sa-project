@@ -1,9 +1,8 @@
-// pages/scholarship.js
 'use client'
-// pages/scholarship.js
 import { useState,useEffect, use } from 'react';
-import { Header } from '../components/Header';
+import { Header } from '../../components/Header';
 import { UserOutlined } from '@ant-design/icons';
+import { useRouter, useParams } from 'next/navigation';
 import axios from "axios";
 export default function ScholarshipPage() {
   const [selectedDate, setSelectedDate] = useState('');
@@ -23,7 +22,10 @@ export default function ScholarshipPage() {
   const [afternoonIdx,setAfternoonIdx] = useState(0);
   const [timeSlotId, setTimeSlotId] = useState(0);
   const [byDate, setByDate] = useState({data:{id:4}});
-
+  const router = useRouter();
+  const { id } = useParams();
+  console.log("id", id);
+ 
 
   const timeSlotsMorning = 
   [
@@ -100,7 +102,7 @@ export default function ScholarshipPage() {
       if(selectedPeriod === 'morning'){
         const response = await axios.post(`/api/queue/create`, {
           studentId: parseInt(profileData.id,10),
-          reqId:1,
+          reqId:id,
           timeslotId: timeSlotId,
           period: morningIdx,
         });
@@ -108,7 +110,7 @@ export default function ScholarshipPage() {
       }else if(selectedPeriod === 'afternoon'){
         const response = await axios.post(`/api/queue/create`, {
           studentId: profileData.id,
-          reqId:1,
+          reqId:id,
           timeslotId: timeSlotId,
           period: afternoonIdx,
         });
@@ -189,27 +191,6 @@ export default function ScholarshipPage() {
     }
   };
   console.log("selectedFetch",selectFetchDate)
-
-  
-  const timeSlot = selectFetchDate?.data?.map((items) => {
-    const [year, month, day] = items.date.split('T')[0].split('-');
-    const buddhistYear = (parseInt(year) + 543).toString();
-    const realDate= `${day}/${month}/${buddhistYear}`;
-    if(realDate === selectedDate){
-      items.is_full.forEach((item, index) => {
-        for(let i = 0; i < items.is_full.length/2; i++){
-          if(item){
-            timeSlotsMorning.splice(i, 1);
-          }
-        }
-        for(let i = items.is_full.length/2; i < items.is_full.length; i++){
-          if(item){
-            timeSlotsAfetrnoon.splice(i, 1);
-          }
-        }
-      }
-    )}
-  })
 
   console.log("timeSlot",timeSlotsAfternoon)
 
