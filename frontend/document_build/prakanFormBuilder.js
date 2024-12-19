@@ -65,8 +65,8 @@ async function prakanFormBuilder(data) {
   );
   drawTextOnPage(firstPage, String(stdAge), 490, height - 135);
   drawTextOnPage(firstPage, data.presentAddress, 123, height - 155);
-  // drawTextOnPage(firstPage, data.businessAddress, 140, height - 173);
-  drawTextOnPage(firstPage, data.occupation, 396, height - 173);
+  drawTextOnPage(firstPage, "-", 140, height - 173);
+  drawTextOnPage(firstPage, "Student", 396, height - 173);
   drawTextOnPage(firstPage, data.phone_num, 454, height - 192);
   drawTextOnPage(firstPage, data.hospitalName, 196, height - 303);
   drawTextOnPage(firstPage, data.hospitalProvince, 350, height - 303);
@@ -79,7 +79,6 @@ async function prakanFormBuilder(data) {
       height - 342
     );
     drawTextOnPage(firstPage, data.accidentTime, 253, height - 342);
-    //TODO แจ้งความ
     drawTextOnPage(firstPage, data.accidentCause, 165, height - 363);
     drawTextOnPage(
       firstPage,
