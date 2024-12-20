@@ -1,23 +1,21 @@
-# Use an official Node.js runtime as the base image
+# Use the official Node.js image as a base image
 FROM node:18-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and lock files
-COPY package.json package-lock.json ./
-
 # Install dependencies
+COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the rest of the project files
+# Copy the rest of the application code
 COPY . .
 
-# Build the Next.js application
+# Run the build process
 RUN npm run build
 
-# Expose the port the app runs on
+# Expose the port the app will run on
 EXPOSE 3000
 
-# Define the default command to run the app
+# Start the Next.js app in production mode
 CMD ["npm", "start"]
