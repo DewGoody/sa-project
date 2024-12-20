@@ -41,7 +41,7 @@ export const Form = () => {
 
             <p className="text-lg font-bold py-4">Service</p>
             <div className="space-y-8 ">
-              <a href="/rordor" ><ServiceCard title="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)" icon={<FaPlus />} /></a>
+              <a href="/rordor" ><ServiceCard title="การสมัคร นศท. รายใหม่และรายงานตัว นศท. (Application and registration for Thai Reserve Officer Training Corps Students)" icon={<FaPlus />} /></a>
 
               <a href="/prakan" className="p-4"><ServiceCard title="การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)" icon={<FaCheck />} /></a>
               <a href="/golden_card"><ServiceCard title="ย้ายสิทธิ์บัตรทองมาที่โรงพยาบาลจุฬาลงกรณ์" icon={<FaRegHospital />} /></a>

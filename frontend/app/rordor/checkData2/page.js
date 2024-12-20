@@ -597,7 +597,7 @@ const CheckData = () => {
         }
     };
     return (
-        <div><Header req1="รายงานตัวนักศึกษาวิชาทหาร  " req2="" />
+        <div><Header req1="รายงานตัวเข้าฝึกนักศึกษาวิชาทหาร" req2="" />
             <div className="min-h-screen bg-whites 2xl:mx-24 xl:mx-24 lg:mx-24 md:mx-24 ">
 
                 <main className="flex justify-center items-center ">
@@ -749,14 +749,14 @@ const CheckData = () => {
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (TOT phone)</label>
+                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
                                             <input
                                                 type="text"
                                                 name="fatherjobTST"
                                                 value={formData.fatherjobTST}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="TOT phone"
+                                                placeholder="Telephone"
                                             />
                                         </div>
                                         <div className="w-1/2">
@@ -797,14 +797,14 @@ const CheckData = () => {
                                             />
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (TOT phone)</label>
+                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
                                             <input
                                                 type="text"
                                                 name="fatherhomeTST"
                                                 value={formData.fatherhomeTST}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="TOT phone"
+                                                placeholder="Telephone"
                                             />
                                         </div>
                                     </div>
@@ -935,14 +935,14 @@ const CheckData = () => {
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (TOT phone)</label>
+                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
                                             <input
                                                 type="text"
                                                 name="motherjobTST"
                                                 value={formData.motherjobTST}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="TOT phone"
+                                                placeholder="Telephone"
                                             />
                                         </div>
                                         <div className="w-1/2">
@@ -982,14 +982,14 @@ const CheckData = () => {
                                             />
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (TOT phone)</label>
+                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
                                             <input
                                                 type="text"
                                                 name="motherhomeTST"
                                                 value={formData.motherhomeTST}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="TOT phone"
+                                                placeholder="Telephone"
                                             />
                                         </div>
                                     </div>
@@ -1084,14 +1084,14 @@ const CheckData = () => {
                                             </div>
                                             <div className="flex space-x-4 w-full">
                                                 <div className="w-1/2">
-                                                    <label className="block text-gray-700 mb-2">คณะ/วิชาเอก (Major)</label>
+                                                    <label className="block text-gray-700 mb-2">คณะ/วิชาเอก (Faculty)</label>
                                                     <input
                                                         type="text"
                                                         name="RD2_Major1"
                                                         value={formData[`RD2_Major${i + 1}`] || ''}
                                                         onChange={(e) => handleinputchange(e, i)}
                                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                        placeholder="Major"
+                                                        placeholder="Faculty"
                                                     />
                                                 </div>
                                                 <div className="w-1/2">
@@ -1635,14 +1635,14 @@ const CheckData = () => {
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (TOT phone)</label>
+                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
                                             <input
                                                 type="text"
                                                 name="follower1_telnum"
                                                 value={formData.follower1_telnum}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="TOT phone"
+                                                placeholder="Telephone"
                                             />
                                         </div>
                                         <div className="w-1/2">
@@ -1776,14 +1776,14 @@ const CheckData = () => {
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (TOT phone)</label>
+                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
                                             <input
                                                 type="text"
                                                 name="follower2_telnum"
                                                 value={formData.follower2_telnum}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="TOT phone"
+                                                placeholder="Telephone"
                                             />
                                         </div>
                                         <div className="w-1/2">

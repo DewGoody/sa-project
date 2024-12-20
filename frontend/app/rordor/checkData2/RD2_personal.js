@@ -81,7 +81,7 @@ export const Personal = () => {
             </div>
 
             <div>
-                <label className="block text-gray-700 mb-2">อายุ (Old)</label>
+                <label className="block text-gray-700 mb-2">อายุ (Age)</label>
                 <input
                     type="text"
                     name="OldRD"
@@ -139,7 +139,7 @@ export const Personal = () => {
                 />
             </div>
             <div>
-                <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (TOT phone)</label>
+                <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
                 <input
                     type="text"
                     name="tel_num"
@@ -171,7 +171,7 @@ export const Personal = () => {
                 </div>
 
                 <div>
-                    <label className="block text-gray-700 mb-2">แผนก/คณะ (Major)</label>
+                    <label className="block text-gray-700 mb-2">แผนก/คณะ (Faculty)</label>
                     <input
                         type="text"
                         name="Major"
@@ -260,7 +260,7 @@ export const Personal = () => {
 
             <div>
                 <h3 className="text-lg font-semibold mb-4 py-10 ">
-                    ขอรายงานตัวเข้าฝึกวชิาทหาร (Request to report for military training)
+                    ขอรายงานตัวเข้าฝึกวิชาทหาร (Completion of military training.)
                 </h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
