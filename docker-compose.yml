@@ -1,21 +1,10 @@
-version: '3.9'
-services:
-  web:
-    build: .
-    container_name: nextjs-app
-    ports:
-      - "3000:3000"
-    environment:
-      DATABASE_URL: "postgresql://user:password@database:5432/mydb"
-    depends_on:
-      - database
-    volumes:
-      - .:/app
-      - /app/node_modules
+version: '3.8'
 
-  database:
+services:
+  postgres-db:
     image: postgres:15
     container_name: postgres-db
+    restart: always
     ports:
       - "5432:5432"
     environment:
@@ -28,11 +17,28 @@ services:
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
+    restart: always
     ports:
       - "5050:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
-      PGADMIN_DEFAULT_PASSWORD: "admin"
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+
+  nextjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.nextjs
+    container_name: nextjs-app
+    depends_on:
+      - postgres-db
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://user:password@postgres-db:5432/mydb"  # Update here
+    command: ["/bin/sh", "-c", "npx prisma migrate deploy && npm start"]
+    restart: always  # This will restart the app if it fails
+
 
 volumes:
   postgres-data:

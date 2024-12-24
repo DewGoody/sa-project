@@ -1,6 +1,8 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
 }
+
 
 datasource db {
   provider  = "postgresql"
@@ -83,10 +85,12 @@ model Student {
   Address              Address[]
   Military_info        Military_info?
   Queue                Queue[]
+  Request              Request[]
   UHC_reg_info         UHC_reg_info?
   accident_info        accident_info[]
   father_mother_info   father_mother_info[]
   guardian_info        guardian_info?
+  prakan_inter_info    prakan_inter_info[]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -244,6 +248,9 @@ model Queue {
   req_id      BigInt?
   timeslot_id BigInt?
   period      BigInt?
+  deleted_at  DateTime? @db.Timestamptz(6)
+  status      String?
+  uid         String?
   Request     Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student     Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Timeslot    Timeslot? @relation(fields: [timeslot_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -255,7 +262,9 @@ model Request {
   created_at DateTime @default(now()) @db.Timestamptz(6)
   type       String?
   status     String?
+  stu_id     Decimal? @db.Decimal
   Queue      Queue[]
+  Student    Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -266,5 +275,26 @@ model Timeslot {
   period     Decimal[] @db.Decimal
   is_full    Boolean[]
   max_stu    Decimal?  @db.Decimal
+  is_open    Boolean[] @default([true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true])
+  deleted_at DateTime? @db.Timestamptz(6)
   Queue      Queue[]
+}
+
+model prakan_inter_info {
+  id                     BigInt   @id @default(autoincrement())
+  created_at             DateTime @default(now()) @db.Timestamptz(6)
+  phone_num              String?
+  claimType              String?
+  accidentDate           String?
+  accidentTime           String?
+  accidentCause          String?
+  hospitalName           String?
+  hospitalProvince       String?
+  hospitalPhoneNumber    String?
+  hospitalAmittedDate    String?
+  hospitalDischargedDate String?
+  presentAddress         String?
+  title                  String?
+  stu_id                 Decimal? @db.Decimal
+  Student                Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
