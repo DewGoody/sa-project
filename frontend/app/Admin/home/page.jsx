@@ -66,6 +66,21 @@ const App = () => {
             name: 'John',
             age: 42,
             address: '10 Downing Street',
+        },        {
+            key: '2',
+            name: 'John',
+            age: 42,
+            address: '10 Downing Street',
+        },        {
+            key: '2',
+            name: 'John',
+            age: 42,
+            address: '10 Downing Street',
+        },        {
+            key: '2',
+            name: 'John',
+            age: 42,
+            address: '10 Downing Street',
         },
     ];
 
@@ -134,7 +149,7 @@ const App = () => {
                     ]}
                 />
             </Sider>
-            <Layout style={{background:"rgb(255,157,210)"}}>
+            <Layout style={{ background: "rgb(255,157,210)" }}>
                 <Content
                     style={{
                         padding: 24,
@@ -152,7 +167,14 @@ const App = () => {
                             <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
                         </div>
                     </div>
-                    <Table dataSource={dataSource} columns={columns} />
+                    <Table
+                        dataSource={dataSource}
+                        columns={columns}
+                        rowClassName={(record, index) =>
+                            index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
+                        }
+                    />
+
                 </Content>
             </Layout>
         </Layout>

@@ -151,7 +151,13 @@ const App = () => {
                             <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
                         </div>
                     </div>
-                    <Table dataSource={dataSource} columns={columns} />
+                    <Table
+                        dataSource={dataSource}
+                        columns={columns}
+                        rowClassName={(record, index) =>
+                            index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
+                        }
+                    />
                 </Content>
             </Layout>
         </Layout>
