@@ -168,7 +168,7 @@ function page() {
                         type="text"
                         name="fnameEN"
                         //value={formData.Name}
-                        onChange={(event) => handleChange(event, "fnameTH")}
+                        onChange={(event) => handleChange(event, "fnameEN")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Name"
                         defaultValue={profileData.fnameEN}
@@ -181,7 +181,7 @@ function page() {
                       type="text"
                       name="lnameEN"
                       //value={formData.Surname}
-                      onChange={(event) => handleChange(event, "lnameTH")}
+                      onChange={(event) => handleChange(event, "lnameEN")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                       placeholder="Surname"
                       defaultValue={profileData.lnameEN}
