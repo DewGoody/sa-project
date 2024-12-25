@@ -14,7 +14,7 @@ const App = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const [selectedKey, setSelectedKey] = useState('5');
+    const [selectedKey, setSelectedKey] = useState('2');
     const columns = [
         {
             title: 'ชื่อ-นามสกุล',
@@ -25,10 +25,6 @@ const App = () => {
             dataIndex: 'student_ID',
         },
         {
-            title: 'เลขบัตรประชาชน',
-            dataIndex: 'citizen_ID',
-        },
-        {
             title: 'เลขคิว',
             dataIndex: 'request_ID',
         },
@@ -37,8 +33,8 @@ const App = () => {
             dataIndex: 'birthdate',
         },
         {
-            title: '',
             align: 'right', // เพิ่ม align ขวา
+            title: '',
             render: (_, record) => (
                 <Space size="middle">
                     <a>Excel</a>
@@ -85,9 +81,6 @@ const App = () => {
                             style={{ borderTop: "5px solid white" }}
                         />
                     </div>
-
-
-
                 </>
 
                 <Menu
@@ -105,7 +98,6 @@ const App = () => {
                             key: '2',
                             label: <span style={{ color: selectedKey === '2' ? 'black' : 'white' }}>ประกันอุบัติเหตุ</span>,
                             onClick: () => window.location.href = '/Admin/prakan'
-
                         },
                         {
                             key: '3',
@@ -138,16 +130,16 @@ const App = () => {
                         padding: 24,
                         minHeight: 280,
                         background: "white",
-                        borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
+                         borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
                         borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
+
                     }}
                 >
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
-                            บัตรทอง
+                            ประกันอุบัติเหตุ
                         </div>
                         <div className='mr-10'>
-
                             <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
                         </div>
                     </div>

@@ -42,6 +42,7 @@ const App = () => {
         },
         {
             title: '',
+            align: 'right', // เพิ่ม align ขวา
             render: (_, record) => (
                 <Space size="middle">
                     <a>Excel</a>
@@ -82,7 +83,12 @@ const App = () => {
                             Departmet of Scholarship & Students Service, Office of the Student Affairs, Chulalongkorn University
                         </p>
                     </div>
-                    <hr className='mt-5'></hr>
+                    <div className="flex justify-center mt-5">
+                        <hr
+                            className="w-11/12"
+                            style={{ borderTop: "5px solid white" }}
+                        />
+                    </div>
                 </>
 
                 <Menu
@@ -99,6 +105,8 @@ const App = () => {
                         {
                             key: '2',
                             label: <span style={{ color: selectedKey === '2' ? 'black' : 'white' }}>ประกันอุบัติเหตุ</span>,
+                            onClick: () => window.location.href = '/Admin/prakan'
+
                         },
                         {
                             key: '3',
