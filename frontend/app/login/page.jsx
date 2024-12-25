@@ -3,7 +3,7 @@ const login = () => {
     return (
         <div className="h-screen">
             <div className="flex justify-center items-end h-1/6 ">
-                <p className="text-3xl">กิจการนิสิต</p>
+                {/* <p className="text-3xl">กิจการนิสิต</p> */}
             </div>
 
             <div className="flex justify-center items-center h-4/6 space-x-6">
@@ -19,7 +19,7 @@ const login = () => {
                 </div>
                 <div className=" h-5/6 w-5/12 shadow-center-lg rounded-3xl items-center place-content-center flex max-[700px]:hidden">
                     <div className="bg-pink-300 h-5/6 w-10/12 rounded-2xl flex place-content-center items-center">
-                        <p className="text-color-white">picture</p>
+                        <img src="Office of Student Affairs_0.png"></img>
                     </div>
                 </div>
             </div>
