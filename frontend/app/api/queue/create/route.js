@@ -1,16 +1,18 @@
 import { PrismaClient } from '@prisma/client';
-import {createQueue} from '../../../service/queueService'
 import { NextResponse } from "next/server"
-import { convertBigIntToString} from '../../../../utills/convertBigInt'
+import {sendMessageToQueue} from '../../../rabbitmq/send'
+import { nanoid } from 'nanoid';
 
 const prisma = new PrismaClient();
 
 export async function POST(req,res){
     try{
     let data = await req.json()
-    console.log("data",data);
-    const createdQueue = await createQueue(data.studentId, data.reqId, data.timeslotId, data.period)
-    return NextResponse.json({ data: convertBigIntToString(createdQueue) });
+    const customUid = nanoid(10);
+    data.uid = customUid
+    console.log("uid",data);
+    await sendMessageToQueue(data);
+    return NextResponse.json({ data: customUid });
 }
     catch(error){
         if(!error.code){
