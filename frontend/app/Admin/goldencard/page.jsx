@@ -14,7 +14,7 @@ const App = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const [selectedKey, setSelectedKey] = useState('1');
+    const [selectedKey, setSelectedKey] = useState('5');
     const columns = [
         {
             title: 'ชื่อ-นามสกุล',
@@ -25,20 +25,16 @@ const App = () => {
             dataIndex: 'student_ID',
         },
         {
-            title: 'เบอร์โทรศัพท์',
-            dataIndex: 'phone_num',
+            title: 'เลขบัตรประชาชน',
+            dataIndex: 'citizen_ID',
         },
         {
-            title: 'วันที่เข้ายื่นเอกสาร',
-            dataIndex: 'applydate',
+            title: 'เลขคิว',
+            dataIndex: 'request_ID',
         },
         {
-            title: 'status',
-            dataIndex: 'status',
-        },
-        {
-            title: 'บริการ',
-            dataIndex: 'service',
+            title: 'วันเดือนปีเกิด',
+            dataIndex: 'birthdate',
         },
         {
             title: '',
@@ -67,7 +63,6 @@ const App = () => {
             address: '10 Downing Street',
         },
     ];
-
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
@@ -126,7 +121,7 @@ const App = () => {
                     ]}
                 />
             </Sider>
-            <Layout style={{background:"rgb(255,157,210)"}}>
+            <Layout style={{ background: "rgb(255,157,210)" }}>
                 <Content
                     style={{
                         padding: 24,
@@ -137,10 +132,11 @@ const App = () => {
                     }}
                 >
                     <div className='flex mb-5 justify-between'>
-                        <div className=' font-extrabold text-3xl'>
-                            จัดการการนัดหมาย
+                        <div className='font-extrabold text-3xl'>
+                            บัตรทอง
                         </div>
                         <div className='mr-10'>
+
                             <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
                         </div>
                     </div>
