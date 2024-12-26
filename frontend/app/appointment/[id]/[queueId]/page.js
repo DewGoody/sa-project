@@ -21,6 +21,7 @@ export default function ScholarshipPage() {
   const [morningIdx,setMorningIdx] = useState(0);
   const [afternoonIdx,setAfternoonIdx] = useState(0);
   const [timeSlotId, setTimeSlotId] = useState(0);
+  const [reqType, setReqType] = useState('');
   const [byDate, setByDate] = useState({data:{id:4}});
   const router = useRouter();
   const { id } = useParams();
@@ -48,11 +49,25 @@ export default function ScholarshipPage() {
       setLoading(false);
     }
   }
+
+  const fetchReqType = async () => {
+    try {
+      const response = await axios.post(`/api/request/getById`, {id: id});
+      console.log("reqType",response.data.data.type);
+      setReqType(response.data.data.type);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  }
   
 
   useEffect(() => {
     fetchAllDate();
   }, []);
+  useEffect(() => {
+    fetchReqType();
+  }, [profileData]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +75,7 @@ export default function ScholarshipPage() {
         const response = await axios.get('/api/profile'); // Example API
         setProfileData(response.data);
         setLoading(false);
-        console.log(response.data);
+        console.log("profile",response.data);
       } catch (error) {
         setError(error.message);
         setLoading(false);
@@ -168,7 +183,6 @@ export default function ScholarshipPage() {
   if (error) return <div>Error: {error}</div>;
 
   const handleDateClick = async (date) => {
-    console.log("date1",date);
     setSelectedDate(date);
     setShowTimeSlots(false);
     setSelectedPeriod('');
@@ -177,13 +191,13 @@ export default function ScholarshipPage() {
     const gregorianYear = parseInt(thaiYear, 10) - 543;
     const formattedDate = `${gregorianYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     getByDate(formattedDate);
-    console.log("byDate",formattedDate);
+    console.log("byDate", formattedDate);
     selectFetchDate?.data?.forEach((item) => {
       const [year, month, day] = item.date.split('T')[0].split('-');
-      const buddhistYear = (parseInt(year) + 543).toString();
-      const realDate = `${day}/${month}/${buddhistYear}`;
+      const realDate = `${day}/${month}/${year}`;
+      console.log("realDate", realDate);
       if (realDate === date) {
-      setTimeSlotId(item.id);
+        setTimeSlotId(item.id);
       }
     });
   };
@@ -227,8 +241,7 @@ export default function ScholarshipPage() {
       .filter(items => !items.is_full.every(item => item === true))
       .map(items => {
         const [year, month, day] = items.date.split('T')[0].split('-');
-        const buddhistYear = (parseInt(year) + 543).toString();
-        return `${day}/${month}/${buddhistYear}`;
+        return `${day}/${month}/${year}`;
       })
       .sort((a, b) => {
         const [dayA, monthA, yearA] = a.split('/');
@@ -241,7 +254,7 @@ export default function ScholarshipPage() {
 
   return (
     <>
-    <Header req1="" req2="" />
+    <Header req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ" : ""} req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accidental Compensation Claim Form" : ""} />
     <div className="flex flex-col items-center text-center p-6 font-sans min-h-screen bg-gray-50">
       <div className="flex items-center bg-gray-100 p-4 rounded-lg mb-6 w-full max-w-xs shadow">
         <UserOutlined />
@@ -253,6 +266,7 @@ export default function ScholarshipPage() {
 
       <div className="mb-6">
         <h3 className="text-gray-800 font-semibold">เลือกวันเข้ารับบริการ</h3>
+        <h3 className="text-gray-800 font-semibold">(Select a Service Appointment Date)</h3>
         <div className="flex gap-4 mt-3">
           {newDate.map((date, index) => (
             <button
@@ -268,7 +282,7 @@ export default function ScholarshipPage() {
         </div>
       </div>
 
-      {selectedDate && morning && afternoon && (
+      {selectedDate !== '' && (
         <div className="flex gap-8 mb-6">
           <button
             onClick={() => handlePeriodClick('morning')}
@@ -276,7 +290,7 @@ export default function ScholarshipPage() {
               selectedPeriod === 'morning' ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
             } hover:bg-pink-500`}
           >
-            ช่วงเช้า
+            ช่วงเช้า (Morning Session)
           </button>
           <button
             onClick={() => handlePeriodClick('afternoon')}
@@ -284,7 +298,7 @@ export default function ScholarshipPage() {
               selectedPeriod === 'afternoon' ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
             } hover:bg-pink-500`}
           >
-            ช่วงบ่าย
+            ช่วงบ่าย (Afternoon Session)
           </button>
         </div>
       )}
@@ -322,11 +336,13 @@ export default function ScholarshipPage() {
 
       {selectedTimeSlot && (
         <div className="mt-8 w-full max-w-xs">
-          <div className="bg-pink-100 p-4 rounded-lg mb-4 text-gray-700">
+          <div className="bg-pink-100 p-5 rounded-lg mb-4 text-gray-700">
             <p className="font-semibold">วันที่เข้ารับบริการ</p>
-            <p>{selectedDate}</p>
+            <p className="font-semibold">(Service Appointment Date)</p>
+            <p className='text-lg'>{selectedDate}</p>
             <p className="mt-2 font-semibold">ช่วงเวลา</p>
-            <p>{selectedTimeSlot}</p>
+            <p className="font-semibold">(Time Slot)</p>
+            <p className='text-lg'>{selectedTimeSlot}</p>
           </div>
           <div className='flex justify-around'>
             <button

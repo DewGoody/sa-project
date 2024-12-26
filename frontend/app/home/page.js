@@ -193,11 +193,7 @@ export const Form = () => {
                     </div>
                   </div>
                 ))
-              ) : (
-                <div className="flex justify-center">
-                  <Spin style={{color:"#f9a8d4"}} />
-                </div>
-              )}
+              ) : null}
               {prakanData.length === 0 && (
                 <div className="text-center mt-4">
                   <p className="text-gray-500">No data available</p>

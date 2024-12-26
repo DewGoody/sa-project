@@ -222,12 +222,6 @@ export default function Form() {
                     <div>
                     อาการบาดเจ็บ (Description of injury) :
                     </div>
-                    {/* <input
-                      type="text"
-                      name="name"
-                      onChange={handleChangeDesInj}
-                      className="ml-2 w-fit border border-solid rounded-md border-gray-800 "
-                    /> */}
                     <textarea className="ml-2 border border-solid rounded-md border-black" cols="32" rows="2" onChange={handleChangeDesInj}></textarea>
                   </label>
                   <div className="text text-sm text-red-600 mt-2">
@@ -235,14 +229,18 @@ export default function Form() {
                   </div>
                 </div>
                 <div>
-                <label>
+                <label className="flex">
+                    
+                    <div>
                     การเกิดอุบัติเหตุ (Description of accident) :
-                    <input
+                    </div>
+                    <textarea className="ml-2 border border-solid rounded-md border-black" cols="23" rows="2" onChange={handleChangeDesAcc}></textarea>
+                    {/* <input
                       type="text"
                       name="faculty"
                       onChange={handleChangeDesAcc}
                       className="ml-2 border border-solid rounded-md border-gray-800"
-                    />
+                    /> */}
                   </label>
                   <div className="text text-sm text-red-600 mt-2">
                   * โปรดระบุตามใบรับรองแพทย์ (Please specify according to the doctor's certificate)
