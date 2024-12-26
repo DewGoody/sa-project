@@ -49,19 +49,59 @@ function Page() {
                       defaultValue={"test"}
                     />
                   </div>
-
-                  <div>
-                    <label className="block text-gray-700 mb-2 ">
+                  <div className="pt-4 md:pt-0">
+                    <label className="block text-gray-700 mb-2">
                       คณะ (Faculty)
                     </label>
-                    <input
-                      type="text"
-                      name="faculty"
+                    <select
+                      id="faculty"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={(event) => handleChange(event, "faculty")}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
-                      placeholder="คณะ (Faculty)"
-                      defaultValue={"test"}
-                    />
+                    >
+                      <option defaultValue value="null">
+                        เลือกคณะ (Choose faculty)
+                      </option>
+                      <option value="คณะครุศาสตร์">คณะครุศาสตร์</option>
+                      <option value="คณะจิตวิทยา">คณะจิตวิทยา</option>
+                      <option value="คณะทันตแพทยศาสตร์">
+                        คณะทันตแพทยศาสตร์
+                      </option>
+                      <option value="คณะนิติศาสตร์">คณะนิติศาสตร์</option>
+                      <option value="คณะนิเทศศาสตร์">คณะนิเทศศาสตร์</option>
+                      <option value="คณะพยาบาลศาสตร์">คณะพยาบาลศาสตร์</option>
+                      <option value="คณะพาณิชยศาสตร์และการบัญชี">
+                        คณะพาณิชยศาสตร์และการบัญชี
+                      </option>
+                      <option value="คณะแพทยศาสตร์">คณะแพทยศาสตร์</option>
+                      <option value="คณะเภสัชศาสตร์">คณะเภสัชศาสตร์</option>
+                      <option value="คณะรัฐศาสตร์">คณะรัฐศาสตร์</option>
+                      <option value="คณะวิทยาศาสตร์">คณะวิทยาศาสตร์</option>
+                      <option value="คณะวิทยาศาสตร์การกีฬา">
+                        คณะวิทยาศาสตร์การกีฬา
+                      </option>
+                      <option value="คณะวิศวกรรมศาสตร์">
+                        คณะวิศวกรรมศาสตร์
+                      </option>
+                      <option value="คณะศิลปกรรมศาสตร์">
+                        คณะศิลปกรรมศาสตร์
+                      </option>
+                      <option value="คณะเศรษฐศาสตร์">คณะเศรษฐศาสตร์</option>
+                      <option value="คณะสถาปัตยกรรมศาสตร์">
+                        คณะสถาปัตยกรรมศาสตร์
+                      </option>
+                      <option value="คณะสหเวชศาสตร์">คณะสหเวชศาสตร์</option>
+                      <option value="คณะสัตวแพทยศาสตร์">
+                        คณะสัตวแพทยศาสตร์
+                      </option>
+                      <option value="คณะอักษรศาสตร์">คณะอักษรศาสตร์</option>
+                      <option value="สถาบันนวัตกรรมบูรณาการแห่งจุฬาลงกรณ์มหาวิทยาลัย">
+                        สถาบันนวัตกรรมบูรณาการแห่งจุฬาลงกรณ์มหาวิทยาลัย
+                      </option>
+                      <option value="สำนักวิชาทรัพยากรการเกษตร">
+                        สำนักวิชาทรัพยากรการเกษตร
+                      </option>
+                      <option value="บัณฑิตวิทยาลัย">บัณฑิตวิทยาลัย</option>
+                    </select>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 md:space-x-4  w-full  ">
                     <div>
@@ -205,13 +245,13 @@ function Page() {
                       วันที่ออกบัตร (Issue date)
                     </label>
                     <input
-                      type="text"
+                      type="date"
                       name="citizenIssueDate"
                       onChange={(event) =>
                         handleChange(event, "citizenIssueDate")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="วันที่ออกบัตร (Issue date)"
+                      max={new Date()?.toISOString()?.slice(0, 10)}
                     />
                   </div>
                   <div>
@@ -219,13 +259,13 @@ function Page() {
                       วันหมดอายุบัตร (Expire date)
                     </label>
                     <input
-                      type="text"
+                      type="date"
                       name="citizenExpireDate"
                       onChange={(event) =>
                         handleChange(event, "citizenExpireDate")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="วันหมดอายุบัตร (Expire date)"
+                      max={new Date()?.toISOString()?.slice(0, 10)}
                     />
                   </div>
                 </div>
@@ -236,18 +276,25 @@ function Page() {
                   ข้อมูลการเงิน (Financial information)
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                  <div className="pt-4 md:pt-0">
+                <div className="pt-4 md:pt-0">
                     <label className="block text-gray-700 mb-2">
-                      ประเภทการเบิกเงิน (Type of request)
+                      ประเภทการเบิกเงิน (Claim type)
                     </label>
-                    <input
-                      type="text"
-                      name="claimType"
-                      onChange={(event) => handleChange(event, "claimType")}
+                    <select
+                      id="claimType"
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="ประเภทการเบิกเงิน (Type of request)"
-                      defaultValue={"test"}
-                    />
+                      onChange={(event) => handleChange(event, "claimType")}
+                    >
+                      <option defaultValue value="null">
+                        เลือกประเภทการเบิกเงิน (Choose claim type)
+                      </option>
+                      <option value="ค่าจ้างนิสิตทำงานพิเศษ">ค่าจ้างนิสิตทำงานพิเศษ</option>
+                      <option value="ค่าเล่าเรียน">ค่าเล่าเรียน</option>
+                      <option value="ค่าธรรมเนียมการศึกษา">ค่าธรรมเนียมการศึกษา</option>
+                      <option value="เงินสมทบค่ารักษาพยาบาล">เงินสมทบค่ารักษาพยาบาล</option>
+                      <option value="เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ">เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ</option>
+                      <option value="อื่นๆ (ระบุ)">อื่นๆ (ระบุ)</option>
+                    </select>
                   </div>
 
                   <div>
@@ -305,15 +352,17 @@ function Page() {
                     <label className="block text-gray-700 mb-2">
                       ประเภทบัญชี (Account type)
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="bankAccountType"
-                      onChange={(event) =>
-                        handleChange(event, "bankAccountType")
-                      }
+                      onChange={(event) => handleChange(event, "bankAccountType")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="ประเภทบัญชี (Account type)"
-                    />
+                    >
+                      <option defaultValue value="null">
+                        เลือกประเภทบัญชี (Choose account type)
+                      </option>
+                      <option value="ออมทรัพย์">ออมทรัพย์</option>
+                      <option value="กระแสรายวัน">กระแสรายวัน</option>
+                    </select>
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
