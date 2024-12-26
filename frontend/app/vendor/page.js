@@ -5,13 +5,18 @@ import axios from "axios";
 import { Header } from "../components/Header.js";
 import numberToThaiText from "../components/numberToThaiText.js";
 
-function page() {
+function Page() {
   const [vendorData, setVendorData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [profileData, setProfileData] = useState(null);
 
   function handleSubmit(event, key) {}
+
+  const handleChange = (event, field) => {
+    console.log(field + " : " + event.target.value);
+    setVendorData({ ...vendorData, [field]: event.target.value });
+  };
   return (
     <>
       <div className=" bg-white min-h-screen">
@@ -40,7 +45,7 @@ function page() {
                       name="nameTH"
                       onChange={(event) => handleChange(event, "nameTH")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Name"
+                      placeholder="ชื่อและนามสกุล (Name-Surname)"
                       defaultValue={"test"}
                     />
                   </div>
@@ -54,7 +59,7 @@ function page() {
                       name="faculty"
                       onChange={(event) => handleChange(event, "faculty")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
-                      placeholder="Surname"
+                      placeholder="คณะ (Faculty)"
                       defaultValue={"test"}
                     />
                   </div>
@@ -65,11 +70,10 @@ function page() {
                       </label>
                       <input
                         type="text"
-                        name="id"
-                        onChange={(event) => handleChange(event, "id")}
+                        name="houseID"
+                        onChange={(event) => handleChange(event, "houseID")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Student ID"
-                        defaultValue={"test"}
+                        placeholder="บ้านเลขที่ (House No.)"
                       />
                     </div>
                     <div className="pt-4 md:pt-0">
@@ -78,11 +82,10 @@ function page() {
                       </label>
                       <input
                         type="text"
-                        name="tel_num"
-                        onChange={(event) => handleChange(event, "phone_num")}
+                        name="moo"
+                        onChange={(event) => handleChange(event, "moo")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Phone number"
-                        defaultValue={"test"}
+                        placeholder="หมู่ที่ (Moo)"
                       />
                     </div>
                   </div>
@@ -93,12 +96,12 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
+                      name="buildingVillage"
                       onChange={(event) =>
-                        handleChange(event, "presentAddress")
+                        handleChange(event, "buildingVillage")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="อาคาร/หมู่บ้าน (Building/Village)"
                     />
                   </div>
                   <div>
@@ -107,12 +110,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="soi"
+                      onChange={(event) => handleChange(event, "soi")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="ตรอก/ซอย (Soi)"
                     />
                   </div>
                   <div>
@@ -121,12 +122,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="road"
+                      onChange={(event) => handleChange(event, "road")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="ถนน (Road)"
                     />
                   </div>
                   <div>
@@ -135,12 +134,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="subDistrict"
+                      onChange={(event) => handleChange(event, "subDistrict")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="แขวง/ตำบล (Sub-district)"
                     />
                   </div>
                   <div>
@@ -149,12 +146,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="district"
+                      onChange={(event) => handleChange(event, "district")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="เขต/อำเภอ (District)"
                     />
                   </div>
                   <div>
@@ -163,12 +158,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="province"
+                      onChange={(event) => handleChange(event, "province")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="จังหวัด (Province)"
                     />
                   </div>
                   <div>
@@ -177,12 +170,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="postalCode"
+                      onChange={(event) => handleChange(event, "postalCode")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="รหัสไปรษณีย์ (Postal code)"
                     />
                   </div>
                   <div>
@@ -191,12 +182,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="tel"
+                      onChange={(event) => handleChange(event, "tel")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="โทรศัพท์ (Telephone)"
                     />
                   </div>
                   <div>
@@ -205,12 +194,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="citizenId"
+                      onChange={(event) => handleChange(event, "citizenId")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="เลขบัตรประชาชน (ID card number)"
                     />
                   </div>
                   <div>
@@ -219,12 +206,12 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
+                      name="citizenIssueDate"
                       onChange={(event) =>
-                        handleChange(event, "presentAddress")
+                        handleChange(event, "citizenIssueDate")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="วันที่ออกบัตร (Issue date)"
                     />
                   </div>
                   <div>
@@ -233,12 +220,12 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
+                      name="citizenExpireDate"
                       onChange={(event) =>
-                        handleChange(event, "presentAddress")
+                        handleChange(event, "citizenExpireDate")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="วันหมดอายุบัตร (Expire date)"
                     />
                   </div>
                 </div>
@@ -255,10 +242,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="nameTH"
-                      onChange={(event) => handleChange(event, "nameTH")}
+                      name="claimType"
+                      onChange={(event) => handleChange(event, "claimType")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Name"
+                      placeholder="ประเภทการเบิกเงิน (Type of request)"
                       defaultValue={"test"}
                     />
                   </div>
@@ -269,10 +256,12 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="faculty"
-                      onChange={(event) => handleChange(event, "faculty")}
+                      name="claimOtherReason"
+                      onChange={(event) =>
+                        handleChange(event, "claimOtherReason")
+                      }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
-                      placeholder="Surname"
+                      placeholder="กรณีอื่นๆ โปรดระบุ (Other case, please specify)"
                       defaultValue={"test"}
                     />
                   </div>
@@ -282,12 +271,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="amount"
+                      onChange={(event) => handleChange(event, "amount")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="จำนวนเงิน (Amount)"
                     />
                   </div>
                   <div>
@@ -296,12 +283,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="bankCompany"
+                      onChange={(event) => handleChange(event, "bankCompany")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="บัญชีธนาคาร (Bank account)"
                     />
                   </div>
                   <div>
@@ -310,12 +295,10 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      name="bankBranch"
+                      onChange={(event) => handleChange(event, "bankBranch")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="สาขา (Branch)"
                     />
                   </div>
                   <div>
@@ -324,12 +307,12 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
+                      name="bankAccountType"
                       onChange={(event) =>
-                        handleChange(event, "presentAddress")
+                        handleChange(event, "bankAccountType")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="ประเภทบัญชี (Account type)"
                     />
                   </div>
                   <div>
@@ -338,12 +321,12 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
+                      name="bankAccountName"
                       onChange={(event) =>
-                        handleChange(event, "presentAddress")
+                        handleChange(event, "bankAccountName")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="ชื่อบัญชี (Account name)"
                     />
                   </div>
                   <div>
@@ -352,12 +335,12 @@ function page() {
                     </label>
                     <input
                       type="text"
-                      name="presentAddress"
+                      name="bankAccountNumber"
                       onChange={(event) =>
-                        handleChange(event, "presentAddress")
+                        handleChange(event, "bankAccountNumber")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
+                      placeholder="เลขที่บัญชี (Account number)"
                     />
                   </div>
                 </div>
@@ -387,4 +370,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
