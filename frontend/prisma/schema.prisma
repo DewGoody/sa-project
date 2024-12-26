@@ -234,7 +234,7 @@ model Queue {
   period      BigInt?
   deleted_at  DateTime? @db.Timestamptz(6)
   status      String?
-  uid         String?
+  uid         String?   @unique
   Request     Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student     Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Timeslot    Timeslot? @relation(fields: [timeslot_id], references: [id], onDelete: NoAction, onUpdate: NoAction)

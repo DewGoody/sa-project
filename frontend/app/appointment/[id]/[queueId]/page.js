@@ -1,6 +1,6 @@
 'use client'
 import { useState,useEffect, use } from 'react';
-import { Header } from '../../components/Header';
+import { Header } from '../../../components/Header';
 import { UserOutlined } from '@ant-design/icons';
 import { useRouter, useParams } from 'next/navigation';
 import axios from "axios";
@@ -24,6 +24,7 @@ export default function ScholarshipPage() {
   const [byDate, setByDate] = useState({data:{id:4}});
   const router = useRouter();
   const { id } = useParams();
+  const {queueId} = useParams();
   console.log("id", id);
  
 
@@ -100,23 +101,49 @@ export default function ScholarshipPage() {
   const createQueue = async () => {
     try {
       if(selectedPeriod === 'morning'){
-        const response = await axios.post(`/api/queue/create`, {
-          studentId: parseInt(profileData.id,10),
-          reqId:id,
-          timeslotId: timeSlotId,
-          period: morningIdx,
-        });
-        console.log(response.data);
+        if(queueId!=0){
+          const response = await axios.post(`/api/queue/create`, {
+            studentId: parseInt(profileData.id, 10),
+            reqId: id,
+            timeslotId: timeSlotId,
+            period: morningIdx,
+            queueId: queueId
+          });
+          console.log("responseMorning",response);
+        }
+        else{
+          const response = await axios.post(`/api/queue/create`, {
+            studentId: parseInt(profileData.id, 10),
+            reqId: id,
+            timeslotId: timeSlotId,
+            period: morningIdx,
+            queueId: null
+          });
+          console.log("responseMorning",response);
+        }
+        
       }else if(selectedPeriod === 'afternoon'){
-        const response = await axios.post(`/api/queue/create`, {
-          studentId: profileData.id,
-          reqId:id,
-          timeslotId: timeSlotId,
-          period: afternoonIdx,
-        });
-        console.log(response.data);
+        if(queueId!=0){
+          const response = await axios.post(`/api/queue/create`, {
+            studentId: profileData.id,
+            reqId:id,
+            timeslotId: timeSlotId,
+            period: afternoonIdx,
+            queueId: queueId
+          });
+          console.log("responseAfterNoon",response.data);
+        }else{
+          const response = await axios.post(`/api/queue/create`, {
+            studentId: profileData.id,
+            reqId:id,
+            timeslotId: timeSlotId,
+            period: afternoonIdx,
+            queueId: null
+          });
+          console.log("responseAfterNoon",response.data);
+        }
       }
-      console.log(response.data);
+      console.log("respobnse",response.data);
     }catch (err) {
       console.log("Error fetching amphures: " + err);
     }
@@ -141,23 +168,24 @@ export default function ScholarshipPage() {
   if (error) return <div>Error: {error}</div>;
 
   const handleDateClick = async (date) => {
+    console.log("date1",date);
     setSelectedDate(date);
     setShowTimeSlots(false);
     setSelectedPeriod('');
     setSelectedTimeSlot('');
     const [day, month, thaiYear] = date.split("/");
-
-// Convert the Thai year to the Gregorian year
-  const gregorianYear = parseInt(thaiYear, 10) - 543;
-
-// Format as YYYY-MM-DD
-  const formattedDate = `${gregorianYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-  getByDate(formattedDate);
-  console.log("byDate",byDate);
-  setTimeSlotId(byDate.data.id);
-  
-    
-
+    const gregorianYear = parseInt(thaiYear, 10) - 543;
+    const formattedDate = `${gregorianYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    getByDate(formattedDate);
+    console.log("byDate",formattedDate);
+    selectFetchDate?.data?.forEach((item) => {
+      const [year, month, day] = item.date.split('T')[0].split('-');
+      const buddhistYear = (parseInt(year) + 543).toString();
+      const realDate = `${day}/${month}/${buddhistYear}`;
+      if (realDate === date) {
+      setTimeSlotId(item.id);
+      }
+    });
   };
   console.log("timeSlotId",timeSlotId)
   console.log("selectDate",selectedDate);
@@ -308,14 +336,16 @@ export default function ScholarshipPage() {
               back
             </button>
            
-          <a href="/home">
-          <button className="py-2 px-6 bg-green-400 text-white rounded-lg shadow-md hover:bg-green-500"
+          
+         <a href='/home'>
+         <button className="py-2 px-6 bg-green-400 text-white rounded-lg shadow-md hover:bg-green-500"
               onClick={handleSubmit}
               htmlType="submit"
             >
               confirm
             </button>
-          </a>
+         </a>
+        
           </div>
         </div>
       )}

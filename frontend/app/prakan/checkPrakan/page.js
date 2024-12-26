@@ -84,7 +84,7 @@ const RD = () => {
 
     // Function to handle navigation attempt
     const handleNavigation = async (event) => {
-        const response = await axios.post(`/api/request/create`, {type: "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id});
+        const response = await axios.post(`/api/request/create`, {type: "การเบิกจ่ายประกันอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id});
         setCreateRequest(response.data);
         console.log("createRequest", createRequest);
         const param = response.data.data.id;
@@ -95,7 +95,7 @@ const RD = () => {
             event.preventDefault();
             alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
         } else {
-            router.push(`/appointment/${param}`);
+            router.push(`/appointment/${param}/0`);
         }
     };
 

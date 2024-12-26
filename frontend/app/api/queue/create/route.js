@@ -11,8 +11,12 @@ export async function POST(req,res){
     const customUid = nanoid(10);
     data.uid = customUid
     console.log("uid",data);
+    await prisma.request.update({
+        where: {id: data.reqId},
+        data: {status: "กำลังดำเนินการจองคิว"}
+    })
     await sendMessageToQueue(data);
-    return NextResponse.json({ data: customUid });
+    return NextResponse.json({ reqId: data.reqId , uid: customUid});
 }
     catch(error){
         if(!error.code){

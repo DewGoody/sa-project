@@ -41,7 +41,7 @@ export async function createQueue(studentId, reqId, timeslotId, period, uid) {
 
 export async function getShowQueueByStuId(studentId) {
     const queue = await prisma.queue.findMany({
-        where: {stu_id: studentId},
+        where: {stu_id: studentId, deleted_at: null},
         include: {
             Timeslot: true,
             Request: true

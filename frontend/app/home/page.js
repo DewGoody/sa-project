@@ -1,6 +1,7 @@
 'use client'
 import React, { use } from "react";
 import { Header } from "../components/Header";
+import { useRouter } from 'next/navigation';
 
 import {
   FaUser,
@@ -10,21 +11,35 @@ import {
   FaRegHospital,
   FaGlobeAmericas,
 } from "react-icons/fa";
+import { DeleteOutlined, EditOutlined  } from '@ant-design/icons';
+import {Modal,Spin} from 'antd';
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 
 export const Form = () => {
 
   const [prakanData, setPrakanData] = useState([]);
-    const [studentInfo, setStudentInfo] = useState({});
-  
-    const [inputValue, setInputValue] = useState('');
-    const [thaiText, setThaiText] = useState('');
     const [profileData, setProfileData] = useState(null);
     const [period, setPeriod] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [prakanDone,setPrakanDone] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [deleteQueueId, setDeleteQueueId] = useState('');
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [prakanDataLength, setPrakanDataLength] = useState(0);
+    const router = useRouter();
+    const showModal = (id) => {
+      setDeleteQueueId(id);
+      setPrakanDataLength(prakanData.length);
+      console.log("comfirm",confirmDelete);
+      console.log("prakanDataLength",prakanDataLength);
+      setIsModalOpen(true);
+    };
+  
+    const handleCancel = () => {
+      setIsModalOpen(false);
+    };
     const timeSlots = 
   [
     '8:00-8:30', '8:30-9:00','9:00-9:30', '9:30-10:00','10:00-10:30', '10:30-11:00','11:00-11:30', '11.30-12.00',
@@ -66,11 +81,43 @@ export const Form = () => {
           setLoading(false);
         }
       }        
-      useEffect(() => {
-          fetchQueue();
 
+      const fetchFirstQueue = async () => {
+        try {          
+          const response = await axios.post('/api/queue/getByStuId',{studentId: profileData.id}); // Example API
+          console.log("wuw",response.data);
+          setPrakanData(response.data.data);
+          setPeriod(response.data.data[0].Timeslot.period);
+          setPrakanDataLength(response.data.data.length);
+          setLoading(false);
+
+        } catch (error) {
+          setError(error.message);
+          setLoading(false);
+        }
+      }  
+      useEffect(() => {
+          fetchFirstQueue();
+      }, []);
+
+      
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        fetchQueue();
+      }, 3000);
+
+      return () => clearInterval(interval);
+    }, [profileData]);
+
+    useEffect(() => {
+      if(prakanDataLength > prakanData.length){
+        setLoading(false);
+        setIsModalOpen(false);
+        setConfirmDelete(false);
       }
-      , [profileData]);
+    }, [prakanData,confirmDelete]);
+     
       console.log("prakanData", prakanData);
       console.log("prakanData length", prakanData.length);
 
@@ -79,8 +126,26 @@ export const Form = () => {
     return new Date(dateString).toLocaleDateString('en-GB', options);
   };
 
+  const handleEditQueue = async (queueID,reqID) => {
+    const queueId = queueID
+    const id = reqID;
+    console.log("req_Id",id);
+    router.push(`/appointment/${id}/${queueId}`);
 
+  }
 
+  const handleDeleteQueue = async () => {
+    try {
+      const response = await axios.post('/api/queue/delete',{id: deleteQueueId}); // Example API
+      setConfirmDelete(true);
+      setPrakanDone(false);
+      console.log(response.data);
+     
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  }
 
   let count = 1;
 
@@ -102,22 +167,41 @@ export const Form = () => {
               <p className="text-lg font-bold">Status</p>
             </div>
             <div className=" justify-between items-center">
-              {prakanDone && Array.isArray(prakanData) ? (
+              {prakanData.length > 0 ? (
                 prakanData.map((item, index) => (
-                  index == 0 ? (
-                    item.Timeslot.period.map((timee, timeIndex) => (
-                      timee != 0 && (
-                        <div key={timeIndex} className="flex justify-between items-center">
-                          <ServiceCard
-                            title={count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " ( " + timeSlots[timeIndex] + " น. )" + " " + item.Request.status}
-                          />
-                        </div>
-                      )
-                    ))
-                  ) : null
+                  <div key={index} className="flex justify-between items-center">
+                    <ServiceCard
+                      title={count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " ( " + timeSlots[item.period] + " น.)" + " " + item.Request.status}
+                    />
+                    <div className="flex justify-around">
+                      <div>
+                        <button
+                          className="bg-pink-300 hover:bg-pink-400 text-white font-bold py-2 px-4 rounded"
+                          onClick={() => { handleEditQueue(item.id, item.req_id) }}
+                        >
+                          <EditOutlined />
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          className="bg-gray-300 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded"
+                          onClick={() => { showModal(item.id) }}
+                        >
+                          <DeleteOutlined />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 ))
               ) : (
-                <p>No data available</p>
+                <div className="flex justify-center">
+                  <Spin style={{color:"#f9a8d4"}} />
+                </div>
+              )}
+              {prakanData.length === 0 && (
+                <div className="text-center mt-4">
+                  <p className="text-gray-500">No data available</p>
+                </div>
               )}
             </div>
           </div>
@@ -157,6 +241,18 @@ export const Form = () => {
           </div>
         </div>
       </main>
+      <Modal 
+        title="ต้องการลบคิวใช่ไหม (Are you sure to delete queue)" 
+        open={isModalOpen} 
+        onOk={handleDeleteQueue} 
+        onCancel={handleCancel} 
+        okButtonProps={{ 
+          style: { backgroundColor: '#f9a8d4' }, 
+          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
+          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
+        }}
+      >
+      </Modal>
     </div>
   );
 };
@@ -173,6 +269,7 @@ const ServiceCard = ({ title, icon }) => {
     ) : (
       <div className="px-16">
         <p className=" -ml-28 text-gray-700 font-semibold">{title}</p>
+        
       </div>
     )}
     </div>
