@@ -42,4 +42,4 @@ next-env.d.ts
 env
 
 docker-compose.yml
-docker-compose.yml
+docker-compose_prod.yml
