@@ -66,8 +66,8 @@ const page = () => {
             fetchDistrictsById(id);
         }
 
-        // เคลียร์ค่า hospitalName เมื่อ benefitStatus ไม่ใช่ "nhso"
-        if (name === "benefitStatus" && value !== "nhso") {
+        // เคลียร์ค่า hospitalName เมื่อ benefitStatus ไม่ใช่ "existing"
+        if (name === "benefitStatus" && value !== "existing") {
             updateData({ hospitalName: '' });
         }
         if (name === "benefitStatus" && value !== "other") {
@@ -102,27 +102,79 @@ const page = () => {
             console.log("Error fetching districts: " + err);
         }
     };
-
+    var isTrueSet=(CH) => (String(CH).toLowerCase() === 'true');
     useEffect(() => {
         fetchProvinces();
 
     }, []);
     useEffect(() => {
-        console.log(Data)
+        // console.log(Data)
     }, [Data])
-
+    const formatDateToISO = (dateString) => {
+        const date = new Date(dateString);
+        return date.toISOString();
+    };
     const handleSubmit = async (e) => {
+       
+        const status_before = () => {
+            if (Data.benefitStatus === "existing") {
+                // console.log("exxxxxxxxxx")
+                return Data.hospitalName}
+            else if (Data.benefitStatus === "other") {
+                // console.log("other")
+                return Data.otherStatus}
+        }
+        const id = Data.id
         e.preventDefault();
         try {
             notifyinprocess()
+            await axios.put(`/api/UHC`, {
+                Student: {
+                    id: id,
+                    lnameTH: Data.Name,
+                    fnameTH: Data.Surname,
+                    facultyNameTH: Data.facultyNameTH,
+                    year: Data.year,
+                    bd: formatDateToISO(Data.birthDate),
+                    tel_num: Data.Telnumber,
+                    title: Data.Nametitle,
+                    thai_id: Data.citizenId,
+                    contactable_tel: Data.Contactphone,
+                    thai_id_card_issured: formatDateToISO(Data.Idcardissuedate),
+                    thai_id_card_expired: formatDateToISO(Data.Idcardexpiraiton),
+                    personal_email: Data.email,
+                    phone_num: Data.Phonenumber,
+                },
+                UHC_reg_info: {
+                    id: id,
+                    smart_card_issured: Data.Idcardissuedate,
+                    smart_card_expired: Data.Idcardissuedate,
+                    status_before_reg: Data.benefitStatus,
+                    status_info: status_before(),
+                    frequence_uses: Data.hospitalService,
+                    is_been: isTrueSet(Data.usedHospitalBefore),
+                    is_congenital_disease: isTrueSet(Data.hasChronicDisease),
+                },
+                DOPA_address: {
+                    id: id,
+                    house_num: Data.domicileNumber,
+                    house_moo: Data.house_moo,
+                    soi: Data.soi,
+                    street: Data.road,
+                    subdistrict: Data.amphure,
+                    district: Data.district,
+                    province: Data.provice,
+                    postal_code: Data.zipCode,
+                }
+            })
+
 
             notifysuccess()
             router.push("/golden_card/Doc")
         } catch (error) {
             notifyerror()
-
             console.error('Form submission error:', error);
-            router.push("/golden_card/Doc")
+            // router.push("/golden_card/Doc")
         }
     };
 
@@ -172,6 +224,28 @@ const page = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                                             placeholder="Surname"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 mb-2 ">คณะ (Faculty)</label>
+                                        <input
+                                            type="text"
+                                            name="facultyNameTH"
+                                            value={Data.facultyNameTH}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
+                                            placeholder="Faculty"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 mb-2 ">ชั้นปี (Year)</label>
+                                        <input
+                                            type="text"
+                                            name="year"
+                                            value={Data.year}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
+                                            placeholder="Year"
                                         />
                                     </div>
                                     <div>
@@ -279,6 +353,26 @@ const page = () => {
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                             placeholder="Domicile Number"
                                         />
+                                    </div>                  <div>
+                                        <label className="block text-gray-700 mb-2">หมู่ที่ (Moo)</label>
+                                        <input
+                                            type="text"
+                                            name="house_moo"
+                                            value={Data.house_moo}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            placeholder="Moo"
+                                        />
+                                    </div>                  <div>
+                                        <label className="block text-gray-700 mb-2">ตรอก/ซอย (Soi)</label>
+                                        <input
+                                            type="text"
+                                            name="soi"
+                                            value={Data.soi}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            placeholder="Soi"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">ถนน (Road)</label>
@@ -348,14 +442,14 @@ const page = () => {
                                         </select>
                                     </div>
                                     <div >
-                                        <label className="block text-gray-700 mb-2">โทรศัพท์ (Tell number)</label>
+                                        <label className="block text-gray-700 mb-2">โทรศัพท์ (Tel number)</label>
                                         <input
                                             type="text"
-                                            name="Tellnumber"
-                                            value={Data.Tellnumber}
+                                            name="Telnumber"
+                                            value={Data.Telnumber}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Tell number"
+                                            placeholder="Tel number"
                                         />
                                     </div>
 
@@ -369,13 +463,13 @@ const page = () => {
                                     <div className="flex items-center space-x-4 py-2">
                                         <input
                                             type="radio"
-                                            id="nhso"
+                                            id="existing"
                                             name="benefitStatus"
-                                            value="nhso"
-                                            checked={Data.benefitStatus === "nhso"}
+                                            value="existing"
+                                            checked={Data.benefitStatus === "existing"}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="nhso" className="block text-gray-700">
+                                        <label htmlFor="existing" className="block text-gray-700">
                                             สิทธิหลักประกันสุขภาพแห่งชาติ โรงพยาบาล
                                             <input
                                                 type="text"
@@ -384,7 +478,7 @@ const page = () => {
                                                 value={Data.hospitalName}
                                                 className="border rounded-lg px-2 py-1 ml-2"
                                                 placeholder="ชื่อโรงพยาบาล" // กำหนด placeholder เริ่มต้น
-                                                disabled={Data.benefitStatus !== "nhso"} // ปิดการกรอกถ้าไม่ใช่ตัวเลือกนี้
+                                                disabled={Data.benefitStatus !== "existing"} // ปิดการกรอกถ้าไม่ใช่ตัวเลือกนี้
                                             />
                                         </label>
                                     </div>
@@ -393,13 +487,13 @@ const page = () => {
                                     <div className="flex items-center space-x-4 py-2">
                                         <input
                                             type="radio"
-                                            id="civilServant"
+                                            id="goverment"
                                             name="benefitStatus" // ใช้ name เดียวกันสำหรับ radio ทั้งหมด
-                                            value="civilServant"
-                                            checked={Data.benefitStatus === "civilServant"}
+                                            value="goverment"
+                                            checked={Data.benefitStatus === "goverment"}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="civilServant" className="block text-gray-700">
+                                        <label htmlFor="goverment" className="block text-gray-700">
                                             สิทธิสวัสดิการข้าราชการ
                                         </label>
                                     </div>
@@ -407,13 +501,13 @@ const page = () => {
                                     <div className="flex items-center space-x-4 py-2">
                                         <input
                                             type="radio"
-                                            id="socialSecurity"
+                                            id="social"
                                             name="benefitStatus" // ใช้ name เดียวกันสำหรับ radio ทั้งหมด
-                                            value="socialSecurity"
-                                            checked={Data.benefitStatus === "socialSecurity"}
+                                            value="social"
+                                            checked={Data.benefitStatus === "social"}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="socialSecurity" className="block text-gray-700">
+                                        <label htmlFor="social" className="block text-gray-700">
                                             สิทธิประกันสังคม
                                         </label>
                                     </div>
@@ -499,8 +593,8 @@ const page = () => {
                                             type="radio"
                                             id="hospitaluse"
                                             name="hospitalService"
-                                            value="use"
-                                            checked={Data.hospitalService === 'use'}
+                                            value="1"
+                                            checked={Data.hospitalService === '1'}
                                             onChange={handleChange}
                                         />
                                         <label htmlFor="hospitaluse" className="block text-gray-700">
@@ -513,8 +607,8 @@ const page = () => {
                                             type="radio"
                                             id="hospitalnotuse"
                                             name="hospitalService"
-                                            value="notUse"
-                                            checked={Data.hospitalService === 'notUse'}
+                                            value="2"
+                                            checked={Data.hospitalService === '2'}
                                             onChange={handleChange}
                                         />
                                         <label htmlFor="hospitalnotuse" className="block text-gray-700">
@@ -525,9 +619,9 @@ const page = () => {
                                         <input
                                             type="radio"
                                             name="hospitalService"
-                                            value="notSure"
+                                            value="3"
                                             id="hospitalnotsure"
-                                            checked={Data.hospitalService === 'notSure'}
+                                            checked={Data.hospitalService === '3'}
                                             onChange={handleChange}
                                         />
                                         <label htmlFor="hospitalnotsure" className="block text-gray-700">
@@ -546,21 +640,21 @@ const page = () => {
                                                 type="radio"
                                                 id="usedHospitalBefore"
                                                 name="usedHospitalBefore"
-                                                value="yes"
-                                                checked={Data.usedHospitalBefore === 'yes'}
+                                                value={true} // Boolean value
+                                                checked={isTrueSet(Data.usedHospitalBefore) === true} // Compare with Boolean
                                                 onChange={handleChange}
                                             />
                                             <label htmlFor="usedHospitalBefore" className="block text-gray-700">
                                                 เคย
                                             </label>
                                         </div>
-                                        <div className="flex items-center space-x-4 w-1/3" >
+                                        <div className="flex items-center space-x-4 w-1/3">
                                             <input
                                                 type="radio"
                                                 id="notusedHospitalBefore"
                                                 name="usedHospitalBefore"
-                                                value="no"
-                                                checked={Data.usedHospitalBefore === 'no'}
+                                                value={false} // Boolean value
+                                                checked={isTrueSet(Data.usedHospitalBefore) === false} // Compare with Boolean
                                                 onChange={handleChange}
                                             />
                                             <label htmlFor="notusedHospitalBefore" className="block text-gray-700">
@@ -580,8 +674,8 @@ const page = () => {
                                                 type="radio"
                                                 name="hasChronicDisease"
                                                 id="hasChronicDisease"
-                                                value="has"
-                                                checked={Data.hasChronicDisease === 'has'}
+                                                value={true}
+                                                checked={isTrueSet(Data.hasChronicDisease) === true}
                                                 onChange={handleChange}
                                             />
                                             <label htmlFor="hasChronicDisease" className="block text-gray-700">
@@ -593,8 +687,8 @@ const page = () => {
                                                 type="radio"
                                                 name="hasChronicDisease"
                                                 id="nothasChronicDisease"
-                                                value="hasNot"
-                                                checked={Data.hasChronicDisease === 'hasNot'}
+                                                value={false}
+                                                checked={isTrueSet(Data.hasChronicDisease) === false}
                                                 onChange={handleChange}
                                             />
                                             <label htmlFor="nothasChronicDisease" className="block text-gray-700">

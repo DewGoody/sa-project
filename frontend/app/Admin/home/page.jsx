@@ -45,7 +45,7 @@ const App = () => {
             align: 'right', // เพิ่ม align ขวา
             render: (_, record) => (
                 <Space size="middle">
-                    <a>Excel</a>
+
                     <a>Delete</a>
                 </Space>
             ),
@@ -144,7 +144,7 @@ const App = () => {
                         },
                         {
                             key: '7',
-                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>แบบคำขอรับเงินผ่านธนาคาร</span>,
+                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>กยส</span>,
                         }
                     ]}
                 />

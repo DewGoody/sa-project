@@ -146,8 +146,6 @@ const CheckData = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const id = formData.id
-        console.log(id)
-        console.log("Yearrrrrrrrrrrrrrr",formData.Collage_Year)
         try {
             notifyinprocess()
             await axios.put(`/api/profile`, {

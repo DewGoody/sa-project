@@ -12,7 +12,7 @@ const RD = () => {
     const { formData, updateFormData } = useFormData();
 
     useEffect(() => {
-        console.log(formData);
+        // console.log(formData);
     }, [formData]);
 
     const filepdf = async () => {
