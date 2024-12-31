@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 
 
 
+
 const RD = () => {
     const { formData, updateFormData } = useFormData();
 
@@ -17,7 +18,7 @@ const RD = () => {
 
     const filepdf = async () => {
         try {
-            const response = await axios.get("/api/export/RD1", { responseType: 'blob' });
+            const response = await axios.get("/api/export/RD2", { responseType: 'blob' });
             return response.data;
         } catch (error) {
             console.log(error);
@@ -29,7 +30,7 @@ const RD = () => {
         if (pdfBlob) {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(pdfBlob);
-            link.download = 'RD1.pdf';
+            link.download = 'RD2.pdf';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -102,7 +103,7 @@ const RD = () => {
 
     return (
         <div>
-            <Header req1="การสมัครเป็น นศท. ปี 1 (ผู้ไม่เคยศึกษาวิชาทหาร) " req2="" />
+            <Header req1="รายงานตัวเข้าฝึกนักศึกษาวิชาทหาร " req2="" />
             <div className="min-h-screen bg-white">
                 <main className="flex justify-center items-center">
                     <div className="bg-white p-8 w-full max-w-4xl">
@@ -126,7 +127,7 @@ const RD = () => {
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
-                                                <strong className="font-medium text-gray-900 ">1. ติดรูป ชุดนิสิต ขนาด 1.5 นิ้ว</strong>
+                                                <strong className="font-medium text-gray-900 ">1. ติดรูป ชุดนักศึกษาวิชาทหาร ขนาด 1.5 นิ้ว</strong>
                                             </div>
                                         </label>
 
@@ -137,7 +138,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">2. สำเนาหลักฐานผลการศึกษาชั้น ม.6</strong>
+                                                <strong className="font-medium text-gray-900">2. สำเนาบัตรนักศึกษาวิชาทหาร</strong>
                                             </div>
                                         </label>
 
@@ -148,65 +149,13 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">3. ใบรับรองแพทย์ โดยแพทย์ปริญญา (ใบรับรองแพทย์มีอายุ 1 เดือนนับจากวันที่ตรวจร่างกาย) รอเติม link</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option4"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">4. สำเนาใบสำคัญทหารกองเกิน (สด.9) กรณีเป็นผู้สมัครชายอายุ 17 ปีขึ้นไป (ถ้ามี)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option5"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">5. สำเนาหมายเรียกเข้ารับราชการทหาร (สด.35) กรณีเป็นผู้สมัครชายอายุ 20 ปีขึ้นไป (ถ้ามี)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option6"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">6. สำเนาใบรับรองผลการตรวจเลือกเข้ารับราชการทหาร (สด.43) กรณีผู้สมัครชายอายุ 21 ปีขึ้นไป (ถ้ามี)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option7"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">7. สำเนาบัตรประจำตัวประชาชน (copy of citizen ID)</strong>
-                                            </div>
-                                        </label>
-
-                                        <label
-                                            htmlFor="Option8"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">8. สำเนาใบเปลี่ยนชื่อ-สกุล (ถ้ามี)</strong>
+                                                <strong className="font-medium text-gray-900">3. ใบสำเร็จนักศึกษาวิชาทหารล่าสุด (กรณีโอนย้าย)</strong>
                                             </div>
                                         </label>
                                     </div>
+
+
+
                                 </fieldset>
                                 <div className="flex space-x-4">
                                     <label
@@ -258,11 +207,11 @@ const RD = () => {
                         {/* Navigation Buttons */}
                         <div className="flex justify-between mt-8">
                             <a
-                                href="/rordor/checkData"
+                                href="/rordor/checkData2"
 
                             >
                                 <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                Back
+                                    Back
                                 </button>
                             </a>
 

@@ -87,14 +87,13 @@ const RD = () => {
                       </strong>
                     </div>
                   </label>
-
                   <label
                     htmlFor="Option2"
                     className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        2. Attending Physician's Report (Included in Claim Form)
+                        2. Original receipt
                       </strong>
                     </div>
                   </label>
@@ -104,7 +103,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        3. Original receipt
+                        3. Medical certificate
                       </strong>
                     </div>
                   </label>
@@ -114,7 +113,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        4. Medical certificate
+                        4. Copy of student card
                       </strong>
                     </div>
                   </label>
@@ -124,17 +123,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        5. Copy of student card
-                      </strong>
-                    </div>
-                  </label>
-                  <label
-                    htmlFor="Option2"
-                    className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                  >
-                    <div>
-                      <strong className="font-medium text-gray-900">
-                        6. Your copy of bank account passbook
+                        5. Your copy of bank account passbook
                       </strong>
                     </div>
                   </label>
@@ -187,7 +176,7 @@ const RD = () => {
 
           {/* Navigation Buttons */}
           <div className="flex justify-between mt-8">
-            <a href="/rordor/checkData">
+            <a href="/home">
               <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
                 Back
               </button>

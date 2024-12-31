@@ -35,8 +35,6 @@ function page() {
       "phone_num",
       "presentAddress",
       "bd",
-      "businessAddress",
-      "occupation",
     ];
 
     // Check if all required fields are present and not empty
@@ -102,7 +100,7 @@ function page() {
       try {
         const response = await axios.get("/api/profile"); // Example API
         console.log(response.data);
-
+        response.data.phone_num = response.data.tel_num;
         setProfileData(response.data);
         setLoading(false);
 
@@ -117,9 +115,6 @@ function page() {
         setPrakanData(updatedData);
         setPrakanData((prakanData) => ({
           ...prakanData,
-          businessAddress:
-            "254 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 10330",
-          occupation: "University Student",
         }));
       } catch (error) {
         setError(error.message);
@@ -148,7 +143,7 @@ function page() {
                   <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
                     1
                   </span>
-                  Personal & contact information
+                  Personal information
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
@@ -254,37 +249,6 @@ function page() {
                       max={new Date()?.toISOString()?.slice(0, 10)}
                     />
                   </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Business Address
-                    </label>
-                    <input
-                      type="text"
-                      name="businessAddress"
-                      //value={formData.religion}
-                      onChange={(event) =>
-                        handleChange(event, "businessAddress")
-                      }
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
-                      placeholder="Business Address"
-                      value="254 Phaya Thai Rd, Wang Mai, Pathum Wan, Bangkok 10330"
-                      disabled
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Occupation
-                    </label>
-                    <input
-                      type="text"
-                      name="occupation"
-                      //value={formData.religion}
-                      onChange={(event) => handleChange(event, "occupation")}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
-                      value="University Student"
-                      disabled
-                    />
-                  </div>
                 </div>
 
                 <h3 className="text-lg font-semibold my-4 flex gap-4">
@@ -322,7 +286,7 @@ function page() {
 
               <div className="flex justify-between mt-8">
                 {/*TODO Edit Link*/}
-                <a href="./">
+                <a href="/home">
                   <button className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11">
                     Back
                   </button>

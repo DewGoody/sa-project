@@ -178,6 +178,7 @@ export const Form = () => {
 
   return (
     <div className="min-h-screen bg-white">
+
       <Header req1="" req2="" />
       <main className="flex justify-center items-center ">
         <div className="bg-white p-8  w-full mx-72">
@@ -334,7 +335,7 @@ export const Form = () => {
     </Modal>
     </div>
   );
-};
+}
 
 const ServiceCard = ({ title, icon }) => {
   return (
@@ -353,6 +354,7 @@ const ServiceCard = ({ title, icon }) => {
     )}
     </div>
   );
-};
+}
+
 
 export default Form;
