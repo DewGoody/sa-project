@@ -1,25 +1,70 @@
 "use client";
-import React from "react";
+import React, { use } from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Header from "../components/header/page.js";
-import numberToThaiText from "../components/numberToThaiText.js";
+import Header from "../../components/header/page.js";
+import numberToThaiText from "../../components/numberToThaiText.js";
+import { useRouter,useParams } from 'next/navigation';
 
 export default function Form() {
   const [prakanData, setPrakanData] = useState({});
   const [studentInfo, setStudentInfo] = useState({});
 
   const [inputValue, setInputValue] = useState('');
-    const [thaiText, setThaiText] = useState('');
-    const [profileData, setProfileData] = useState(null);
+  const [thaiText, setThaiText] = useState('');
+  const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [alreadyData, setAlreadyData] = useState('');
+  const [date, setDate] = useState("");
+
+  const router = useRouter();
+  const {form} = useParams();
+
+  console.log("form", form);
+  console.log("type Form : ", typeof form);
 
 
+  const fetchDataForm = async () => {
+    try {
+      const response = await axios.post(`/api/prakan/getDataById`, { id: parseInt(form) });
+      console.log("kuy",response.data.data);
+      const isoDate = response.data.data.acc_date;
+      const formattedDate = isoDate.split("T")[0];
+      setDate(formattedDate); 
+      const thaiText = numberToThaiText(response.data.data.medical_fee);
+      response.data.data.thaiText = thaiText
+      response.data.data.formId = form
+      setAlreadyData(response.data.data);
+      setPrakanData(response.data.data);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const fetchStudentData = async () => {
+    const response = await axios.get('/api/profile'); // Example API
+        console.log(response.data);
+        
+        setProfileData(response.data);
+        setLoading(false);
+        console.log(response.data);
+  };
 
 
+  useEffect(() => {
+    fetchStudentData();
+  }, []);
 
-
+  useEffect(() => {
+    if (form !== "0") {
+      setTimeout(() => {
+        fetchDataForm();
+      }, 1000);
+    }
+  }, []);
 
   const handleChangeThai = (e) => {
     const value = e.target.value;
@@ -27,15 +72,13 @@ export default function Form() {
         if (!/^(\d+(\.\d{0,2})?)?$/.test(value)) {
             return;
         }
-
         setInputValue(value);
-
-        // Convert to Thai text only if it's a valid number
         if (value !== '') {
             const number = parseFloat(value);
             const thaiText = numberToThaiText(number);
             setThaiText(thaiText);
             setPrakanData({ ...prakanData, thaiText: thaiText , medical_fee: value});
+            setAlreadyData({ ...alreadyData, thaiText: thaiText , medical_fee: value});
             console.log(thaiText);
         } else {
             setThaiText('');
@@ -55,7 +98,7 @@ export default function Form() {
 
   const handleChangePhone = (event) => {
     console.log(event.target.value);
-    setPrakanData({ ...profileData, tel_num: event.target.value });
+    setProfileData({ ...profileData, tel_num: event.target.value });
   };
   const handleChangeFaculty = (event) => {
     console.log(event.target.value);
@@ -64,66 +107,69 @@ export default function Form() {
   const handleChangeDesAcc = (event) => {
     console.log(event.target.value);
     setPrakanData({ ...prakanData, acc_desc: event.target.value });
+    setAlreadyData({ ...alreadyData, acc_desc: event.target.value });
   };
   const handleChangeEmail = (event) => {
     console.log(event.target.value);
-    setPrakanData({ ...prakanData, emailType: event.target.value });
+    setProfileData({ ...profileData, personal_email: event.target.value });
   };
   const handleChangeDesInj = (event) => {
     console.log(event.target.value);
-    setPrakanData({ ...prakanData, desInj: event.target.value });
+    setPrakanData({ ...prakanData, des_injury: event.target.value });
+    setAlreadyData({ ...alreadyData, des_injury: event.target.value });
   };
   const handleChangeDateAcc = (event) => {
-    // console.log(event.target.value);
-    // const dateValue = event.target.value; // YYYY-MM-DD format
    console.log(typeof event.target.value,event.target.value);
-   
-    setPrakanData({ ...prakanData, acc_date: event.target.value  });
+   setDate(event.target.value)
+  setPrakanData({ ...prakanData, acc_date: event.target.value  });
+
   };
   const handleChangePlaceAcc = (event) => {
     console.log(event.target.value);
     setPrakanData({ ...prakanData, accident_place: event.target.value });
+    setAlreadyData({ ...alreadyData, accident_place: event.target.value });
   };
   const handleChangePlaceTreat = (event) => {
     console.log(event.target.value);
     setPrakanData({ ...prakanData, treatment_place: event.target.value });
+    setAlreadyData({ ...alreadyData, treatment_place: event.target.value });
   };
   const handleChangeTypeHos = (event) => {
     console.log(event.target.value);
     setPrakanData({ ...prakanData, hospital_type: event.target.value });
+    setAlreadyData({ ...alreadyData, hospital_type: event.target.value });
   };
   const handleChangeMedicalFeeNum = (event) => {
     console.log(event.target.value);
     setPrakanData({ ...prakanData, medical_fee: (event.target.value)});
   };
 
-  const handleSubmit = (event) => {
-    let allData = { ...prakanData, ...studentInfo, ...thaiText };
-    console.log(prakanData);
-    console.log(allData);
-    //prakanService.createPrakanForm(allData);
+  const handleSubmit = async (event) => {
+    
 
-    axios.post('/api/prakanService', allData)
+    try {
+      if(form !== '0'){
+        let allData = { ...alreadyData, ...studentInfo, ...thaiText, ...profileData };
+        console.log("prakanSubmit : ",thaiText);
+        console.log("prakanAllData",allData);
+        const response = await axios.post('/api/prakan/update', allData);
+        console.log("responseId :",response.data.data.id);
+        router.push(`/prakan/checkPrakan/${form}`);
+      }else{
+        let allData = { ...prakanData, ...studentInfo, ...thaiText, ...profileData };
+        console.log("prakanSubmit : ",thaiText);
+        console.log("prakanAllData",allData);
+        const response = await axios.post('/api/prakan/create', allData);
+        const formId = response.data.data.id
+        router.push(`/prakan/checkPrakan/${formId}`);
+      }
+    } catch (error) {
+      console.error("There was an error submitting the form!", error);
+    }
   };
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/api/profile'); // Example API
-        console.log(response.data);
-        
-        setProfileData(response.data);
-        setLoading(false);
-        console.log(response.data);
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
-      }
-    };
 
-    fetchData();
-  }, []);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -190,6 +236,7 @@ export default function Form() {
                       name="phone"
                       onChange={handleChangePhone}
                       className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                      value={profileData.tel_num}
                     />
                   </div>
                 </div>
@@ -201,6 +248,7 @@ export default function Form() {
                       name="email"
                       onChange={handleChangeEmail}
                       className="ml-2 border border-solid rounded-md border-gray-800"
+                      value={profileData.personal_email}
                     />
                   </label>
                 </div>
@@ -222,27 +270,32 @@ export default function Form() {
                     <div>
                     อาการบาดเจ็บ (Description of injury) :
                     </div>
-                    {/* <input
-                      type="text"
-                      name="name"
+                    <textarea 
+                      className="ml-2 border border-solid rounded-md border-black" cols="32" rows="2" 
                       onChange={handleChangeDesInj}
-                      className="ml-2 w-fit border border-solid rounded-md border-gray-800 "
-                    /> */}
-                    <textarea className="ml-2 border border-solid rounded-md border-black" cols="32" rows="2" onChange={handleChangeDesInj}></textarea>
+                      value={alreadyData.des_injury}
+                    >
+
+                    </textarea>
                   </label>
                   <div className="text text-sm text-red-600 mt-2">
                   * โปรดระบุตามใบรับรองแพทย์ (Please specify according to the doctor's certificate)
                   </div>
                 </div>
                 <div>
-                <label>
+                <label className="flex">
+                    
+                    <div>
                     การเกิดอุบัติเหตุ (Description of accident) :
-                    <input
-                      type="text"
-                      name="faculty"
+                    </div>
+                    <textarea 
+                      className="ml-2 border border-solid rounded-md border-black" cols="23" rows="2" 
                       onChange={handleChangeDesAcc}
-                      className="ml-2 border border-solid rounded-md border-gray-800"
-                    />
+                      value={alreadyData.acc_desc}
+                      >
+
+                      </textarea>
+                   
                   </label>
                   <div className="text text-sm text-red-600 mt-2">
                   * โปรดระบุตามใบรับรองแพทย์ (Please specify according to the doctor's certificate)
@@ -255,6 +308,7 @@ export default function Form() {
                       type="text"
                       name="phone"
                       onChange={handleChangePlaceTreat}
+                      value={alreadyData.treatment_place}
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>
@@ -269,6 +323,7 @@ export default function Form() {
                       onChange={handleChangeTypeHos}
                       className="border border-solid rounded-md border-gray-800 text-gray-800 "
                       defaultValue="เลือกประเภทสถานพยาบาล"
+                      value={alreadyData.hospital_type}
                       
                       
                     >
@@ -287,6 +342,7 @@ export default function Form() {
                     <input
                       type="date"
                       onChange={handleChangeDateAcc}
+                      value={date}
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>
@@ -298,6 +354,7 @@ export default function Form() {
                       type="text"
                       name="id"
                       onChange={handleChangePlaceAcc}
+                      value={alreadyData.accident_place}
                       className="ml-2 border border-solid rounded-md border-gray-800"
                     />
                   </label>
@@ -320,6 +377,7 @@ export default function Form() {
                     <input
                       type="num"
                       onChange={handleChangeThai}
+                      value={alreadyData.medical_fee}
                       className="ml-2 w-fit border border-solid  rounded-md border-gray-800"
                     />
                   </label>
@@ -329,7 +387,7 @@ export default function Form() {
           </div>
         </main>
         <div className="flex justify-end">
-          <a href="./prakan/checkPrakan">
+        
           <button
             onClick={handleSubmit}
             
@@ -337,7 +395,7 @@ export default function Form() {
           >
             Next
           </button>
-          </a>
+    
         </div>
       </div>
     </div>
