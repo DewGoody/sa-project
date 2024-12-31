@@ -69,7 +69,11 @@ export async function   getTimeslotByDate(date) {
 }
 
 export async function   getAllTimeslot() {    
-    const timeslots = await prisma.timeslot.findMany()    
+    const timeslots = await prisma.timeslot.findMany({
+        orderBy: {
+          id: 'asc', // 'asc' for ascending order
+        },
+      }); 
     if(timeslots){
         return timeslots
     }

@@ -1,10 +1,10 @@
 "use client"
 import React, { useState,useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import Header from '../../components/header/page';
+import Header from '../../../components/header/page';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useRouter,useParams } from 'next/navigation';
 
 
 const RD = () => {
@@ -24,6 +24,8 @@ const RD = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const router = useRouter();
+    const { form } = useParams();
+    console.log("formId :", form);
   
 
     useEffect(() => {
@@ -43,15 +45,6 @@ const RD = () => {
     
         fetchData();
       }, []);
-
-    // const createReq = async () => {
-    //     try {
-    //         const response = await axios.post(`/api/request/create`, {type: "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id});
-    //         setCreateRequest(response.data);
-    //     } catch (err) {
-    //         console.log("Error fetching amphures: " + err);
-    //     }
-    // };
     
     const handleDownload = () => {
         const link = document.createElement('a');
@@ -61,6 +54,10 @@ const RD = () => {
         link.click();
         document.body.removeChild(link);
       };
+
+    const handleBack = () => {  
+        router.push(`/prakan/${form}`);
+    };
 
     // Function to handle checkbox change
     const handleCheckboxChange = (event) => {
@@ -84,7 +81,7 @@ const RD = () => {
 
     // Function to handle navigation attempt
     const handleNavigation = async (event) => {
-        const response = await axios.post(`/api/request/create`, {type: "การเบิกจ่ายประกันอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id});
+        const response = await axios.post(`/api/request/create`, {type: "การเบิกจ่ายประกันอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id, formId:form});
         setCreateRequest(response.data);
         console.log("createRequest", createRequest);
         const param = response.data.data.id;
@@ -185,14 +182,14 @@ const RD = () => {
 
                     {/* Navigation Buttons */}
                     <div className="flex justify-between mt-8">
-                            <a
-                                href="/rordor/checkData"
-
-                            >
-                                <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                            
+                                <button 
+                                    className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+                                    onClick={handleBack}
+                                    >
                                 Back
                                 </button>
-                            </a>
+                            
 
                             <button
                                 onClick={handleDownload}

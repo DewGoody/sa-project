@@ -69,7 +69,7 @@ const createPrakanPdf = async (data) => {
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.desInj, {
+    firstPage.drawText(data.des_injury, {
         x: 220,
         y: height-372.3,
         size: 14,   
@@ -138,7 +138,7 @@ app.post('/api/create', (req, res, next) => {
     console.log(data);
     createPrakanPdf(data)
 
-     db.query("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [data.studentId, data.firstNameTH+' '+data.lastNameTH, data.facultyNameTH, data.phone, data.desAcc, data.emailType, data.desInj, data.dateAcc, data.placeAcc, data.placeTreat, data.typeHos, data.medicalFeeNum, data.bankAcc, data.thaiText],(err, result) => {
+     db.query("INSERT INTO user VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [data.studentId, data.firstNameTH+' '+data.lastNameTH, data.facultyNameTH, data.phone, data.desAcc, data.emailType, data.des_injury, data.dateAcc, data.placeAcc, data.placeTreat, data.typeHos, data.medicalFeeNum, data.bankAcc, data.thaiText],(err, result) => {
         if(err){
             console.log(err);
         }

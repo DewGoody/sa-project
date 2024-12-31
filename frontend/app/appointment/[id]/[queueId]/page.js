@@ -23,10 +23,12 @@ export default function ScholarshipPage() {
   const [timeSlotId, setTimeSlotId] = useState(0);
   const [reqType, setReqType] = useState('');
   const [byDate, setByDate] = useState({data:{id:4}});
+  const [indexSelectedDate, setIndexSelectedDate] = useState(0);
   const router = useRouter();
-  const { id } = useParams();
+  const { id } = useParams(); //id is reqId
   const {queueId} = useParams();
   console.log("id", id);
+  console.log("queueId",queueId)
  
 
   const timeSlotsMorning = 
@@ -42,7 +44,6 @@ export default function ScholarshipPage() {
     try {
       const response = await axios.post('/api/timeslot/getAll'); // Example API
       console.log("getAll : ",response.data);
-      response.data
       setSelectFetchDate(response.data);
     } catch (error) {
       setError(error.message);
@@ -125,6 +126,10 @@ export default function ScholarshipPage() {
             queueId: queueId
           });
           console.log("responseMorning",response);
+          const uid = response.data.uid
+          console.log("uid",uid)
+          router.push(`/waiting-appointment/${id}/${queueId}/${uid}`);
+
         }
         else{
           const response = await axios.post(`/api/queue/create`, {
@@ -135,6 +140,9 @@ export default function ScholarshipPage() {
             queueId: null
           });
           console.log("responseMorning",response);
+          const uid = response.data.uid
+          console.log("uid",uid)
+          router.push(`/waiting-appointment/${id}/${queueId}/${uid}`);
         }
         
       }else if(selectedPeriod === 'afternoon'){
@@ -147,6 +155,9 @@ export default function ScholarshipPage() {
             queueId: queueId
           });
           console.log("responseAfterNoon",response.data);
+          const uid = response.data.uid
+          console.log("uid",uid)
+          router.push(`/waiting-appointment/${id}/${queueId}/${uid}`);
         }else{
           const response = await axios.post(`/api/queue/create`, {
             studentId: profileData.id,
@@ -156,6 +167,9 @@ export default function ScholarshipPage() {
             queueId: null
           });
           console.log("responseAfterNoon",response.data);
+          const uid = response.data.uid
+          console.log("uid",uid)
+          router.push(`/waiting-appointment/${id}/${queueId}/${uid}`);
         }
       }
       console.log("respobnse",response.data);
@@ -166,7 +180,6 @@ export default function ScholarshipPage() {
   
   const handleSubmit = () =>{
     createQueue();
-    
   }
 
   const getByDate = async (date) => {
@@ -182,9 +195,10 @@ export default function ScholarshipPage() {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const handleDateClick = async (date) => {
+  const handleDateClick = async (date,index) => {
     setSelectedDate(date);
     setShowTimeSlots(false);
+    setIndexSelectedDate(index)
     setSelectedPeriod('');
     setSelectedTimeSlot('');
     const [day, month, thaiYear] = date.split("/");
@@ -223,6 +237,17 @@ export default function ScholarshipPage() {
     
   };
 
+  const isOpenPeriod = (index) =>{
+    if(selectFetchDate.data[indexSelectedDate].is_open[index] == false){
+      console.log("selectIndex",selectFetchDate.data[indexSelectedDate].is_open[index])
+      return false
+    }
+    else{
+      console.log("selectIndex",selectFetchDate.data[indexSelectedDate].is_open[index])
+      return true
+    }
+  }
+
   const handleTimeSlotClick = (timeSlot) => {
     setSelectedTimeSlot(timeSlot);
     if(selectedPeriod === 'morning'){
@@ -254,118 +279,129 @@ export default function ScholarshipPage() {
 
   return (
     <>
-    <Header req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ" : ""} req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accidental Compensation Claim Form" : ""} />
-    <div className="flex flex-col items-center text-center p-6 font-sans min-h-screen bg-gray-50">
-      <div className="flex items-center bg-gray-100 p-4 rounded-lg mb-6 w-full max-w-xs shadow">
-        <UserOutlined />
-        <div className="text-left ml-8">
-          <p className="text-gray-500">{ profileData.fnameTH + " " + profileData.lnameTH}</p>
-          <p className="text-gray-500">{ profileData.id }</p>
-        </div>
-      </div>
-
-      <div className="mb-6">
-        <h3 className="text-gray-800 font-semibold">เลือกวันเข้ารับบริการ</h3>
-        <h3 className="text-gray-800 font-semibold">(Select a Service Appointment Date)</h3>
-        <div className="flex gap-4 mt-3">
-          {newDate.map((date, index) => (
-            <button
-              key={index}
-              onClick={() => handleDateClick(date)}
-              className={`px-4 py-2 rounded-lg border transition-all ${
-                selectedDate === date ? 'border-pink-400 bg-pink-100' : 'border-gray-300 bg-gray-50'
-              }`}
-            >
-              {date}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {selectedDate !== '' && (
-        <div className="flex gap-8 mb-6">
-          <button
-            onClick={() => handlePeriodClick('morning')}
-            className={`py-2 px-6 rounded-lg shadow-md ${
-              selectedPeriod === 'morning' ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
-            } hover:bg-pink-500`}
-          >
-            ช่วงเช้า (Morning Session)
-          </button>
-          <button
-            onClick={() => handlePeriodClick('afternoon')}
-            className={`py-2 px-6 rounded-lg shadow-md ${
-              selectedPeriod === 'afternoon' ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
-            } hover:bg-pink-500`}
-          >
-            ช่วงบ่าย (Afternoon Session)
-          </button>
-        </div>
-      )}
-
-      {showTimeSlotsMorning && (
-        <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md">
-          {timeSlotsMorning.map((slot, index) => (
-            <button
-              key={index}
-              onClick={() => handleTimeSlotClick(slot)}
-              className={`py-2 px-4 rounded-lg ${
-                selectedTimeSlot === slot ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
-              } hover:bg-pink-300`}
-            >
-              {slot}
-            </button>
-          ))}
-        </div>
-      )}
-      {showTimeSlotsAfterNoon && (
-        <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md">
-          {timeSlotsAfternoon.map((slot, index) => (
-            <button
-              key={index}
-              onClick={() => handleTimeSlotClick(slot)}
-              className={`py-2 px-4 rounded-lg ${
-                selectedTimeSlot === slot ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
-              } hover:bg-pink-300`}
-            >
-              {slot}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {selectedTimeSlot && (
-        <div className="mt-8 w-full max-w-xs">
-          <div className="bg-pink-100 p-5 rounded-lg mb-4 text-gray-700">
-            <p className="font-semibold">วันที่เข้ารับบริการ</p>
-            <p className="font-semibold">(Service Appointment Date)</p>
-            <p className='text-lg'>{selectedDate}</p>
-            <p className="mt-2 font-semibold">ช่วงเวลา</p>
-            <p className="font-semibold">(Time Slot)</p>
-            <p className='text-lg'>{selectedTimeSlot}</p>
-          </div>
-          <div className='flex justify-around'>
-            <button
-              onClick={() => setSelectedTimeSlot('')}
-              className="py-2 px-6 bg-red-400 text-white rounded-lg shadow-md hover:bg-red-500"
-            >
-              back
-            </button>
-           
-          
-         <a href='/home'>
-         <button className="py-2 px-6 bg-green-400 text-white rounded-lg shadow-md hover:bg-green-500"
-              onClick={handleSubmit}
-              htmlType="submit"
-            >
-              confirm
-            </button>
-         </a>
-        
+      <Header req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ" : ""} req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accidental Compensation Claim Form" : ""} />
+      <div className="flex flex-col items-center text-center p-6 font-sans min-h-screen bg-gray-50">
+        <div className="flex items-center bg-gray-100 p-4 rounded-lg mb-6 w-full max-w-xs shadow">
+          <UserOutlined />
+          <div className="text-left ml-8">
+            <p className="text-gray-500">{profileData.fnameTH + " " + profileData.lnameTH}</p>
+            <p className="text-gray-500">{profileData.id}</p>
           </div>
         </div>
-      )}
-    </div>
+
+        <div className="mb-6">
+          <h3 className="text-gray-800 font-semibold">เลือกวันเข้ารับบริการ</h3>
+          <h3 className="text-gray-800 font-semibold">(Select a Service Appointment Date)</h3>
+          <div className="flex gap-4 mt-3">
+            {newDate.map((date, index) => (
+              <button
+                key={index}
+                onClick={() => handleDateClick(date, index)}
+                className={`px-4 py-2 rounded-lg border transition-all ${
+                  selectedDate === date ? 'border-pink-400 bg-pink-100' : 'border-gray-300 bg-gray-50'
+                }`}
+              >
+                {date}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {selectedDate !== '' && (
+          <div className="flex gap-8 mb-6">
+            <button
+              onClick={() => handlePeriodClick('morning')}
+              className={`py-2 px-6 rounded-lg shadow-md ${
+                selectedPeriod === 'morning' ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
+              } hover:bg-pink-500`}
+            >
+              ช่วงเช้า (Morning Session)
+            </button>
+            <button
+              onClick={() => handlePeriodClick('afternoon')}
+              className={`py-2 px-6 rounded-lg shadow-md ${
+                selectedPeriod === 'afternoon' ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
+              } hover:bg-pink-500`}
+            >
+              ช่วงบ่าย (Afternoon Session)
+            </button>
+          </div>
+        )}
+
+        {showTimeSlotsMorning && (
+          <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md">
+            {timeSlotsMorning.map((slot, index) => (
+              <button
+                key={index}
+                disabled={!isOpenPeriod(index)}
+                onClick={() => handleTimeSlotClick(slot)}
+                className={`py-2 px-4 rounded-lg ${
+                  selectedTimeSlot === slot ? 'bg-pink-400 text-white' : 'bg-gray-200 text-black'
+                } ${!isOpenPeriod(index) ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'hover:bg-gray-300'}`}
+              >
+                {slot}
+              </button>
+            ))}
+          </div>
+        )}
+        {showTimeSlotsAfterNoon && (
+          <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md">
+            {timeSlotsAfternoon.map((slot, index) => (
+              <button
+                key={index}
+                disabled={!isOpenPeriod(index + 8)}
+                onClick={() => handleTimeSlotClick(slot)}
+                className={`py-2 px-4 rounded-lg ${
+                  selectedTimeSlot === slot ? 'bg-pink-400 text-white' : 'bg-gray-200 text-black'
+                } ${!isOpenPeriod(index + 8) ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'hover:bg-gray-300'}`}
+              >
+                {slot}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {selectedTimeSlot ? (
+          <div className="mt-8 w-full max-w-xs">
+            <div className="bg-pink-100 p-5 rounded-lg mb-4 text-gray-700">
+              <p className="font-semibold">วันที่เข้ารับบริการ</p>
+              <p className="font-semibold">(Service Appointment Date)</p>
+              <p className='text-lg'>{selectedDate}</p>
+              <p className="mt-2 font-semibold">ช่วงเวลา</p>
+              <p className="font-semibold">(Time Slot)</p>
+              <p className='text-lg'>{selectedTimeSlot}</p>
+            </div>
+            <div className='flex justify-around'>
+              <a href='/home'>
+                <button
+                  onClick={() => setSelectedTimeSlot('')}
+                  className="py-2 px-6 bg-red-400 text-white rounded-lg shadow-md hover:bg-red-500"
+                >
+                  back
+                </button>
+              </a>
+              <a>
+                <button className="py-2 px-6 bg-green-400 text-white rounded-lg shadow-md hover:bg-green-500"
+                  onClick={handleSubmit}
+                  htmlType="submit"
+                >
+                  confirm
+                </button>
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div className='flex justify-around mt-8 w-full max-w-xs'>
+            <a href='/home'>
+              <button
+                className="py-2 px-6 bg-red-400 text-white rounded-lg shadow-md hover:bg-red-500"
+              >
+                back
+              </button>
+            </a>
+          </div>
+        )}
+      </div>
     </>
   );
 }

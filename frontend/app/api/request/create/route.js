@@ -16,6 +16,10 @@ export async function POST(req,res){
             stu_id: data.stuId,
         }
     })    
+    await prisma.accident_info.update({
+        where: {id: data.formId},
+        data: {req_id: createRequest.id}
+    })
     console.log("createRequest",createRequest);
     return NextResponse.json({ data: convertBigIntToString(createRequest) });
 }
