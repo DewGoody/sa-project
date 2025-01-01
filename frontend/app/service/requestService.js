@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 export async function getRequestById(id) {
     if(id){
         const request = await prisma.request.findUnique({
-            where: {id: id},
+            where: {id: id, deleted_at: null},
             include: {
                 accident_info: true,
             }
@@ -28,9 +28,9 @@ export async function getRequestById(id) {
     }
 }
 
-export async function getShowRequestNotQueue() {
+export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
-        where: {status: "รอจองคิว"},
+        where: {status: "รอจองคิว", stu_id: data,deleted_at: null},
         include: {
             accident_info: true,
         }
@@ -57,7 +57,7 @@ export async function cancleRequest(id) {
 export async function getRequestByIdFast(data) {
     if(data.id){
         const request = await prisma.request.findUnique({
-            where: {id: Number(data.id)},
+            where: {id: Number(data.id), deleted_at: null},
         })
         if(request){
             return request
@@ -65,5 +65,83 @@ export async function getRequestByIdFast(data) {
         else{
             return "Not found"
         }
+    }
+}
+
+export async function getRequestPrakanInAdmin(year){
+    const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
+    const endOfYear = new Date(year + 1, 0, 1);
+    let requests = null
+    if(year !== 0){
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    not: "คำขอถูกยกเลิก",
+                },
+                type: "การเบิกจ่ายประกันอุบัติเหตุ",
+                deleted_at: null,
+                created_at: {
+                    gte: startOfYear, // Greater than or equal to start of year
+                    lt: endOfYear, // Less than start of the next year
+                },
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+        })
+    }
+    else{
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    not: "คำขอถูกยกเลิก",
+                },
+                type: "การเบิกจ่ายประกันอุบัติเหตุ",
+                deleted_at: null
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+        })
+    }
+    if(requests){
+        return requests
+    }
+    else{
+        return "Not found"
+    }
+}
+
+export async function changeStatusPrakanToProcess(id) {
+    if(id){
+        const request = await getRequestById(id)
+        if(request.status !== "รอเข้ารับบริการ"){
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: {id: request.id},
+            data: {status: "รอดำเนินงานเอกสาร" }
+        })
+        return changeStatusRequest
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
+
+export async function changeStatusPrakanToFinish(id) {
+    if(id){
+        const request = await getRequestById(id)
+        if(request.status !== "รอดำเนินงานเอกสาร"){
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: {id: request.id},
+            data: {status: "ดำเนินการเสร็จสิ้น" }
+        })
+        return changeStatusRequest
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
     }
 }
