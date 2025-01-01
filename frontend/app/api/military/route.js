@@ -63,7 +63,7 @@ export async function PUT(req, res) {
 
         //console.log(addresses.Military_address);
 
-        await prisma.Military_info.upsert({
+        const create = await prisma.Military_info.upsert({
             where: { id },
             update: { ...Military_info },
             create: { id, ...Military_info }
@@ -154,6 +154,17 @@ export async function PUT(req, res) {
                 create: { id, ...guardian }
             });
         }
+        const createRequest = await prisma.request.create({
+            data: {
+                type: "Rordor",
+                status: "รอจองคิว",
+                stu_id: id,
+            }
+        })    
+        await prisma.military_info.update({
+            where: {id: create.id},
+            data: {req_id: createRequest.id}
+        })
 
         return NextResponse.json({ message: "Data updated successfully" });
     } catch (error) {

@@ -57,7 +57,7 @@ const gold = () => {
     
         try {
             const response = await axios.post(
-                `/api/UHC`, // เรียก API endpoint
+                `/api/POSTPDF`, // เรียก API endpoint
                 formData,
                 {
                     headers: {

@@ -1,5 +1,6 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
+import axios from 'axios';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -10,6 +11,54 @@ import {
 import { Button, Layout, Menu, theme, Input, Table, Space } from 'antd';
 const { Header, Sider, Content } = Layout;
 const App = () => {
+
+    async function fetchPdfFile(studentId) {
+        try {
+            const response = await fetch(`/api/POSTPDF?id=${studentId}`);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+    
+            const data = await response.json();
+    
+            if (data.binary_file_data) {
+                // Decode Base64 to binary
+                const byteCharacters = atob(data.binary_file_data);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: 'application/pdf' });
+    
+                // Create a URL for the Blob and trigger download
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `student_${studentId}_file.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert('No file data found.');
+            }
+        } catch (error) {
+            console.error('Error fetching file:', error);
+        }
+    }
+        
+    const [Data ,setData] = useState([])
+    const fetchData = async () =>{
+        try{
+            const response =await axios.get(`/api/Admin/getgoldenbyreq_id`)
+            setData(response.data)
+        }catch(error){
+            console.log(error)
+        }
+    }
+    useEffect(()=> {
+        fetchData();
+    },[])
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -29,10 +78,6 @@ const App = () => {
             dataIndex: 'citizen_ID',
         },
         {
-            title: 'เลขคิว',
-            dataIndex: 'request_ID',
-        },
-        {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
         },
@@ -41,8 +86,7 @@ const App = () => {
             align: 'right', // เพิ่ม align ขวา
             render: (_, record) => (
                 <Space size="middle">
-                    <a>Excel</a>
-                    <a>Delete</a>
+                    <Button onClick={() => fetchPdfFile(record.student_ID)}>PDF</Button>
                 </Space>
             ),
         },
@@ -50,20 +94,13 @@ const App = () => {
 
 
     ];
-    const dataSource = [
-        {
-            key: '1',
-            name: 'Mike',
-            age: 32,
-            address: '10 Downing Street',
-        },
-        {
-            key: '2',
-            name: 'John',
-            age: 42,
-            address: '10 Downing Street',
-        },
-    ];
+    const dataSource = Data.map((item, index) => ({
+        key: index, // Unique key for each row
+        fullname: `${item.Student?.lnameTH || ''} ${item.Student?.fnameTH || ''}`,
+        student_ID: item.student_id?.toString(),
+        citizen_ID: item.Student?.thai_id || 'N/A',
+        birthdate: item.Student?.bd || 'N/A',
+    }));
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
