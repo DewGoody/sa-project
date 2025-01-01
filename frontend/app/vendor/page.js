@@ -11,12 +11,102 @@ function Page() {
   const [error, setError] = useState(null);
   const [profileData, setProfileData] = useState(null);
 
-  function handleSubmit(event, key) {}
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    // List of required fields
+    const requiredFields = [
+      "nameTH",
+      "faculty",
+      "houseID",
+      "moo",
+      "buildingVillage",
+      "soi",
+      "road",
+      "subDistrict",
+      "district",
+      "province",
+      "postalCode",
+      "tel",
+      "citizenId",
+      "citizenIssueDate",
+      "citizenExpireDate",
+      "claimType",
+      "amount",
+      "bankCompany",
+      "bankBranch",
+      "bankAccountType",
+      "bankAccountName",
+      "bankAccountNumber",
+    ];
+
+    // Check if all required fields are present and not empty or Null
+    for (let field of requiredFields) {
+      if (!vendorData[field] || vendorData[field].trim() === "") {
+        alert(`Please fill in the "${field}" field.`);
+        return;
+      }
+    }
+    //TODO Handle Other Claim Type Case
+
+    //Handle Submit
+    console.log(vendorData);
+    let allData = { ...vendorData };
+    window.location.href = "/vendor/checkVendor";
+    /*axios
+      .post("/api/prakanInterService", allData)
+      .then((response) => {
+        console.log("Form submitted successfully:", response.data);
+        window.location.href = "/vendor/checkVendor";
+      })
+      .catch((error) => {
+        console.error("Error submitting form:", error);
+      });
+      */
+  };
 
   const handleChange = (event, field) => {
     console.log(field + " : " + event.target.value);
     setVendorData({ ...vendorData, [field]: event.target.value });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/profile"); // Example API
+        console.log(response.data);
+        response.data.phone_num = response.data.tel_num;
+        setProfileData(response.data);
+        setLoading(false);
+
+        //console.log(response.data);
+        // Create a new object to hold the updated state
+        const updatedData = {};
+        Object.keys(response.data).forEach((key) => {
+          updatedData[key] = response.data[key];
+        });
+
+        // Update the state once with the new object
+        setVendorData(updatedData);
+        setVendorData((vendorData) => ({
+          ...vendorData,
+          nameTH: response.data.fnameTH + " " + response.data.lnameTH,
+          faculty: response.data.facultyNameTH,
+        }));
+
+        //document.getElementById("faculty").value = vendorData.facultyNameTH;
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <>
       <div className=" bg-white min-h-screen">
@@ -46,7 +136,9 @@ function Page() {
                       onChange={(event) => handleChange(event, "nameTH")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="ชื่อและนามสกุล (Name-Surname)"
-                      defaultValue={"test"}
+                      defaultValue={
+                        profileData?.fnameTH + " " + profileData?.lnameTH
+                      }
                     />
                   </div>
                   <div className="pt-4 md:pt-0">
@@ -57,6 +149,7 @@ function Page() {
                       id="faculty"
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={(event) => handleChange(event, "faculty")}
+                      value={vendorData.facultyNameTH}
                     >
                       <option defaultValue value="null">
                         เลือกคณะ (Choose faculty)
@@ -276,7 +369,7 @@ function Page() {
                   ข้อมูลการเงิน (Financial information)
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                <div className="pt-4 md:pt-0">
+                  <div className="pt-4 md:pt-0">
                     <label className="block text-gray-700 mb-2">
                       ประเภทการเบิกเงิน (Claim type)
                     </label>
@@ -288,11 +381,19 @@ function Page() {
                       <option defaultValue value="null">
                         เลือกประเภทการเบิกเงิน (Choose claim type)
                       </option>
-                      <option value="ค่าจ้างนิสิตทำงานพิเศษ">ค่าจ้างนิสิตทำงานพิเศษ</option>
+                      <option value="ค่าจ้างนิสิตทำงานพิเศษ">
+                        ค่าจ้างนิสิตทำงานพิเศษ
+                      </option>
                       <option value="ค่าเล่าเรียน">ค่าเล่าเรียน</option>
-                      <option value="ค่าธรรมเนียมการศึกษา">ค่าธรรมเนียมการศึกษา</option>
-                      <option value="เงินสมทบค่ารักษาพยาบาล">เงินสมทบค่ารักษาพยาบาล</option>
-                      <option value="เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ">เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ</option>
+                      <option value="ค่าธรรมเนียมการศึกษา">
+                        ค่าธรรมเนียมการศึกษา
+                      </option>
+                      <option value="เงินสมทบค่ารักษาพยาบาล">
+                        เงินสมทบค่ารักษาพยาบาล
+                      </option>
+                      <option value="เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ">
+                        เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ
+                      </option>
                       <option value="อื่นๆ (ระบุ)">อื่นๆ (ระบุ)</option>
                     </select>
                   </div>
@@ -309,7 +410,6 @@ function Page() {
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                       placeholder="กรณีอื่นๆ โปรดระบุ (Other case, please specify)"
-                      defaultValue={"test"}
                     />
                   </div>
                   <div>
@@ -326,14 +426,14 @@ function Page() {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      บัญชีธนาคาร (Bank account)
+                      บัญชีของธนาคาร (Bank)
                     </label>
                     <input
                       type="text"
                       name="bankCompany"
                       onChange={(event) => handleChange(event, "bankCompany")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="บัญชีธนาคาร (Bank account)"
+                      placeholder="บัญชีของธนาคาร (Bank)"
                     />
                   </div>
                   <div>
@@ -354,7 +454,9 @@ function Page() {
                     </label>
                     <select
                       name="bankAccountType"
-                      onChange={(event) => handleChange(event, "bankAccountType")}
+                      onChange={(event) =>
+                        handleChange(event, "bankAccountType")
+                      }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
                       <option defaultValue value="null">
@@ -420,3 +522,4 @@ function Page() {
 }
 
 export default Page;
+
