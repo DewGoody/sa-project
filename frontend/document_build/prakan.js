@@ -66,7 +66,7 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.emailType, {
+    firstPage.drawText(data.personal_email, {
         x: 360,
         y: height-274.6,
         size: 14,   
@@ -80,14 +80,14 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.desInj, {
+    firstPage.drawText(data.des_injury, {
         x: 220,
         y: height-372.3,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(dataDateAcc, {
+    firstPage.drawText(data.acc_date, {
         x: 206,
         y: height-397.3,
         size: 14,   

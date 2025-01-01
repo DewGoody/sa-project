@@ -1,8 +1,11 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import Header from '../../components/header/page';
+import Header from '../../../components/header/page';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+import { useRouter,useParams } from 'next/navigation';
+
 
 const RD = () => {
     // State to manage checkbox status
@@ -11,6 +14,37 @@ const RD = () => {
         Option2: false,
         Option3: false,
     });
+    const [createRequest, setCreateRequest] = useState([]);
+    const [prakanData, setPrakanData] = useState({});
+    const [studentInfo, setStudentInfo] = useState({});
+  
+    const [inputValue, setInputValue] = useState('');
+    const [thaiText, setThaiText] = useState('');
+    const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const router = useRouter();
+    const { form } = useParams();
+    console.log("formId :", form);
+  
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get('/api/profile'); // Example API
+            console.log(response.data);
+            
+            setProfileData(response.data);
+            setLoading(false);
+            console.log(response.data);
+          } catch (error) {
+            setError(error.message);
+            setLoading(false);
+          }
+        };
+    
+        fetchData();
+      }, []);
     
     const handleDownload = () => {
         const link = document.createElement('a');
@@ -20,6 +54,10 @@ const RD = () => {
         link.click();
         document.body.removeChild(link);
       };
+
+    const handleBack = () => {  
+        router.push(`/prakan/${form}`);
+    };
 
     // Function to handle checkbox change
     const handleCheckboxChange = (event) => {
@@ -42,12 +80,19 @@ const RD = () => {
     };
 
     // Function to handle navigation attempt
-    const handleNavigation = (event, targetUrl) => {
+    const handleNavigation = async (event) => {
+        const response = await axios.post(`/api/request/create`, {type: "การเบิกจ่ายประกันอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id, formId:form});
+        setCreateRequest(response.data);
+        console.log("createRequest", createRequest);
+        const param = response.data.data.id;
+        console.log("responseRequest", response.data);
+        console.log("param", param);
+        
         if (!allChecked()) {
             event.preventDefault();
             alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
         } else {
-            window.location.href = targetUrl;
+            router.push(`/appointment/${param}/0`);
         }
     };
 
@@ -88,18 +133,6 @@ const RD = () => {
                                                 <strong className="font-medium text-gray-900">2. ใบรับรองเสร็จฉบับจริง</strong>
                                             </div>
                                         </label>
-
-                                        <label
-                                            htmlFor="Option3"
-                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                        >
-
-
-                                            <div>
-                                                <strong className="font-medium text-gray-900">3. สำเนาบัญชีธนาคาร</strong>
-                                            </div>
-                                        </label>
-
                                     </div>
                                 </fieldset>
                                 <div className="flex space-x-4">
@@ -149,14 +182,14 @@ const RD = () => {
 
                     {/* Navigation Buttons */}
                     <div className="flex justify-between mt-8">
-                            <a
-                                href="/rordor/checkData"
-
-                            >
-                                <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                            
+                                <button 
+                                    className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+                                    onClick={handleBack}
+                                    >
                                 Back
                                 </button>
-                            </a>
+                            
 
                             <button
                                 onClick={handleDownload}
@@ -165,8 +198,7 @@ const RD = () => {
                             </button>
 
                             <a
-                                href="/home"
-                                onClick={(event) => handleNavigation(event, "/home")}
+                                onClick={(event) => handleNavigation(event)}
                             >
                                 <button
                                     type="submit"

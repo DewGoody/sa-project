@@ -4,7 +4,7 @@ import { Header } from '../components/Header';
 const RD = () => {
     return (
         <div className="min-h-screen bg-white">
-            <Header req1="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" req2="" />
+            <Header req1="การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" req2="Request for deferral of military service" />
             <main className="flex justify-center items-center ">
                 <div className="bg-white p-8  w-full max-w-4xl">
 

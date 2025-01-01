@@ -11,7 +11,7 @@ const createPdfUsingAccForm = (data) =>{
     doc.text("คณะ" + data.faculty,10,40)
     doc.text("email" + data.email,10,50)
     doc.text("การเกิดอุบัติเหตุ" + data.desAcc,10,60)
-    doc.text("อาการบาดเจ็บ" + data.desInj,10,70)
+    doc.text("อาการบาดเจ็บ" + data.des_injury,10,70)
     doc.text("วันเกิดอุบัติเหตุ " + data.dateAcc,10,80)
     doc.text("สถานที่เกิดอุบัติเหตุ" + data.placeAcc,10,90)
     doc.text("ชื่อสถานพยาบาลที่เข้ารับการรักษา" + data.placeTreat,10,100)
