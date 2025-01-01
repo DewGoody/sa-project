@@ -52,17 +52,15 @@ function Page() {
     //Handle Submit
     console.log(vendorData);
     let allData = { ...vendorData };
-    window.location.href = "/vendor/checkVendor";
-    /*axios
-      .post("/api/prakanInterService", allData)
+    axios
+      .post("/api/vendorService", allData)
       .then((response) => {
         console.log("Form submitted successfully:", response.data);
-        window.location.href = "/vendor/checkVendor";
+        //window.location.href = "/vendor/checkVendor";
       })
       .catch((error) => {
         console.error("Error submitting form:", error);
       });
-      */
   };
 
   const handleChange = (event, field) => {
@@ -522,4 +520,3 @@ function Page() {
 }
 
 export default Page;
-
