@@ -30,13 +30,15 @@ async function prakan(data){
     const firstPage = pages[0]
     const { width, height } = firstPage.getSize()
     const convertDateFormat = (dateString) => {
-        // Split the input date string by the hyphen (-) to get year, month, and day
-        const [year, month, day] = dateString.split('-');
-        
-        // Return the date in the desired format
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
         return `${day}/${month}/${year}`;
       };
     const dataDateAcc = convertDateFormat(data.acc_date)
+   
 
     firstPage.drawText(data.fnameTH + ' ' + data.lnameTH, {
         x: 204,
@@ -87,7 +89,7 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.acc_date, {
+    firstPage.drawText(dataDateAcc, {
         x: 206,
         y: height-397.3,
         size: 14,   
