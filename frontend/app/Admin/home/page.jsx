@@ -1,13 +1,84 @@
 import React from 'react';
 
 const AppointmentManagement = () => {
-  const appointments = [
-    { firstName: 'Jane', lastName: 'Cooper', phone: '+91 9876543210', date: '13-Aug-2023 at 10:00 AM', status: 'Open' },
-    { firstName: 'Wade', lastName: 'Warren', phone: '+91 9876543210', date: '13-Aug-2023 at 10:00 AM', status: 'Booked' },
-    { firstName: 'Brooklyn', lastName: 'Simmons', phone: '+91 9876543210', date: '13-Aug-2023 at 10:00 AM', status: 'Completed' },
-    { firstName: 'Cameron', lastName: 'Williamson', phone: '+91 9876543210', date: '13-Aug-2023 at 10:00 AM', status: 'Open' },
-    { firstName: 'Leslie', lastName: 'Alexander', phone: '+91 9876543210', date: '13-Aug-2023 at 10:00 AM', status: 'Open' },
-  ];
+  const columns = [
+    {
+        title: 'ชื่อ-นามสกุล',
+        dataIndex: 'name',
+    },
+    {
+        title: 'รหัสนิสิต',
+        dataIndex: 'student_ID',
+    },
+    {
+        title: 'อาการบาดเจ็บ',
+        dataIndex: 'des_injury',
+    },
+    {
+        title: 'การเกิดอุบัติเหตุ',
+        dataIndex: 'acc_desc',
+    },
+    {
+        title: 'สถานที่เกิดอุบัติเหตุ',
+        dataIndex: 'accident_place',
+    },
+    {
+        title: 'วันที่เกิดอุบัติเหตุ',
+        dataIndex: 'acc_date',
+    },
+    {
+        title: 'การเกิดอุบัติเหตุ',
+        dataIndex: 'acc_desc',
+    },
+    {
+        title: 'สถานที่รักษา',
+        dataIndex: 'treatment_place',
+    },
+    {
+        title: 'ประเภทสถานพยาบาล',
+        dataIndex: 'hospital_type',
+    },
+    {
+        title: 'ค่ารักษาพบาบาล',
+        dataIndex: 'medical_fee',
+    },
+    {
+        title: 'สถานะ',
+        dataIndex: 'status',
+        render: (status) => (
+            <Select
+                defaultValue={status}
+                style={{ width: "180px" }}
+                options={[
+                    { value: 'รอเข้ารับบริการ', label: 'รอเข้ารับบริการ', style: {color: 'black' } },
+                    { value: 'Approved', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'green' } },
+                    { value: 'Rejected', label: 'คิวถูกยกเลิก', style: { color: 'red' } },
+                ]}
+            />
+        )
+    },
+    {
+        align: 'right', // เพิ่ม align ขวา
+        title: 'ดาวน์โหลด',
+        render: (_, record) => (
+            <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%', // Optional: ensures full height centering within the parent
+            }}
+          >
+            <DownloadOutlined
+              style={{
+                fontSize: '21px', // Increase the size (e.g., 24px)
+                cursor: 'pointer', // Optional: changes the cursor to a pointer
+              }}
+            />
+          </div>
+        ),
+    },
+];
 
   return (
     <div className="flex h-screen">

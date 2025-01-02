@@ -77,7 +77,7 @@ export async function getRequestPrakanInAdmin(year){
         requests = await prisma.request.findMany({
             where: {
                 status: {
-                    not: "คำขอถูกยกเลิก",
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
                 },
                 type: "การเบิกจ่ายประกันอุบัติเหตุ",
                 deleted_at: null,
@@ -105,7 +105,7 @@ export async function getRequestPrakanInAdmin(year){
         requests = await prisma.request.findMany({
             where: {
                 status: {
-                    not: "คำขอถูกยกเลิก",
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
                 },
                 type: "การเบิกจ่ายประกันอุบัติเหตุ",
                 deleted_at: null

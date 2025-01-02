@@ -2,3 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Header ของ Table */
+.ant-table-thead > tr > th {
+    background-color: rgb(255,157,210) !important; /* ทำให้ header เป็นสีขาว */
+    color: white !important;           /* เปลี่ยนตัวอักษรเป็นสีดำ */
+    font-weight: bold;                 /* ตัวหนา */
+    text-align: center;                /* จัดกลาง */
+}
+
+/* แถวสลับสี */
+.table-row-light {
+    background-color: white; /* สีแถวคี่ */
+}
+
+.table-row-dark {
+    background-color: #f3edf7; /* สีแถวคู่ */
+}
+
+/* เพิ่มเส้นขอบให้แถวดูชัดเจนขึ้น */
+.ant-table-tbody > tr > td {
+    border-bottom: 1px solid #ddd;
+}
+.ant-table-tbody > tr:nth-child(odd):hover > td {
+    background-color: white !important; /* สีแถวคี่เมื่อ hover */
+}
+
+.ant-table-tbody > tr:nth-child(even):hover > td {
+    background-color: #f3edf7 !important; /* สีแถวคู่เมื่อ hover */
+}
