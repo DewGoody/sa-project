@@ -1,5 +1,8 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
+import axios from 'axios';
+import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
+import { saveAs } from 'file-saver'; // เพิ่ม FileSaver สำหรับบันทึกไฟล์
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -10,7 +13,22 @@ import {
 import { Button, Layout, Menu, theme, Input, Table, Space } from 'antd';
 const { Header, Sider, Content } = Layout;
 const App = () => {
+    const [Data ,setData] = useState([])
+    const fetchData = async () =>{
+        try{
+            const response =await axios.get(`/api/Admin/getrordor`)
+            setData(response.data)
+        }catch(error){
+            console.log(error)
+        }
+    }
+    useEffect(()=> {
+        console.log(Data)
+        fetchData()},[])
     const [collapsed, setCollapsed] = useState(false);
+
+
+
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -33,10 +51,6 @@ const App = () => {
             dataIndex: 'citizen_ID',
         },
         {
-            title: 'เลขคิว',
-            dataIndex: 'request_ID',
-        },
-        {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
         },
@@ -45,29 +59,28 @@ const App = () => {
             align: 'right', // เพิ่ม align ขวา
             render: (_, record) => (
                 <Space size="middle">
-                    <a>Excel</a>
-                    <a>Delete</a>
+                    {/* <a>Delete</a> */}
                 </Space>
             ),
         },
-
-
-
     ];
-    const dataSource = [
-        {
-            key: '1',
-            name: 'Mike',
-            age: 32,
-            address: '10 Downing Street',
-        },
-        {
-            key: '2',
-            name: 'John',
-            age: 42,
-            address: '10 Downing Street',
-        },
-    ];
+    const dataSource = Data.map((item, index) => ({
+        key: index, // Unique key for each row
+        fullname: `${item.Student?.lnameTH || ''} ${item.Student?.fnameTH || ''}`,
+        student_ID: item.Student?.id,
+        citizen_ID: item.Student?.thai_id || 'N/A',
+        birthdate: item.Student?.bd || 'N/A',
+        rd_ID: item.Military_info[0]?.military_id || 'N/A',
+    }));
+
+    const exportToExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(dataSource); // แปลงข้อมูลเป็น worksheet
+        const workbook = XLSX.utils.book_new(); // สร้าง workbook ใหม่
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Data"); // เพิ่ม worksheet เข้า workbook
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' }); // สร้างไฟล์ excel
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" }); // สร้าง blob
+        saveAs(data, "exported_data.xlsx"); // บันทึกไฟล์
+    };
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
@@ -152,6 +165,9 @@ const App = () => {
                             <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
                         </div>
                     </div>
+                    <Button type="primary" onClick={exportToExcel} style={{ marginBottom: '16px' }}>
+                        Export to Excel
+                    </Button>
                     <Table
                         dataSource={dataSource}
                         columns={columns}

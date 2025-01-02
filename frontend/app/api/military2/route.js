@@ -71,7 +71,7 @@ export async function GET(req, res) {
         console.log("RD", data);
         const createRequest = await prisma.request.create({
             data: {
-                type: "การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
+                type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
                 status: "รอจองคิว",
                 stu_id: id,
             }

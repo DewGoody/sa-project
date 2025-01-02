@@ -17,7 +17,14 @@ export async function GET(req, res) {
 
         const data = await getMilitaryInfo(id);
 
-        return NextResponse.json(data);
+        const serializedData = JSON.parse(
+            JSON.stringify(data, (key, value) =>
+                typeof value === "bigint" ? value.toString() : value
+            )
+        );
+        
+        return NextResponse.json(serializedData);
+        
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: "An error occurred while fetching the profile" }, { status: 500 });
@@ -156,7 +163,7 @@ export async function PUT(req, res) {
         }
         const createRequest = await prisma.request.create({
             data: {
-                type: "Rordor",
+                type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
                 status: "รอจองคิว",
                 stu_id: id,
             }

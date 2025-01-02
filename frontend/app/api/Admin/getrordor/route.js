@@ -3,41 +3,56 @@ import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
+function serializeBigInt(obj) {
+    if (obj === null || obj === undefined) return obj;
+
+    if (typeof obj === 'bigint') {
+        return obj.toString(); // แปลง BigInt เป็น string
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.map((item) => serializeBigInt(item));
+    }
+
+    if (typeof obj === 'object') {
+        // Handle special cases for Prisma nested fields
+        if (obj.hasOwnProperty('s') && obj.hasOwnProperty('e') && obj.hasOwnProperty('d')) {
+            // กรณีโครงสร้าง Prisma ID ที่เป็น object แบบ nested
+            return obj.d.join(""); // นำเลขที่อยู่ใน d มาต่อกัน
+        }
+
+        return Object.fromEntries(
+            Object.entries(obj).map(([key, value]) => [key, serializeBigInt(value)])
+        );
+    }
+
+    return obj;
+}
+
+
 export async function GET(req) {
     try {
-        // Fetch rows where type matches the specified condition, and include related data
+        // ดึงข้อมูลพร้อม Include relations
+
         const queue = await prisma.request.findMany({
             where: {
-                type: "การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" // Filter by type
+                type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร"
             },
             include: {
-                Student: true,       // Include related Student data
-                Military_info: true, // Include related Military_info data
+                Student: true,
+                Military_info: true,
             },
         });
 
-        // Handle serialization for BigInt and Decimal fields
-        const serializedQueue = queue.map((row) => ({
-            ...row,
-            id: row.id.toString(), // Convert BigInt to string
-            req_id: row.req_id ? row.req_id.toString() : null, // Handle nullable BigInt
-            student_id: row.student_id ? row.student_id.toString() : null, // Handle nullable Decimal
-            Student: row.Student ? {
-                ...row.Student,
-                id: row.Student.id.toString(), // Convert Decimal to string
-            } : null,
-            Military_info: row.Military_info ? {
-                ...row.Military_info,
-                id: row.Military_info.id.toString() // Handle Military_info BigInt serialization
-            } : null,
-        }));
+        // แปลง BigInt ในข้อมูลทั้งหมด
+        const serializedQueue = serializeBigInt(queue);
 
-        // Return serialized data as a JSON response
+        // ส่งข้อมูล JSON กลับ
+        // console.log(serializedQueue[0]?.Military_info);
+
         return NextResponse.json(serializedQueue, { status: 200 });
     } catch (error) {
         console.error("Error fetching data:", error);
-
-        // Return error response
         return NextResponse.json(
             { error: error.message || "Server error" },
             { status: 500 }

@@ -200,7 +200,7 @@ const CheckData = () => {
                     guardian_lname: formData.ParentSurname,
                     guardian_title: formData.Parenttitle,
                     guardian_occupation: formData.Parentjob,
-                    guardian_age: (formData.Parentage),
+                    guardian_age: parseInt(formData.Parentage),
                     guardian_relation: formData.Parentrelated,
                     guardian_address: formData.ParentworkAddress
                 },
