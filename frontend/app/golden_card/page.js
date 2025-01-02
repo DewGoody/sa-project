@@ -108,7 +108,7 @@ const page = () => {
 
     }, []);
     useEffect(() => {
-        // console.log(Data)
+        console.log(Data)
     }, [Data])
     const formatDateToISO = (dateString) => {
         const date = new Date(dateString);
@@ -143,7 +143,7 @@ const page = () => {
                     thai_id_card_issured: formatDateToISO(Data.Idcardissuedate),
                     thai_id_card_expired: formatDateToISO(Data.Idcardexpiraiton),
                     personal_email: Data.email,
-                    phone_num: Data.Phonenumber,
+                    // contactable_tel: Data.Phonenumber,
                 },
                 UHC_reg_info: {
                     id: id,

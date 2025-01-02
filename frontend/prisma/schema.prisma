@@ -256,6 +256,7 @@ model Request {
   Military_info Military_info[]
   Queue         Queue[]
   Student       Student?        @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  UHC_request   UHC_request[]
   accident_info accident_info[]
 }
 
@@ -317,6 +318,8 @@ model UHC_request {
   update_at        DateTime? @db.Timetz(6)
   student_id       Decimal   @db.Decimal
   binary_file_data Bytes?
+  req_id           BigInt?
+  Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student   @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 

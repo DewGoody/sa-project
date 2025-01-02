@@ -69,6 +69,17 @@ export async function GET(req, res) {
         data.mf_occupation = data.father_info?.mf_occupation || data.mother_info?.mf_occupation || '';
 
         console.log("RD", data);
+        const createRequest = await prisma.request.create({
+            data: {
+                type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
+                status: "รอจองคิว",
+                stu_id: id,
+            }
+        })    
+        await prisma.military_info.update({
+            where: {id: create.id},
+            data: {req_id: createRequest.id}
+        })
         return NextResponse.json(data);
     } catch (error) {
         console.log(error);
