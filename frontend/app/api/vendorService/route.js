@@ -6,17 +6,18 @@ import { vendorFormBuilder } from "../../../document_build/vendorFormBuilder";
 const prisma = new PrismaClient();
 
 export async function POST(req, res) {
-  let data = await req.json();
+  //let data = await req.json();
   // generate PDF Document
-  await vendorFormBuilder(data);
-  console.log("-----------------");
-  console.log("data", data);
-  return NextResponse.json({ message: "success" }, { status: 200 });
+  // await vendorFormBuilder(data);
+  //console.log("-----------------");
+  //console.log("data", data);
+  //return NextResponse.json({ message: "success" }, { status: 200 });
   try {
     let data = await req.json();
     // generate PDF Document
-    //await vendorFormBuilder(data);
+    await vendorFormBuilder(data);
     console.log("data", data);
+    return NextResponse.json({ message: "success" }, { status: 200 });
 
     //Push data to database
     /*const createPrakan = await prisma.prakan_inter_info.create({
@@ -50,5 +51,9 @@ export async function POST(req, res) {
 }*/
   } catch (error) {
     console.error("Error submitting form:", error);
+    return NextResponse.json(
+      { error: "Error submitting form" },
+      { status: 500 }
+    );
   }
 }

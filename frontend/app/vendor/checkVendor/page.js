@@ -14,8 +14,8 @@ const Page = () => {
 
   const handleDownload = () => {
     const link = document.createElement("a");
-    link.href = "../../documents/prakan-inter/Health-claim-form-filled.pdf";
-    link.download = "Health-claim-form.pdf";
+    link.href = "../../documents/vendor/Vendor-filled.pdf";
+    link.download = "Vendor.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -69,8 +69,7 @@ const Page = () => {
               นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
             </h3>
             <h3 className="text-lg font-semibold mb-4 text-center">
-              Students, please prepare the following documents to submit to the
-              staff
+              Please prepare the following documents to submit to the staff.
             </h3>
             <div className="grid grid-cols-1 gap-6">
               <fieldset>
@@ -154,7 +153,7 @@ const Page = () => {
             </a>
 
             <button
-              //onClick={handleDownload}
+              onClick={handleDownload}
               className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300"
             >
               Download
