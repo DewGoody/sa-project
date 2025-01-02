@@ -18,7 +18,7 @@ export async function getPrakanDataById(id) {
 export async function createPrakan(data) {    
     await prakan(data)
     const createPrakan = await prisma.accident_info.create({
-        data:{
+        data: {
             stu_id: Number(data.id),
             acc_desc: data.acc_desc,
             des_injury: data.des_injury,
@@ -27,6 +27,7 @@ export async function createPrakan(data) {
             treatment_place: data.treatment_place,
             hospital_type: data.hospital_type,
             medical_fee: Number(data.medical_fee),
+            medical_fee_text: data.thaiText
         }
     })
 

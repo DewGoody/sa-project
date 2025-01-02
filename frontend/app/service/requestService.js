@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { prakan } from '../../document_build/prakan'
 
 const prisma = new PrismaClient();
 
@@ -88,6 +89,16 @@ export async function getRequestPrakanInAdmin(year){
             orderBy: {
                 created_at: 'desc', // or 'asc' for ascending order
             },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameTH: true,
+                        lnameTH: true
+                    },
+                },
+                accident_info: true
+            }
         })
     }
     else{
@@ -102,6 +113,16 @@ export async function getRequestPrakanInAdmin(year){
             orderBy: {
                 created_at: 'desc', // or 'asc' for ascending order
             },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameTH: true,
+                        lnameTH: true
+                    },
+                },
+                accident_info: true
+            }
         })
     }
     if(requests){
@@ -144,4 +165,41 @@ export async function changeStatusPrakanToFinish(id) {
     else{
         throw {code: 400,error: new Error("Bad Request")}
     }
+}
+
+export async function downloadPrakanAdmin(id) {
+    if(id){
+        const thisPrakan = await prisma.accident_info.findUnique({
+            where: {id: id},
+            include: {
+                Student:true
+            }
+        })
+        const mergedData = {
+            ...thisPrakan,
+            ...thisPrakan.Student, // Spread the `Student` object into the main object
+          };
+        const filePath = await prakan(mergedData)
+        console.log('fileeee',filePath);
+        
+        return filePath
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
+
+export async function getUniqueYearPrakan() {
+    const requests = await prisma.request.findMany({
+        select: {
+            created_at: true,
+        },
+    });
+
+    // Extract unique years
+    const uniqueYears = Array.from(
+        new Set(requests.map((request) => request.created_at.getFullYear()))
+    );
+
+    return uniqueYears;
 }
