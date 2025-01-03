@@ -147,9 +147,13 @@ model Student {
   thai_id_card_issured DateTime?            @db.Date
   thai_id_card_expired DateTime?            @db.Date
   personal_email       String?
+  phone_num            String?
+  degree               String?
   Address              Address[]
   Military_info        Military_info?
+  Ponpan               Ponpan[]
   Queue                Queue[]
+  RD_info              RD_info[]
   Request              Request[]
   UHC_reg_info         UHC_reg_info?
   UHC_request          UHC_request[]
@@ -196,19 +200,20 @@ model accident_claim_info {
 }
 
 model accident_info {
-  id              BigInt    @id @default(autoincrement())
-  created_at      DateTime  @default(now()) @db.Timestamptz(6)
-  stu_id          Decimal?  @db.Decimal
-  acc_desc        String?
-  acc_date        DateTime? @db.Date
-  accident_place  String?
-  treatment_place String?
-  hospital_type   String?
-  medical_fee     Int?
-  req_id          BigInt?
-  des_injury      String?
-  Request         Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student         Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id               BigInt    @id @default(autoincrement())
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  stu_id           Decimal?  @db.Decimal
+  acc_desc         String?
+  acc_date         DateTime? @db.Date
+  accident_place   String?
+  treatment_place  String?
+  hospital_type    String?
+  medical_fee      Int?
+  req_id           BigInt?
+  des_injury       String?
+  medical_fee_text String?
+  Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student          Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model father_mother_info {
@@ -254,8 +259,10 @@ model Request {
   stu_id        Decimal?        @db.Decimal
   deleted_at    DateTime?       @db.Timestamptz(6)
   Military_info Military_info[]
+  Ponpan        Ponpan[]
   Queue         Queue[]
   Student       Student?        @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  UHC_request   UHC_request[]
   accident_info accident_info[]
 }
 
@@ -317,6 +324,8 @@ model UHC_request {
   update_at        DateTime? @db.Timetz(6)
   student_id       Decimal   @db.Decimal
   binary_file_data Bytes?
+  req_id           BigInt?
+  Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student   @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -326,4 +335,40 @@ model pdffile {
   content    Bytes
   size       Int
   created_at DateTime? @default(now()) @db.Timestamp(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Ponpan {
+  id             BigInt    @id @default(autoincrement())
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  deleted_at     DateTime? @db.Timestamptz(6)
+  sdnine_id      BigInt?
+  stu_id         Decimal?  @db.Decimal
+  req_id         BigInt?
+  degree         BigInt?
+  father_name    String?
+  mother_name    String?
+  house_num      String?
+  house_moo      BigInt?
+  district       String?
+  sub_district   String?
+  province       String?
+  house_moo_sd   BigInt?
+  house_num_sd   String?
+  district_sd    String?
+  subdistrict_sd String?
+  province_sd    String?
+  phone_num      String?
+  email          String?
+  Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student        Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model RD_info {
+  id         BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  RD_type    Decimal? @db.Decimal
+  student_id Decimal? @db.Decimal
+  Student    Student? @relation(fields: [student_id], references: [id], onDelete: Cascade)
 }
