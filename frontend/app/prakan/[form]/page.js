@@ -35,6 +35,7 @@ export default function Form() {
       const thaiText = numberToThaiText(response.data.data.medical_fee);
       response.data.data.thaiText = thaiText
       response.data.data.formId = form
+      response.data.data.acc_date = formattedDate
       setAlreadyData(response.data.data);
       setPrakanData(response.data.data);
       setLoading(false);
@@ -119,9 +120,10 @@ export default function Form() {
     setAlreadyData({ ...alreadyData, des_injury: event.target.value });
   };
   const handleChangeDateAcc = (event) => {
-   console.log(typeof event.target.value,event.target.value);
+   console.log("dateeeee", prakanData.acc_date);
    setDate(event.target.value)
   setPrakanData({ ...prakanData, acc_date: event.target.value  });
+  setAlreadyData({ ...alreadyData, acc_date: event.target.value  });
 
   };
   const handleChangePlaceAcc = (event) => {

@@ -8,6 +8,8 @@ export async function getRequestById(id) {
             where: {id: id},
             include: {
                 accident_info: true,
+                Ponpan: true,
+                Student: true
             }
         })
         if(request){
@@ -20,6 +22,14 @@ export async function getRequestById(id) {
                 }
                 return result
             }
+           else if(request.type == "การผ่อนผันเข้ารับราชการทหาร"){
+                result = {
+                    ...request,
+                    form: request.Ponpan[0].id,
+                    path: "ponpan"
+                }
+                return result
+            }
             // return request
         }
         else{
@@ -28,11 +38,12 @@ export async function getRequestById(id) {
     }
 }
 
-export async function getShowRequestNotQueue() {
+export async function getShowRequestNotQueue(data) {    
     const requests = await prisma.request.findMany({
-        where: {status: "รอจองคิว"},
+        where: {status: "รอจองคิว", stu_id: data},
         include: {
             accident_info: true,
+            Ponpan: true,
         }
     })
     if(requests){            
@@ -66,4 +77,14 @@ export async function getRequestByIdFast(data) {
             return "Not found"
         }
     }
+}
+
+export async function changeStatusToWaitService(id) {
+    const changed = await prisma.request.update({
+        where: {id: id},
+        data: {
+            status: "รอเข้ารับบริการ"
+        }
+    })
+    return changed
 }

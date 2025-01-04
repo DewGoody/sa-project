@@ -97,8 +97,8 @@ export const Form = () => {
       }     
       
       const fetchNotQueue = async () => {
-        try {          
-          const response = await axios.post('/api/request/getNotQueue'); // Example API
+        try {                    
+          const response = await axios.post('/api/request/getNotQueue', profileData.id); // Example API
           console.log("getNotQueue",response.data.data);
           console.log("formId",response.data.data[0].id);
           setFormId(response.data.data[0].id);
@@ -276,7 +276,7 @@ export const Form = () => {
                 icon={<FaPlus />}
               />
             </a>
-            <a href="/ponpan">
+            <a href="/ponpan/0">
               <ServiceCard
                 title="3. การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)"
                 icon={<FaEye />}
