@@ -345,7 +345,7 @@ model Ponpan {
   sdnine_id      BigInt?
   stu_id         Decimal?  @db.Decimal
   req_id         BigInt?
-  degree         BigInt?
+  degree         String?
   father_name    String?
   mother_name    String?
   house_num      String?
@@ -360,6 +360,7 @@ model Ponpan {
   province_sd    String?
   phone_num      String?
   email          String?
+  year           BigInt?
   Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student        Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
