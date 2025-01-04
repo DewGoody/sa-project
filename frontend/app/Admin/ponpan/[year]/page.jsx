@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { Children, useEffect, useState } from 'react';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -17,47 +17,72 @@ import { useRouter,useParams } from 'next/navigation';
 const { Header, Sider, Content } = Layout;
 
 const AppointmentManagement = () => {
-  const columns = [
-    {
-        title: 'ชื่อ-นามสกุล',
-        dataIndex: 'name',
-    },
-    {
-        title: 'รหัสนิสิต',
-        dataIndex: 'student_ID',
-    },
-    {
-        title: 'อาการบาดเจ็บ',
-        dataIndex: 'des_injury',
-    },
-    {
-        title: 'การเกิดอุบัติเหตุ',
-        dataIndex: 'acc_desc',
-    },
-    {
-        title: 'สถานที่เกิดอุบัติเหตุ',
-        dataIndex: 'accident_place',
-    },
-    {
-        title: 'วันที่เกิดอุบัติเหตุ',
-        dataIndex: 'acc_date',
-    },
-    {
-        title: 'การเกิดอุบัติเหตุ',
-        dataIndex: 'acc_desc',
-    },
-    {
-        title: 'สถานที่รักษา',
-        dataIndex: 'treatment_place',
-    },
-    {
-        title: 'ประเภทสถานพยาบาล',
-        dataIndex: 'hospital_type',
-    },
-    {
-        title: 'ค่ารักษาพบาบาล',
-        dataIndex: 'medical_fee',
-    },
+    const [dataSource, setDataSource] = useState('');
+    const [stuData, setStuData] = useState([]);
+    const {
+        token: { colorBgContainer, borderRadiusLG },
+    } = theme.useToken();
+    const [selectedKey, setSelectedKey] = useState('3');
+    const [fetchYear, setfetchYear] = useState([]);
+    const [statusRequest, setStatusRequest] = useState([]);
+    const router = useRouter();
+    const { year } = useParams();
+    console.log("year", year);
+    console.log("fetchYear :", fetchYear);
+    const fetchStuData = async () => {
+        try {
+            const res = await axios.post('/api/request/getPonpanAdmin', { year: parseInt(year) });
+            console.log("stuData", res.data.data);
+            setStuData(res.data.data);
+            setDataSource(...dataSource, res.data.data.map((item, index) => {
+                const buddhistYear = new Date(item.Student.bd).getFullYear() + 543;
+                return {
+                    key: index,
+                    stu_id: item.stu_id,
+                    bd: buddhistYear,
+                    thai_id: item.Student.thai_id,
+                };
+            }));
+            console.log("dataSource :", dataSource);
+        } catch (error) {
+            console.error('Error fetching student data:', error);
+        }
+    }
+
+    
+
+    const fetchUniqueYear = async () => {
+        try {
+            const res = await axios.post('/api/request/getUniqueYearPonpan');
+            setfetchYear(res.data.data);
+        }
+        catch (error) {
+            console.error('Error fetching unique year:', error);
+        }
+    }
+
+    useEffect(() => {
+        fetchStuData()
+    }, [])
+
+    useEffect(() => {
+        fetchUniqueYear()
+    }, [])
+
+
+    console.log("statusRequest", statusRequest);
+
+
+    console.log("dataSource", dataSource);
+
+    const handleYearChange = async (year) => {
+        console.log("year", year);
+        router.push(`/Admin/prakan/${year}`);
+    }
+
+
+
+const columns = [
     {
         title: 'สถานะ',
         dataIndex: 'status',
@@ -66,7 +91,7 @@ const AppointmentManagement = () => {
                 defaultValue={status}
                 style={{ width: "180px" }}
                 options={[
-                    { value: 'รอเข้ารับบริการ', label: 'รอเข้ารับบริการ', style: {color: 'black' } },
+                    { value: 'รอเข้ารับบริการ', label: 'รอเข้ารับบริการ', style: { color: 'black' } },
                     { value: 'Approved', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'green' } },
                     { value: 'Rejected', label: 'คิวถูกยกเลิก', style: { color: 'red' } },
                 ]}
@@ -74,26 +99,127 @@ const AppointmentManagement = () => {
         )
     },
     {
-        align: 'right', // เพิ่ม align ขวา
-        title: 'ดาวน์โหลด',
-        render: (_, record) => (
-            <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100%', // Optional: ensures full height centering within the parent
-            }}
-          >
-            <DownloadOutlined
-              style={{
-                fontSize: '21px', // Increase the size (e.g., 24px)
-                cursor: 'pointer', // Optional: changes the cursor to a pointer
-              }}
-            />
-          </div>
-        ),
+        title: 'พ.ศ. เกิด',
+        dataIndex: 'bd',
+        align: 'center',
     },
+    {
+        title: 'รหัสนิสิต',
+        dataIndex: 'stu_id',
+        align: 'center',
+    },
+    {
+        title: 'เลขประจำตัวประชาชน',
+        dataIndex: 'thai_id',
+        align: 'center',
+    },
+    {
+        title: 'ศึกษาในระดับปริญญา',
+        dataIndex: 'degree',
+        align: 'center',
+    },
+    {
+        title: 'ชั้นปีที่',
+        dataIndex: 'year',
+        align: 'center',
+    },
+    {
+        title: 'ชื่อ',
+        dataIndex: 'fnameTH',
+        align: 'center',
+    },
+    {
+        title: 'นามสกุล',
+        dataIndex: 'lnameTH',
+        align: 'center',
+    },
+    {
+        title: 'เบอร์โทรศัพท์',
+        dataIndex: 'phone_num',
+        align: 'center',
+    },
+    {
+        title: 'ชื่อบิดา',
+        dataIndex: 'father_name',
+        align: 'center',
+    },
+    {
+        title: 'ชื่อมารดา',
+        dataIndex: 'mother_name',
+        align: 'center',
+    },
+    {
+        title: 'ใบสำคัญ สด. 9',
+        dataIndex: 'sdnine_id',
+        align: 'center',
+    },
+    {
+        title: 'ที่อยู่ตามทะเบียนบ้าน',
+        align: 'center',
+        children: [
+            {
+                title: 'บ้านเลขที่',
+                dataIndex: 'house_num',
+                align: 'center',
+            },
+            {
+                title: 'หมู่',
+                dataIndex: 'house_moo',
+                align: 'center',
+            },
+            {
+                title: 'แขวง/ตำบล',
+                dataIndex: 'sub_district',
+                align: 'center',
+            },
+            {
+                title: 'อำเภอ',
+                dataIndex: 'district',
+                align: 'center',
+            },
+            {
+                title: 'จังหวัด',
+                dataIndex: 'province',
+                align: 'center',
+            },
+        ]
+    },
+    {
+        title: 'ที่อยู่ตาม สด.9',
+        align: 'center',
+        children: [
+            {
+                title: 'บ้านเลขที่',
+                dataIndex: 'house_num_sd',
+                align: 'center',
+            },
+            {
+                title: 'หมู่',
+                dataIndex: 'house_moo_sd',
+                align: 'center',
+            },
+            {
+                title: 'แขวง/ตำบล',
+                dataIndex: 'subdistrict_sd',
+                align: 'center',
+            },
+            {
+                title: 'อำเภอ',
+                dataIndex: 'district_sd',
+                align: 'center',
+            },
+            {
+                title: 'จังหวัด',
+                dataIndex: 'province_sd',
+                align: 'center',
+            },
+        ]
+    },
+    {
+        title: "อีเมลล์",
+        dataIndex: "email",
+        align: 'center',
+    }
 ];
 
   return (
@@ -140,26 +266,27 @@ const AppointmentManagement = () => {
                         {
                             key: '1',
                             label: <span style={{ color: selectedKey === '1' ? 'black' : 'white' }}>จัดการการนัดหมาย</span>,
-                            onClick: () => window.location.href = '/Admin/home'
+                            onClick: () => window.location.href = '/Admin/home/0'
                         },
                         {
                             key: '2',
                             label: <span style={{ color: selectedKey === '2' ? 'black' : 'white' }}>ประกันอุบัติเหตุ</span>,
-                            onClick: () => window.location.href = '/Admin/prakan'
+                            onClick: () => window.location.href = '/Admin/prakan/0'
                         },
                         {
                             key: '3',
                             label: <span style={{ color: selectedKey === '3' ? 'black' : 'white' }}>การขอผ่อนผันการเข้ารับราชการทหาร</span>,
+                            onClick: () => window.location.href = '/Admin/ponpan/0'
                         },
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd'
+                            onClick: () => window.location.href = '/Admin/rd/0'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard'
+                            onClick: () => window.location.href = '/Admin/goldencard/0'
                         },
                         {
                             key: '6',
@@ -167,7 +294,7 @@ const AppointmentManagement = () => {
                         },
                         {
                             key: '7',
-                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>แบบคำขอรับเงินผ่านธนาคาร</span>,
+                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>กยศ</span>,
                         }
                     ]}
                 />
@@ -185,7 +312,7 @@ const AppointmentManagement = () => {
                 >
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
-                            ประกันอุบัติเหตุ
+                            การขอผ่อนผันการเข้ารับราชการทหาร
                         </div>
                         <div className='mr-10'>
                             <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
@@ -207,7 +334,7 @@ const AppointmentManagement = () => {
                     </div>
                     
                     <Table
-                        dataSource={columns}
+                        dataSource={dataSource}
                         columns={columns}
                         style={{ borderRadius: borderRadiusLG  }}
                         scroll={{ x: 'max-content' }}

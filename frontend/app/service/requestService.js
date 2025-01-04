@@ -135,7 +135,9 @@ export async function getRequestPrakanInAdmin(year){
 
 export async function changeStatusPrakanToProcess(id) {
     if(id){
-        const request = await getRequestByIdFast(id)
+        const request = await getRequestByIdFast({id: id})
+        console.log('request',request);
+        
         if(request.status !== "รอเข้ารับบริการ"){
             throw {code: 400,error: new Error("Bad Request")}
         }
@@ -152,7 +154,7 @@ export async function changeStatusPrakanToProcess(id) {
 
 export async function changeStatusPrakanToSended(id) {
     if(id){
-        const request = await getRequestByIdFast(id)
+        const request = await getRequestByIdFast({id: id})
         if(request.status !== "รอเจ้าหน้าที่ดำเนินการ"){
             throw {code: 400,error: new Error("Bad Request")}
         }
@@ -169,7 +171,7 @@ export async function changeStatusPrakanToSended(id) {
 
 export async function changeStatusPrakanToWantInfo(id) {
     if(id){
-        const request = await getRequestById(id)
+        const request = await getRequestByIdFast({id: id})
         if(request.status !== "ส่งเอกสารแล้ว"){
             throw {code: 400,error: new Error("Bad Request")}
         }
@@ -186,8 +188,8 @@ export async function changeStatusPrakanToWantInfo(id) {
 
 export async function changeStatusPrakanToNotApprove(id) {
     if(id){
-        const request = await getRequestById(id)
-        if(request.status !== "ส่งเอกสารแล้ว"){
+        const request = await getRequestByIdFast({id: id})        
+        if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"){      
             throw {code: 400,error: new Error("Bad Request")}
         }
         const changeStatusRequest = await prisma.request.update({
@@ -203,8 +205,8 @@ export async function changeStatusPrakanToNotApprove(id) {
 
 export async function changeStatusPrakanToFinish(id) {
     if(id){
-        const request = await getRequestByIdFast(id)
-        if(request.status !== "ส่งเอกสารแล้ว" || request.status !== "ขอข้อมูลเพิ่มเติม"){
+        const request = await getRequestByIdFast({id: id})
+        if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"){            
             throw {code: 400,error: new Error("Bad Request")}
         }
         const changeStatusRequest = await prisma.request.update({
@@ -285,7 +287,8 @@ export async function getRequestPonpanInAdmin(year){
                         id: true,
                         fnameTH: true,
                         lnameTH: true,
-                        thai_id: true
+                        thai_id: true,
+                        bd: true
                     },
                 },
                 Ponpan: true
@@ -310,7 +313,8 @@ export async function getRequestPonpanInAdmin(year){
                         id: true,
                         fnameTH: true,
                         lnameTH: true,
-                        thai_id: true
+                        thai_id: true,
+                        bd: true
                     },
                 },
                 Ponpan: true

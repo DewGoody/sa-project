@@ -25,7 +25,7 @@ const App = () => {
     } = theme.useToken();
     const [selectedKey, setSelectedKey] = useState('2');
     const [fetchYear, setfetchYear] = useState([]);
-    const [statusRequest, setStatusRequest] = useState([]);
+    const [statusRequest, setStatusRequest] = useState('');
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
@@ -114,18 +114,44 @@ const App = () => {
     }
 
     const handleChangeStatus = async (record) => {
-       if(record.status === "รอเข้ารับบริการ"){
-        try {x
+        setStatusRequest(record.status);
+        console.log("record", record);
+       if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
+        try {
             const res = await axios.post('/api/request/changePrakanProcess', { id: parseInt(record.reqId) });
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
         }
        }
-       else if(record.status === "รอดำเนินงานเอกสาร"){
+       else if(record.status === "ส่งเอกสารแล้ว"){
+        try {
+            const res = await axios.post('/api/request/changePrakanToSended', { id: parseInt(record.reqId) });
+            console.log("res", res);
+        } catch (error) {
+            console.error('Error fetching status:', error);
+        }
+       } 
+       else if(record.status === "ขอข้อมูลเพิ่มเติม"){
+        try {
+            const res = await axios.post('/api/request/changePrakanToWantInfo', { id: parseInt(record.reqId) });
+            console.log("resPerm", res);
+        } catch (error) {
+            console.error('Error fetching status:', error);
+        }
+       }
+       else if(record.status === "ไม่อนุมัติ"){
+        try {
+            const res = await axios.post('/api/request/changePrakanToNotApprove', { id: parseInt(record.reqId) });
+            console.log("res", res);
+        } catch (error) {
+            console.error('Error fetching status:', error);
+        }
+       }
+       else if(record.status === "โอนเงินเรียบร้อย"){
         try {
             const res = await axios.post('/api/request/changePrakanFinish', { id: parseInt(record.reqId) });
-            console.log("res", res);
+            console.log("resOwn", res);
         } catch (error) {
             console.error('Error fetching status:', error);
         }
@@ -163,18 +189,53 @@ const App = () => {
                 let options = [];
                 if (status === 'รอเข้ารับบริการ') {
                     options = [
-                        { value: 'รอดำเนินงานเอกสาร', label: 'รอดำเนินงานเอกสาร', style: { color: 'black' } },
-                        { value: 'ดำเนินการเสร็จสิ้น', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'gray' }, disabled: true },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'black' } , },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' } , disabled: true},
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' } , disabled: true},
+                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' } , disabled: true},
                     ];
-                } else if (status === 'รอดำเนินงานเอกสาร') {
+                } else if (status === 'รอเจ้าหน้าที่ดำเนินการ') {
                     options = [
-                        { value: 'ดำเนินการเสร็จสิ้น', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'black' } },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'black' } },
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' } , disabled: true},
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' } , disabled: true},
+                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
-                } else {
+                } else if (status === 'ส่งเอกสารแล้ว') {
                     options = [
-                        { value: 'รอเข้ารับบริการ', label: 'รอเข้ารับบริการ', style: { color: 'black' } },
-                        { value: 'รอดำเนินงานเอกสาร', label: 'รอดำเนินงานเอกสาร', style: { color: 'green' } },
-                        { value: 'ดำเนินการเสร็จสิ้น', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'red' } },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'black' } },
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
+                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'black' } },
+                    ];
+                }
+                else if (status === 'ขอข้อมูลเพิ่มเติม') {
+                    options = [
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'black' }, disabled: true },
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
+                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'black' } },
+                    ];
+                }else if (status === 'ไม่อนุมัติ') {
+                    options = [
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' },disabled: true },
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' },disabled: true },
+                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' },disabled: true },
+                    ];
+                }
+                else if (status === 'โอนเงินเรียบร้อย') {
+                    options = [
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' },disabled: true },
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' },disabled: true },
+                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' },disabled: true },
                     ];
                 }
                 return (
@@ -182,8 +243,7 @@ const App = () => {
                         defaultValue={record.status}
                         style={{ width: "180px" }}
                         options={options}
-                        onChange={() => handleChangeStatus(record)}
-                        
+                        onChange={(value) => handleChangeStatus({ ...record, status: value })}
                     />
                 );
             }
@@ -277,12 +337,12 @@ const App = () => {
                         {
                             key: '1',
                             label: <span style={{ color: selectedKey === '1' ? 'black' : 'white' }}>จัดการการนัดหมาย</span>,
-                            onClick: () => window.location.href = '/Admin/home'
+                            onClick: () => window.location.href = '/Admin/home/0'
                         },
                         {
                             key: '2',
                             label: <span style={{ color: selectedKey === '2' ? 'black' : 'white' }}>ประกันอุบัติเหตุ</span>,
-                            onClick: () => window.location.href = '/Admin/prakan'
+                            onClick: () => window.location.href = '/Admin/prakan/0'
                         },
                         {
                             key: '3',
@@ -291,12 +351,12 @@ const App = () => {
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd'
+                            onClick: () => window.location.href = '/Admin/rd/0'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard'
+                            onClick: () => window.location.href = '/Admin/goldencard/0'
                         },
                         {
                             key: '6',
@@ -304,7 +364,7 @@ const App = () => {
                         },
                         {
                             key: '7',
-                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>แบบคำขอรับเงินผ่านธนาคาร</span>,
+                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>กยศ</span>,
                         }
                     ]}
                 />
