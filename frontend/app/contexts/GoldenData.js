@@ -1,31 +1,22 @@
 'use client';
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-
 const Golden = createContext();
 export const useGoldenContext = () => useContext(Golden);
-
 export const GoldenDataProvider = ({ children }) => {
   const [Data, setData] = useState({});
-  const [datafromapiprofile, setdatafromapiprofile] = useState({});
-  const [datafromaddresses, setdatafromaddresses] = useState({});
-
+  const [datafromapi, setdatafromapi] = useState({});
   const fetchdataapi = async () => {
     try {
-      const response = await axios.get("/api/profile");
-      setdatafromapiprofile(response.data);
-      const response2 = await axios.get("")
-      setdatafromaddresses(response2.data)
+      const response = await axios.get("/api/UHC");
+      setdatafromapi(response.data);
     } catch (err) {
       console.log(err);
     }
   };
-
   useEffect(() => {
     fetchdataapi();
   }, []);
-
   const formatDate = (dateString) => {
     if (!dateString) return ''; // Handle null or undefined dates
     const date = new Date(dateString);
@@ -34,23 +25,51 @@ export const GoldenDataProvider = ({ children }) => {
     const year = date.getFullYear();
     return `${year}-${month}-${day}`;
   };
-
   useEffect(() => {
-    if (Object.keys(datafromapiprofile).length > 0) {
-      const formattedBirthDate = formatDate(datafromapiprofile.bd);
+    if (Object.keys(datafromapi).length > 0) {
+      const formattedBirthDate = formatDate(datafromapi.Student.bd);
       setData((prevData) => ({
         ...prevData,
-        id: datafromapiprofile.id,
-        Nametitle: datafromapiprofile.title,
-        Name: datafromapiprofile.fnameTH,
-        Surname: datafromapiprofile.lnameTH,
-        citizenId: datafromapiprofile.thai_id,
+        id: datafromapi.Student.id,
+        Nametitle: datafromapi.Student.title,
+        Name: datafromapi.Student.fnameTH,
+        Surname: datafromapi.Student.lnameTH,
+        citizenId: datafromapi.Student.thai_id,
         birthDate: formattedBirthDate,
-        
+        Idcardissuedate: formatDate(datafromapi.Student.thai_id_card_issured),
+        Idcardexpiraiton: formatDate(datafromapi.Student.thai_id_card_expired),
+        Job: "นิสิต",
+        Phonenumber: datafromapi.Student.phone_num,
+        Contactphone: datafromapi.Student.contactable_tel,
+        email: datafromapi.Student.personal_email,
+        year:datafromapi.Student.year,
+        facultyNameTH:datafromapi.Student.facultyNameTH,
+
+        domicileNumber: datafromapi.DOPA_address.house_num,
+        house_moo:datafromapi.DOPA_address.house_moo,
+        soi:datafromapi.DOPA_address.soi,
+        road: datafromapi.DOPA_address.street,
+        province: datafromapi.DOPA_address.province,
+        amphure: datafromapi.DOPA_address.subdistrict,
+        district: datafromapi.DOPA_address.district,
+        zipCode: datafromapi.DOPA_address.postal_code,
+        Telnumber: datafromapi.Student.tel_num,
+
+        benefitStatus: datafromapi.UHC_reg_info.status_before_reg,
+        hospitalName: datafromapi.UHC_reg_info.status_before_reg === "existing"
+          ? datafromapi.UHC_reg_info.status_info
+          : "",
+
+        otherStatus: datafromapi.UHC_reg_info.status_before_reg === "other"
+          ? datafromapi.UHC_reg_info.status_info
+          : "",
+        hospitalService:datafromapi.UHC_reg_info.frequence_uses,
+        usedHospitalBefore:datafromapi.UHC_reg_info.is_been,
+        hasChronicDisease:datafromapi.UHC_reg_info.is_congenital_disease,
 
       }));
     }
-  }, [datafromapiprofile]);
+  }, [datafromapi]);
 
   const updateData = (newData) => {
     setData((prevData) => ({

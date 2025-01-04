@@ -57,7 +57,10 @@ const WaitingQueue = () => {
 
     return ( 
         <>
-            <Header req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ" : ""} req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accidental Compensation Claim Form" : ""} />
+            <Header 
+                req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "แบบคำขอผ่อนผันเข้ารับราชการทหาร" : ""} 
+                req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accidental Compensation Claim Form" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "Military Service Postponement Request Form" : ""} 
+            />
             <Modal
                 title= {statusUid === 'จองคิวสำเร็จ' ? 'จองคิวสำเร็จ' : statusUid === 'คิวเต็ม' ? 'คิวเต็ม' : ''}
                 visible={isNaN(statusUid)}

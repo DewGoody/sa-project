@@ -276,7 +276,7 @@ export const Form = () => {
                 icon={<FaPlus />}
               />
             </a>
-            <a href="/ponpan">
+            <a href="/ponpan/0">
               <ServiceCard
                 title="3. การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)"
                 icon={<FaEye />}

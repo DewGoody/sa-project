@@ -17,7 +17,14 @@ export async function GET(req, res) {
 
         const data = await getMilitaryInfo(id);
 
-        return NextResponse.json(data);
+        const serializedData = JSON.parse(
+            JSON.stringify(data, (key, value) =>
+                typeof value === "bigint" ? value.toString() : value
+            )
+        );
+        
+        return NextResponse.json(serializedData);
+        
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: "An error occurred while fetching the profile" }, { status: 500 });
@@ -63,7 +70,7 @@ export async function PUT(req, res) {
 
         //console.log(addresses.Military_address);
 
-        await prisma.Military_info.upsert({
+        const create = await prisma.Military_info.upsert({
             where: { id },
             update: { ...Military_info },
             create: { id, ...Military_info }
@@ -154,6 +161,17 @@ export async function PUT(req, res) {
                 create: { id, ...guardian }
             });
         }
+        const createRequest = await prisma.request.create({
+            data: {
+                type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
+                status: "รอจองคิว",
+                stu_id: id,
+            }
+        })    
+        await prisma.military_info.update({
+            where: {id: create.id},
+            data: {req_id: createRequest.id}
+        })
 
         return NextResponse.json({ message: "Data updated successfully" });
     } catch (error) {

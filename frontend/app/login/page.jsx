@@ -3,7 +3,7 @@ const login = () => {
     return (
         <div className="h-screen">
             <div className="flex justify-center items-end h-1/6 ">
-                {/* <p className="text-3xl">กิจการนิสิต</p> */}
+                <p className="text-3xl">กิจการนิสิต</p>
             </div>
 
             <div className="flex justify-center items-center h-4/6 space-x-6">
