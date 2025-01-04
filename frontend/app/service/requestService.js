@@ -135,13 +135,64 @@ export async function getRequestPrakanInAdmin(year){
 
 export async function changeStatusPrakanToProcess(id) {
     if(id){
-        const request = await getRequestById(id)
+        const request = await getRequestByIdFast(id)
         if(request.status !== "รอเข้ารับบริการ"){
             throw {code: 400,error: new Error("Bad Request")}
         }
         const changeStatusRequest = await prisma.request.update({
             where: {id: request.id},
-            data: {status: "รอดำเนินงานเอกสาร" }
+            data: {status: "รอเจ้าหน้าที่ดำเนินการ" }
+        })
+        return changeStatusRequest
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
+
+export async function changeStatusPrakanToSended(id) {
+    if(id){
+        const request = await getRequestByIdFast(id)
+        if(request.status !== "รอเจ้าหน้าที่ดำเนินการ"){
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: {id: request.id},
+            data: {status: "ส่งเอกสารแล้ว" }
+        })
+        return changeStatusRequest
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
+
+export async function changeStatusPrakanToWantInfo(id) {
+    if(id){
+        const request = await getRequestById(id)
+        if(request.status !== "ส่งเอกสารแล้ว"){
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: {id: request.id},
+            data: {status: "ขอข้อมูลเพิ่มเติม" }
+        })
+        return changeStatusRequest
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
+
+export async function changeStatusPrakanToNotApprove(id) {
+    if(id){
+        const request = await getRequestById(id)
+        if(request.status !== "ส่งเอกสารแล้ว"){
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: {id: request.id},
+            data: {status: "ไม่อนุมัติ" }
         })
         return changeStatusRequest
     }
@@ -152,13 +203,13 @@ export async function changeStatusPrakanToProcess(id) {
 
 export async function changeStatusPrakanToFinish(id) {
     if(id){
-        const request = await getRequestById(id)
-        if(request.status !== "รอดำเนินงานเอกสาร"){
+        const request = await getRequestByIdFast(id)
+        if(request.status !== "ส่งเอกสารแล้ว" || request.status !== "ขอข้อมูลเพิ่มเติม"){
             throw {code: 400,error: new Error("Bad Request")}
         }
         const changeStatusRequest = await prisma.request.update({
             where: {id: request.id},
-            data: {status: "ดำเนินการเสร็จสิ้น" }
+            data: {status: "โอนเงินเรียบร้อย" }
         })
         return changeStatusRequest
     }
@@ -191,6 +242,95 @@ export async function downloadPrakanAdmin(id) {
 
 export async function getUniqueYearPrakan() {
     const requests = await prisma.request.findMany({
+        where: {
+            type: "การเบิกจ่ายประกันอุบัติเหตุ",
+            deleted_at: null
+        },
+        select: {
+            created_at: true,
+        },
+    });
+
+    // Extract unique years
+    const uniqueYears = Array.from(
+        new Set(requests.map((request) => request.created_at.getFullYear()))
+    );
+
+    return uniqueYears;
+}
+
+export async function getRequestPonpanInAdmin(year){
+    const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
+    const endOfYear = new Date(year + 1, 0, 1);
+    let requests = null
+    if(year !== 0){
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                },
+                type: "การผ่อนผันเข้ารับราชการทหาร",
+                deleted_at: null,
+                created_at: {
+                    gte: startOfYear, // Greater than or equal to start of year
+                    lt: endOfYear, // Less than start of the next year
+                },
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameTH: true,
+                        lnameTH: true,
+                        thai_id: true
+                    },
+                },
+                Ponpan: true
+            }
+        })
+    }
+    else{
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                },
+                type: "การผ่อนผันเข้ารับราชการทหาร",
+                deleted_at: null
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameTH: true,
+                        lnameTH: true,
+                        thai_id: true
+                    },
+                },
+                Ponpan: true
+            }
+        })
+    }
+    if(requests){
+        return requests
+    }
+    else{
+        return "Not found"
+    }
+}
+
+export async function getUniqueYearPonpan() {
+    const requests = await prisma.request.findMany({
+        where: {
+            type: "การผ่อนผันเข้ารับราชการทหาร",
+            deleted_at: null
+        },
         select: {
             created_at: true,
         },
