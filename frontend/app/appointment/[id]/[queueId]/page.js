@@ -3,6 +3,7 @@ import { useState,useEffect, use } from 'react';
 import { Header } from '../../../components/Header';
 import { UserOutlined } from '@ant-design/icons';
 import { useRouter, useParams } from 'next/navigation';
+import RedirectOnBack from './RedirectOnBack';
 import axios from "axios";
 export default function ScholarshipPage() {
   const [selectedDate, setSelectedDate] = useState('');
@@ -260,6 +261,7 @@ export default function ScholarshipPage() {
   console.log("selectedFetch",selectFetchDate)
 
   console.log("timeSlot",timeSlotsAfternoon)
+  
 
   const newDate = Array.isArray(selectFetchDate?.data)
     ? selectFetchDate.data
@@ -268,17 +270,13 @@ export default function ScholarshipPage() {
         const [year, month, day] = items.date.split('T')[0].split('-');
         return `${day}/${month}/${year}`;
       })
-      .sort((a, b) => {
-        const [dayA, monthA, yearA] = a.split('/');
-        const [dayB, monthB, yearB] = b.split('/');
-        return new Date(`${yearA}-${monthA}-${dayA}`) - new Date(`${yearB}-${monthB}-${dayB}`);
-      })
     : [];
 
   console.log("newDate::", newDate);
 
   return (
     <>
+    <RedirectOnBack />
       <Header req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ" : ""} req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accidental Compensation Claim Form" : ""} />
       <div className="flex flex-col items-center text-center p-6 font-sans min-h-screen bg-gray-50">
         <div className="flex items-center bg-gray-100 p-4 rounded-lg mb-6 w-full max-w-xs shadow">

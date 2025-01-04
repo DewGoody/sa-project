@@ -25,7 +25,7 @@ const App = () => {
     } = theme.useToken();
     const [selectedKey, setSelectedKey] = useState('2');
     const [fetchYear, setfetchYear] = useState([]);
-
+    const [statusRequest, setStatusRequest] = useState([]);
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
@@ -53,7 +53,8 @@ const App = () => {
                     hospital_type: item.accident_info[0].hospital_type,
                     medical_fee: item.accident_info[0].medical_fee + ' บาท',
                     status: item.status,
-                    id: item.accident_info[0].id
+                    id: item.accident_info[0].id,
+                    reqId: item.id
                 };
             }));
             console.log("dataSource :", dataSource);
@@ -79,6 +80,10 @@ const App = () => {
     useEffect(() => {
         fetchUniqueYear()
     }, [])
+
+
+    console.log("statusRequest", statusRequest);
+
 
     console.log("dataSource", dataSource);
 
@@ -108,8 +113,81 @@ const App = () => {
         }
     }
 
+    const handleChangeStatus = async (record) => {
+       if(record.status === "รอเข้ารับบริการ"){
+        try {x
+            const res = await axios.post('/api/request/changePrakanProcess', { id: parseInt(record.reqId) });
+            console.log("res", res);
+        } catch (error) {
+            console.error('Error fetching status:', error);
+        }
+       }
+       else if(record.status === "รอดำเนินงานเอกสาร"){
+        try {
+            const res = await axios.post('/api/request/changePrakanFinish', { id: parseInt(record.reqId) });
+            console.log("res", res);
+        } catch (error) {
+            console.error('Error fetching status:', error);
+        }
+       }
+    }
+
 
     const columns = [
+        {
+            align: 'right', // เพิ่ม align ขวา
+            title: 'ดาวน์โหลด',
+            render: (_, record) => (
+                <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%', // Optional: ensures full height centering within the parent
+                }}
+              >
+                <DownloadOutlined
+                  style={{
+                    fontSize: '21px', // Increase the size (e.g., 24px)
+                    cursor: 'pointer', // Optional: changes the cursor to a pointer
+                  }}
+                  onClick={() => handleDownload(record.id)}
+                />
+              </div>
+            ),
+        },
+        {
+            title: 'สถานะ',
+            dataIndex: 'status',
+            render: (status,record) => {
+                let options = [];
+                if (status === 'รอเข้ารับบริการ') {
+                    options = [
+                        { value: 'รอดำเนินงานเอกสาร', label: 'รอดำเนินงานเอกสาร', style: { color: 'black' } },
+                        { value: 'ดำเนินการเสร็จสิ้น', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'gray' }, disabled: true },
+                    ];
+                } else if (status === 'รอดำเนินงานเอกสาร') {
+                    options = [
+                        { value: 'ดำเนินการเสร็จสิ้น', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'black' } },
+                    ];
+                } else {
+                    options = [
+                        { value: 'รอเข้ารับบริการ', label: 'รอเข้ารับบริการ', style: { color: 'black' } },
+                        { value: 'รอดำเนินงานเอกสาร', label: 'รอดำเนินงานเอกสาร', style: { color: 'green' } },
+                        { value: 'ดำเนินการเสร็จสิ้น', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'red' } },
+                    ];
+                }
+                return (
+                    <Select
+                        defaultValue={record.status}
+                        style={{ width: "180px" }}
+                        options={options}
+                        onChange={() => handleChangeStatus(record)}
+                        
+                    />
+                );
+            }
+        },
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'name',
@@ -150,43 +228,7 @@ const App = () => {
             title: 'ค่ารักษาพบาบาล',
             dataIndex: 'medical_fee',
         },
-        {
-            title: 'สถานะ',
-            dataIndex: 'status',
-            render: (status) => (
-                <Select
-                    defaultValue={status}
-                    style={{ width: "180px" }}
-                    options={[
-                        { value: 'รอเข้ารับบริการ', label: 'รอเข้ารับบริการ', style: {color: 'black' } },
-                        { value: 'Approved', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'green' } },
-                        { value: 'Rejected', label: 'คิวถูกยกเลิก', style: { color: 'red' } },
-                    ]}
-                />
-            )
-        },
-        {
-            align: 'right', // เพิ่ม align ขวา
-            title: 'ดาวน์โหลด',
-            render: (_, record) => (
-                <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '100%', // Optional: ensures full height centering within the parent
-                }}
-              >
-                <DownloadOutlined
-                  style={{
-                    fontSize: '21px', // Increase the size (e.g., 24px)
-                    cursor: 'pointer', // Optional: changes the cursor to a pointer
-                  }}
-                  onClick={() => handleDownload(record.id)}
-                />
-              </div>
-            ),
-        },
+        
     ];
 
     
@@ -291,6 +333,7 @@ const App = () => {
                     <div className='mt-10 mb-6'>
                             <Select
                                 defaultValue={year}
+                                value={year === '0' ? 'ทั้งหมด' : year}
                                 style={{ width: 120, marginLeft: 10 }}
                                 onChange={handleYearChange}
                             >

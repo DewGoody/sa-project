@@ -1,4 +1,20 @@
-import React from 'react';
+'use client'
+import React, { useEffect, useState } from 'react';
+import {
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+    UploadOutlined,
+    UserOutlined,
+    VideoCameraOutlined,
+    DeleteOutlined,
+    DownloadOutlined
+} from '@ant-design/icons';
+import { Button, Layout, Menu, theme, Input, Table, Space,Select } from 'antd';
+import axios from 'axios';
+import { useRouter,useParams } from 'next/navigation';
+
+
+const { Header, Sider, Content } = Layout;
 
 const AppointmentManagement = () => {
   const columns = [
@@ -81,101 +97,126 @@ const AppointmentManagement = () => {
 ];
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <div className="w-1/4 bg-pink-300 p-5">
-        <h1 className="text-lg font-bold text-white mb-4">ฝ่ายทุนการศึกษาและบริการนิสิต</h1>
-        <ul className="space-y-4">
-          <li className="bg-white p-2 rounded-lg">จัดการการนัดหมาย</li>
-          <li className="p-2 rounded-lg">รายการนัดหมาย</li>
-        </ul>
-        <div className="mt-auto pt-10">
-          <div className="flex items-center">
-            <img
-              src="/user-profile.png"
-              alt="Profile"
-              className="w-10 h-10 rounded-full mr-3"
-            />
-            <div>
-              <p className="font-bold">Receptionist</p>
-              <p>recep@example.com</p>
-            </div>
-          </div>
-          <button className="w-full mt-5 bg-white p-2 rounded-lg">Log out</button>
-        </div>
-      </div>
+    <Layout style={{ height: "100vh" }}>
+            <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
+                <div>
+                    <div className="demo-logo-vertical" />
+                    <div className='text-center mt-10 ml-3 mr-3'>
+                        <p className='font-mono font-bold text-xl text-white'>
+                            ฝ่ายทุนการศึกษาและบริการนิสิต
+                        </p>
+                        <p className='font-mono font-bold text-xl text-white'>
+                            สำนักบริหารกิจการนิสิต
+                        </p>
+                        <p className='font-mono font-bold text-xl text-white'>
+                            จุฬาลงกรณ์มหาวิทยาลัย
+                        </p>
+                    </div>
+                    <div className='text-center mt-4 ml-3 mr-3'>
+                        <p className='font-mono font-semibold text-white'>
+                            Departmet of Scholarship & Students
+                        </p>
+                        <p className='font-mono font-semibold text-white'>
+                            Service, Office of the Student Affairs,
+                        </p>
+                        <p className='font-mono font-semibold text-white'>
+                            Chulalongkorn University
+                        </p>
+                    </div>
+                    <div className="flex justify-center mt-5">
+                        <hr
+                            className="w-11/12"
+                            style={{ borderTop: "5px solid white" }}
+                        />
+                    </div>
+                </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-5 bg-gray-100">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">จัดการการนัดหมาย</h1>
-          <div className="flex space-x-2">
-            <input
-              type="text"
-              placeholder="Search"
-              className="border p-2 rounded-lg"
-            />
-            <button className="bg-pink-300 p-2 rounded-lg">+ Add Appointment</button>
-          </div>
-        </div>
+                <Menu
+                    style={{ background: "rgb(255,157,210)", marginTop: "20px" }}
+                    defaultSelectedKeys={[selectedKey]}
+                    mode="inline"
+                    onClick={(e) => setSelectedKey(e.key)}
+                    items={[
+                        {
+                            key: '1',
+                            label: <span style={{ color: selectedKey === '1' ? 'black' : 'white' }}>จัดการการนัดหมาย</span>,
+                            onClick: () => window.location.href = '/Admin/home'
+                        },
+                        {
+                            key: '2',
+                            label: <span style={{ color: selectedKey === '2' ? 'black' : 'white' }}>ประกันอุบัติเหตุ</span>,
+                            onClick: () => window.location.href = '/Admin/prakan'
+                        },
+                        {
+                            key: '3',
+                            label: <span style={{ color: selectedKey === '3' ? 'black' : 'white' }}>การขอผ่อนผันการเข้ารับราชการทหาร</span>,
+                        },
+                        {
+                            key: '4',
+                            label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
+                            onClick: () => window.location.href = '/Admin/rd'
+                        },
+                        {
+                            key: '5',
+                            label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
+                            onClick: () => window.location.href = '/Admin/goldencard'
+                        },
+                        {
+                            key: '6',
+                            label: <span style={{ color: selectedKey === '6' ? 'black' : 'white' }}>Health Insurance For Foreigner Student</span>,
+                        },
+                        {
+                            key: '7',
+                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>แบบคำขอรับเงินผ่านธนาคาร</span>,
+                        }
+                    ]}
+                />
+            </Sider>
+            <Layout style={{ background: "rgb(255,157,210)" }}>
+                <Content
+                    style={{
+                        padding: 24,
+                        minHeight: 280,
+                        background: "white",
+                        borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
+                        borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
 
-        {/* Table */}
-        <table className="w-full bg-white rounded-lg overflow-hidden shadow-lg">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="p-3 text-left">First Name</th>
-              <th className="p-3 text-left">Last Name</th>
-              <th className="p-3 text-left">Phone Number</th>
-              <th className="p-3 text-left">Appointment Date & Time</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3 text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appointments.map((appointment, index) => (
-              <tr key={index} className="border-t">
-                <td className="p-3">{appointment.firstName}</td>
-                <td className="p-3">{appointment.lastName}</td>
-                <td className="p-3">{appointment.phone}</td>
-                <td className="p-3">{appointment.date}</td>
-                <td className="p-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-white ${
-                      appointment.status === 'Open'
-                        ? 'bg-green-500'
-                        : appointment.status === 'Booked'
-                        ? 'bg-yellow-500'
-                        : 'bg-red-500'
-                    }`}
-                  >
-                    {appointment.status}
-                  </span>
-                </td>
-                <td className="p-3 space-x-2">
-                  <button className="bg-purple-500 text-white px-3 py-1 rounded-lg">Pay Now</button>
-                  <button className="bg-blue-500 text-white px-3 py-1 rounded-lg">
-                    {appointment.status === 'Completed' ? 'Re-Book' : 'Book Now'}
-                  </button>
-                  <button className="text-red-500">🗑️</button>
-                  <button className="text-gray-500">👁️</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* Pagination */}
-        <div className="flex justify-between items-center mt-4">
-          <button className="text-gray-500">Previous</button>
-          <div className="flex space-x-2">
-            <button className="bg-purple-500 text-white px-3 py-1 rounded-lg">1</button>
-            <button className="bg-gray-300 px-3 py-1 rounded-lg">2</button>
-            <button className="bg-gray-300 px-3 py-1 rounded-lg">3</button>
-          </div>
-          <button className="text-gray-500">Next</button>
-        </div>
-      </div>
-    </div>
+                    }}
+                >
+                    <div className='flex mb-5 justify-between'>
+                        <div className='font-extrabold text-3xl'>
+                            ประกันอุบัติเหตุ
+                        </div>
+                        <div className='mr-10'>
+                            <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
+                        </div>
+                        
+                        
+                    </div>
+                    <div className='mt-10 mb-6'>
+                            <Select
+                                defaultValue={year}
+                                style={{ width: 120, marginLeft: 10 }}
+                                onChange={handleYearChange}
+                            >
+                                <Select.Option value={0}>ทั้งหมด</Select.Option>
+                                {fetchYear.map((year) => (
+                                    <Select.Option key={year} value={year}>{year}</Select.Option>
+                                ))}
+                            </Select>
+                    </div>
+                    
+                    <Table
+                        dataSource={columns}
+                        columns={columns}
+                        style={{ borderRadius: borderRadiusLG  }}
+                        scroll={{ x: 'max-content' }}
+                        
+                    />
+               
+                </Content>
+            </Layout>
+        </Layout>
   );
 };
 
