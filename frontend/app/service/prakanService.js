@@ -18,15 +18,16 @@ export async function getPrakanDataById(id) {
 export async function createPrakan(data) {    
     await prakan(data)
     const createPrakan = await prisma.accident_info.create({
-        data:{
+        data: {
             stu_id: Number(data.id),
             acc_desc: data.acc_desc,
             des_injury: data.des_injury,
-            acc_date: new Date(data.acc_date),
+            acc_date: data.acc_date,
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
             hospital_type: data.hospital_type,
             medical_fee: Number(data.medical_fee),
+            medical_fee_text: data.medical_fee_text
         }
     })
 
@@ -47,11 +48,12 @@ export async function updatePrakanForm(data) {
         data:{
             acc_desc: data.acc_desc,
             des_injury: data.des_injury,
-            acc_date: new Date(data.acc_date),
+            acc_date: data.acc_date,
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
             hospital_type: data.hospital_type,
             medical_fee: Number(data.medical_fee),
+            medical_fee_text: data.medical_fee_text,
         }
     })
     await prisma.student.update({

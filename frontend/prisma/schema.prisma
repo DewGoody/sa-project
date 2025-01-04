@@ -112,7 +112,9 @@ model Military_info {
   date_of_study       DateTime? @db.Date
   prev_year           String?   @default("")
   req_id              BigInt?
+  req_id              BigInt?
   Student             Student   @relation(fields: [id], references: [id], onDelete: Cascade)
+  Request             Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Request             Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -214,6 +216,20 @@ model accident_info {
   medical_fee_text String?
   Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id               BigInt    @id @default(autoincrement())
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  stu_id           Decimal?  @db.Decimal
+  acc_desc         String?
+  acc_date         DateTime? @db.Date
+  accident_place   String?
+  treatment_place  String?
+  hospital_type    String?
+  medical_fee      Int?
+  req_id           BigInt?
+  des_injury       String?
+  medical_fee_text String?
+  Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student          Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model father_mother_info {
@@ -259,9 +275,9 @@ model Request {
   stu_id        Decimal?        @db.Decimal
   deleted_at    DateTime?       @db.Timestamptz(6)
   Military_info Military_info[]
-  Ponpan        Ponpan[]
   Queue         Queue[]
   Student       Student?        @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  UHC_request   UHC_request[]
   UHC_request   UHC_request[]
   accident_info accident_info[]
 }
@@ -324,6 +340,8 @@ model UHC_request {
   update_at        DateTime? @db.Timetz(6)
   student_id       Decimal   @db.Decimal
   binary_file_data Bytes?
+  req_id           BigInt?
+  Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   req_id           BigInt?
   Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student   @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction)

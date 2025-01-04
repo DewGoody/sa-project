@@ -4,8 +4,8 @@
 
 /* Header ของ Table */
 .ant-table-thead > tr > th {
-    background-color: white !important; /* ทำให้ header เป็นสีขาว */
-    color: black !important;           /* เปลี่ยนตัวอักษรเป็นสีดำ */
+    background-color: rgb(255,157,210) !important; /* ทำให้ header เป็นสีขาว */
+    color: white !important;           /* เปลี่ยนตัวอักษรเป็นสีดำ */
     font-weight: bold;                 /* ตัวหนา */
     text-align: center;                /* จัดกลาง */
 }

@@ -78,8 +78,8 @@ export default function Form() {
             const number = parseFloat(value);
             const thaiText = numberToThaiText(number);
             setThaiText(thaiText);
-            setPrakanData({ ...prakanData, thaiText: thaiText , medical_fee: value});
-            setAlreadyData({ ...alreadyData, thaiText: thaiText , medical_fee: value});
+            setPrakanData({ ...prakanData, medical_fee_text: thaiText , medical_fee: value});
+            setAlreadyData({ ...alreadyData, medical_fee_text: thaiText , medical_fee: value});
             console.log(thaiText);
         } else {
             setThaiText('');
@@ -122,8 +122,10 @@ export default function Form() {
   const handleChangeDateAcc = (event) => {
    console.log("dateeeee", prakanData.acc_date);
    setDate(event.target.value)
-  setPrakanData({ ...prakanData, acc_date: event.target.value  });
-  setAlreadyData({ ...alreadyData, acc_date: event.target.value  });
+    const timestamp = new Date(event.target.value)
+    console.log("timestamp",timestamp);
+    setPrakanData({ ...prakanData, acc_date: timestamp });
+    setAlreadyData({ ...alreadyData, acc_date: timestamp });
 
   };
   const handleChangePlaceAcc = (event) => {
@@ -146,21 +148,24 @@ export default function Form() {
     setPrakanData({ ...prakanData, medical_fee: (event.target.value)});
   };
 
+  console.log("prakanDataJaa",prakanData);
+
   const handleSubmit = async (event) => {
     
 
     try {
       if(form !== '0'){
         let allData = { ...alreadyData, ...studentInfo, ...thaiText, ...profileData };
-        console.log("prakanSubmit : ",thaiText);
-        console.log("prakanAllData",allData);
+        console.log("prakanData !== 0 :",allData);
+        console.log("prakanAllData != 0 :",allData);
+        
         const response = await axios.post('/api/prakan/update', allData);
         console.log("responseId :",response.data.data.id);
         router.push(`/prakan/checkPrakan/${form}`);
       }else{
         let allData = { ...prakanData, ...studentInfo, ...thaiText, ...profileData };
-        console.log("prakanSubmit : ",thaiText);
-        console.log("prakanAllData",allData);
+        console.log("prakanData === 0 :",allData);
+        console.log("prakanAllData === 0 :",allData);
         const response = await axios.post('/api/prakan/create', allData);
         const formId = response.data.data.id
         router.push(`/prakan/checkPrakan/${formId}`);
