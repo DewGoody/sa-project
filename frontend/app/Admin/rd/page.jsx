@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
 import { saveAs } from 'file-saver'; // เพิ่ม FileSaver สำหรับบันทึกไฟล์
@@ -18,21 +17,20 @@ const App = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get(`/api/Admin/getrordor`)
-    const [Data, setData] = useState([])
-    const fetchData = async () => {
-        try {
-            const response = await axios.get(`/api/Admin/getrordor`)
-            setData(response.data)
-        } catch (error) {
+            setData(...Data,response.map((item, index) => ({
+                key: index, // Unique key for each row
+                fullname: `${item.Student?.lnameTH || ''} ${item.Student?.fnameTH || ''}`,
+                student_ID: item.Student?.id,
+                citizen_ID: item.Student?.thai_id || 'N/A',
+                birthdate: item.Student?.bd || 'N/A',
+                rd_ID: item.Military_info[0]?.military_id || 'N/A',
+            })))
         } catch (error) {
             console.log(error)
         }
     }
     useEffect(() => {
-    useEffect(() => {
         console.log(Data)
-        fetchData()
-    }, [])
         fetchData()
     }, [])
     const [collapsed, setCollapsed] = useState(false);
