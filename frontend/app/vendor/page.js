@@ -3,6 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Header } from "../components/Header.js";
+import InputMask from "react-input-mask";
 import numberToThaiText from "../components/numberToThaiText.js";
 
 function Page() {
@@ -10,6 +11,7 @@ function Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [profileData, setProfileData] = useState(null);
+  const [otherCase, setOtherCase] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -66,6 +68,11 @@ function Page() {
   const handleChange = (event, field) => {
     console.log(field + " : " + event.target.value);
     setVendorData({ ...vendorData, [field]: event.target.value });
+    if (field === "claimType" && event.target.value === "อื่นๆ (ระบุ)") {
+      setOtherCase(true);
+    } else if (field === "claimType") {
+      setOtherCase(false);
+    }
   };
 
   useEffect(() => {
@@ -323,9 +330,9 @@ function Page() {
                     <label className="block text-gray-700 mb-2">
                       เลขบัตรประชาชน (ID card number)
                     </label>
-                    <input
-                      type="text"
-                      name="citizenId"
+                    <InputMask
+                      mask="9-9999-99999-99-9"
+                      value={vendorData.citizenId}
                       onChange={(event) => handleChange(event, "citizenId")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="เลขบัตรประชาชน (ID card number)"
@@ -406,8 +413,13 @@ function Page() {
                       onChange={(event) =>
                         handleChange(event, "claimOtherReason")
                       }
+                      disabled={!otherCase}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
-                      placeholder="กรณีอื่นๆ โปรดระบุ (Other case, please specify)"
+                      placeholder={
+                        !otherCase
+                          ? "-"
+                          : "กรณีอื่นๆ โปรดระบุ (Other case, please specify)"
+                      }
                     />
                   </div>
                   <div>
@@ -415,11 +427,13 @@ function Page() {
                       จำนวนเงิน (Amount)
                     </label>
                     <input
-                      type="text"
+                      type="number"
+                      inputMode="decimal"
                       name="amount"
                       onChange={(event) => handleChange(event, "amount")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="จำนวนเงิน (Amount)"
+                      placeholder="ไม่จำเป็นต้องใส่คอมม่า (No commas)"
+                      min="1"
                     />
                   </div>
                   <div>
@@ -482,14 +496,14 @@ function Page() {
                     <label className="block text-gray-700 mb-2">
                       เลขที่บัญชี (Account number)
                     </label>
-                    <input
-                      type="text"
-                      name="bankAccountNumber"
+                    <InputMask
+                      mask="999-9-99999-9"
+                      value={vendorData.bankAccountNumber}
                       onChange={(event) =>
                         handleChange(event, "bankAccountNumber")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="เลขที่บัญชี (Account number)"
+                      placeholder="000-0-00000-0"
                     />
                   </div>
                 </div>
