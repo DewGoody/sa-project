@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
 import { saveAs } from 'file-saver'; // เพิ่ม FileSaver สำหรับบันทึกไฟล์
@@ -17,13 +18,21 @@ const App = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get(`/api/Admin/getrordor`)
+    const [Data, setData] = useState([])
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(`/api/Admin/getrordor`)
             setData(response.data)
+        } catch (error) {
         } catch (error) {
             console.log(error)
         }
     }
     useEffect(() => {
+    useEffect(() => {
         console.log(Data)
+        fetchData()
+    }, [])
         fetchData()
     }, [])
     const [collapsed, setCollapsed] = useState(false);
@@ -68,6 +77,21 @@ const App = () => {
         {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
+        }, 
+        {
+            title: 'สถานะ',
+            dataIndex: 'status',
+            render: (status) => (
+                <Select
+                    defaultValue={status}
+                    style={{ width: "180px" }}
+                    options={[
+                        { value: 'รอดำเนินการ', label: 'รอดำเนินการ', style: { color: 'black' } },
+                        { value: 'Approved', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'green' } },
+                        { value: 'กำลังดำเนินการ', label: 'กำลังดำเนินการ', style: { color: 'red' } },
+                    ]}
+                />
+            )
         },
         {
             title: '',
@@ -167,6 +191,7 @@ const App = () => {
                         padding: 24,
                         minHeight: 280,
                         background: "white",
+                        borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
                         borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
                         borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
 
