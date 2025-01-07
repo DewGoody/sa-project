@@ -10,7 +10,7 @@ import {
     UserOutlined,
     VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Input, Table, Space,Select } from 'antd';
+import { Button, Layout, Menu, theme, Input, Table, Space, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
 const App = () => {
     const [Data, setData] = useState([])
@@ -36,6 +36,20 @@ const App = () => {
     const [selectedKey, setSelectedKey] = useState('4');
     const columns = [
         {
+            title: 'สถานะ',
+            dataIndex: 'status',
+            render: (status) => (
+                <Select
+                    defaultValue={status}
+                    style={{ width: "180px" }}
+                    options={[
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
+                        { value: 'ส่งเอกสารเรียบร้อย', label: 'ส่งเอกสารเรียบร้อย', },
+                    ]}
+                />
+            )
+        },
+        {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'fullname',
         },
@@ -54,21 +68,6 @@ const App = () => {
         {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
-        }, 
-        {
-            title: 'สถานะ',
-            dataIndex: 'status',
-            render: (status) => (
-                <Select
-                    defaultValue={status}
-                    style={{ width: "180px" }}
-                    options={[
-                        { value: 'รอดำเนินการ', label: 'รอดำเนินการ', style: { color: 'black' } },
-                        { value: 'Approved', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'green' } },
-                        { value: 'กำลังดำเนินการ', label: 'กำลังดำเนินการ', style: { color: 'red' } },
-                    ]}
-                />
-            )
         },
         {
             title: '',

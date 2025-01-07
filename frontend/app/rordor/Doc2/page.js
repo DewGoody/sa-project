@@ -108,10 +108,10 @@ const RD = () => {
                 <main className="flex justify-center items-center">
                     <div className="bg-white p-8 w-full max-w-4xl">
                         <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
-                            นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
+                            โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
                         </h2>
                         <h1 className="text-mb text-gray-700 mb-6 text-center">
-                            Students, please prepare the following documents to submit to the staff
+                            Please prepare the following documents to submit to the staff
                         </h1>
 
                         {/* Personal & Contact Information Section */}

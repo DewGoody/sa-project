@@ -24,7 +24,7 @@ const gold = () => {
 
     const [selectedFiles, setSelectedFiles] = useState([]); // เริ่มต้นเป็น Array
 
-    
+
 
     const handleFileChange = (info) => {
         const { status } = info.file;
@@ -35,26 +35,26 @@ const gold = () => {
             setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
-    
+
 
     const handleConfirm = async (event) => {
         event.preventDefault();
-    
+
         if (!allChecked()) {
             notifyerror();
             return;
         }
-    
+
         if (!selectedFiles || selectedFiles.length === 0) { // ตรวจสอบไฟล์
             toast.error("กรุณาเลือกไฟล์ก่อนทำการอัปโหลด");
             return;
         }
-    
+
         const formData = new FormData();
         selectedFiles.forEach(file => {
             formData.append("file", file); // เพิ่มไฟล์ลงใน FormData
         });
-    
+
         try {
             const response = await axios.post(
                 `/api/POSTPDF`, // เรียก API endpoint
@@ -65,7 +65,7 @@ const gold = () => {
                     },
                 }
             );
-    
+
             // console.log(response.data);
             window.location.href = "/home";
         } catch (error) {
@@ -73,7 +73,7 @@ const gold = () => {
             toast.error("การอัปโหลดล้มเหลว");
         }
     };
-    
+
 
     const props = {
         name: 'file',
@@ -95,7 +95,7 @@ const gold = () => {
             console.log('Dropped files', e.dataTransfer.files);
         },
     };
-    
+
 
 
 
@@ -171,16 +171,34 @@ const gold = () => {
 
     return (
         <div>
-            <Header req1="รายงานตัวเข้าฝึกนักศึกษาวิชาทหาร " req2="" />
+            <Header req1="แบบคำขอรับรองคุณสมบัติในการเข้าร่วมโครงการประกันสุขภาพถ้วนหน้า (กรุงเทพมหานคร) สำหรับนิสิตจุฬาลงกรณ์มหาวิทยาลัย และ หนังสือข้อตกลงขอขึ้นทะเบียนบัตรประกันสุขภาพถ้วนหน้า โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย" req2="" />
             <div className="min-h-screen bg-white">
                 <main className="flex justify-center items-center">
                     <div className="bg-white p-8 w-full max-w-4xl">
-                        <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
+
+                        <h1 className="text-lg font-bold text-center mb-4 text-gray-800" >
+                            Download เอกสารเพื่อเซ็นรับรอง
+                        </h1>
+                        <button
+                            onClick={handleDownload}
+                            className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300 w-full h-16">
+                            Download
+                        </button>
+
+
+                        <h2 className="pt-5 text-lg font-bold text-center mb-4 text-gray-800">
+                           อัพโหลดเอกสารที่นี่ (Upload documents here.)
+                        </h2>
+
+                        {/* <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
                             นิสิตโหลดและอัพโหลดเอกสารที่นี่
                         </h2>
                         <h1 className="text-mb text-gray-700 mb-6 text-center">
                             Students can download and upload documents here.
-                        </h1>
+                        </h1> OLD Version */ }
+
+
+
 
                         {/* Personal & Contact Information Section */}
                         <section>
@@ -258,11 +276,11 @@ const gold = () => {
                                 </button>
                             </a>
 
-                            <button
+                            {/* <button
                                 onClick={handleDownload}
                                 className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300">
                                 Download
-                            </button>
+                            </button> */}
 
                             <a
                                 href="/home"
@@ -271,7 +289,7 @@ const gold = () => {
                                     type="submit"
                                     className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                 >
-                                    Confrim
+                                    Home page
                                     <ToastContainer />
                                 </button>
                             </a>

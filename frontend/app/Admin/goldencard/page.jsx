@@ -64,7 +64,43 @@ const App = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
     const [selectedKey, setSelectedKey] = useState('5');
+    const [values, setValues] = useState({})
+    const handleChanged = (e) => {
+        const { value } = e.target;
+        /**
+         * Updates the state with the provided value.
+         *
+         * @param {any} value - The new value to set in the state.
+         */
+        setValues({ ...values, [e.target.name]: value });
+    }
     const columns = [
+        {
+            title: 'ดาวน์โหลด PDF',
+            render: (_, record) => (
+                <Space size="middle">
+                    <Button onClick={() => fetchPdfFile(record.student_ID)}>PDF</Button>
+                </Space>
+            ),
+        },
+        {
+            title: 'สถานะ',
+            dataIndex: 'status',
+            render: (status) => (
+                <Select
+                    defaultValue={status}
+                    style={{ width: "180px" }}
+                    options={[
+                        { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ',  },
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม',  },
+                        { value: 'ส่งเอกสารเรียบร้อย', label: 'ส่งเอกสารเรียบร้อย',  },
+                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ',  },
+                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ',  },
+                    ]}
+                />
+            )
+        },
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'fullname',
@@ -81,29 +117,8 @@ const App = () => {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
         },
-        {
-            title: 'สถานะ',
-            dataIndex: 'status',
-            render: (status) => (
-                <Select
-                    defaultValue={status}
-                    style={{ width: "180px" }}
-                    options={[
-                        { value: 'กำลังดำเนินการ', label: 'กำลังดำเนินการ', style: {color: 'black' } },
-                        { value: 'Approved', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'green' } },
-                    ]}
-                />
-            )
-        },
-        {
-            title: '',
-            align: 'right', // เพิ่ม align ขวา
-            render: (_, record) => (
-                <Space size="middle">
-                    <Button onClick={() => fetchPdfFile(record.student_ID)}>PDF</Button>
-                </Space>
-            ),
-        },
+        
+    
 
 
 
@@ -115,6 +130,7 @@ const App = () => {
         citizen_ID: item.Student?.thai_id || 'N/A',
         birthdate: item.Student?.bd || 'N/A',
     }));
+    console.log(dataSource)
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>

@@ -181,7 +181,7 @@ const page = () => {
 
     return (
         <div>
-            <Header req1="แบบคำขอรับรองคุณสมบัติในการเข้าร่วมโครงการประกันสุขภาพถ้วนหน้า (กรุงเทพมหานคร) สำหรับสินิตจุฬาลงกรณ์มหาวิทยาลัย และ หนังสือข้อตกลงขอขึ้นทะเบียนบัตรประกันสุขภาพถ้วนหน้า โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย" req2="" />
+            <Header req1="แบบคำขอรับรองคุณสมบัติในการเข้าร่วมโครงการประกันสุขภาพถ้วนหน้า (กรุงเทพมหานคร) สำหรับนิสิตจุฬาลงกรณ์มหาวิทยาลัย และ หนังสือข้อตกลงขอขึ้นทะเบียนบัตรประกันสุขภาพถ้วนหน้า โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย" req2="" />
             <div className="min-h-screen bg-whites 2xl:mx-24 xl:mx-24 lg:mx-24 md:mx-24 ">
                 <main className="flex justify-center items-center ">
                     <div className="bg-white p-8 w-full ">
@@ -400,7 +400,7 @@ const page = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
+                                        <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
                                         <select
                                             name="amphure"
                                             value={Data.amphure}
@@ -414,7 +414,7 @@ const page = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
+                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
                                         <select
                                             name="district"
                                             value={Data.district}

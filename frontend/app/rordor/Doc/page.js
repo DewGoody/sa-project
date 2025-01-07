@@ -106,12 +106,26 @@ const RD = () => {
             <div className="min-h-screen bg-white">
                 <main className="flex justify-center items-center">
                     <div className="bg-white p-8 w-full max-w-4xl">
-                        <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
-                            นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
+
+                        <h1 className="text-lg font-bold text-center mb-4 text-gray-800" >
+                            Download เอกสารน้ำมายื่นให้เจ้าหน้าที่
+                        </h1>
+                        <button
+                            onClick={handleDownload}
+                            className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300 w-full h-16">
+                            Download
+                        </button>
+
+                        <h2 className="text-mb pt-4 font-bold text-center mb-4 text-gray-800">
+                            โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่ (Please prepare the following documents to submit to the staff)
+                        </h2>
+
+                        {/* <h2 className="text-lg pt-4 font-bold text-center mb-4 text-gray-800">
+                            โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
                         </h2>
                         <h1 className="text-mb text-gray-700 mb-6 text-center">
-                            Students, please prepare the following documents to submit to the staff
-                        </h1>
+                            Please prepare the following documents to submit to the staff
+                        </h1> Old version  */}
 
                         {/* Personal & Contact Information Section */}
                         <section>
@@ -262,15 +276,15 @@ const RD = () => {
 
                             >
                                 <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                Back
-                                </button>
+                                    Back
+                                </button> 
                             </a>
 
-                            <button
+                            {/* <button
                                 onClick={handleDownload}
                                 className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300">
                                 Download
-                            </button>
+                            </button> */}
 
                             <a
                                 href="/home"
@@ -280,7 +294,7 @@ const RD = () => {
                                     type="submit"
                                     className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                 >
-                                    Confrim
+                                    Next
                                     <ToastContainer />
                                 </button>
                             </a>
