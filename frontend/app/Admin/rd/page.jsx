@@ -17,13 +17,16 @@ const App = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get(`/api/Admin/getrordor`)
-            setData(...Data,response.map((item, index) => ({
+            console.log(response.data)
+            setData(...Data, response.data.map((item, index) => ({
                 key: index, // Unique key for each row
                 fullname: `${item.Student?.lnameTH || ''} ${item.Student?.fnameTH || ''}`,
                 student_ID: item.Student?.id,
                 citizen_ID: item.Student?.thai_id || 'N/A',
                 birthdate: item.Student?.bd || 'N/A',
-                rd_ID: item.Military_info[0]?.military_id || 'N/A',
+                status:item.status,
+                reqId: item.id,
+                rd_ID: item.Military_info.military_id || 'N/A',
             })))
         } catch (error) {
             console.log(error)
@@ -41,20 +44,51 @@ const App = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
     const [selectedKey, setSelectedKey] = useState('4');
+    const handleChangeStatus = async (record) => {
+        if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
+            try {
+                const res = await axios.post('/api/request/changePrakanProcess', { id: parseInt(record.reqId) });
+                console.log("res", res);
+            } catch (error) {
+                console.error('Error fetching status:', error);
+            }
+           }
+           else if(record.status === "ส่งเอกสารแล้ว"){
+            try {
+                const res = await axios.post('/api/request/changePrakanToSended', { id: parseInt(record.reqId) });
+                console.log("res", res);
+            } catch (error) {
+                console.error('Error fetching status:', error);
+            }
+           } 
+    } 
     const columns = [
         {
             title: 'สถานะ',
             dataIndex: 'status',
-            render: (status) => (
+            render: (status, record) => {
+                console.log("status", record )
+                let options = [];
+                if(status == "รอจองคิว"){
+                    options=[
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
+                    ]
+                }else if(status == "รอเจ้าหน้าที่ดำเนินการ"){
+                    options=[
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
+                    ]
+                }
+                return(
                 <Select
                     defaultValue={status}
                     style={{ width: "180px" }}
-                    options={[
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
-                        { value: 'ส่งเอกสารเรียบร้อย', label: 'ส่งเอกสารเรียบร้อย', },
-                    ]}
+                    options={options}
+                    onChange={(value) => handleChangeStatus({ ...record, status: value })}
                 />
-            )
+                )
+            }
         },
         {
             title: 'ชื่อ-นามสกุล',
@@ -75,22 +109,8 @@ const App = () => {
         {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
-        }, 
-        {
-            title: 'สถานะ',
-            dataIndex: 'status',
-            render: (status) => (
-                <Select
-                    defaultValue={status}
-                    style={{ width: "180px" }}
-                    options={[
-                        { value: 'รอดำเนินการ', label: 'รอดำเนินการ', style: { color: 'black' } },
-                        { value: 'Approved', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'green' } },
-                        { value: 'กำลังดำเนินการ', label: 'กำลังดำเนินการ', style: { color: 'red' } },
-                    ]}
-                />
-            )
         },
+
         {
             title: '',
             align: 'right', // เพิ่ม align ขวา
@@ -101,17 +121,10 @@ const App = () => {
             ),
         },
     ];
-    const dataSource = Data.map((item, index) => ({
-        key: index, // Unique key for each row
-        fullname: `${item.Student?.lnameTH || ''} ${item.Student?.fnameTH || ''}`,
-        student_ID: item.Student?.id,
-        citizen_ID: item.Student?.thai_id || 'N/A',
-        birthdate: item.Student?.bd || 'N/A',
-        rd_ID: item.Military_info[0]?.military_id || 'N/A',
-    }));
+
 
     const exportToExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(dataSource); // แปลงข้อมูลเป็น worksheet
+        const worksheet = XLSX.utils.json_to_sheet(Data); // แปลงข้อมูลเป็น worksheet
         const workbook = XLSX.utils.book_new(); // สร้าง workbook ใหม่
         XLSX.utils.book_append_sheet(workbook, worksheet, "Data"); // เพิ่ม worksheet เข้า workbook
         const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' }); // สร้างไฟล์ excel
@@ -207,7 +220,7 @@ const App = () => {
                         Export to Excel
                     </Button>
                     <Table
-                        dataSource={dataSource}
+                        dataSource={Data}
                         columns={columns}
                         rowClassName={(record, index) =>
                             index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
