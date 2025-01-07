@@ -158,7 +158,7 @@ export async function changeStatusToWaitBook(id) {
     }
 }
 
-export async function changeStatusPrakanToProcess(id) {
+export async function changeStatusToProcess(id) {
     if(id){
         const request = await getRequestByIdFast({id: id})
         console.log('request',request);
@@ -177,7 +177,7 @@ export async function changeStatusPrakanToProcess(id) {
     }
 }
 
-export async function changeStatusPrakanToSended(id) {
+export async function changeStatusToSended(id) {
     if(id){
         const request = await getRequestByIdFast({id: id})
         if(request.status !== "รอเจ้าหน้าที่ดำเนินการ"){
@@ -194,7 +194,7 @@ export async function changeStatusPrakanToSended(id) {
     }
 }
 
-export async function changeStatusPrakanToWantInfo(id) {
+export async function changeStatusToWantInfo(id) {
     if(id){
         const request = await getRequestByIdFast({id: id})
         if(request.status !== "ส่งเอกสารแล้ว"){
@@ -211,7 +211,7 @@ export async function changeStatusPrakanToWantInfo(id) {
     }
 }
 
-export async function changeStatusPrakanToNotApprove(id) {
+export async function changeStatusToNotApprove(id) {
     if(id){
         const request = await getRequestByIdFast({id: id})        
         if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"){      
@@ -228,7 +228,41 @@ export async function changeStatusPrakanToNotApprove(id) {
     }
 }
 
-export async function changeStatusPrakanToFinish(id) {
+export async function changeStatusRecieveDoc(id) {
+    if(id){
+        const request = await getRequestByIdFast({id: id})
+        if(request.status !== "ส่งเอกสารแล้ว"){            
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: {id: request.id},
+            data: {status: "ติดต่อรับเอกสาร" }
+        })
+        return changeStatusRequest
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
+
+export async function changeStatusFinishRecieve(id) {
+    if(id){
+        const request = await getRequestByIdFast({id: id})
+        if(request.status !== "ติดต่อรับเอกสาร"){            
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: {id: request.id},
+            data: {status: "รับเอกสารเรียบร้อย" }
+        })
+        return changeStatusRequest
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
+
+export async function changeStatusToFinish(id) {
     if(id){
         const request = await getRequestByIdFast({id: id})
         if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"){            
