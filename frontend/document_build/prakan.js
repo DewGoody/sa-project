@@ -29,14 +29,26 @@ async function prakan(data){
     const pages = pdfDoc.getPages()
     const firstPage = pages[0]
     const { width, height } = firstPage.getSize()
-    const convertDateFormat = (dateString) => {
-        // Split the input date string by the hyphen (-) to get year, month, and day
-        const [year, month, day] = dateString.split('-');
+    const date = new Date(data.acc_date)
+    const formatDate = (date) => {
+        // const date = new Date(dateSend)
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based
+        const year = date.getFullYear();
         
-        // Return the date in the desired format
         return `${day}/${month}/${year}`;
       };
-    const dataDateAcc = convertDateFormat(data.acc_date)
+    const formattedDate = formatDate(date)
+    console.log(formattedDate);
+    
+    // const convertDateFormat = (dateString) => {
+    //     // Split the input date string by the hyphen (-) to get year, month, and day
+    //     const [year, month, day] = dateString.split('-');
+        
+    //     // Return the date in the desired format
+    //     return `${day}/${month}/${year}`;
+    //   };
+    // const dataDateAcc = convertDateFormat(data.acc_date)
 
     firstPage.drawText(data.fnameTH + ' ' + data.lnameTH, {
         x: 204,
@@ -45,7 +57,7 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.id, {
+    firstPage.drawText(data.id+'', {
         x: 460,
         y: height-223.3,
         size: 14,   
@@ -59,7 +71,7 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.tel_num, {
+    firstPage.drawText(data.tel_num+'', {
         x: 231,
         y: height-275,
         size: 14,   
@@ -87,7 +99,7 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.acc_date, {
+    firstPage.drawText(`${formattedDate}`, {
         x: 206,
         y: height-397.3,
         size: 14,   
@@ -124,7 +136,7 @@ async function prakan(data){
         color: rgb(0, 0, 0),
     })
    
-    firstPage.drawText(data.thaiText, {
+    firstPage.drawText(data.medical_fee_text, {
         x: 143,
         y: height-578,
         size: 14,   
@@ -142,6 +154,7 @@ async function prakan(data){
 
     const pdfBytes = await pdfDoc.save()
     fs.writeFileSync('public/documents/accident/prakanformfilled.pdf', pdfBytes);
+    return 'public/documents/accident/prakanformfilled.pdf'
 }
 
 module.exports = { prakan };
