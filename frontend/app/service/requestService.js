@@ -144,6 +144,20 @@ export async function getRequestPrakanInAdmin(year){
     }
 }
 
+export async function changeStatusToWaitBook(id) {
+    if(id){
+        const request = await getRequestByIdFast({id: id})
+        const changeStatusRequest = await prisma.request.update({
+            where: {id: request.id},
+            data: {status: "รอจองคิว" }
+        })
+        return changeStatusRequest
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
+
 export async function changeStatusPrakanToProcess(id) {
     if(id){
         const request = await getRequestByIdFast({id: id})

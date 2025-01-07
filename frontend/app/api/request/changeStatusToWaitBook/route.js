@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import {changeStatusToWaitService} from '../../../service/requestService'
+import {changeStatusToWaitBook} from '../../../service/requestService'
 import { NextResponse } from "next/server"
 import { convertBigIntToString} from '../../../../utills/convertBigInt'
 
@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export async function POST(req,res){
     try{
     let data = await req.json()
-    const changeStatusRequest = await changeStatusToWaitService(data.req_id)    
+    const changeStatusRequest = await changeStatusToWaitBook(data.req_id)    
     return NextResponse.json({ data: convertBigIntToString(changeStatusRequest) });
     }
     catch(error){   
