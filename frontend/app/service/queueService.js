@@ -134,3 +134,68 @@ export async function changeQueue(queueId,studentId, reqId, timeslotId, period, 
     })
     return createdQueue
 }
+
+export async function getShowQueueInAdmin(year) {
+    const startOfYear = new Date(year, 0, 1);
+    const endOfYear = new Date(year + 1, 0, 1);
+    let queue
+    if(year !== 0){
+        queue = await prisma.queue.findMany({
+            where: {
+                status: {
+                    in: ["จองคิวสำเร็จ", "ไม่มาเข้ารับบริการ"]
+                }, 
+                deleted_at: null,
+                created_at: {
+                    gte: startOfYear, // Greater than or equal to start of year
+                    lt: endOfYear, // Less than start of the next year
+                }
+            },
+            include: {
+                Timeslot: true,
+                Request: true
+            },
+            orderBy: [
+                {timeslot_id: 'desc'},
+                {period: 'asc'}
+            ]
+        })
+    }
+    else{
+        queue = await prisma.queue.findMany({
+            where: {
+                status: {
+                    in: ["จองคิวสำเร็จ", "ไม่มาเข้ารับบริการ"]
+                }, 
+                deleted_at: null},
+            include: {
+                Timeslot: true,
+                Request: true
+            },
+            orderBy: [
+                {timeslot_id: 'desc'},
+                {period: 'asc'}
+            ]
+        })
+    }
+    if(queue){
+        return queue
+    }
+}
+
+export async function changeStatusToLate(id) {
+    if(id){
+        const request = await getQueueById(id)        
+        if(request.status !== "จองคิวสำเร็จ"){
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusQueue = await prisma.queue.update({
+            where: {id: id},
+            data: {status: "ไม่มาเข้ารับบริการ" }
+        })
+        return changeStatusQueue
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
