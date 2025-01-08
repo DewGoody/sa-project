@@ -440,13 +440,69 @@ function Page() {
                     <label className="block text-gray-700 mb-2">
                       บัญชีของธนาคาร (Bank)
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="bankCompany"
                       onChange={(event) => handleChange(event, "bankCompany")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="บัญชีของธนาคาร (Bank)"
-                    />
+                    >
+                      <option value="" defaultValue>
+                        เลือกบัญชีของธนาคาร (Choose Bank)
+                      </option>
+                      <option value="ธนาคารกรุงเทพ">ธนาคารกรุงเทพ</option>
+                      <option value="ธนาคารกสิกรไทย">ธนาคารกสิกรไทย</option>
+                      <option value="ธนาคารกรุงไทย">ธนาคารกรุงไทย</option>
+                      <option value="ธนาคารทหารไทย">ธนาคารทหารไทย</option>
+                      <option value="ธนาคารไทยพาณิชย์">ธนาคารไทยพาณิชย์</option>
+                      <option value="ธนาคารกรุงศรีอยุธยา">
+                        ธนาคารกรุงศรีอยุธยา
+                      </option>
+                      <option value="ธนาคารเกียรตินาคิน">
+                        ธนาคารเกียรตินาคิน
+                      </option>
+                      <option value="ธนาคารซีไอเอ็มบีไทย">
+                        ธนาคารซีไอเอ็มบีไทย
+                      </option>
+                      <option value="ธนาคารทิสโก้">ธนาคารทิสโก้</option>
+                      <option value="ธนาคารธนชาต">ธนาคารธนชาต</option>
+                      <option value="ธนาคารยูโอบี">ธนาคารยูโอบี</option>
+                      <option value="ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)">
+                        ธนาคารสแตนดาร์ดชาร์เตอร์ด (ไทย)
+                      </option>
+                      <option value="ธนาคารไทยเครดิตเพื่อรายย่อย">
+                        ธนาคารไทยเครดิตเพื่อรายย่อย
+                      </option>
+                      <option value="ธนาคารแลนด์ แอนด์ เฮาส์">
+                        ธนาคารแลนด์ แอนด์ เฮาส์
+                      </option>
+                      <option value="ธนาคารไอซีบีซี (ไทย)">
+                        ธนาคารไอซีบีซี (ไทย)
+                      </option>
+                      <option value="ธนาคารพัฒนาวิสาหกิจขนาดกลางและขนาดย่อมแห่งประเทศไทย">
+                        ธนาคารพัฒนาวิสาหกิจขนาดกลางและขนาดย่อมแห่งประเทศไทย
+                      </option>
+                      <option value="ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร">
+                        ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร
+                      </option>
+                      <option value="ธนาคารเพื่อการส่งออกและนำเข้าแห่งประเทศไทย">
+                        ธนาคารเพื่อการส่งออกและนำเข้าแห่งประเทศไทย
+                      </option>
+                      <option value="ธนาคารออมสิน">ธนาคารออมสิน</option>
+                      <option value="ธนาคารอาคารสงเคราะห์">
+                        ธนาคารอาคารสงเคราะห์
+                      </option>
+                      <option value="ธนาคารอิสลามแห่งประเทศไทย">
+                        ธนาคารอิสลามแห่งประเทศไทย
+                      </option>
+                      <option value="ธนาคารแห่งประเทศจีน">
+                        ธนาคารแห่งประเทศจีน
+                      </option>
+                      <option value="ธนาคารซูมิโตโม มิตซุย ทรัสต์ (ไทย)">
+                        ธนาคารซูมิโตโม มิตซุย ทรัสต์ (ไทย)
+                      </option>
+                      <option value="ธนาคารฮ่องกงและเซี้ยงไฮ้แบงกิ้งคอร์ปอเรชั่น จำกัด">
+                        ธนาคารฮ่องกงและเซี้ยงไฮ้แบงกิ้งคอร์ปอเรชั่น จำกัด
+                      </option>
+                    </select>
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
