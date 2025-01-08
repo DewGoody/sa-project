@@ -41,10 +41,16 @@ export async function getRequestById(id) {
 
 export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
-        where: {status: "รอจองคิว", stu_id: data,deleted_at: null},
+        where: {
+            status: {
+                notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+            }, 
+            stu_id: data,
+            deleted_at: null},
         include: {
             accident_info: true,
             Ponpan: true,
+            UHC_request: true
         }
     })
     if(requests){            
@@ -54,6 +60,7 @@ export async function getShowRequestNotQueue(data) {
         return "Not found"
     }
 }
+
 
 export async function cancleRequest(id) {
     if(id){

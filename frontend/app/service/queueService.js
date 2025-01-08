@@ -143,7 +143,7 @@ export async function getShowQueueInAdmin(year) {
         queue = await prisma.queue.findMany({
             where: {
                 status: {
-                    in: ["จองคิวสำเร็จ", "ไม่มาเข้ารับบริการ"]
+                    in: ["จองคิวสำเร็จ", "ไม่มาเข้ารับบริการ","เข้ารับบริการแล้ว"]
                 }, 
                 deleted_at: null,
                 created_at: {
@@ -153,7 +153,8 @@ export async function getShowQueueInAdmin(year) {
             },
             include: {
                 Timeslot: true,
-                Request: true
+                Request: true,
+                Student: true
             },
             orderBy: [
                 {timeslot_id: 'desc'},
@@ -165,12 +166,13 @@ export async function getShowQueueInAdmin(year) {
         queue = await prisma.queue.findMany({
             where: {
                 status: {
-                    in: ["จองคิวสำเร็จ", "ไม่มาเข้ารับบริการ"]
+                    in: ["จองคิวสำเร็จ", "ไม่มาเข้ารับบริการ","เข้ารับบริการแล้ว"]
                 }, 
                 deleted_at: null},
             include: {
                 Timeslot: true,
-                Request: true
+                Request: true,
+                Student: true
             },
             orderBy: [
                 {timeslot_id: 'desc'},
@@ -192,6 +194,23 @@ export async function changeStatusToLate(id) {
         const changeStatusQueue = await prisma.queue.update({
             where: {id: id},
             data: {status: "ไม่มาเข้ารับบริการ" }
+        })
+        return changeStatusQueue
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
+
+export async function changeStatusToReceiveService(id) {
+    if(id){
+        const request = await getQueueById(id)        
+        if(request.status !== "จองคิวสำเร็จ"){
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusQueue = await prisma.queue.update({
+            where: {id: id},
+            data: {status: "เข้ารับบริการแล้ว" }
         })
         return changeStatusQueue
     }
