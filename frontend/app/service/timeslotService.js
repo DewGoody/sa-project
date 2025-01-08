@@ -2,12 +2,18 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function updateTimeslotMaxStu(timeslotId, maxStu) {
-    const updatedTimeslot = await prisma.timeslot.update({
-        where: { id: timeslotId },
-        data: { max_stu: maxStu }, 
+export async function updateTimeslotMaxStu(date, maxStu) {
+    const maxstu = await prisma.max_student.upsert({
+        where: { date: new Date(date) },
+        update: {
+            max_stu: parseInt(maxStu),
+        },
+        create: {
+            date: new Date(date),
+            max_stu: parseInt(maxStu)
+        },
     });
-    return updatedTimeslot
+    return maxstu
 }
 
 export async function getTimeslotById(timeslotId) {
@@ -70,6 +76,9 @@ export async function   getTimeslotByDate(date) {
 
 export async function   getAllTimeslot() {    
     const timeslots = await prisma.timeslot.findMany({
+        where: {
+            deleted_at: null
+        },
         orderBy: {
           id: 'asc', // 'asc' for ascending order
         },
