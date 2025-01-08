@@ -118,7 +118,7 @@ const App = () => {
         console.log("record", record);
        if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
         try {
-            const res = await axios.post('/api/request/changePrakanProcess', { id: parseInt(record.reqId) });
+            const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -126,15 +126,16 @@ const App = () => {
        }
        else if(record.status === "ส่งเอกสารแล้ว"){
         try {
-            const res = await axios.post('/api/request/changePrakanToSended', { id: parseInt(record.reqId) });
+            const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
         }
        } 
+       
        else if(record.status === "ขอข้อมูลเพิ่มเติม"){
         try {
-            const res = await axios.post('/api/request/changePrakanToWantInfo', { id: parseInt(record.reqId) });
+            const res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
             console.log("resPerm", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -142,7 +143,7 @@ const App = () => {
        }
        else if(record.status === "ไม่อนุมัติ"){
         try {
-            const res = await axios.post('/api/request/changePrakanToNotApprove', { id: parseInt(record.reqId) });
+            const res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -150,7 +151,7 @@ const App = () => {
        }
        else if(record.status === "โอนเงินเรียบร้อย"){
         try {
-            const res = await axios.post('/api/request/changePrakanFinish', { id: parseInt(record.reqId) });
+            const res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
             console.log("resOwn", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -347,6 +348,7 @@ const App = () => {
                         {
                             key: '3',
                             label: <span style={{ color: selectedKey === '3' ? 'black' : 'white' }}>การขอผ่อนผันการเข้ารับราชการทหาร</span>,
+                             onClick: () => window.location.href = '/Admin/ponpan/0'
                         },
                         {
                             key: '4',

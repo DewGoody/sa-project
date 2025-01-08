@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import {changeStatusPrakanToNotApprove} from '../../../service/requestService'
+import {changeStatusToNotApprove} from '../../../service/requestService'
 import { NextResponse } from "next/server"
 import { convertBigIntToString} from '../../../../utills/convertBigInt'
 
@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export async function POST(req,res){
     try{
     let data = await req.json()
-    const showRequest = await changeStatusPrakanToNotApprove(data.id)
+    const showRequest = await changeStatusToNotApprove(data.id)
     return NextResponse.json({ data: convertBigIntToString(showRequest) });
     }
     catch(error){      

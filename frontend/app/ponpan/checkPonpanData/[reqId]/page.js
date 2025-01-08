@@ -81,7 +81,7 @@ const RD = () => {
 
     // Function to handle navigation attempt
     const handleNavigation = async (event) => {
-        await axios.post(`/api/request/changeStatusToWaitService`, {req_id:reqId});
+        await axios.post(`/api/request/changeStatusToWaitBook`, {req_id:reqId});
         
         if (!allChecked()) {
             event.preventDefault();
