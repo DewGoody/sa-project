@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { PrismaClient } from '@prisma/client'
 import * as XLSX from "xlsx";
+import * as fs from 'fs';
+import path from 'path';
 
 const prisma = new PrismaClient();
 
@@ -15,13 +17,11 @@ export async function POST(req,res){
               Ponpan: true,
               Student: true,
             },
-        });
-        console.log(ponpanData[0].Ponpan);
-        
+        });        
         const formattedData = ponpanData.map((item) => ({
-            yearBirth: item.Student.bd.getFullYear(),
-            studentId: item.Student.id,
-            thaiId: item.Student.thai_id,
+            yearBirth: item.Student.bd.getFullYear()+543,
+            studentId: item.Student.id+'',
+            thaiId: item.Student.thai_id+'',
             degree: item.Ponpan[0].degree,
             yearLevel: item.Ponpan[0].year,
             fName: item.Student.fnameTH,
@@ -44,8 +44,8 @@ export async function POST(req,res){
         }));
         const headers = [
             { header: "พ.ศ. เกิด", key: "yearBirth" },
-            { header: "เลขประจำตัวนิสิต", key: "studentId" },
-            { header: "เลขประจำตัวประชาชน", key: "studentId" },
+            { header: "เลขประจำตัวนิสิต", key: "studentId"},
+            { header: "เลขประจำตัวประชาชน", key: "thaiId" },
             { header: "ศึกษาในระดับปริญญา", key: "degree" },
             { header: "ชั้นปีที่", key: "yearLevel" },
             { header: "ชื่อ (ไม่ต้องใส่คำนำหน้า)", key: "fName" },
@@ -70,20 +70,24 @@ export async function POST(req,res){
             headers.map((h) => h.header), // Add headers as the first row
             ...formattedData.map((row) => headers.map((h) => row[h.key] || "")), // Map data rows
         ];
+
         const workbook = XLSX.utils.book_new();
-        const worksheet = XLSX.utils.json_to_sheet(formattedDataWithHeaders);
+        const worksheet = XLSX.utils.aoa_to_sheet(formattedDataWithHeaders);
         XLSX.utils.book_append_sheet(workbook, worksheet, "Ponpan");
+        // const filePath = path.join(process.cwd(), 'exports', 'ponpandata.xlsx');
+        // fs.mkdirSync(path.dirname(filePath), { recursive: true });
+        const filePath = 'public/documents/ponpan/ponpandata.xlsx';
         const buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+        fs.writeFileSync(filePath, buffer);
         return new NextResponse(buffer, {
             headers: {
               "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-              "Content-Disposition": 'attachment; filename="exported-file.xlsx"',
+              "Content-Disposition": 'attachment; filename="ponpandata.xlsx"',
             },
           });
         }
-        catch(error){      
-            console.log(error);
-              
+        catch(error){               
+            console.log(error)     
             if(!error.code){
                 return NextResponse.json({ error: "Server error" }, { status: 500 });
             }

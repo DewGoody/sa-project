@@ -230,7 +230,7 @@ export async function changeStatusToNotApprove(id) {
 
 export async function changeStatusRecieveDoc(id) {
     if(id){
-        const request = await getRequestByIdFast({id: id})
+        const request = await getRequestByIdFast({id: id})        
         if(request.status !== "ส่งเอกสารแล้ว"){            
             throw {code: 400,error: new Error("Bad Request")}
         }

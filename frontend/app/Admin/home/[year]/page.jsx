@@ -88,47 +88,18 @@ const AppointmentManagement = () => {
         router.push(`/Admin/prakan/${year}`);
     }
 
-    const handleDownload = async (dataDownload) => {
-
-        console.log("dataDownloadJaa", typeof dataDownload);
-
-        try {
-            const res = await axios.post('/api/request/downloadPrakan', { id: parseInt(dataDownload) }, {
-                responseType: 'blob',
-            });
-            const url = window.URL.createObjectURL(new Blob([res.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'prakanformfilled.pdf');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            console.log("download", res);
-        } catch (error) {
-            console.error('Error downloading file:', error);
-        }
-    }
-
-    const handleChangeStatus = async (record) => {
-       if(record.status === "รอเข้ารับบริการ"){
-        try {x
-            const res = await axios.post('/api/request/changePrakanProcess', { id: parseInt(record.reqId) });
-            console.log("res", res);
-        } catch (error) {
-            console.error('Error fetching status:', error);
-        }
-       }
-       else if(record.status === "รอดำเนินงานเอกสาร"){
-        try {
-            const res = await axios.post('/api/request/changePrakanFinish', { id: parseInt(record.reqId) });
-            console.log("res", res);
-        } catch (error) {
-            console.error('Error fetching status:', error);
-        }
-       }
-    }
+    
+    
 
   const columns = [
+    {
+        title: 'สถานะ',
+        dataIndex: 'status',
+    },
+    {
+        title: 'ประเภทการเข้ารับบริการ',
+        dataIndex: 'type',
+    },
     {
         title: 'ชื่อ-นามสกุล',
         dataIndex: 'name',
@@ -137,74 +108,8 @@ const AppointmentManagement = () => {
         title: 'รหัสนิสิต',
         dataIndex: 'student_ID',
     },
-    {
-        title: 'อาการบาดเจ็บ',
-        dataIndex: 'des_injury',
-    },
-    {
-        title: 'การเกิดอุบัติเหตุ',
-        dataIndex: 'acc_desc',
-    },
-    {
-        title: 'สถานที่เกิดอุบัติเหตุ',
-        dataIndex: 'accident_place',
-    },
-    {
-        title: 'วันที่เกิดอุบัติเหตุ',
-        dataIndex: 'acc_date',
-    },
-    {
-        title: 'การเกิดอุบัติเหตุ',
-        dataIndex: 'acc_desc',
-    },
-    {
-        title: 'สถานที่รักษา',
-        dataIndex: 'treatment_place',
-    },
-    {
-        title: 'ประเภทสถานพยาบาล',
-        dataIndex: 'hospital_type',
-    },
-    {
-        title: 'ค่ารักษาพบาบาล',
-        dataIndex: 'medical_fee',
-    },
-    {
-        title: 'สถานะ',
-        dataIndex: 'status',
-        render: (status) => (
-            <Select
-                defaultValue={status}
-                style={{ width: "180px" }}
-                options={[
-                    { value: 'รอเข้ารับบริการ', label: 'รอเข้ารับบริการ', style: {color: 'black' } },
-                    { value: 'Approved', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'green' } },
-                    { value: 'Rejected', label: 'คิวถูกยกเลิก', style: { color: 'red' } },
-                ]}
-            />
-        )
-    },
-    {
-        align: 'right', // เพิ่ม align ขวา
-        title: 'ดาวน์โหลด',
-        render: (_, record) => (
-            <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100%', // Optional: ensures full height centering within the parent
-            }}
-          >
-            <DownloadOutlined
-              style={{
-                fontSize: '21px', // Increase the size (e.g., 24px)
-                cursor: 'pointer', // Optional: changes the cursor to a pointer
-              }}
-            />
-          </div>
-        ),
-    },
+    
+    
 ];
 
   return (
@@ -319,7 +224,7 @@ const AppointmentManagement = () => {
                     </div>
                     
                     <Table
-                        dataSource={columns}
+                        dataSource={dataSource}
                         columns={columns}
                         style={{ borderRadius: borderRadiusLG  }}
                         scroll={{ x: 'max-content' }}

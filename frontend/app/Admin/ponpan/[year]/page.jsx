@@ -38,6 +38,7 @@ const AppointmentManagement = () => {
                 const buddhistYear = new Date(item.Student.bd).getFullYear() + 543;
                 return {
                     key: index,
+                    id: item.Ponpan[0].id,
                     stu_id: item.stu_id,
                     bd: buddhistYear,
                     thai_id: item.Student.thai_id,
@@ -60,6 +61,9 @@ const AppointmentManagement = () => {
                     district_sd: item.Ponpan[0].district_sd,
                     province_sd: item.Ponpan[0].province_sd,
                     email: item.Ponpan[0].email,
+                    status:item.status,
+                    reqId: item.id
+
                 };
             }));
             console.log("dataSource :", dataSource);
@@ -67,7 +71,6 @@ const AppointmentManagement = () => {
             console.error('Error fetching student data:', error);
         }
     }
-
     
 
     const fetchUniqueYear = async () => {
@@ -88,6 +91,20 @@ const AppointmentManagement = () => {
         fetchUniqueYear()
     }, [])
 
+    const handleExport = async () => {
+        try {   
+          const fileUrl = '/documents/ponpan/ponpandata.xlsx';
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.download = 'ponpandataFile.xlsx';  // Optional: specify file name
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+          console.error('Failed to export Excel file:', error);
+        }
+      };
+      
 
     console.log("statusRequest", statusRequest);
 
@@ -99,23 +116,99 @@ const AppointmentManagement = () => {
         router.push(`/Admin/prakan/${year}`);
     }
 
+    const handleChangeStatus = async (record) => {
+        setStatusRequest(record.status);
+        console.log("record", record);
+       if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
+        try {
+            const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
+            console.log("res", res);
+        } catch (error) {
+            console.error('Error fetching status:', error);
+        }
+       }
+       else if(record.status === "ส่งเอกสารแล้ว"){
+        try {
+            const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+            console.log("res", res);
+        } catch (error) {
+            console.error('Error fetching status:', error);
+        }
+       } 
+       else if(record.status === "ติดต่อรับเอกสาร"){
+        try {
+            const res = await axios.post('/api/request/changeStatusToRecieveDoc', { id: parseInt(record.reqId) });
+            console.log("res", res);
+        } catch (error) {
+            console.error('Error fetching status:', error);
+        }
+       } 
+       else if(record.status === "รับเอกสารเรียบร้อย"){
+        try {
+            const res = await axios.post('/api/request/changeStatusToFinishRecieve', { id: parseInt(record.reqId) });
+            console.log("res", res);
+        } catch (error) {
+            console.error('Error fetching status:', error);
+        }
+       } 
+    }
+
 
 
 const columns = [
     {
         title: 'สถานะ',
         dataIndex: 'status',
-        render: (status) => (
-            <Select
-                defaultValue={status}
-                style={{ width: "180px" }}
-                options={[
-                    { value: 'รอเข้ารับบริการ', label: 'รอเข้ารับบริการ', style: { color: 'black' } },
-                    { value: 'Approved', label: 'ดำเนินการเสร็จสิ้น', style: { color: 'green' } },
-                    { value: 'Rejected', label: 'คิวถูกยกเลิก', style: { color: 'red' } },
-                ]}
-            />
-        )
+        render: (status,record) => {
+            console.log("status", record);
+            let options = [];
+            if (status === 'รอเข้ารับบริการ') {
+                options = [
+                    { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'black' } , },
+                    { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                    { value: 'ติดต่อรับเอกสาร', label: 'ติดต่อรับเอกสาร', style: { color: 'gray' } , disabled: true},
+                    { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' } , disabled: true},
+                ];
+            } else if (status === 'รอเจ้าหน้าที่ดำเนินการ') {
+                options = [
+                    { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
+                    { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'black' } },
+                    { value: 'ติดต่อรับเอกสาร', label: 'ติดต่อรับเอกสาร', style: { color: 'gray' } , disabled: true},
+                    { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' } , disabled: true},
+                ];
+            } else if (status === 'ส่งเอกสารแล้ว') {
+                options = [
+                    { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
+                    { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                    { value: 'ติดต่อรับเอกสาร', label: 'ติดต่อรับเอกสาร', style: { color: 'black' } },
+                    { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' } , disabled: true},
+                ];
+            }
+            else if (status === 'ติดต่อรับเอกสาร') {
+                options = [
+                    { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
+                    { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                    { value: 'ติดต่อรับเอกสาร', label: 'ติดต่อรับเอกสาร', style: { color: 'gray' } , disabled: true},
+                    { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'black' } },
+                ];
+            }else if (status === 'รับเอกสารเรียบร้อย') {
+                options = [
+                    { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
+                    { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                    { value: 'ติดต่อรับเอกสาร', label: 'ติดต่อรับเอกสาร', style: { color: 'gray' } , disabled: true},
+                    { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' } , disabled: true},
+                ];
+            }
+            
+            return (
+                <Select
+                    defaultValue={record.status}
+                    style={{ width: "180px" }}
+                    options={options}
+                    onChange={(value) => handleChangeStatus({ ...record, status: value })}
+                />
+            );
+        }
     },
     {
         title: 'พ.ศ. เกิด',
@@ -350,6 +443,14 @@ const columns = [
                                     <Select.Option key={year} value={year}>{year}</Select.Option>
                                 ))}
                             </Select>
+                    </div>
+                    <div>
+                        <button 
+                            className="bg-blue-500 p-4 rounded-md text-white mb-3"
+                            onClick={handleExport}
+                        >
+                            Export Excel
+                        </button>
                     </div>
                     
                     <Table
