@@ -269,7 +269,7 @@ model Request {
   Queue         Queue[]
   Student       Student?        @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   UHC_request   UHC_request[]
-  UHC_request   UHC_request[]
+  // UHC_request   UHC_request[]
   accident_info accident_info[]
 }
 

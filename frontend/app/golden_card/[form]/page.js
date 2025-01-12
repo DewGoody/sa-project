@@ -1,9 +1,9 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Header } from '../components/Header';
-import { useGoldenContext } from '../contexts/GoldenData';
-import { useRouter } from 'next/navigation';
+import { Header } from '../../components/Header';
+import { useGoldenContext } from '../../contexts/GoldenData';
+import { useParams, useRouter } from 'next/navigation';
 
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -49,15 +49,22 @@ const notifysuccess = () => {
     });
 }
 const page = () => {
+    const { form } = useParams()
     const router = useRouter();
     const { Data, updateData } = useGoldenContext();
+    const { updateDataid } = useGoldenContext(); // ใช้ context
     const [provinces, setProvinces] = useState([]);
     const [amphures, setAmphures] = useState([]);
     const [districts, setDistricts] = useState([]);
+    const int_req_id = parseInt(form)
+    useEffect(() => {
+        if (form) {
+            updateDataid({ int_req_id }); // Pass form to the context
+        }
+    }, [form, updateData]);
     const handleChange = (e) => {
         const { name, value } = e.target;
         updateData({ [name]: value });
-
         if (name === "province") {
             const id = e.target.selectedOptions[0]?.dataset.id;
             fetchAmphuresById(id);
@@ -102,27 +109,27 @@ const page = () => {
             console.log("Error fetching districts: " + err);
         }
     };
-    var isTrueSet=(CH) => (String(CH).toLowerCase() === 'true');
+    var isTrueSet = (CH) => (String(CH).toLowerCase() === 'true');
     useEffect(() => {
         fetchProvinces();
 
     }, []);
-    useEffect(() => {
-        console.log(Data)
-    }, [Data])
     const formatDateToISO = (dateString) => {
         const date = new Date(dateString);
         return date.toISOString();
     };
     const handleSubmit = async (e) => {
-       
+        console.log(int_req_id)
+
         const status_before = () => {
             if (Data.benefitStatus === "existing") {
                 // console.log("exxxxxxxxxx")
-                return Data.hospitalName}
+                return Data.hospitalName
+            }
             else if (Data.benefitStatus === "other") {
                 // console.log("other")
-                return Data.otherStatus}
+                return Data.otherStatus
+            }
         }
         const id = Data.id
         e.preventDefault();
@@ -170,7 +177,7 @@ const page = () => {
 
 
             notifysuccess()
-            router.push("/golden_card/Doc")
+            router.push(`/golden_card/Doc/${int_req_id}`)
         } catch (error) {
             notifyerror()
             console.error('Form submission error:', error);
@@ -181,7 +188,7 @@ const page = () => {
 
     return (
         <div>
-            <Header req1="แบบคำขอรับรองคุณสมบัติในการเข้าร่วมโครงการประกันสุขภาพถ้วนหน้า (กรุงเทพมหานคร) สำหรับนิสิตจุฬาลงกรณ์มหาวิทยาลัย และ หนังสือข้อตกลงขอขึ้นทะเบียนบัตรประกันสุขภาพถ้วนหน้า โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย" req2="" />
+            <Header req1="แบบคำขอรับรองคุณสมบัติในการเข้าร่วมโครงการประกันสุขภาพถ้วนหน้า (กรุงเทพมหานคร) สำหรับสินิตจุฬาลงกรณ์มหาวิทยาลัย และ หนังสือข้อตกลงขอขึ้นทะเบียนบัตรประกันสุขภาพถ้วนหน้า โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย" req2="" />
             <div className="min-h-screen bg-whites 2xl:mx-24 xl:mx-24 lg:mx-24 md:mx-24 ">
                 <main className="flex justify-center items-center ">
                     <div className="bg-white p-8 w-full ">
@@ -400,7 +407,7 @@ const page = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
+                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
                                         <select
                                             name="amphure"
                                             value={Data.amphure}
@@ -414,7 +421,7 @@ const page = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
+                                        <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
                                         <select
                                             name="district"
                                             value={Data.district}

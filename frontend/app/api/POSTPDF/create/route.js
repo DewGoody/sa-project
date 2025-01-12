@@ -2,7 +2,7 @@
 
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
-import { getID, getIDbyToken } from "../../../lib/session"
+import { getID, getIDbyToken } from "../../../../lib/session"
 
 
 const prisma = new PrismaClient()
@@ -44,6 +44,7 @@ export async function GET(req) {
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(req) {
+    console.log("rerewrwqrwqr")
     try {
         const cookie = req.headers.get('cookie') || '';
         const id = await getID(req) || getIDbyToken(cookie);
@@ -76,7 +77,7 @@ export async function POST(req) {
         const createRequest = await prisma.request.create({
             data: {
                 type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
-                status: "รอจองคิว",
+                status: "รอเจ้าหน้าที่ดำเนินการ",
                 stu_id: id,
             }
         }) 

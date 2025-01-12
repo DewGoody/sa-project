@@ -45,6 +45,7 @@ const App = () => {
     } = theme.useToken();
     const [selectedKey, setSelectedKey] = useState('4');
     const handleChangeStatus = async (record) => {
+        console.log("status11",record.status)
         if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
             try {
                 const res = await axios.post('/api/request/changePrakanProcess', { id: parseInt(record.reqId) });
@@ -67,14 +68,14 @@ const App = () => {
             title: 'สถานะ',
             dataIndex: 'status',
             render: (status, record) => {
-                console.log("status", record )
+                console.log("status", status )
                 let options = [];
-                if(status == "รอจองคิว"){
+                if(status == "รอเข้ารับบริการ"){
                     options=[
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
                     ]
-                }else if(status == "รอเจ้าหน้าที่ดำเนินการ"){
+                }else if(status == "ส่งเอกสารแล้ว"){
                     options=[
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },

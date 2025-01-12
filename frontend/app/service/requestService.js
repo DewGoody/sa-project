@@ -10,7 +10,9 @@ export async function getRequestById(id) {
             include: {
                 accident_info: true,
                 Ponpan: true,
-                Student: true
+                Student: true,
+                UHC_request:true,
+                Military_info:true,
             }
         })
         if(request){
@@ -31,6 +33,22 @@ export async function getRequestById(id) {
                 }
                 return result
             }
+            else if(request.type == "โครงการหลักประกันสุขภาพถ้วนหน้า"){
+                console.log("sdfdsfsdfsdf")
+                result = {
+                    ...request,
+                    form: request.UHC_request[0].id,
+                    path: "golden_card"
+                }
+                return result
+            }            else if(request.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร"){
+                result = {
+                    ...request,
+                    form: request.Military_info[0].id,
+                    path: "rordor"
+                }
+                return result
+            }
             // return request
         }
         else{
@@ -41,7 +59,11 @@ export async function getRequestById(id) {
 
 export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
-        where: {status: "รอจองคิว", stu_id: data,deleted_at: null},
+        where: {
+            status: {
+                notIn: ["รอจองคิว"]
+            }, 
+            stu_id: data,deleted_at: null},
         include: {
             accident_info: true,
             Ponpan: true,
@@ -166,7 +188,7 @@ export async function changeStatusPrakanToProcess(id) {
 export async function changeStatusPrakanToSended(id) {
     if(id){
         const request = await getRequestByIdFast({id: id})
-        if(request.status !== "รอเจ้าหน้าที่ดำเนินการ"){
+        if(request.status !== "รอเจ้าหน้าที่ดำเนินการ" ){
             throw {code: 400,error: new Error("Bad Request")}
         }
         const changeStatusRequest = await prisma.request.update({
@@ -183,7 +205,7 @@ export async function changeStatusPrakanToSended(id) {
 export async function changeStatusPrakanToWantInfo(id) {
     if(id){
         const request = await getRequestByIdFast({id: id})
-        if(request.status !== "ส่งเอกสารแล้ว"){
+        if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "รอเจ้าหน้าที่ดำเนินการ"){
             throw {code: 400,error: new Error("Bad Request")}
         }
         const changeStatusRequest = await prisma.request.update({
@@ -230,6 +252,38 @@ export async function changeStatusPrakanToFinish(id) {
         throw {code: 400,error: new Error("Bad Request")}
     }
 }
+export async function changeToTranApprove(id) {
+    if(id){
+        const request = await getRequestByIdFast({id: id})        
+        if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"){      
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: {id: request.id},
+            data: {status: "ย้ายสิทธิสำเร็จ" }
+        })
+        return changeStatusRequest
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
+export async function changeToTranNotApprove(id) {
+    if(id){
+        const request = await getRequestByIdFast({id: id})        
+        if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"){      
+            throw {code: 400,error: new Error("Bad Request")}
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: {id: request.id},
+            data: {status: "ย้ายสิทธิไม่สำเร็จ" }
+        })
+        return changeStatusRequest
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
+}
 
 export async function downloadPrakanAdmin(id) {
     if(id){
@@ -252,6 +306,7 @@ export async function downloadPrakanAdmin(id) {
         throw {code: 400,error: new Error("Bad Request")}
     }
 }
+
 
 export async function getUniqueYearPrakan() {
     const requests = await prisma.request.findMany({

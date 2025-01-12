@@ -282,7 +282,7 @@ export const Form = () => {
                 icon={<FaEye />}
               />
             </a>
-            <a>
+            <a href="/golden_card/0"> 
               <ServiceCard
                 title="4. โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)"
                 icon={<FaRegHospital />}

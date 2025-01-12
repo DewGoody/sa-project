@@ -1,11 +1,12 @@
 "use client"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Header } from '../../components/Header';
+import { Header } from '../../../components/Header';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
+import { useRouter, useParams } from 'next/navigation';
 const { Dragger } = Upload;
 
 
@@ -39,7 +40,6 @@ const gold = () => {
 
     const handleConfirm = async (event) => {
         event.preventDefault();
-
         if (!allChecked()) {
             notifyerror();
             return;
@@ -56,15 +56,29 @@ const gold = () => {
         });
 
         try {
-            const response = await axios.post(
-                `/api/POSTPDF`, // เรียก API endpoint
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
+            console.log(req_id)
+            if (req_id !== "0") {
+                const response = await axios.post(
+                    `/api/POSTPDF/update`, // เรียก API endpoint
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+            } else {
+                const response = await axios.post(
+                    `/api/POSTPDF/create`, // เรียก API endpoint
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+            }
+
 
             // console.log(response.data);
             window.location.href = "/home";
@@ -167,6 +181,12 @@ const gold = () => {
             return acc;
         }, {}));
     };
+    const { form } = useParams()
+    const int_req_id = parseInt(form)
+    const router = useRouter();
+    const handleback = () => {
+        router.push(`/golden_card/${int_req_id}`)
+    }
 
 
     return (
@@ -187,7 +207,7 @@ const gold = () => {
 
 
                         <h2 className="pt-5 text-lg font-bold text-center mb-4 text-gray-800">
-                           อัพโหลดเอกสารที่นี่ (Upload documents here.)
+                            อัพโหลดเอกสารที่นี่ (Upload documents here.)
                         </h2>
 
                         {/* <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
@@ -267,14 +287,12 @@ const gold = () => {
 
                         {/* Navigation Buttons */}
                         <div className="flex justify-between mt-8">
-                            <a
-                                href="/golden_card"
 
-                            >
-                                <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                    Back
-                                </button>
-                            </a>
+                            <button
+                                onClick={handleback}
+                                className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                Back
+                            </button>
 
                             {/* <button
                                 onClick={handleDownload}
