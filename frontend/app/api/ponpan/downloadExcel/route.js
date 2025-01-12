@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { convertBigIntToString} from '../../../../utills/convertBigInt'
 import { PrismaClient } from '@prisma/client'
 import * as XLSX from "xlsx";
+import fs from 'fs';
+import path from "path";
 
 const prisma = new PrismaClient();
 
