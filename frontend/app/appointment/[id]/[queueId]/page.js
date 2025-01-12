@@ -277,8 +277,14 @@ export default function ScholarshipPage() {
   return (
     <>
     <RedirectOnBack />
-      <Header req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "แบบคำขอเรียกร้องค่าสินไหมทดแทนอันเนื่องมาจากอุบัติเหตุ" : ""} req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accidental Compensation Claim Form" : ""} />
+    <Header 
+                req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "การเบิกจ่ายประกันอุบัติเหตุ" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "แบบคำขอผ่อนผันเข้ารับราชการทหาร" : ""} 
+                req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accident insurance claim" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "Military Service Postponement Request Form" : ""} 
+    />
+
+    
       <div className="flex flex-col items-center text-center p-6 font-sans min-h-screen bg-gray-50">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">จองคิวเข้ารับบริการ (Booking reservation)</h1>
         <div className="flex items-center bg-gray-100 p-4 rounded-lg mb-6 w-full max-w-xs shadow">
           <UserOutlined />
           <div className="text-left ml-8">
@@ -289,7 +295,7 @@ export default function ScholarshipPage() {
 
         <div className="mb-6">
           <h3 className="text-gray-800 font-semibold">เลือกวันเข้ารับบริการ</h3>
-          <h3 className="text-gray-800 font-semibold">(Select a Service Appointment Date)</h3>
+          <h3 className="text-gray-800 font-semibold">(Select an appointment date)</h3>
           <div className="flex gap-4 mt-3">
             {newDate.map((date, index) => (
               <button
@@ -373,17 +379,17 @@ export default function ScholarshipPage() {
               <a href='/home'>
                 <button
                   onClick={() => setSelectedTimeSlot('')}
-                  className="py-2 px-6 bg-red-400 text-white rounded-lg shadow-md hover:bg-red-500"
+                  className="py-2 px-6 bg-gray-400 text-white rounded-lg shadow-md hover:bg-gray-500"
                 >
-                  back
+                  Back to home
                 </button>
               </a>
               <a>
-                <button className="py-2 px-6 bg-green-400 text-white rounded-lg shadow-md hover:bg-green-500"
+                <button className="py-2 px-6 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-400"
                   onClick={handleSubmit}
                   htmlType="submit"
                 >
-                  confirm
+                  Confirm booking
                 </button>
               </a>
             </div>
@@ -392,9 +398,9 @@ export default function ScholarshipPage() {
           <div className='flex justify-around mt-8 w-full max-w-xs'>
             <a href='/home'>
               <button
-                className="py-2 px-6 bg-red-400 text-white rounded-lg shadow-md hover:bg-red-500"
+                className="py-2 px-6 bg-gray-400 text-white rounded-lg shadow-md hover:bg-gray-500"
               >
-                back
+                Back to home
               </button>
             </a>
           </div>

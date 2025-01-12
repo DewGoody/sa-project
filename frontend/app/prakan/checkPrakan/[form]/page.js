@@ -1,7 +1,7 @@
 "use client"
 import React, { useState,useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import Header from '../../../components/header/page';
+import { Header } from '../../../components/Header.js';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useRouter,useParams } from 'next/navigation';
@@ -23,6 +23,7 @@ const RD = () => {
     const [profileData, setProfileData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isDownload, setIsDownload] = useState(false);
     const router = useRouter();
     const { form } = useParams();
     console.log("formId :", form);
@@ -53,6 +54,7 @@ const RD = () => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        setIsDownload(true);
       };
 
     const handleBack = () => {  
@@ -98,16 +100,15 @@ const RD = () => {
 
     return (
         <div className="min-h-screen bg-white">
-            <Header/>
+            <Header req1="การเบิกจ่ายประกันอุบัติเหตุ" req2="Accident insurance claim"/>
             <main className="flex justify-center items-center">
                 <div className="bg-white p-8 w-full max-w-4xl">
-                    {/* Personal & Contact Information Section */}
                     <section>
                         <h3 className="text-lg font-semibold mb-4 text-center">
                             นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่ 
                         </h3>
                         <h3 className="text-lg font-normal mb-4 text-center">
-                        Students, please prepare the following documents to submit to the staff 
+                        Please prepare the following documents to submit to the staff 
                         </h3>
                         <div className="grid grid-cols-1 gap-6">
                                 <fieldset>
@@ -119,7 +120,7 @@ const RD = () => {
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
-                                                <strong className="font-medium text-gray-900 ">1. ใบรับรองแพทย์ฉบับจริง</strong>
+                                                <strong className="font-medium text-gray-900 ">1. ใบรับรองแพทย์ฉบับจริง (Original medical certificate)</strong>
                                             </div>
                                         </label>
 
@@ -130,12 +131,27 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">2. ใบรับรองเสร็จฉบับจริง</strong>
+                                                <strong className="font-medium text-gray-900">2. ใบเสร็จฉบับจริง (Original receipt)</strong>
+                                            </div>
+                                        </label>
+                                        <label
+                                            htmlFor="Option3"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">3. สำเนาบัญชีธนาคาร (Bank account copy)</strong>
                                             </div>
                                         </label>
                                     </div>
                                 </fieldset>
-                                <div className="flex space-x-4">
+                                <button
+                                onClick={handleDownload}
+                                className="px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
+                                Download
+                            </button>
+                                <div className="">
                                     <label
                                         htmlFor="Option9"
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
@@ -148,11 +164,12 @@ const RD = () => {
                                                 id="Option9"
                                                 checked={checkboxes.Option9}
                                                 onChange={handleCheckboxChange}
+
                                             />
                                         </div>
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">รับทราบรายการเอกสาร</strong>
+                                            <strong className="font-medium text-gray-900">จัดเตรียมเอกสารตามข้อมูลข้างต้น (Prepare the documents as per the information above)</strong>
                                         </div>
                                     </label>
 
@@ -169,47 +186,47 @@ const RD = () => {
                                                 id="allCheck"
                                                 checked={allChecked()}
                                                 onChange={handleAllCheck}
+                                                disabled={!isDownload}
                                             />
                                         </div>
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">ดาวน์โหลดไฟล์และตรวจสอบข้อมูลแล้ว</strong>
+                                            <strong className="font-medium text-gray-900">ดาวน์โหลดไฟล์และตรวจสอบข้อมูลแล้ว (Download the file and verify the information)</strong>
                                         </div>
                                     </label>
                                 </div>
                             </div>
                     </section>
 
-                    {/* Navigation Buttons */}
-                    <div className="flex justify-between mt-8">
+                    {Object.values(checkboxes).filter(Boolean).length >= 2 && (
+                <div className="flex justify-end mt-8">
                             
-                                <button 
-                                    className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
-                                    onClick={handleBack}
-                                    >
-                                Back
-                                </button>
-                            
+                <button 
+                    className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+                    onClick={handleBack}
+                    >
+                Back
+                </button>
+            
 
-                            <button
-                                onClick={handleDownload}
-                                className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300">
-                                Download
-                            </button>
+            
 
-                            <a
-                                onClick={(event) => handleNavigation(event)}
-                            >
-                                <button
-                                    type="submit"
-                                    className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
-                                >
-                                    Confrim
-                                    <ToastContainer />
-                                </button>
-                            </a>
-                        </div>
+            <a
+                onClick={(event) => handleNavigation(event)}
+            >
+                <button
+                    type="submit"
+                    className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                >
+                    Book queue
+                    <ToastContainer />
+                </button>
+            </a>
+        </div>
+            )}
+                    
                 </div>
+            
             </main>
         </div>
     );

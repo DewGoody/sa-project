@@ -352,7 +352,7 @@ const handleDistrictSD9Change = (e) => {
 }
   return (
     <div className=" bg-white min-h-screen">
-       <Header req1="การขอผ่อนผันการเข้ารับราชการทหาร" req2="Application and registration for Thai Reserve Officer Training Corps Students" />
+       <Header req1="การขอผ่อนผันการเข้ารับราชการทหาร" req2="Request for deferral of military service" />
       <div className=" mx-24 ">
         <main className="flex justify-center bg-white w-full">
           <div className="bg-white  w-full min-w-screen-6xl">

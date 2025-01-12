@@ -2,7 +2,7 @@
 import React, { use } from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Header from "../../components/header/page.js";
+import { Header } from '../../components/Header.js';
 import numberToThaiText from "../../components/numberToThaiText.js";
 import { useRouter,useParams } from 'next/navigation';
 
@@ -156,9 +156,6 @@ export default function Form() {
     try {
       if(form !== '0'){
         let allData = { ...alreadyData, ...studentInfo, ...thaiText, ...profileData };
-        console.log("prakanData !== 0 :",allData);
-        console.log("prakanAllData != 0 :",allData);
-        
         const response = await axios.post('/api/prakan/update', allData);
         console.log("responseId :",response.data.data.id);
         router.push(`/prakan/checkPrakan/${form}`);
@@ -184,7 +181,7 @@ export default function Form() {
 
   return (
     <div className=" bg-white min-h-screen">
-      <Header />
+      <Header req1="การเบิกจ่ายประกันอุบัติเหตุ" req2="Accident insurance claim"/>
       <div className=" mx-24 ">
         <main className="flex justify-center bg-white w-full">
           <div className="bg-white  w-full min-w-screen-6xl">
@@ -398,7 +395,7 @@ export default function Form() {
           <button
             onClick={handleSubmit}
             
-            className="bg-pink-300 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+            className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
           >
             Next
           </button>

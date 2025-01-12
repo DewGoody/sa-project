@@ -43,7 +43,7 @@ export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
         where: {
             status: {
-                notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                in: ["รอจองคิว"]
             }, 
             stu_id: data,
             deleted_at: null},
