@@ -1,19 +1,19 @@
-import { PrismaClient } from '@prisma/client';
 import { updateTimeslotMaxStu } from '../../../service/timeslotService'
-
-const prisma = new PrismaClient();
+import { NextResponse } from "next/server"
+import { convertBigIntToString} from '../../../../utills/convertBigInt'
 
 export async function POST(req, res) {
     try {
         let data = await req.json()
-        console.log("data", data);
-        const updatedTimeslot = await updateTimeslotMaxStu(data.id, data.maxStu)
-        return updatedTimeslot
+        const updatedTimeslot = await updateTimeslotMaxStu(data.date, data.maxStu)
+        return NextResponse.json({ data: convertBigIntToString(updatedTimeslot) });
     }
     catch (error) {
+        console.log(error);
+        
         if (!error.code) {
-            return res.status(500).json({ message: "Server error" })
+            return NextResponse.json({ error: "Server error" }, { status: 500 });
         }
-        return res.status(error.code).json({ message: error.error?.message })
+        return NextResponse.json({ error: error.error?.message }, { status: error.code });
     }
 }

@@ -34,6 +34,13 @@ model Address_Desc {
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Dayoff {
+  id   BigInt    @id @default(autoincrement())
+  date DateTime? @db.Date
+  name String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model District {
   id          BigInt  @id @default(autoincrement())
   code        String  @db.VarChar
@@ -47,6 +54,15 @@ model Geography {
   name String @db.VarChar(255)
 }
 
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model Max_student {
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  max_stu    BigInt?
+  date       DateTime @id @db.Timestamptz(6)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Military_info {
   military_id         Decimal?  @db.Decimal
@@ -112,10 +128,36 @@ model Military_info {
   date_of_study       DateTime? @db.Date
   prev_year           String?   @default("")
   req_id              BigInt?
-  req_id              BigInt?
   Student             Student   @relation(fields: [id], references: [id], onDelete: Cascade)
   Request             Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Request             Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Ponpan {
+  id             BigInt    @id @default(autoincrement())
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  deleted_at     DateTime? @db.Timestamptz(6)
+  sdnine_id      BigInt?
+  stu_id         Decimal?  @db.Decimal
+  req_id         BigInt?
+  degree         String?
+  father_name    String?
+  mother_name    String?
+  house_num      String?
+  house_moo      BigInt?
+  district       String?
+  sub_district   String?
+  province       String?
+  house_moo_sd   BigInt?
+  house_num_sd   String?
+  district_sd    String?
+  subdistrict_sd String?
+  province_sd    String?
+  phone_num      String?
+  email          String?
+  year           BigInt?
+  Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student        Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Province {
@@ -126,6 +168,48 @@ model Province {
   geography_id Int    @default(0)
 }
 
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Queue {
+  id          BigInt    @id @default(autoincrement())
+  created_at  DateTime  @default(now()) @db.Timestamptz(6)
+  stu_id      Decimal?  @db.Decimal
+  req_id      BigInt?
+  timeslot_id BigInt?
+  period      BigInt?
+  deleted_at  DateTime? @db.Timestamptz(6)
+  status      String?
+  uid         String?   @unique
+  Request     Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student     Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Timeslot    Timeslot? @relation(fields: [timeslot_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model RD_info {
+  id         BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  RD_type    Decimal? @db.Decimal
+  student_id Decimal? @db.Decimal
+  Student    Student? @relation(fields: [student_id], references: [id], onDelete: Cascade)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Request {
+  id            BigInt          @id @default(autoincrement())
+  created_at    DateTime        @default(now()) @db.Timestamptz(6)
+  type          String?
+  status        String?
+  stu_id        Decimal?        @db.Decimal
+  deleted_at    DateTime?       @db.Timestamptz(6)
+  Military_info Military_info[]
+  Ponpan        Ponpan[]
+  Queue         Queue[]
+  Student       Student?        @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  UHC_request   UHC_request[]
+  accident_info accident_info[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model Student {
   id                   Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
   lnameTH              String
@@ -178,6 +262,19 @@ model Subdistrict {
   amphureId BigInt?
 }
 
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Timeslot {
+  id         BigInt    @id @default(autoincrement())
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  date       DateTime? @db.Date
+  period     Decimal[] @default([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) @db.Decimal
+  is_full    Boolean[] @default([false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false])
+  max_stu    Decimal?  @default(5) @db.Decimal
+  is_open    Boolean[] @default([true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true])
+  deleted_at DateTime? @db.Timestamptz(6)
+  Queue      Queue[]
+}
+
 model UHC_reg_info {
   id                    Decimal   @id @db.Decimal
   last_update           DateTime  @default(now()) @db.Timestamptz(6)
@@ -189,6 +286,17 @@ model UHC_reg_info {
   is_been               Boolean?
   is_congenital_disease Boolean?
   Student               Student   @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model UHC_request {
+  id               BigInt    @id @default(autoincrement())
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  update_at        DateTime? @db.Timetz(6)
+  student_id       Decimal   @db.Decimal
+  binary_file_data Bytes?
+  req_id           BigInt?
+  Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student          Student   @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model accident_claim_info {
@@ -240,52 +348,6 @@ model father_mother_info {
   @@id([id, relation])
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Queue {
-  id          BigInt    @id @default(autoincrement())
-  created_at  DateTime  @default(now()) @db.Timestamptz(6)
-  stu_id      Decimal?  @db.Decimal
-  req_id      BigInt?
-  timeslot_id BigInt?
-  period      BigInt?
-  deleted_at  DateTime? @db.Timestamptz(6)
-  status      String?
-  uid         String?   @unique
-  Request     Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student     Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Timeslot    Timeslot? @relation(fields: [timeslot_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Request {
-  id            BigInt          @id @default(autoincrement())
-  created_at    DateTime        @default(now()) @db.Timestamptz(6)
-  type          String?
-  status        String?
-  stu_id        Decimal?        @db.Decimal
-  deleted_at    DateTime?       @db.Timestamptz(6)
-  Military_info Military_info[]
-  Ponpan        Ponpan[]
-  Queue         Queue[]
-  Student       Student?        @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  UHC_request   UHC_request[]
-  // UHC_request   UHC_request[]
-  accident_info accident_info[]
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Timeslot {
-  id         BigInt    @id @default(autoincrement())
-  created_at DateTime  @default(now()) @db.Timestamptz(6)
-  date       DateTime? @db.Date
-  period     Decimal[] @default([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) @db.Decimal
-  is_full    Boolean[] @default([false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false])
-  max_stu    Decimal?  @default(5) @db.Decimal
-  is_open    Boolean[] @default([true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true])
-  deleted_at DateTime? @db.Timestamptz(6)
-  Queue      Queue[]
-}
-
 model guardian_info {
   guardian_fname       String?
   guardian_lname       String?
@@ -297,6 +359,14 @@ model guardian_info {
   guardian_address     String?
   guardian_nationality String? @default("")
   Student              Student @relation(fields: [id], references: [id], onDelete: Cascade, map: "parent_info_id_fkey")
+}
+
+model pdffile {
+  id         Int       @id @default(autoincrement())
+  name       String
+  content    Bytes
+  size       Int
+  created_at DateTime? @default(now()) @db.Timestamp(6)
 }
 
 model prakan_inter_info {
@@ -316,106 +386,4 @@ model prakan_inter_info {
   title                  String?
   stu_id                 Decimal? @db.Decimal
   Student                Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Dayoff {
-  id   BigInt    @id @default(autoincrement())
-  date DateTime? @db.Date
-  name String?
-}
-
-model UHC_request {
-  id               BigInt    @id @default(autoincrement())
-  created_at       DateTime  @default(now()) @db.Timestamptz(6)
-  update_at        DateTime? @db.Timetz(6)
-  student_id       Decimal   @db.Decimal
-  binary_file_data Bytes?
-  req_id           BigInt?
-  Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  req_id           BigInt?
-  Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student          Student   @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model pdffile {
-  id         Int       @id @default(autoincrement())
-  name       String
-  content    Bytes
-  size       Int
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Ponpan {
-  id             BigInt    @id @default(autoincrement())
-  created_at     DateTime  @default(now()) @db.Timestamptz(6)
-  deleted_at     DateTime? @db.Timestamptz(6)
-  sdnine_id      BigInt?
-  stu_id         Decimal?  @db.Decimal
-  req_id         BigInt?
-  degree         String?
-  father_name    String?
-  mother_name    String?
-  house_num      String?
-  house_moo      BigInt?
-  district       String?
-  sub_district   String?
-  province       String?
-  house_moo_sd   BigInt?
-  house_num_sd   String?
-  district_sd    String?
-  subdistrict_sd String?
-  province_sd    String?
-  phone_num      String?
-  email          String?
-  year           BigInt?
-  Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student        Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model RD_info {
-  id         BigInt   @id @default(autoincrement())
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  RD_type    Decimal? @db.Decimal
-  student_id Decimal? @db.Decimal
-  Student    Student? @relation(fields: [student_id], references: [id], onDelete: Cascade)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Ponpan {
-  id             BigInt    @id @default(autoincrement())
-  created_at     DateTime  @default(now()) @db.Timestamptz(6)
-  deleted_at     DateTime? @db.Timestamptz(6)
-  sdnine_id      BigInt?
-  stu_id         Decimal?  @db.Decimal
-  req_id         BigInt?
-  degree         String?
-  father_name    String?
-  mother_name    String?
-  house_num      String?
-  house_moo      BigInt?
-  district       String?
-  sub_district   String?
-  province       String?
-  house_moo_sd   BigInt?
-  house_num_sd   String?
-  district_sd    String?
-  subdistrict_sd String?
-  province_sd    String?
-  phone_num      String?
-  email          String?
-  year           BigInt?
-  Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student        Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model RD_info {
-  id         BigInt   @id @default(autoincrement())
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  RD_type    Decimal? @db.Decimal
-  student_id Decimal? @db.Decimal
-  Student    Student? @relation(fields: [student_id], references: [id], onDelete: Cascade)
 }

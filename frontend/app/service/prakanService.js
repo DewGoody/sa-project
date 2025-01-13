@@ -48,7 +48,7 @@ export async function updatePrakanForm(data) {
         data:{
             acc_desc: data.acc_desc,
             des_injury: data.des_injury,
-            acc_date: data.acc_date,
+            acc_date: new Date(data.acc_date),
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
             hospital_type: data.hospital_type,
