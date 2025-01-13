@@ -85,7 +85,7 @@ function page() {
     console.log(prakanData);
     let allData = { ...prakanData };
     axios
-      .post("/api/prakanInterService", allData)
+      .post("/api/prakanInter/create", allData)
       .then((response) => {
         console.log("Form submitted successfully:", response.data);
         window.location.href = "/prakan-inter/checkPrakan";

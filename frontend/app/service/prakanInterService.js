@@ -1,15 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
-import { parseISO, isValid } from "date-fns";
-import { prakanFormBuilder } from "../../../document_build/prakanFormBuilder.js";
+import { PrismaClient } from '@prisma/client';
+import { prakanFormBuilder } from '../../document_build/prakanFormBuilder'
 
 const prisma = new PrismaClient();
 
-export async function POST(req, res) {
-  try {
-    let data = await req.json();
-    // Validate and format accidentDate
-    let accidentDate = data.accidentDate ? parseISO(data.accidentDate) : null;
+export async function createPrakanInter(data) {    
     await prakanFormBuilder(data);
     console.log("data", data);
 
@@ -30,12 +24,12 @@ export async function POST(req, res) {
         title: data.title,
       },
     });
-    return NextResponse.json({ message: "success" }, { status: 200 });
-  } catch (error) {
-    console.error("Error submitting form:", error);
-    return NextResponse.json(
-      { error: "Error submitting form" },
-      { status: 500 }
-    );
-  }
+
+    await prisma.student.update({
+        where: {id: Number(data.id)},
+        data: {
+            tel_num: data.phone_num,
+        }
+    })
+    return createPrakan
 }
