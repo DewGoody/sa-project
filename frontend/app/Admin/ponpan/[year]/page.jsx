@@ -12,6 +12,7 @@ import {
 import { Button, Layout, Menu, theme, Input, Table, Space,Select } from 'antd';
 import axios from 'axios';
 import { useRouter,useParams } from 'next/navigation';
+import * as XLSX from 'xlsx';
 
 
 const { Header, Sider, Content } = Layout;
@@ -92,17 +93,13 @@ const AppointmentManagement = () => {
     }, [])
 
     const handleExport = async () => {
-        try {   
-          const fileUrl = '/documents/ponpan/ponpandata.xlsx';
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.download = 'ponpandataFile.xlsx';  // Optional: specify file name
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } catch (error) {
-          console.error('Failed to export Excel file:', error);
-        }
+        const worksheet = XLSX.utils.json_to_sheet(dataSource);
+        // Create a new workbook
+        const workbook = XLSX.utils.book_new();
+        // Append the worksheet to the workbook
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Table Data');
+        // Write the workbook to a file
+        XLSX.writeFile(workbook, 'table_data.xlsx');
       };
       
 
