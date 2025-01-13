@@ -8,11 +8,14 @@ export const GoldenDataProvider = ({ children }) => {
   const [Data, setData] = useState({});
   const [datafromapi, setdatafromapi] = useState({});
   const updateDataid = ({ int_req_id }) => {
-    setForm(int_req_id);
-    if (form) fetchdataapi(form); // Trigger API call when form changes
-    // console.log("sdfjdsahfbjksadnfljdsanfljdsanflsadnfmsad", form);
+    if (int_req_id === form) return; // Prevent redundant updates
+    setForm(int_req_id); // Update form
+    if (int_req_id !== null && int_req_id !== undefined) {
+      fetchdataapi(int_req_id); // Trigger API only when valid form is provided
+    }
   };
   const fetchdataapi = async (form) => {
+    if (form === null || form === undefined) return; // Avoid calls if form is invalid
     try {
       const response = await axios.get(`/api/UHC?id=${form}`); //form คือเลข formid
       setdatafromapi(response.data);
@@ -20,7 +23,7 @@ export const GoldenDataProvider = ({ children }) => {
       console.log(err);
     }
   };
-
+  
   const formatDate = (dateString) => {
     if (!dateString) return ''; // Handle null or undefined dates
     const date = new Date(dateString);

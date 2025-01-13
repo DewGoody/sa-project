@@ -2,7 +2,6 @@
 
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
-import { getID, getIDbyToken } from "../../../../lib/session"
 
 
 const prisma = new PrismaClient()
@@ -44,9 +43,15 @@ export async function GET(req) {
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(req) {
+    
     try {
-        const cookie = req.headers.get('cookie') || '';
-        const id = await getID(req) || getIDbyToken(cookie);
+        const formId = req.nextUrl.searchParams.get('id')
+        const idbefore = await prisma.uHC_request.findFirst({
+            where: { id: parseInt(formId) }
+        })
+        const id = idbefore.student_id
+        // const cookie = req.headers.get('cookie') || '';
+        // const id = await getID(req) || getIDbyToken(cookie);
         if (!id) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
         }

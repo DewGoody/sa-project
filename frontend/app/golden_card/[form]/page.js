@@ -135,7 +135,7 @@ const page = () => {
         e.preventDefault();
         try {
             notifyinprocess()
-            await axios.put(`/api/UHC`, {
+            await axios.put(`/api/UHC?id=${int_req_id}`, {
                 Student: {
                     id: id,
                     lnameTH: Data.Name,

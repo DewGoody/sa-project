@@ -7,13 +7,20 @@ import { getID } from '../../../lib/session'
 const prisma = new PrismaClient()
 
 export async function GET(req) {
-    const formId = req.nextUrl.searchParams.get('id');
+    let id = 0
+    const formId = req.nextUrl.searchParams.get('id')
+    if (formId == 0) {
+        id = await getID(req)
+        console.log("in frist");
+    } else {
+        console.log("in else");
+        const idbefore = await prisma.uHC_request.findFirst({
+            where: { id: parseInt(formId) }
+        })
+        id = idbefore.student_id
+    }
+    // console.log("fdsakfjklsdjfkldsjfklsdajflskd",id);
 
-    const idbefore = await prisma.uHC_request.findFirst({
-        where:{id:parseInt(formId)}
-    })
-
-    const id = idbefore.student_id
 
     const UHC_reg_info = await prisma.UHC_reg_info.findFirst({
         where: {
@@ -66,7 +73,19 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-    const id = await getID(req)
+    let id = 0
+    const formId = req.nextUrl.searchParams.get('id')
+    if (formId == 0) {
+        id = await getID(req)
+        console.log("in frist");
+    } else {
+        console.log("in else");
+        const idbefore = await prisma.uHC_request.findFirst({
+            where: { id: parseInt(formId) }
+        })
+        id = idbefore.student_id
+    }
+
     if (!id) {
         return NextResponse.json({ error: 'Session is expired' }, { status: 401 })
     }
@@ -87,12 +106,25 @@ export async function POST(req) {
             is_congenital_disease: uhc.is_congenital_disease
         }
     });
-            
+
 }
 
 export async function PUT(req) {
-    console.log("TESETTTT")
-    const id = await getID(req); // Get student ID from the session or request context
+    let id = 0
+    const formId = req.nextUrl.searchParams.get('id')
+    if (formId == 0) {
+        id = await getID(req)
+        console.log("in frist");
+    } else {
+        console.log("in else");
+        const idbefore = await prisma.uHC_request.findFirst({
+            where: { id: parseInt(formId) }
+        })
+        id = idbefore.student_id
+    }
+    console.log("test id from api",id);
+    
+    // Get student ID from the session or request context
     if (!id) {
         return NextResponse.json({ error: 'Session is expired' }, { status: 401 });
     }

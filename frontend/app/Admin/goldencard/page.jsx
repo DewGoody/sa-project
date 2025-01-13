@@ -13,10 +13,9 @@ import { Button, Layout, Menu, theme, Input, Table, Space, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
 const App = () => {
     const router = useRouter()
-
-    async function fetchPdfFile(studentId) {
+    async function fetchPdfFile(form) {
         try {
-            const response = await fetch(`/api/POSTPDF?id=${studentId}`);
+            const response = await fetch(`/api/POSTPDF/getpdfadmin?id=${form}`);
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`);
             }
@@ -33,8 +32,12 @@ const App = () => {
                 // Create a URL for the Blob and trigger download
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
+                // console.log('Generated link:', link);
+                // console.log('Generated URL:', url);
+                // console.log('Generated Blob:', blob);
+                // window.open(url, '_blank');
                 link.href = url;
-                link.download = `student_${studentId}_file.pdf`;
+                link.download = `student_${form}_file.pdf`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -49,8 +52,8 @@ const App = () => {
         if (!dateString) return 'N/A'; // Handle null or undefined dates
 
         const date = new Date(dateString); // Parse the input date string
-        console.log("fdsfdsfdsf",date);
-        
+        console.log("fdsfdsfdsf", date);
+
         const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits for day
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = date.getFullYear(); // Get the full year
@@ -59,16 +62,16 @@ const App = () => {
     };
     const formatDateToDMYWithTime = (dateString) => {
         if (!dateString) return 'N/A'; // Handle null or undefined dates
-    
+
         const date = new Date(dateString); // Parse the input date string
-    
+
         const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits for day
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = String(date.getFullYear()).slice(-2); // Get the last 2 digits of the year
-    
+
         const hours = String(date.getHours()).padStart(2, '0'); // Ensure 2 digits for hours
         const minutes = String(date.getMinutes()).padStart(2, '0'); // Ensure 2 digits for minutes
-    
+
         return `${day}/${month}/${year} เวลา:${hours}:${minutes}`; // Return in dd/mm/yy-hour:min format
     };
 
@@ -85,7 +88,7 @@ const App = () => {
                 birthdate: formatDateToDMY(item.Student?.bd) || 'N/A',
                 reqId: item.id,
                 status: item.status,
-                updateat:formatDateToDMYWithTime(item.created_at),
+                updateat: formatDateToDMYWithTime(item.created_at),
             })))
             // console.log(Data.status)
 
@@ -123,7 +126,7 @@ const App = () => {
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
-        }else if (record.status === "ขอข้อมูลเพิ่มเติม") {
+        } else if (record.status === "ขอข้อมูลเพิ่มเติม") {
             try {
                 const res = await axios.post('/api/request/changePrakanToWantInfo', { id: parseInt(record.reqId) });
                 console.log("res", res);
@@ -139,14 +142,14 @@ const App = () => {
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
-        }else if (record.status === "ย้ายสิทธิสำเร็จ") {
+        } else if (record.status === "ย้ายสิทธิสำเร็จ") {
             try {
                 const res = await axios.post('/api/request/changeToTranApprove', { id: parseInt(record.reqId) });
                 console.log("res", res);
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
-        }else if (record.status === "ย้ายสิทธิไม่สำเร็จ") {
+        } else if (record.status === "ย้ายสิทธิไม่สำเร็จ") {
             try {
                 const res = await axios.post('/api/request/changeToTranNotApprove', { id: parseInt(record.reqId) });
                 console.log("res", res);
@@ -160,17 +163,19 @@ const App = () => {
             title: 'แก้ไขข้อมูล',
             dataIndex: 'status',
             render: (status, record) => {
-                if(status !=="ประวัติการแก้ไข"){return(
-                <Space size="middle">
-                    <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
-                </Space>)}
+                if (status !== "ประวัติการแก้ไข") {
+                    return (
+                        <Space size="middle">
+                            <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
+                        </Space>)
+                }
             },
         },
         {
             title: 'ดาวน์โหลด PDF',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button onClick={() => fetchPdfFile(record.student_ID)}>PDF</Button>
+                    <Button onClick={() => fetchPdfFile(record.reqId)}>PDF</Button>
                 </Space>
             ),
         },
@@ -193,10 +198,10 @@ const App = () => {
                     options = [
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม'},
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม' },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว' },
-                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ',disabled: true },
-                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ',disabled: true },
+                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', disabled: true },
+                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true },
                     ]
                 }
                 else if (status == "ขอข้อมูลเพิ่มเติม") {
@@ -205,20 +210,20 @@ const App = () => {
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
-                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', disabled: true},
-                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true},
+                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', disabled: true },
+                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true },
                     ]
-                }else if (status == "ส่งเอกสารแล้ว") {
+                } else if (status == "ส่งเอกสารแล้ว") {
                     options = [
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ',disabled: true },
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม',disabled: true },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
                         { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', },
                         { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', },
                     ]
                 }
-                 else if (status == "ย้ายสิทธิสำเร็จ") {
+                else if (status == "ย้ายสิทธิสำเร็จ") {
                     options = [
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
@@ -245,7 +250,7 @@ const App = () => {
                         onChange={(value) => handleChangeStatus({ ...record, status: value })}
                     />)
             }
-        },        {
+        }, {
             title: 'วันที่อัพโหลดเอกสาร',
             dataIndex: 'updateat',
         },

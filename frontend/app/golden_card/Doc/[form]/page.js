@@ -12,7 +12,9 @@ const { Dragger } = Upload;
 
 
 const gold = () => {
-
+    const { form } = useParams()
+    const router = useRouter();
+    const int_req_id = parseInt(form)
     const filepdf = async () => {
         try {
             const response = await axios.get("/api/export/UHC_Reg", { responseType: 'blob' });
@@ -56,10 +58,10 @@ const gold = () => {
         });
 
         try {
-            console.log(req_id)
-            if (req_id !== "0") {
+            console.log(int_req_id)
+            if (int_req_id !== "0") {
                 const response = await axios.post(
-                    `/api/POSTPDF/update`, // เรียก API endpoint
+                    `/api/POSTPDF/update?id=${int_req_id}`, // เรียก API endpoint
                     formData,
                     {
                         headers: {
@@ -181,9 +183,6 @@ const gold = () => {
             return acc;
         }, {}));
     };
-    const { form } = useParams()
-    const int_req_id = parseInt(form)
-    const router = useRouter();
     const handleback = () => {
         router.push(`/golden_card/${int_req_id}`)
     }
