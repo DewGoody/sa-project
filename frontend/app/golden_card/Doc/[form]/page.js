@@ -59,7 +59,7 @@ const gold = () => {
 
         try {
             console.log(int_req_id)
-            if (int_req_id !== "0") {
+            if (int_req_id !== 0) {
                 const response = await axios.post(
                     `/api/POSTPDF/update?id=${int_req_id}`, // เรียก API endpoint
                     formData,

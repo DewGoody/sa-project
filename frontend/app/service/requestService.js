@@ -205,7 +205,7 @@ export async function changeStatusToProcess(id) {
 export async function changeStatusToSended(id) {
     if(id){
         const request = await getRequestByIdFast({id: id})
-        if(request.status !== "รอเจ้าหน้าที่ดำเนินการ" ){
+        if(request.status !== "รอเจ้าหน้าที่ดำเนินการ" &&  request.status !== "ขอข้อมูลเพิ่มเติม"){
             throw {code: 400,error: new Error("Bad Request")}
         }
         const changeStatusRequest = await prisma.request.update({

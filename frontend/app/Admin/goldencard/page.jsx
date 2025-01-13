@@ -121,14 +121,14 @@ const App = () => {
         console.log("status11", record.status)
         if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
             try {
-                const res = await axios.post('/api/request/changePrakanProcess', { id: parseInt(record.reqId) });
+                const res = await axios.post('/api/request/changeStatusProcess', { id: parseInt(record.reqId) });
                 console.log("res", res);
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
         } else if (record.status === "ขอข้อมูลเพิ่มเติม") {
             try {
-                const res = await axios.post('/api/request/changePrakanToWantInfo', { id: parseInt(record.reqId) });
+                const res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
                 console.log("res", res);
             } catch (error) {
                 console.error('Error fetching status:', error);
@@ -136,7 +136,7 @@ const App = () => {
         }
         else if (record.status === "ส่งเอกสารแล้ว") {
             try {
-                const res = await axios.post('/api/request/changePrakanToSended', { id: parseInt(record.reqId) });
+                const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
                 console.log("res", res);
                 console.log("dfsfdsfdsfdsfdsfdsf")
             } catch (error) {
