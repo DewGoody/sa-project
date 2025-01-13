@@ -1,7 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { Header } from "../../components/Header";
+import { Header } from "../../../../components/Header";
+import { useRouter,useParams } from 'next/navigation';
+import axios from 'axios';
 import "react-toastify/dist/ReactToastify.css";
 
 const RD = () => {
@@ -11,10 +13,38 @@ const RD = () => {
     Option2: false,
     Option3: false,
   });
+  const [profileData, setProfileData] = useState(null);
+  const [createRequest, setCreateRequest] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const router = useRouter();
+  const { form } = useParams();
+  const { reqId } = useParams();
+  console.log(form);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/api/profile'); // Example API
+        console.log(response.data);
+        
+        setProfileData(response.data);
+        setLoading(false);
+        console.log(response.data);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(profileData);
 
   const handleDownload = () => {
     const link = document.createElement("a");
-    link.href = "../../documents/prakan-inter/Health-claim-form-filled.pdf";
+    link.href = "../../../documents/prakan-inter/Health-claim-form-filled.pdf";
     link.download = "Health-claim-form.pdf";
     document.body.appendChild(link);
     link.click();
@@ -44,16 +74,30 @@ const RD = () => {
   };
 
   // Function to handle navigation attempt
-  const handleNavigation = (event, targetUrl) => {
+  const handleNavigation = async (event) => {
+    console.log(profileData.id, form);
+    
+    if(reqId !== '0'){
+      router.push(`/appointment/${reqId}/0`);
+    }else{
+      const response = await axios.post(`/api/request/create`, {type: "Health insurance", status: "รอจองคิว", stuId: profileData.id, formId:form});
+    console.log("responseCreate:",response.data);
+    setCreateRequest(response.data);
+    const param = response.data.data.id;
     if (!allChecked()) {
       event.preventDefault();
       alert(
         "กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)"
       );
     } else {
-      window.location.href = targetUrl;
+      router.push(`/appointment/${param}/0`);
     }
+  }
   };
+  const handleBack = () => {  
+    router.push(`/prakan-inter/${form}`);
+};
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -176,7 +220,7 @@ const RD = () => {
 
           {/* Navigation Buttons */}
           <div className="flex justify-between mt-8">
-            <a href="/prakan-inter">
+            <a onClick={handleBack}>
               <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
                 Back
               </button>
@@ -189,18 +233,15 @@ const RD = () => {
               Download
             </button>
 
-            <a
-              href="/home"
-              onClick={(event) => handleNavigation(event, "/home")}
-            >
               <button
                 type="submit"
+                onClick={(event) => handleNavigation(event)}
                 className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
               >
                 Confirm
                 <ToastContainer />
               </button>
-            </a>
+            
           </div>
         </div>
       </main>

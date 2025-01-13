@@ -33,3 +33,48 @@ export async function createPrakanInter(data) {
     })
     return createPrakan
 }
+
+export async function getPrakanDataById(id) {
+  const prakan = await prisma.prakan_inter_info.findUnique({
+      where: {id: id},
+  })
+  if(prakan){           
+      return prakan
+  }
+  else{
+      return "Not found"
+  }
+}
+
+export async function updatePrakanForm(data) {
+  await prakanFormBuilder(data)
+  const prakanUpdated = await prisma.prakan_inter_info.update({
+      where: {id: data.formId},
+      data:{
+          phone_num: data.phone_num,
+          claimType: data.claimType,
+          accidentDate: data.accidentDate,
+          accidentTime: data.accidentTime,
+          accidentCause: data.accidentCause,
+          hospitalName: data.hospitalName,
+          hospitalProvince: data.hospitalProvince,
+          hospitalPhoneNumber: data.hospitalPhoneNumber,
+          hospitalAmittedDate: data.hospitalAmittedDate,
+          hospitalDischargedDate: data.hospitalDischargedDate,
+          presentAddress: data.presentAddress,
+          title: data.title,
+      }
+  })
+  await prisma.student.update({
+      where: {id: data.stu_id},
+      data: {
+          tel_num: data.phone_num,
+      }
+  })
+  if(prakanUpdated){           
+      return prakanUpdated
+  }
+  else{
+      return "Not found"
+  }
+}

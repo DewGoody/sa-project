@@ -2,20 +2,50 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Header } from "../components/Header.js";
-import numberToThaiText from "../components/numberToThaiText.js";
+import { Header } from "../../components/Header.js";
+import numberToThaiText from "../../components/numberToThaiText.js";
 import AccidentForm from "./AccidentForm.js";
 import IllnessForm from "./IllnessForm.js";
+import { useRouter,useParams } from 'next/navigation';
+
 function page() {
   const [prakanData, setPrakanData] = useState({});
   const [claimType, setClaimType] = useState("null");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [profileData, setProfileData] = useState(null);
+  const [alreadyData, setAlreadyData] = useState(null);
+  const router = useRouter();
+  const {form} = useParams();
+  console.log("form : "+form);  
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.post("/api/prakanInter/getDataById", { id: parseInt(form) });
+      console.log("responseFetch", response.data.data);
+      setAlreadyData(response.data.data);
+      setClaimType(response.data.data.claimType);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if(form!=="0"){
+      fetchData();
+    }
+  }, []);
+
+  console.log("alreadyData : ", alreadyData);
+  
 
   const handleChange = (event, field) => {
     console.log(field + " : " + event.target.value);
+    console.log("alreadydata inside :", event.target.value);
     setPrakanData({ ...prakanData, [field]: event.target.value });
+    setAlreadyData({ ...alreadyData, [field]: event.target.value });
   };
 
   const handleCiaimTypeChange = (event) => {
@@ -24,75 +54,91 @@ function page() {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
+    // event.preventDefault(); // Prevent the default form submission behavior
 
-    // List of required fields
-    const requiredFields = [
-      "title",
-      "lnameEN",
-      "fnameEN",
-      "id",
-      "phone_num",
-      "presentAddress",
-      "bd",
-    ];
+    // // List of required fields
+    // const requiredFields = [
+    //   "title",
+    //   "lnameEN",
+    //   "fnameEN",
+    //   "id",
+    //   "phone_num",
+    //   "presentAddress",
+    //   "bd",
+    // ];
 
-    // Check if all required fields are present and not empty
-    for (let field of requiredFields) {
-      if (!prakanData[field] || prakanData[field].trim() === "") {
-        alert(`Please fill in the "${field}" field.`);
-        return;
-      }
-    }
+    // // Check if all required fields are present and not empty
+    // for (let field of requiredFields) {
+    //   if (!prakanData[field] || prakanData[field].trim() === "") {
+    //     alert(`Please fill in the "${field}" field.`);
+    //     return;
+    //   }
+    // }
 
-    if (claimType === "accident") {
-      const accidentRequiredFields = [
-        "accidentDate",
-        "accidentTime",
-        "accidentCause",
-        "hospitalName",
-        "hospitalProvince",
-        "hospitalPhoneNumber",
-        "hospitalAmittedDate",
-        "hospitalDischargedDate",
-      ];
+    // if (claimType === "accident") {
+    //   const accidentRequiredFields = [
+    //     "accidentDate",
+    //     "accidentTime",
+    //     "accidentCause",
+    //     "hospitalName",
+    //     "hospitalProvince",
+    //     "hospitalPhoneNumber",
+    //     "hospitalAmittedDate",
+    //     "hospitalDischargedDate",
+    //   ];
 
-      for (let field of accidentRequiredFields) {
-        if (!prakanData[field] || prakanData[field].trim() === "") {
-          alert(`Please fill in the "${field}" field.`);
-          return;
-        }
-      }
-    } else if (claimType === "illness") {
-      const illnessRequiredFields = [
-        "hospitalName",
-        "hospitalProvince",
-        "hospitalPhoneNumber",
-        "hospitalAmittedDate",
-        "hospitalDischargedDate",
-      ];
+    //   for (let field of accidentRequiredFields) {
+    //     if (!prakanData[field] || prakanData[field].trim() === "") {
+    //       alert(`Please fill in the "${field}" field.`);
+    //       return;
+    //     }
+    //   }
+    // } else if (claimType === "illness") {
+    //   const illnessRequiredFields = [
+    //     "hospitalName",
+    //     "hospitalProvince",
+    //     "hospitalPhoneNumber",
+    //     "hospitalAmittedDate",
+    //     "hospitalDischargedDate",
+    //   ];
 
-      for (let field of illnessRequiredFields) {
-        if (!prakanData[field] || prakanData[field].trim() === "") {
-          alert(`Please fill in the "${field}" field.`);
-          return;
-        }
-      }
-    } else {
-      alert(`Please Select an Claim Type.`);
-    }
+    //   for (let field of illnessRequiredFields) {
+    //     if (!prakanData[field] || prakanData[field].trim() === "") {
+    //       alert(`Please fill in the "${field}" field.`);
+    //       return;
+    //     }
+    //   }
+    // } else {
+    //   alert(`Please Select an Claim Type.`);
+    // }
 
     console.log(prakanData);
     let allData = { ...prakanData };
-    axios
+    let dataUpdate = { ...alreadyData, formId:form , ...profileData }; 
+    console.log("allData", allData);
+    console.log("dataUpdate", dataUpdate);
+    if(form==="0"){
+      axios
       .post("/api/prakanInter/create", allData)
       .then((response) => {
         console.log("Form submitted successfully:", response.data);
-        window.location.href = "/prakan-inter/checkPrakan";
+        router.push(`/prakan-inter/checkPrakan/${response.data.data.id}/0`);
       })
       .catch((error) => {
         console.error("Error submitting form:", error);
       });
+    }else{
+      axios
+      .post("/api/prakanInter/update", dataUpdate)
+      .then((response) => {
+        console.log("Form submitted successfully:", response.data);
+        router.push(`/prakan-inter/checkPrakan/${response.data.data.id}/${response.data.data.req_id}`);
+      })
+      .catch((error) => {
+        console.error("Error submitting form:", error);
+      });
+      console.log("dataUpdate", dataUpdate);
+    }
   };
 
   useEffect(() => {
@@ -158,7 +204,7 @@ function page() {
                         onChange={(event) => handleChange(event, "title")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Mr. / Mrs. / Miss"
-                        defaultValue={profileData.title}
+                        defaultValue={profileData?.title}
                       />
                     </div>
 
@@ -171,7 +217,7 @@ function page() {
                         onChange={(event) => handleChange(event, "fnameEN")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Name"
-                        defaultValue={profileData.fnameEN}
+                        defaultValue={profileData?.fnameEN}
                       />
                     </div>
                   </div>
@@ -184,7 +230,7 @@ function page() {
                       onChange={(event) => handleChange(event, "lnameEN")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                       placeholder="Surname"
-                      defaultValue={profileData.lnameEN}
+                      defaultValue={profileData?.lnameEN}
                     />
                   </div>
                   <div>
@@ -198,7 +244,7 @@ function page() {
                       onChange={(event) => handleChange(event, "id")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Student ID"
-                      defaultValue={profileData.id}
+                      defaultValue={profileData?.id}
                     />
                   </div>
                   <div>
@@ -212,7 +258,7 @@ function page() {
                       onChange={(event) => handleChange(event, "phone_num")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Phone number"
-                      defaultValue={profileData.tel_num}
+                      defaultValue={profileData?.tel_num}
                     />
                   </div>
                   <div>
@@ -222,7 +268,7 @@ function page() {
                     <input
                       type="text"
                       name="presentAddress"
-                      //value={formData.religion}
+                      value={alreadyData?.presentAddress}
                       onChange={(event) =>
                         handleChange(event, "presentAddress")
                       }
@@ -240,7 +286,7 @@ function page() {
                       //value={formData.religion}
                       onChange={(event) => handleChange(event, "bd")}
                       defaultValue={
-                        profileData.bd
+                        profileData?.bd
                           ? new Date(profileData.bd).toISOString().split("T")[0]
                           : ""
                       }
@@ -266,8 +312,9 @@ function page() {
                       id="claimType"
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleCiaimTypeChange}
+                      value={alreadyData?.claimType}
                     >
-                      <option defaultValue value="null">
+                      <option value="null">
                         Select an Claim Type
                       </option>
                       <option value="accident">Accident</option>

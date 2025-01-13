@@ -15,11 +15,23 @@ export async function POST(req,res){
             status: "รอจองคิว",
             stu_id: data.stuId,
         }
-    })    
-    await prisma.accident_info.update({
-        where: {id: data.formId},
-        data: {req_id: createRequest.id}
     })
+    if(data.type === "Health insurance"){
+        await prisma.prakan_inter_info.update({
+            where: {id: data.formId},
+            data: {
+                req_id: createRequest.id
+            }
+        })
+    }    
+    else if(data.type === "การเบิกจ่ายประกันอุบัติเหตุ"){
+        await prisma.accident_info.update({
+            where: {id: data.formId},
+            data: {
+                req_id: createRequest.id
+            }
+        })
+    }
     console.log("createRequest",createRequest);
     return NextResponse.json({ data: convertBigIntToString(createRequest) });
 }

@@ -33,19 +33,23 @@ export const Form = () => {
     const [formId, setFormId] = useState(0);
     const [notQueueLength, setNotQueueLength] = useState(0);
     const [notQueue, setNotQueue] = useState([]);
+    const [reqIdEdit, setReqIdEdit] = useState(0);
     const router = useRouter();
-    const showModal = (id) => {
-      console.log("deleteId1 :",id);
-      setDeleteQueueId(id);
+    const showModal = (item) => {
+      console.log("item :",item);
+      setDeleteQueueId(item.id);
       setPrakanDataLength(prakanData.length);
+      setReqIdEdit(item.Request.id)
       console.log("comfirm",confirmDelete);
       console.log("prakanDataLength",prakanDataLength);
       setIsModalOpen(true);
     };
 
-    const showModalEditForm = (id) => {
-      console.log("deleteId1111:",id);
-      
+    const showModalEditForm = (item) => {
+      console.log("item:",item);
+      setReqIdEdit(item.Request.id)
+      setDeleteQueueId(item.id);
+      setPrakanDataLength(prakanData.length);
       setIsModalEditFormOpen(true);
     };
 
@@ -131,10 +135,10 @@ export const Form = () => {
     return new Date(dateString).toLocaleDateString('en-GB', options);
   };
 
-  const handleBookQueue = async (queueID,reqID) => {
-    const queueId = queueID
-    const id = reqID;
-    console.log("req_Id",id);
+  const handleBookQueue = async (item) => {
+    console.log("item",item);
+    const queueId = item.id
+    const id = item.req_id;
     router.push(`/appointment/${id}/${queueId}`);
 
   }
@@ -149,6 +153,7 @@ export const Form = () => {
   const handleDeleteQueue = async () => {
     try {
       const response = await axios.post('/api/queue/delete',{id: deleteQueueId}); // Example API
+      const res = await axios.post('/api/request/delete',{id: reqIdEdit}); // Example API
       setConfirmDelete(true);
       setPrakanDone(false);
       setDeleteQueueId(0);
@@ -185,12 +190,16 @@ export const Form = () => {
   const handleEditFormDeleteQueue = async (id) => {
     console.log("editFormReqId : ",id);
     const res = await axios.post('/api/queue/delete',{id: deleteQueueId}); // Example API
+   
     setConfirmDelete(true);
     setPrakanDone(false);
     setDeleteQueueId(0);
-    const response = await axios.post('/api/request/getById',{id: id}); // Example API
+    const response = await axios.post('/api/request/getById',{id: reqIdEdit}); // Example API
+    // const resDelete = await axios.post('/api/request/delete',{id: reqIdEdit}); // Example API
     console.log("editFormResponse :",response.data.data);
     router.push(`/${response.data.data.path}/${response.data.data.form}`);
+    setIsModalEditFormOpen(false);
+    
   }
  
 
@@ -238,32 +247,35 @@ export const Form = () => {
               {prakanData.length > 0 ? (
                 prakanData.map((item, index) => (
                   <div key={index} className="flex justify-between items-center mt-5">
-                    
+                    {(item.status === "จองคิวสำเร็จ" || item.status === "เข้ารับบริการแล้ว") && (
                     <div className="flex justify-between border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full">
                       <div className="">
                       {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " ( " + timeSlots[item.period] + " น.)" + " " + item.Request.status}
                       </div>
-                      <div className="flex">
-                      <button 
-                      className="bg-stone-500 hover:bg-stone-400 text-white text-xs py-2 px-4 rounded"
-                      onClick={() => { showModalEditForm(item.id) }}
-                      >
-                    Edit form
-                    </button>
-                    <button className="
-                      bg-pink-400 hover:bg-pink-300 text-white text-xs py-2 px-4 rounded ml-2"
-                      onClick={() => { handleBookNotQueue(item.id) }}
-                      >
-                        Reschedule
-                    </button>
-                    <button 
-                      className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-2"
-                      onClick={() => { showModalNotQueue(item.id) }}
-                      >
-                      cancel
-                    </button>
-                      </div>
+                      
+                          <div className="flex">
+                            <button 
+                              className="bg-stone-500 hover:bg-stone-400 text-white text-xs py-2 px-4 rounded"
+                              onClick={() => { showModalEditForm(item) }}
+                            >
+                              Edit form
+                            </button>
+                            <button 
+                              className="bg-pink-400 hover:bg-pink-300 text-white text-xs py-2 px-4 rounded ml-2"
+                              onClick={() => { handleBookQueue(item) }}
+                            >
+                              Reschedule
+                            </button>
+                            <button 
+                              className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-2"
+                              onClick={() => { showModal(item) }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        
                     </div>
+                    )}
                   </div>
                 ))
               ) : null}
@@ -276,7 +288,7 @@ export const Form = () => {
                    </div>
                      <div className="flex">
                     <button 
-                      className="bg-green-500 hover:bg-green-400 text-white text-xs py-2 px-4 rounded"
+                      className="bg-stone-500 hover:bg-stone-400 text-white text-xs py-2 px-4 rounded"
                       onClick={() => { handleEditForm(item.id) }}
                       >
                     Edit form
@@ -291,7 +303,7 @@ export const Form = () => {
                       className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-2"
                       onClick={() => { showModalNotQueue(item.id) }}
                       >
-                      ยกเลิก
+                      cancel
                     </button>
                   </div>
                   </div>
@@ -329,7 +341,7 @@ export const Form = () => {
                 title="4. โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)"
               />
             </a>
-            <a href="/prakan-inter">
+            <a href="/prakan-inter/0">
               <ServiceCard
                 title="5. Health Insurance For Foreigner Student"
               />

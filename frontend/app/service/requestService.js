@@ -10,7 +10,8 @@ export async function getRequestById(id) {
             include: {
                 accident_info: true,
                 Ponpan: true,
-                Student: true
+                Student: true,
+                prakan_inter_info: true,
             }
         })
         if(request){
@@ -28,6 +29,14 @@ export async function getRequestById(id) {
                     ...request,
                     form: request.Ponpan[0].id,
                     path: "ponpan"
+                }
+                return result
+            }
+            else if(request.type == "Health insurance"){
+                result = {
+                    ...request,
+                    form: request.prakan_inter_info[0].id,
+                    path: "prakan-inter"
                 }
                 return result
             }
