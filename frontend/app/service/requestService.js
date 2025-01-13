@@ -422,3 +422,67 @@ export async function getUniqueYearPonpan() {
 
     return uniqueYears;
 }
+
+export async function getRequestPrakanInterInAdmin(year){
+    const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
+    const endOfYear = new Date(year + 1, 0, 1);
+    let requests = null
+    if(year !== 0){
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                },
+                type: "Health insurance",
+                deleted_at: null,
+                created_at: {
+                    gte: startOfYear, // Greater than or equal to start of year
+                    lt: endOfYear, // Less than start of the next year
+                },
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameTH: true,
+                        lnameTH: true
+                    },
+                },
+                prakan_inter_info: true
+            }
+        })
+    }
+    else{
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                },
+                type: "Health insurance",
+                deleted_at: null
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameTH: true,
+                        lnameTH: true
+                    },
+                },
+                prakan_inter_info: true
+            }
+        })
+    }
+    if(requests){
+        return requests
+    }
+    else{
+        return "Not found"
+    }
+}
