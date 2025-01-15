@@ -7,31 +7,30 @@ import RedirectOnBack from './RedirectOnBack';
 import axios from "axios";
 export default function ScholarshipPage() {
   const [selectedDate, setSelectedDate] = useState('');
-  const [showTimeSlots, setShowTimeSlots] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState('');
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectFetchDate, setSelectFetchDate] = useState([]);
-  const [convertDate, setConvertDate] = useState('');
-  const [morning, setMorning] = useState(false);
-  const [afternoon, setAfternoon] = useState(false);
-  const [showTimeSlotsMorning, setShowTimeSlotsMorning] = useState(false);
-  const [showTimeSlotsAfterNoon, setShowTimeSlotsAfterNoon] = useState(false);
   const [morningIdx,setMorningIdx] = useState(0);
   const [afternoonIdx,setAfternoonIdx] = useState(0);
   const [timeSlotId, setTimeSlotId] = useState(0);
   const [reqType, setReqType] = useState('');
-  const [byDate, setByDate] = useState({data:{id:4}});
-  const [indexSelectedDate, setIndexSelectedDate] = useState(0);
+  const [morningAvailable,setMorningAvailable] = useState([]);
+  const [afternoonAvailable,setAfternoonAvailable] = useState([]);
+  const [dateSelected, setDateSelected] = useState((false));
+  const [showTimeSlotsMorning, setShowTimeSlotsMorning] = useState(false);
+  const [showTimeSlotsAfterNoon, setShowTimeSlotsAfterNoon] = useState(false);
+  const [isMorningOpen, setIsMorningOpen] = useState([]);
+  const [isAfternoonOpen, setIsAfternoonOpen] = useState([]);
+
   const router = useRouter();
   const { id } = useParams(); //id is reqId
   const {queueId} = useParams();
   console.log("id", id);
   console.log("queueId",queueId)
  
-
   const timeSlotsMorning = 
   [
     '8:00-8:30', '8:30-9:00','9:00-9:30', '9:30-10:00','10:00-10:30', '10:30-11:00','11:00-11:30', '11.30-12.00',
@@ -44,8 +43,8 @@ export default function ScholarshipPage() {
   const fetchAllDate = async () => {
     try {
       const response = await axios.post('/api/timeslot/getAll'); // Example API
-      console.log("getAll : ",response.data);
-      setSelectFetchDate(response.data);
+      console.log("getAll : ",response.data.data);
+      setSelectFetchDate(response.data.data);
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -63,7 +62,6 @@ export default function ScholarshipPage() {
     }
   }
   
-
   useEffect(() => {
     fetchAllDate();
   }, []);
@@ -83,37 +81,9 @@ export default function ScholarshipPage() {
         setLoading(false);
       }
     };
-
-    
-    const checkAvailability = () => {
-      let morningAvailable = false;
-      let afternoonAvailable = false;
-  
-      selectFetchDate?.data?.forEach((items) => {
-        const [year, month, day] = items.date.split('T')[0].split('-');
-        const buddhistYear = (parseInt(year) + 543).toString();
-        const realDate = `${day}/${month}/${buddhistYear}`;
-        if (realDate === selectedDate) {
-          for (let i = 0; i < items.is_full.length / 2; i++) {
-            if (!items.is_full[i]) {
-              morningAvailable = true;
-            }
-          }
-          for (let i = items.is_full.length / 2; i < items.is_full.length; i++) {
-            if (!items.is_full[i]) {
-              afternoonAvailable = true;
-            }
-          }
-        }
-      });
-  
-      setMorning(morningAvailable);
-      setAfternoon(afternoonAvailable);
-    };
     fetchData();
-    checkAvailability();
     
-  }, [morning, afternoon, selectedDate]);
+  }, [selectedDate]);
 
   const createQueue = async () => {
     try {
@@ -183,45 +153,20 @@ export default function ScholarshipPage() {
     createQueue();
   }
 
-  const getByDate = async (date) => {
-    try{
-        const response = await axios.post(`/api/timeslot/getByDate`, {date: date});
-      console.log("response.data",response.data);
-      setByDate(response.data);
-    }catch (err) {
-      console.log("Error fetching amphures: " + err);
-    }
-  }
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const handleDateClick = async (date,index) => {
-    setSelectedDate(date);
-    setShowTimeSlots(false);
-    setIndexSelectedDate(index)
-    setSelectedPeriod('');
-    setSelectedTimeSlot('');
-    const [day, month, thaiYear] = date.split("/");
-    const gregorianYear = parseInt(thaiYear, 10) - 543;
-    const formattedDate = `${gregorianYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-    getByDate(formattedDate);
-    console.log("byDate", formattedDate);
-    selectFetchDate?.data?.forEach((item) => {
-      const [year, month, day] = item.date.split('T')[0].split('-');
-      const realDate = `${day}/${month}/${year}`;
-      console.log("realDate", realDate);
-      if (realDate === date) {
-        setTimeSlotId(item.id);
-      }
-    });
+  const handleDateClick = async (item,id) => {
+    console.log("item::",item);
+    setSelectedDate(item.date);
+    setMorningAvailable(item.is_full.slice(0, item.is_full.length / 2));
+    setAfternoonAvailable(item.is_full.slice(item.is_full.length / 2));
+    setIsMorningOpen(item.is_open.slice(0, item.is_open.length / 2));
+    setIsAfternoonOpen(item.is_open.slice(item.is_open.length / 2));
+    setDateSelected(true);
+    setTimeSlotId(id);
   };
-  console.log("timeSlotId",timeSlotId)
-  console.log("selectDate",selectedDate);
-  
-  
-  
-  
+
   const handlePeriodClick = (period) => {
     setSelectedPeriod(period);
     if(period === 'morning'){
@@ -238,17 +183,6 @@ export default function ScholarshipPage() {
     
   };
 
-  const isOpenPeriod = (index) =>{
-    if(selectFetchDate.data[indexSelectedDate].is_open[index] == false){
-      console.log("selectIndex",selectFetchDate.data[indexSelectedDate].is_open[index])
-      return false
-    }
-    else{
-      console.log("selectIndex",selectFetchDate.data[indexSelectedDate].is_open[index])
-      return true
-    }
-  }
-
   const handleTimeSlotClick = (timeSlot) => {
     setSelectedTimeSlot(timeSlot);
     if(selectedPeriod === 'morning'){
@@ -262,27 +196,16 @@ export default function ScholarshipPage() {
 
   console.log("timeSlot",timeSlotsAfternoon)
   
+  console.log("morningIdx",morningIdx)
 
-  const newDate = Array.isArray(selectFetchDate?.data)
-    ? selectFetchDate.data
-      .filter(items => !items.is_full.every(item => item === true))
-      .map(items => {
-        const [year, month, day] = items.date.split('T')[0].split('-');
-        return `${day}/${month}/${year}`;
-      })
-    : [];
-
-  console.log("newDate::", newDate);
 
   return (
     <>
-    <RedirectOnBack />
-    <Header 
-                req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "การเบิกจ่ายประกันอุบัติเหตุ" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "แบบคำขอผ่อนผันเข้ารับราชการทหาร" : ""} 
-                req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accident insurance claim" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "Military Service Postponement Request Form" : ""} 
-    />
-
-    
+      <RedirectOnBack />
+      <Header 
+        req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "การเบิกจ่ายประกันอุบัติเหตุ" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "แบบคำขอผ่อนผันเข้ารับราชการทหาร" : reqType === "Health insurance" ? "Health insurance" : ""} 
+        req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accident insurance claim" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "Military Service Postponement Request Form" : ""} 
+      />
       <div className="flex flex-col items-center text-center p-6 font-sans min-h-screen bg-gray-50">
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">จองคิวเข้ารับบริการ (Booking reservation)</h1>
         <div className="flex items-center bg-gray-100 p-4 rounded-lg mb-6 w-full max-w-xs shadow">
@@ -292,85 +215,137 @@ export default function ScholarshipPage() {
             <p className="text-gray-500">{profileData.id}</p>
           </div>
         </div>
-
         <div className="mb-6">
           <h3 className="text-gray-800 font-semibold">เลือกวันเข้ารับบริการ</h3>
           <h3 className="text-gray-800 font-semibold">(Select an appointment date)</h3>
           <div className="flex gap-4 mt-3">
-            {newDate.map((date, index) => (
+            {selectFetchDate.map((item) => {
+              const [year, month, day] = item.date.split('T')[0].split('-');
+              const formattedDate = `${day}/${month}/${year}`;
+                return item.is_full.every((isFull) => isFull === true) || item.is_open.every((isOpen) => isOpen === false) ? (
+                <button
+                  key={item.id}
+                  className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                  disabled
+                >
+                  {formattedDate} Full
+                </button>
+                ) : (
+                <button
+                  key={item.id}
+                  onClick={() => handleDateClick(item, item.id)}
+                  className={`py-2 px-4 rounded-lg ${selectedDate === item.date ? 'bg-pink-300 text-white border border-pink-800 shadow-md' : 'bg-pink-500 text-white hover:bg-pink-400'}`}
+                >
+                  {formattedDate}
+                </button>
+                );
+            })}
+            </div>
+            </div>
+            {dateSelected && (
+            <div className="mb-6">
+            <h3 className="text-gray-800 font-semibold">เลือกช่วงเวลา</h3>
+            <h3 className="text-gray-800 font-semibold">(Select a time slot)</h3>
+            <div className="flex gap-4 mt-3">
+              {morningAvailable.includes(false) || isMorningOpen.includes(true) ? (
               <button
-                key={index}
-                onClick={() => handleDateClick(date, index)}
-                className={`px-4 py-2 rounded-lg border transition-all ${
-                  selectedDate === date ? 'border-pink-400 bg-pink-100' : 'border-gray-300 bg-gray-50'
-                }`}
-              >
-                {date}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {selectedDate !== '' && (
-          <div className="flex gap-8 mb-6">
-            <button
               onClick={() => handlePeriodClick('morning')}
-              className={`py-2 px-6 rounded-lg shadow-md ${
-                selectedPeriod === 'morning' ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
-              } hover:bg-pink-500`}
-            >
-              ช่วงเช้า (Morning Session)
-            </button>
-            <button
+              className={`py-2 px-4 rounded-lg ${selectedPeriod === 'morning' ? 'bg-pink-300 text-white border border-pink-800 shadow-md' : 'bg-pink-500 text-white hover:bg-pink-400'}`}
+              >
+              ช่วงเช้า (Morning)
+              </button>
+              ) : (
+              <button
+              className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+              disabled
+              >
+              ช่วงเช้า (Morning) Full
+              </button>
+              )}
+              {afternoonAvailable.includes(false) || isAfternoonOpen.includes(true) ? (
+              <button
               onClick={() => handlePeriodClick('afternoon')}
-              className={`py-2 px-6 rounded-lg shadow-md ${
-                selectedPeriod === 'afternoon' ? 'bg-pink-400 text-white' : 'bg-pink-200 text-white'
-              } hover:bg-pink-500`}
-            >
-              ช่วงบ่าย (Afternoon Session)
-            </button>
+              className={`py-2 px-4 rounded-lg ${selectedPeriod === 'afternoon' ? 'bg-pink-300 text-white border border-pink-800 shadow-md' : 'bg-pink-500 text-white hover:bg-pink-400'}`}
+              >
+              ช่วงบ่าย (Afternoon)
+              </button>
+              ) : (
+              <button
+              className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+              disabled
+              >
+              ช่วงบ่าย (Afternoon) Full
+              </button>
+              )}
+            </div>
+            </div>
+            )}
+            {showTimeSlotsMorning && (
+            <div className="mb-6">
+            <h3 className="text-gray-800 font-semibold">เลือกช่วงเวลา</h3>
+            <h3 className="text-gray-800 font-semibold">(Select a time slot)</h3>
+            <div className="grid grid-cols-2 gap-4 mt-3">
+              {timeSlotsMorning.map((timeSlot) => {
+                const isFull = morningAvailable[timeSlotsMorning.indexOf(timeSlot)];
+                const isOpen = isMorningOpen[timeSlotsMorning.indexOf(timeSlot)];
+                return isFull || (!isOpen) ? (
+                  <button
+                  key={timeSlot}
+                  className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                  disabled
+                  >
+                  {timeSlot} Full
+                  </button>
+                ) : (
+                  <button
+                  key={timeSlot}
+                  onClick={() => handleTimeSlotClick(timeSlot)}
+                  className={`py-2 px-4 rounded-lg ${selectedTimeSlot === timeSlot ? 'bg-pink-300 text-white border border-pink-800 shadow-md' : 'bg-pink-500 text-white hover:bg-pink-400'}`}
+                  >
+                  {timeSlot}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
 
-        {showTimeSlotsMorning && (
-          <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md">
-            {timeSlotsMorning.map((slot, index) => (
-              <button
-                key={index}
-                disabled={!isOpenPeriod(index)}
-                onClick={() => handleTimeSlotClick(slot)}
-                className={`py-2 px-4 rounded-lg ${
-                  selectedTimeSlot === slot ? 'bg-pink-400 text-white' : 'bg-gray-200 text-black'
-                } ${!isOpenPeriod(index) ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'hover:bg-gray-300'}`}
-              >
-                {slot}
-              </button>
-            ))}
-          </div>
-        )}
         {showTimeSlotsAfterNoon && (
-          <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md">
-            {timeSlotsAfternoon.map((slot, index) => (
-              <button
-                key={index}
-                disabled={!isOpenPeriod(index + 8)}
-                onClick={() => handleTimeSlotClick(slot)}
-                className={`py-2 px-4 rounded-lg ${
-                  selectedTimeSlot === slot ? 'bg-pink-400 text-white' : 'bg-gray-200 text-black'
-                } ${!isOpenPeriod(index + 8) ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'hover:bg-gray-300'}`}
-              >
-                {slot}
-              </button>
-            ))}
+          <div className="mb-6">
+            <h3 className="text-gray-800 font-semibold">เลือกช่วงเวลา</h3>
+            <h3 className="text-gray-800 font-semibold">(Select a time slot)</h3>
+            <div className="grid grid-cols-2 gap-4 mt-3">
+              {timeSlotsAfternoon.map((timeSlot) => {
+                const isFull = afternoonAvailable[timeSlotsAfternoon.indexOf(timeSlot)];
+                const isOpen = isAfternoonOpen[timeSlotsAfternoon.indexOf(timeSlot)];
+                return isFull || (!isOpen) ? (
+                  <button
+                    key={timeSlot}
+                    className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                    disabled
+                  >
+                    {timeSlot} Full
+                  </button>
+                ) : (
+                  <button
+                    key={timeSlot}
+                    onClick={() => handleTimeSlotClick(timeSlot)}
+                    className={`py-2 px-4 rounded-lg ${selectedTimeSlot === timeSlot ? 'bg-pink-300 text-white border border-pink-800 shadow-md' : 'bg-pink-500 text-white hover:bg-pink-400'}`}
+                  >
+                    {timeSlot}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
-
+        
         {selectedTimeSlot ? (
           <div className="mt-8 w-full max-w-xs">
             <div className="bg-pink-100 p-5 rounded-lg mb-4 text-gray-700">
               <p className="font-semibold">วันที่เข้ารับบริการ</p>
               <p className="font-semibold">(Service Appointment Date)</p>
-              <p className='text-lg'>{selectedDate}</p>
+              <p className='text-lg'>{selectedDate.split('T')[0].split('-').reverse().join('/')}</p>
               <p className="mt-2 font-semibold">ช่วงเวลา</p>
               <p className="font-semibold">(Time Slot)</p>
               <p className='text-lg'>{selectedTimeSlot}</p>
@@ -379,13 +354,13 @@ export default function ScholarshipPage() {
               <a href='/home'>
                 <button
                   onClick={() => setSelectedTimeSlot('')}
-                  className="py-2 px-6 bg-gray-400 text-white rounded-lg shadow-md hover:bg-gray-500"
+                  className="-ml-6 py-2 px-6 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-500"
                 >
                   Back to home
                 </button>
               </a>
               <a>
-                <button className="py-2 px-6 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-400"
+                <button className="-mr-6 py-2 px-6 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-400"
                   onClick={handleSubmit}
                   htmlType="submit"
                 >
@@ -398,7 +373,7 @@ export default function ScholarshipPage() {
           <div className='flex justify-around mt-8 w-full max-w-xs'>
             <a href='/home'>
               <button
-                className="py-2 px-6 bg-gray-400 text-white rounded-lg shadow-md hover:bg-gray-500"
+                className="py-2 px-6 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-500"
               >
                 Back to home
               </button>

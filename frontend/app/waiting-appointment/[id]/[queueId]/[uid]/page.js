@@ -68,11 +68,11 @@ const WaitingQueue = () => {
                 closable={false}
             >
                 {statusUid === 'จองคิวสำเร็จ' ? (
-                    <Button type="primary" style={{backgroundColor:"gray"}} onClick={() => router.push('/')}>
+                    <Button type="primary" style={{backgroundColor:"#f687b3 "}} onClick={() => router.push('/')}>
                         กลับหน้าแรก (Back to homepage)
                     </Button>
                 ) : (
-                    <Button type="primary" style={{backgroundColor:"gray"}} onClick={() => router.push(`/appointment/${id}/0`)}>
+                    <Button type="primary" style={{backgroundColor:"#f687b3 "}} onClick={() => router.push(`/appointment/${id}/0`)}>
                         กลับไปหน้าจองคิวใหม่ (Back to queue page)
                     </Button>
                 )}

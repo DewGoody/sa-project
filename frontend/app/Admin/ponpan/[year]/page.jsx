@@ -400,10 +400,12 @@ const columns = [
                         {
                             key: '6',
                             label: <span style={{ color: selectedKey === '6' ? 'black' : 'white' }}>Health Insurance For Foreigner Student</span>,
+                             onClick: () => window.location.href = '/Admin/prakan-inter/0'
                         },
                         {
                             key: '7',
-                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>กยศ</span>,
+                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
+                             onClick: () => window.location.href = '/Admin/editMaxStudent'
                         }
                     ]}
                 />

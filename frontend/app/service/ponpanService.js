@@ -70,3 +70,15 @@ export async function updatePonpan(data){
     })
     return updatedPonpan
 }
+
+export async function getPonpanDataById(id) {
+    const ponpan = await prisma.ponpan.findUnique({
+        where: {id: id},
+    })
+    if(ponpan){           
+        return ponpan
+    }
+    else{
+        return "Not found"
+    }
+}

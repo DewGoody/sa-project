@@ -17,6 +17,7 @@ const RD = () => {
   const [createRequest, setCreateRequest] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isDownload, setIsDownload] = useState(false);
   const router = useRouter();
   const { form } = useParams();
   const { reqId } = useParams();
@@ -49,6 +50,7 @@ const RD = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setIsDownload(true);
   };
 
   // Function to handle checkbox change
@@ -110,7 +112,7 @@ const RD = () => {
           {/* Personal & Contact Information Section */}
           <section>
             <h3 className="text-lg font-semibold mb-4 text-center">
-              Students, please prepare the following documents to submit to the
+              Please prepare the following documents to submit to the
               staff
             </h3>
             <h3 className="text-lg font-normal mb-4 text-center">
@@ -171,7 +173,14 @@ const RD = () => {
                       </strong>
                     </div>
                   </label>
+                  
                 </div>
+                <button
+              onClick={handleDownload}
+              className="mt-3 px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300"
+            >
+              Download
+            </button>
               </fieldset>
               <div className="flex space-x-4">
                 <label
@@ -187,7 +196,9 @@ const RD = () => {
                       checked={checkboxes.Option1}
                       onChange={handleCheckboxChange}
                     />
+                    
                   </div>
+                  
 
                   <div>
                     <strong className="font-medium text-gray-900">
@@ -205,6 +216,7 @@ const RD = () => {
                       id="allCheck"
                       checked={allChecked()}
                       onChange={handleAllCheck}
+                      disabled={!isDownload}
                     />
                   </div>
 
@@ -219,30 +231,32 @@ const RD = () => {
           </section>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8">
-            <a onClick={handleBack}>
-              <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+          {Object.values(checkboxes).filter(Boolean).length >= 2 && (
+                <div className="flex justify-end mt-8">
+                            
+                <button 
+                    className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+                    onClick={handleBack}
+                    >
                 Back
-              </button>
-            </a>
-
-            <button
-              onClick={handleDownload}
-              className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300"
-            >
-              Download
-            </button>
-
-              <button
-                type="submit"
-                onClick={(event) => handleNavigation(event)}
-                className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
-              >
-                Confirm
-                <ToastContainer />
-              </button>
+                </button>
             
-          </div>
+
+            
+
+            <a
+                onClick={(event) => handleNavigation(event)}
+            >
+                <button
+                    type="submit"
+                    className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                >
+                    Book queue
+                    <ToastContainer />
+                </button>
+            </a>
+        </div>
+            )}
         </div>
       </main>
     </div>

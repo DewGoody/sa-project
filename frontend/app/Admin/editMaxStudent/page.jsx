@@ -11,7 +11,6 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space,Select,Modal } from 'antd';
 import axios from 'axios';
-import { useRouter,useParams } from 'next/navigation';
 
 
 const { Header, Sider, Content } = Layout;
@@ -22,16 +21,13 @@ const AppointmentManagement = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const [selectedKey, setSelectedKey] = useState('1');
-    const [fetchYear, setfetchYear] = useState([]);
+    const [selectedKey, setSelectedKey] = useState('7');
     const [statusRequest, setStatusRequest] = useState([]);
-    const router = useRouter();
-    const { year } = useParams();
+
     const [dateMaxStu, setDateMaxStu] = useState([])
     const [selectDate, setSelectDate] = useState();
     const [maxStu, setMaxStu] = useState();
-    console.log("year", year);
-    console.log("fetchYear :", fetchYear);
+
     const timeSlots = 
   [
     '8:00-8:30', '8:30-9:00','9:00-9:30', '9:30-10:00','10:00-10:30', '10:30-11:00','11:00-11:30', '11.30-12.00',
@@ -40,8 +36,7 @@ const AppointmentManagement = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-const showModal = async () => {
-    setIsModalOpen(true);
+const fetchGetAllTimeSlots = async () => {
     try {
         const res = await axios.post('/api/timeslot/getAll');
         console.log("resGetAll", res.data.data);
@@ -58,6 +53,10 @@ const showModal = async () => {
     }
 };
 
+useEffect(() => {
+    fetchGetAllTimeSlots();
+}, []);
+
 console.log("dateMaxStu", dateMaxStu);
 
   const handleOk = () => {
@@ -70,125 +69,15 @@ console.log("dateMaxStu", dateMaxStu);
     setIsModalOpen(false);
   };
 
+  const handleSelectDate = async (date) => {
+    const formattedDate = new Date(date)
+    setSelectDate(formattedDate);
+    console.log("date", formattedDate);
+}
+
   const handleMaxStuChange = async (input) => {
     setMaxStu(input);
     }
-
-    const fetchStuData = async () => {
-        try {
-            const res = await axios.post('/api/queue/getInAdmin', { year: 0 });
-            console.log("stuData", res.data.data);
-            setStuData(res.data.data);
-            setDataSource(...dataSource, res.data.data.map((item, index) => {
-                const date = new Date(item.Timeslot.date);
-                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
-
-                return {
-                    key: index,
-                    name: item.Student.fnameTH + ' ' + item.Student.lnameTH,
-                    student_ID: item.Student.id,
-                    status: item.status,
-                    id: item.id,
-                    reqId: item.Request.id,
-                    type: item.Request.type,
-                    date:formattedDate,
-                    period: timeSlots[item.period] + " น.",
-                };
-            }));
-            console.log("dataSource :", dataSource);
-        } catch (error) {
-            console.error('Error fetching student data:', error);
-        }
-    }
-
-    const fetchUniqueYear = async () => {
-        try {
-            const res = await axios.post('/api/request/getUniqueYearPrakan');
-            setfetchYear(res.data.data);
-        }
-        catch (error) {
-            console.error('Error fetching unique year:', error);
-        }
-    }
-
-    useEffect(() => {
-        fetchStuData()
-    }, [])
-
-    useEffect(() => {
-        fetchUniqueYear()
-    }, [])
-
-
-    console.log("statusRequest", statusRequest);
-
-
-    console.log("dataSource", dataSource);
-
-    const handleYearChange = async (year) => {
-        console.log("year", year);
-        router.push(`/Admin/prakan/${year}`);
-    }
-
-    const handleStatusChange = async (reocrd) => {
-        console.log("record : ", reocrd);
-        try {
-            if(reocrd.status === "ไม่มาเข้ารับบริการ"){
-                await axios.post('/api/queue/changeStatusToLate', { id: reocrd.id });
-            }
-            else if(reocrd.status === "เข้ารับบริการแล้ว"){
-                await axios.post('/api/queue/changeStatusToReceiveService', { id: reocrd.id });
-            }
-        } catch (error) {
-            console.error('Error changing status:', error);
-        }
-    }
-    
-    const handleSelectDate = async (date) => {
-        const formattedDate = new Date(date)
-        setSelectDate(formattedDate);
-        console.log("date", formattedDate);
-    }
-    
-    
-
-const columns = [
-    {
-        title: 'สถานะ',
-        dataIndex: 'status',
-        render: (status, record) => (
-            <Select
-                defaultValue={record.status}
-                style={{ width: 120 }}
-                onChange={(value) => handleStatusChange({ ...record, status: value })}
-            >
-                <Select.Option value="จองคิวสำเร็จ" disabled={record.status === "ไม่มาเข้ารับบริการ"}>จองคิวสำเร็จ</Select.Option>
-                <Select.Option value="ไม่มาเข้ารับบริการ">ไม่มาเข้ารับบริการ</Select.Option>
-                <Select.Option value="เข้ารับบริการแล้ว">เข้ารับบริการแล้ว</Select.Option>
-            </Select>
-        ),
-    },
-    {
-        title: 'ประเภทการเข้ารับบริการ',
-        dataIndex: 'type',
-    },
-    {
-        title: 'วันที่',
-        dataIndex: 'date',
-    },
-    {
-        title: 'เวลา',
-        dataIndex: 'period',
-    },
-    {
-        title: 'ชื่อ-นามสกุล',
-        dataIndex: 'name',
-    },
-    {
-        title: 'รหัสนิสิต',
-        dataIndex: 'student_ID',
-    },
-];
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -264,7 +153,7 @@ const columns = [
                         {
                             key: '7',
                             label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
-                             onClick: () => window.location.href = '/Admin/editMaxStudent'
+                            onClick: () => window.location.href = '/Admin/editMaxStudent'
                         }
                     ]}
                 />
@@ -282,58 +171,33 @@ const columns = [
                 >
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
-                            จัดการการนัดหมาย
-                        </div>
-                        <div className='mr-10'>
-                            <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
-                        </div>
-                        
-                        
-                    </div>
-                    <div className="flex justify-between">
-                        <div className='mt-10 mb-6'>
-                                <Select
-                                    defaultValue={year}
-                                    style={{ width: 120, marginLeft: 10 }}
-                                    onChange={handleYearChange}
-                                >
-                                    <Select.Option value={0}>ทั้งหมด</Select.Option>
-                                    {fetchYear.map((year) => (
-                                        <Select.Option key={year} value={year}>{year}</Select.Option>
-                                    ))}
-                                </Select>
+                        จัดการจำนวนผู้เข้ารับบริการ
                         </div>
                        
-                    </div>
-                    
-                    <Table
-                        dataSource={dataSource}
-                        columns={columns}
-                        style={{ borderRadius: borderRadiusLG  }}
-                        scroll={{ x: 'max-content' }}
                         
-                    />
+                    </div>
+                    <div className='w-3/12'>
+                        <p>เลือกวัน</p>
+                        <Input 
+                            type="date" 
+                            min = {dateMaxStu[0]?.date}
+                            onClick={ (e) => handleSelectDate(e.target.value)}
+                        
+                        />
+                    </div>
+                    <div className="mt-4 w-3/12">
+                        <p>เลือกจำนวนนิสิต</p>
+                        <Input 
+                            placeholder="จำนวนนิสิต" 
+                            type="number"
+                            onChange={(e) => handleMaxStuChange(e.target.value)}
 
-                    <Modal title="เลือกจำนวนนิสิตที่รับได้ในแต่ละรอบ" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                         <div>
-                            <p>เลือกวัน</p>
-                            <Input 
-                                type="date" 
-                                min = {dateMaxStu[0]?.date}
-                                onClick={ (e) => handleSelectDate(e.target.value)}
-                           
-                            />
-                         </div>
-                         <div className="mt-4">
-                            <p>เลือกจำนวนนิสิต</p>
-                            <Input 
-                                placeholder="จำนวนนิสิต" 
-                                type="number"
-                                onChange={(e) => handleMaxStuChange(e.target.value)}
+                        />
+                    </div>
 
-                            />
-                         </div>
-                    </Modal>
+                    <div className='absolute mt-6 '>
+                        <Button type="primary" onClick={handleOk}>ยืนยัน</Button>
+                    </div>
                
                 </Content>
             </Layout>

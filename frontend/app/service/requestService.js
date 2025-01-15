@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { prakan } from '../../document_build/prakan'
+import { prakanFormBuilder } from '../../document_build/prakanFormBuilder'
 
 const prisma = new PrismaClient();
 
@@ -447,8 +448,8 @@ export async function getRequestPrakanInterInAdmin(year){
                 Student: {
                     select: {
                         id: true,
-                        fnameTH: true,
-                        lnameTH: true
+                        fnameEN: true,
+                        lnameEN: true
                     },
                 },
                 prakan_inter_info: true
@@ -471,8 +472,8 @@ export async function getRequestPrakanInterInAdmin(year){
                 Student: {
                     select: {
                         id: true,
-                        fnameTH: true,
-                        lnameTH: true
+                        fnameEN: true,
+                        lnameEN: true
                     },
                 },
                 prakan_inter_info: true
@@ -484,5 +485,27 @@ export async function getRequestPrakanInterInAdmin(year){
     }
     else{
         return "Not found"
+    }
+}
+
+export async function downloadPrakanInterAdmin(id) {
+    if(id){
+        const thisPrakan = await prisma.prakan_inter_info.findUnique({
+            where: {id: id},
+            include: {
+                Student:true
+            }
+        })
+        const mergedData = {
+            ...thisPrakan,
+            ...thisPrakan.Student, // Spread the `Student` object into the main object
+          };
+        const filePath = await prakanFormBuilder(mergedData)
+        console.log('fileeee',filePath);
+        
+        return filePath
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
     }
 }
