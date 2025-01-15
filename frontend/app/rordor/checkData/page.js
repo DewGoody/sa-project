@@ -151,7 +151,7 @@ const CheckData = () => {
             await axios.put(`/api/profile`, {
                 fnameTH: formData.Name,
                 lnameTH: formData.Surname,
-                fnameEN: formData.fnameEN || "", // Ensure fnameEN is provided
+                fnameEN: formData.fnameEN || "",
                 lnameEN: formData.lnameEN || "",
                 fac_id: '',
                 title: formData.Nametitle,

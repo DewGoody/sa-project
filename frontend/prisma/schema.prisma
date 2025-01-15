@@ -40,9 +40,19 @@ model Dayoff {
   name String?
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model District {
-  id          BigInt  @id @default(autoincrement())
+  id          BigInt  @id(map: "District_pkey1") @default(autoincrement())
+  code        String  @db.VarChar
+  name_th     String? @db.VarChar
+  name_en     String? @db.VarChar
+  province_id BigInt?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model District_old {
+  id          BigInt  @id(map: "District_pkey") @default(autoincrement())
   code        String  @db.VarChar
   name_th     String? @db.VarChar
   name_en     String? @db.VarChar
@@ -55,7 +65,6 @@ model Geography {
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model Max_student {
   created_at DateTime @default(now()) @db.Timestamptz(6)
   max_stu    BigInt?
@@ -114,7 +123,7 @@ model Military_info {
   promo_corp2         String?   @default("")
   promo_order2        String?   @default("")
   promo_date2         DateTime? @db.Date
-  id                  Decimal   @id @db.Decimal
+  student_id          Decimal   @id @db.Decimal
   grade9_province     String?
   follower_name1      String?   @default("")
   follower_school1    String?   @default("")
@@ -127,9 +136,7 @@ model Military_info {
   prev_province       String?   @default("")
   date_of_study       DateTime? @db.Date
   prev_year           String?   @default("")
-  req_id              BigInt?
-  Student             Student   @relation(fields: [id], references: [id], onDelete: Cascade)
-  Request             Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student             Student   @relation(fields: [student_id], references: [id], onDelete: Cascade)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -186,27 +193,31 @@ model Queue {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model RD_info {
-  id         BigInt   @id @default(autoincrement())
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  RD_type    Decimal? @db.Decimal
-  student_id Decimal? @db.Decimal
-  Student    Student? @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  id           BigInt   @id @default(autoincrement())
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+  RD_type      Decimal? @db.Decimal
+  student_id   Decimal? @db.Decimal
+  json_history Json?    @db.Json
+  req_id       BigInt?
+  Request      Request? @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student      Student? @relation(fields: [student_id], references: [id], onDelete: Cascade)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Request {
-  id            BigInt          @id @default(autoincrement())
-  created_at    DateTime        @default(now()) @db.Timestamptz(6)
-  type          String?
-  status        String?
-  stu_id        Decimal?        @db.Decimal
-  deleted_at    DateTime?       @db.Timestamptz(6)
-  Military_info Military_info[]
-  Ponpan        Ponpan[]
-  Queue         Queue[]
-  Student       Student?        @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  UHC_request   UHC_request[]
-  accident_info accident_info[]
+  id                BigInt              @id @default(autoincrement())
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  type              String?
+  status            String?
+  stu_id            Decimal?            @db.Decimal
+  deleted_at        DateTime?           @db.Timestamptz(6)
+  Ponpan            Ponpan[]
+  Queue             Queue[]
+  RD_info           RD_info[]
+  Student           Student?            @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  UHC_request       UHC_request[]
+  accident_info     accident_info[]
+  prakan_inter_info prakan_inter_info[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -235,14 +246,10 @@ model Student {
   personal_email       String?
   phone_num            String?
   degree               String?
-  phone_num            String?
-  degree               String?
   Address              Address[]
   Military_info        Military_info?
   Ponpan               Ponpan[]
-  Ponpan               Ponpan[]
   Queue                Queue[]
-  RD_info              RD_info[]
   RD_info              RD_info[]
   Request              Request[]
   UHC_reg_info         UHC_reg_info?
@@ -253,8 +260,19 @@ model Student {
   prakan_inter_info    prakan_inter_info[]
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Subdistrict {
+  id        String  @id @db.VarChar
+  zipCode   BigInt
+  nameTh    String? @db.VarChar
+  nameEn    String? @db.VarChar
+  amphureId BigInt?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Subdistrict_old {
   id        String  @id @db.VarChar
   zipCode   BigInt
   nameTh    String? @db.VarChar
@@ -291,7 +309,7 @@ model UHC_reg_info {
 model UHC_request {
   id               BigInt    @id @default(autoincrement())
   created_at       DateTime  @default(now()) @db.Timestamptz(6)
-  update_at        DateTime? @db.Timetz(6)
+  update_at        DateTime? @default(now()) @db.Timetz(6)
   student_id       Decimal   @db.Decimal
   binary_file_data Bytes?
   req_id           BigInt?
@@ -385,5 +403,7 @@ model prakan_inter_info {
   presentAddress         String?
   title                  String?
   stu_id                 Decimal? @db.Decimal
+  req_id                 BigInt?
+  Request                Request? @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student                Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
