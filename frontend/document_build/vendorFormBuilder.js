@@ -146,13 +146,12 @@ async function vendorFormBuilder(data) {
     maximumFractionDigits: 2,
   });
   drawTextOnPage(firstPage, formattedAmount, 272, height - 446);
-  //todo amout to thai
   let amoutFloat = parseFloat(data.amount);
   drawTextOnPage(firstPage, numberToThaiText(amoutFloat), 402, height - 447);
   drawTextOnPage(firstPage, data.bankCompany, 149, height - 468);
   drawTextOnPage(firstPage, data.bankBranch, 264, height - 468);
   //todo bankacctype
-  
+
   drawTextOnPage(firstPage, data.bankAccountName, 91, height - 488);
   //todo accnum
   drawTextOnPage(firstPage, data.nameTH, 315, height - 627);
