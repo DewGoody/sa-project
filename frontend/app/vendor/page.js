@@ -49,7 +49,36 @@ function Page() {
         return;
       }
     }
-    //TODO Handle Other Claim Type Case
+
+    if (
+      vendorData.claimType === "อื่นๆ (ระบุ)" &&
+      !vendorData.claimOtherReason
+    ) {
+      alert("กรุณาระบุเหตุในการเบิกเงิน");
+      return;
+    }
+    if (vendorData.amount <= 0) {
+      alert("กรุณาระบุจำนวนเงินที่ต้องการเบิก");
+      return;
+    }
+    //cut out all "-" in citizenId,BankAccountNumber
+    vendorData.citizenId = vendorData.citizenId.replace(/-/g, "");
+    vendorData.bankAccountNumber = vendorData.bankAccountNumber.replace(
+      /-/g,
+      ""
+    );
+    if (vendorData.citizenId.length !== 13) {
+      alert("กรุณาระบุเลขบัตรประชาชนให้ถูกต้อง");
+      return;
+    }
+    if (vendorData.citizenIssueDate > vendorData.citizenExpireDate) {
+      alert("กรุณาระบุวันหมดอายุบัตรให้ถูกต้อง");
+      return;
+    }
+    if (vendorData.bankAccountNumber.length !== 10) {
+      alert("กรุณาระบุเลขบัญชีธนาคารให้ถูกต้อง");
+      return;
+    }
 
     //Handle Submit
     console.log(vendorData);
@@ -58,7 +87,7 @@ function Page() {
       .post("/api/vendorService", allData)
       .then((response) => {
         console.log("Form submitted successfully:", response.data);
-        window.location.href = "/vendor/checkVendor";
+        //window.location.href = "/vendor/checkVendor";
       })
       .catch((error) => {
         console.error("Error submitting form:", error);
@@ -363,7 +392,7 @@ function Page() {
                         handleChange(event, "citizenExpireDate")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      max={new Date()?.toISOString()?.slice(0, 10)}
+                      min={vendorData.citizenIssueDate}
                     />
                   </div>
                 </div>

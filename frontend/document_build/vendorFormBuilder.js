@@ -63,9 +63,51 @@ async function vendorFormBuilder(data) {
   drawTextOnPage(firstPage, data.postalCode, 475, height - 329);
   drawTextOnPage(firstPage, "-", 160, height - 350);
   drawTextOnPage(firstPage, data.tel, 364, height - 350);
-  //TODO handle id, date,money,claimType
-  drawTextOnPage(firstPage, data.claimOtherReason, 120, height - 446);
-  drawTextOnPage(firstPage, data.amount, 272, height - 446);
+  // Draw Citizen ID
+  drawTextOnPage(firstPage, data.citizenId[0], 142, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[1], 163.5, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[2], 176.5, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[3], 189.5, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[4], 202.5, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[5], 224, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[6], 237, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[7], 249.5, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[8], 262.5, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[9], 275, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[10], 297.5, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[11], 310.5, height - 376);
+  drawTextOnPage(firstPage, data.citizenId[12], 332.5, height - 376);
+  //Todo Handle issue,Expire Date
+  //Handle Checkboxes
+  switch (data.claimType) {
+    case "ค่าจ้างนิสิตทำงานพิเศษ":
+      drawTextOnPage(firstPage, "/", 444.5, height - 403.5);
+      break;
+    case "ค่าเล่าเรียน":
+      drawTextOnPage(firstPage, "/", 45.5, height - 425.5);
+      break;
+    case "ค่าธรรมเนียมการศึกษา":
+      drawTextOnPage(firstPage, "/", 115, height - 425.5);
+      break;
+    case "เงินสมทบค่ารักษาพยาบาล":
+      drawTextOnPage(firstPage, "/", 235, height - 425.5);
+      break;
+    case "เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ":
+      drawTextOnPage(firstPage, "/", 365.5, height - 425.5);
+      break;
+    case "อื่นๆ (ระบุ)":
+      drawTextOnPage(firstPage, "/", 46, height - 446);
+      drawTextOnPage(firstPage, data.claimOtherReason, 120, height - 446);
+      break;
+    default:
+      console.warn("Unknown claim type:", data.claimType);
+      break;
+  }
+  const formattedAmount = Number(data.amount).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  drawTextOnPage(firstPage, formattedAmount, 272, height - 446);
   //todo amout to thai
   drawTextOnPage(firstPage, data.bankCompany, 149, height - 468);
   drawTextOnPage(firstPage, data.bankBranch, 264, height - 468);
