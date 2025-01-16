@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const FormDataContext = createContext();
 export const useFormData = () => useContext(FormDataContext);
@@ -10,13 +11,33 @@ export const FormDataProvider = ({ children }) => {
   const [datafromapiprofile, setdatafromapiprofile] = useState({});
   const [datafromapimilitary, setdatafromapimilitary] = useState({});
   const [formData, setFormData] = useState({});
+  const router = useRouter();
+  const [form, setForm] = useState(null); // Store form value in context
+  const updateDataid = ({ int_form }) => {
+    if (isNaN(int_form) || Object.is(int_form, form)) {
+      // router.push("/home")
+      return
+    };
+  
+    setForm(int_form);
+  
+    if (int_form !== null && int_form !== undefined) {
+      // console.log("dsfdsfdsfdsfdsfsdf", int_form);
+      fetchdataapi(int_form);
+    }
+  };
+  
+  
+  useEffect(() => {
+    // console.log(form);
 
-  const fetchdataapi = async () => {
+  }, [form])
+
+  const fetchdataapi = async (form) => {
     try {
-      const response = await axios.get("/api/profile");
+      const response = await axios.get(`/api/militaryapi/student?id=${form}`);
       setdatafromapiprofile(response.data);
-
-      const responsemilitary = await axios.get("/api/military")
+      const responsemilitary = await axios.get(`/api/military?id=${form}`)
       // console.log(responsemilitary.data)
       await setdatafromapimilitary(responsemilitary.data)
     } catch (err) {
@@ -48,14 +69,11 @@ export const FormDataProvider = ({ children }) => {
     return age;
   };
 
-  useEffect(() => {
-    fetchdataapi();
-  }, []);
   const getCurrentYear = () => {
     return new Date().getFullYear();
   };
   useEffect(() => {
-    console.log(datafromapimilitary.Military_info?.academic_grade1)
+    // console.log("พ่อแม่", datafromapimilitary.addresses?.Military_address.house_num)
   }, [datafromapimilitary])
   useEffect(() => {
 
@@ -75,7 +93,7 @@ export const FormDataProvider = ({ children }) => {
         nationality: datafromapiprofile.nationality,
         email: datafromapiprofile.personal_email,
         phone_num: datafromapiprofile.phone_num,
-        tel_num :datafromapiprofile.tel_num,
+        tel_num: datafromapiprofile.tel_num,
 
         fatherName: datafromapimilitary.father_mother_info?.father.fname,
         fatherSurname: datafromapimilitary.father_mother_info?.father.lname,
@@ -253,7 +271,7 @@ export const FormDataProvider = ({ children }) => {
   };
 
   return (
-    <FormDataContext.Provider value={{ formData, updateFormData }}>
+    <FormDataContext.Provider value={{ formData, updateFormData, updateDataid }}>
       {children}
     </FormDataContext.Provider>
   );

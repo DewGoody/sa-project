@@ -8,9 +8,18 @@ const prisma = new PrismaClient()
 
 export async function GET(req, res) {
     try {
-        // Read cookie header
-        const cookie = req.headers.get('cookie') || '';
-        const id = await getID(req) || getIDbyToken(cookie);
+        let id = 0
+        const formId = req.nextUrl.searchParams.get('id')
+        if (formId == 0) {
+            id = await getID(req)
+            console.log("in frist");
+        } else if(formId !== NaN){
+            console.log("in else");
+            const idbefore = await prisma.rD_info.findFirst({
+                where: { id: parseInt(formId) }
+            })
+            id = idbefore.student_id
+        }
         if (!id) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
         }
@@ -22,9 +31,9 @@ export async function GET(req, res) {
                 typeof value === "bigint" ? value.toString() : value
             )
         );
-        
+
         return NextResponse.json(serializedData);
-        
+
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: "An error occurred while fetching the profile" }, { status: 500 });
@@ -33,9 +42,18 @@ export async function GET(req, res) {
 
 export async function PUT(req, res) {
     try {
-        // Read cookie header
-        const cookie = req.headers.get('cookie') || '';
-        const id = await getID(req) || getIDbyToken(cookie);
+        let id = 0
+        const formId = req.nextUrl.searchParams.get('id')
+        if (formId == 0) {
+            id = await getID(req)
+            console.log("in frist");
+        } else if(formId !== NaN){
+            console.log("in else");
+            const idbefore = await prisma.rD_info.findFirst({
+                where: { id: parseInt(formId) }
+            })
+            id = idbefore.student_id
+        }
         if (!id) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
         }
@@ -49,7 +67,7 @@ export async function PUT(req, res) {
             student
         } = await req.json();
 
-        let {year, thai_id, phone_num, tel_num, personal_email, race, religion, nationality} = await student;
+        let { year, thai_id, phone_num, tel_num, personal_email, race, religion, nationality } = await student;
 
         // Upsert military information
         if (student) {
@@ -86,6 +104,7 @@ export async function PUT(req, res) {
         }
 
         if (addresses?.Military_address) {
+            // console.log("testestetstestetstestetsteset", addresses.Military_address)
             await prisma.Address.upsert({
                 where: { id_address_type: { id: id, address_type: "Military_address" } },
                 update: { ...addresses.Military_address },
@@ -161,17 +180,17 @@ export async function PUT(req, res) {
                 create: { id, ...guardian }
             });
         }
-        const createRequest = await prisma.request.create({
-            data: {
-                type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
-                status: "รอจองคิว",
-                stu_id: id,
-            }
-        })    
-        await prisma.military_info.update({
-            where: {id: create.id},
-            data: {req_id: createRequest.id}
-        })
+        // const createRequest = await prisma.request.create({
+        //     data: {
+        //         type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
+        //         status: "รอจองคิว",
+        //         stu_id: id,
+        //     }
+        // })    
+        // await prisma.military_info.update({
+        //     where: {id: create.id},
+        //     data: {req_id: createRequest.id}
+        // })
 
         return NextResponse.json({ message: "Data updated successfully" });
     } catch (error) {

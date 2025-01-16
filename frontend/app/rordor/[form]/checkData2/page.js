@@ -370,7 +370,7 @@ const CheckData = () => {
         e.preventDefault();
         // console.log(formData)
         const id = formData.id
-        console.log("formData.fatherzipCodeformData.fatherzipCodeformData.fatherzipCodeformData.fatherzipCodeformData.fatherzipCode",formData.fatherzipcode)
+
         try {
             notifyinprocess()
             await axios.put(`/api/profile`, {
@@ -392,7 +392,7 @@ const CheckData = () => {
 
             })
 
-            console.log("suc profile",formData.militaryDomicileNumber)
+
 
             await axios.put(`/api/military`, {
                 student: {

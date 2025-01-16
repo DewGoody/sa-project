@@ -1,7 +1,7 @@
 
-import '../globals.css';
-import { Header } from '../components/Header';
-import { FormDataProvider } from '../contexts/RDDataContext'; // Adjust the import path as necessary
+import '../../globals.css';
+import { Header } from '../../components/Header';
+import { FormDataProvider } from '../../contexts/RDDataContext'; // Adjust the import path as necessary
 
 export const metadata = {
   title: 'Your App Title',

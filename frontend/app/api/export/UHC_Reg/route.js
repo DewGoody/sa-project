@@ -14,11 +14,13 @@ export async function GET(req) {
   try {
     let id = 0
     const formId = req.nextUrl.searchParams.get('id')
+    // console.log("export pdf",formId);
+    
     if (formId == 0) {
       id = await getID(req)
-      // console.log("in frist");
+      console.log("in frist");
     } else {
-      // console.log("in else");
+      console.log("in else");
       const idbefore = await prisma.uHC_request.findFirst({
         where: { id: parseInt(formId) }
       })

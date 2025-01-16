@@ -123,7 +123,7 @@ model Military_info {
   promo_corp2         String?   @default("")
   promo_order2        String?   @default("")
   promo_date2         DateTime? @db.Date
-  student_id          Decimal   @id @db.Decimal
+  id                  Decimal   @id @db.Decimal
   grade9_province     String?
   follower_name1      String?   @default("")
   follower_school1    String?   @default("")
@@ -136,7 +136,7 @@ model Military_info {
   prev_province       String?   @default("")
   date_of_study       DateTime? @db.Date
   prev_year           String?   @default("")
-  Student             Student   @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  Student             Student   @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.

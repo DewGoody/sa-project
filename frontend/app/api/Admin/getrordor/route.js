@@ -32,24 +32,32 @@ function serializeBigInt(obj) {
 
 export async function GET(req) {
     try {
-        // ดึงข้อมูลพร้อม Include relations
-
+        // Fetch data with related RD_info
         const queue = await prisma.request.findMany({
             where: {
                 type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร"
             },
             include: {
-                Student: true,
-                Military_info: true,
+                RD_info: true, // Include related RD_info
             },
         });
 
-        // แปลง BigInt ในข้อมูลทั้งหมด
-        const serializedQueue = serializeBigInt(queue);
+        // Flatten RD_info into the parent object
+        const flattenedQueue = queue.map((entry) => {
+            // Merge RD_info properties with the main entry
+            if (entry.RD_info) {
+                return {
+                    ...entry,
+                    ...entry.RD_info, // Flatten RD_info into the parent
+                };
+            }
+            return entry; // In case RD_info is null or missing
+        });
 
-        // ส่งข้อมูล JSON กลับ
-        // console.log(serializedQueue[0]?.Military_info);
+        // Serialize BigInt values
+        const serializedQueue = serializeBigInt(flattenedQueue);
 
+        // Return the flattened and serialized data
         return NextResponse.json(serializedQueue, { status: 200 });
     } catch (error) {
         console.error("Error fetching data:", error);

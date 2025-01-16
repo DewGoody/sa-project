@@ -1,15 +1,20 @@
 "use client"
 import { ToastContainer, toast } from 'react-toastify';
-import { useFormData } from '../../contexts/RDDataContext'; // Adjust the import path as necessary
+import { useFormData } from '../../../contexts/RDDataContext'; // Adjust the import path as necessary
 import 'react-toastify/dist/ReactToastify.css';
-import { Header } from '../../components/Header';
+import { Header } from '../../../components/Header';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 
 
 
 const RD = () => {
     const { formData, updateFormData } = useFormData();
+    const { form } = useParams()
+    const int_form = parseInt(form)
+    const router = useRouter();
+
 
     useEffect(() => {
         // console.log(formData);
@@ -98,6 +103,11 @@ const RD = () => {
             return acc;
         }, {}));
     };
+    const handleback = () => {
+        console.log("Doc", int_form);
+
+        router.push(`/rordor/${int_form}/checkData`)
+    }
 
 
     return (
@@ -271,14 +281,12 @@ const RD = () => {
 
                         {/* Navigation Buttons */}
                         <div className="flex justify-between mt-8">
-                            <a
-                                href="/rordor/checkData"
 
-                            >
-                                <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                    Back
-                                </button> 
-                            </a>
+                            <button
+                                onClick={event =>  handleback() }
+                                className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                Back
+                            </button>
 
                             {/* <button
                                 onClick={handleDownload}

@@ -44,7 +44,6 @@ export async function GET(req) {
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(req) {
-    console.log("rerewrwqrwqr")
     try {
         const cookie = req.headers.get('cookie') || '';
         const id = await getID(req) || getIDbyToken(cookie);

@@ -2,9 +2,9 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Header } from '../../components/Header';
-import { useFormData } from '../../contexts/RDDataContext'; // Adjust the import path as necessary
-import { useRouter } from 'next/navigation';
+import { Header } from '../../../components/Header';
+import { useFormData } from '../../../contexts/RDDataContext'; // Adjust the import path as necessary
+import { useParams, useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -52,6 +52,7 @@ const notifysuccess = () => {
 }
 const CheckData = () => {
     const { formData, updateFormData } = useFormData();
+    const { updateDataid } = useFormData()
     const router = useRouter();
     const [provinces, setProvinces] = useState([]);
     const [amphures, setAmphures] = useState([]);
@@ -59,7 +60,14 @@ const CheckData = () => {
     const [provincesmilitary, setProvincesmilitary] = useState([]);
     const [amphuresmilitary, setAmphuresmilitary] = useState([]);
     const [districtsmilitary, setDistrictsmilitary] = useState([]);
-
+    const { form } = useParams()
+    const int_form = parseInt(form)
+    useEffect(() => {
+        if (form) {
+            console.log("เลขform", int_form)
+            updateDataid({ int_form })
+        }
+    }, [form, updateDataid])
     const fetchProvinces = async () => {
         try {
             const response = await axios.get("/api/Province");
@@ -120,6 +128,15 @@ const CheckData = () => {
         fetchProvincesmilitary();
     }, []);
 
+    const handleback = () => {
+        console.log("Button clicked, int_form value:", int_form);
+        if (!int_form || isNaN(int_form)) {
+            console.error("Invalid int_form value:", int_form);
+            return;
+        }
+        router.push(`/rordor/${int_form}`);
+    };
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -143,12 +160,83 @@ const CheckData = () => {
         const date = new Date(dateString);
         return date.toISOString();
     };
+    useEffect(() => {
+        console.log(formData);
+
+    }, [formData])
+    const id = formData.id
+    const dataforsentlog = {
+        student: {
+            id: formData.id,
+            title: formData.Nametitle,
+            fnameTH: formData.Name,
+            lnameTH: formData.lnameTH,
+            thai_id: formData.citizenId,
+            bd: formData.birthDate,
+            religion: formData.religion,
+            race: formData.ethnicity,
+            nationality: formData.nationality,
+            personal_email: formData.email,
+            phone_num: formData.phone_num,
+            // tel_num: formData.tel_num,
+        },
+        Military_info: {
+            id: id,
+            grade9_gpax: formData.grade9GPAX,
+            grade9_school: formData.school,
+            grade9_province: formData.schoolProvince,
+        },
+        addresses: {
+            DOPA_address: {
+                id: id,
+                house_num: formData.domicileNumber,
+                street: formData.road,
+                district: formData.amphure,
+                province: formData.province,
+                postal_code: (formData.zipCode),
+                subdistrict: formData.district
+
+            },
+            Military_address: {
+                id: id,
+                district: formData.militaryDistrict,
+                province: formData.militaryProvince,
+                subdistrict: formData.militaryAmphure,
+                house_num: formData.militaryDomicileNumber
+            },
+        },
+        guardian_info: {
+            id: id,
+            guardian_fname: formData.ParentName,
+            guardian_lname: formData.ParentSurname,
+            guardian_title: formData.Parenttitle,
+            guardian_occupation: formData.Parentjob,
+            guardian_age: parseInt(formData.Parentage),
+            guardian_relation: formData.Parentrelated,
+            guardian_address: formData.ParentworkAddress
+        },
+        father_mother_info: {
+            father: {
+                id: id,
+                relation: "father",
+                fname: formData.fatherName,
+                lname: formData.fatherSurname,
+                occupation: formData.occupationfather
+            },
+            mother: {
+                id: id,
+                relation: "mother",
+                fname: formData.motherName,
+                lname: formData.motherSurname,
+                occupation: formData.occupationmother
+            }
+        },
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const id = formData.id
         try {
             notifyinprocess()
-            await axios.put(`/api/profile`, {
+            await axios.put(`/api/militaryapi/student?id=${int_form}`, {
                 fnameTH: formData.Name,
                 lnameTH: formData.Surname,
                 fnameEN: formData.fnameEN || "",
@@ -158,7 +246,7 @@ const CheckData = () => {
                 facultyNameTH: '',
                 dept: '',
                 tel_num: '',
-                year: formData.Collage_Year ||'',
+                year: formData.Collage_Year || '',
                 thai_id: formData.citizenId,
                 bd: formatDateToISO(formData.birthDate),
                 religion: formData.religion,
@@ -166,7 +254,7 @@ const CheckData = () => {
                 nationality: formData.nationality,
             })
 
-            await axios.put(`/api/military`, {
+            await axios.put(`/api/military?id=${int_form}`, {
                 student: {
                 },
                 Military_info: {
@@ -186,7 +274,7 @@ const CheckData = () => {
                         subdistrict: formData.district
 
                     },
-                    military_address: {
+                    Military_address: {
                         id: id,
                         district: formData.militaryDistrict,
                         province: formData.militaryProvince,
@@ -205,26 +293,30 @@ const CheckData = () => {
                     guardian_address: formData.ParentworkAddress
                 },
                 father_mother_info: {
-                    father_info: {
+                    father: {
                         id: id,
                         relation: "father",
                         fname: formData.fatherName,
                         lname: formData.fatherSurname,
-                        occupation: formData.occupation
+                        occupation: formData.occupationfather
                     },
-                    mother_info: {
+                    mother: {
                         id: id,
                         relation: "mother",
                         fname: formData.motherName,
                         lname: formData.motherSurname,
-                        occupation: formData.occupation
+                        occupation: formData.occupationmother
                     }
                 },
 
 
             })
+            if (int_form !== 0) { await axios.post(`/api/logRd/update?id=${int_form}`, (dataforsentlog)) }
+            else {
+                await axios.post(`/api/logRd/create`, (dataforsentlog))
+            }
             notifysuccess()
-            router.push("/rordor/Doc")
+            router.push(`/rordor/${int_form}/Doc`)
         } catch (error) {
             notifyerror()
             console.log(formData)
@@ -692,14 +784,17 @@ const CheckData = () => {
                                     </div>
                                 </div>
                                 <div className="flex justify-between mt-8">
-                                    <a href="/rordor">
-                                        <button
-                                            type="button"
-                                            className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
-                                        >
-                                            Back
-                                        </button>
-                                    </a>
+
+                                    <button
+                                        onClick={event => handleback()}
+                                        type="button"
+                                        className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+                                    >
+                                        Back
+                                    </button>
+
+
+
                                     <button
                                         type="submit"
                                         // onClick={notify}

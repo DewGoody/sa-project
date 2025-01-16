@@ -174,8 +174,6 @@ const page = () => {
                     postal_code: Data.zipCode,
                 }
             })
-
-
             notifysuccess()
             router.push(`/golden_card/Doc/${int_req_id}`)
         } catch (error) {

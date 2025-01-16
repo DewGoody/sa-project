@@ -4,20 +4,20 @@ import { prakan } from '../../document_build/prakan'
 const prisma = new PrismaClient();
 
 export async function getRequestById(id) {
-    if(id){
+    if (id) {
         const request = await prisma.request.findUnique({
-            where: {id: id, deleted_at: null},
+            where: { id: id, deleted_at: null },
             include: {
                 accident_info: true,
                 Ponpan: true,
                 Student: true,
-                UHC_request:true,
-                Military_info:true,
+                UHC_request: true,
+                RD_info: true,
             }
         })
-        if(request){
+        if (request) {
             let result
-            if(request.type == "การเบิกจ่ายประกันอุบัติเหตุ"){
+            if (request.type == "การเบิกจ่ายประกันอุบัติเหตุ") {
                 result = {
                     ...request,
                     form: request.accident_info[0].id,
@@ -25,7 +25,7 @@ export async function getRequestById(id) {
                 }
                 return result
             }
-           else if(request.type == "การผ่อนผันเข้ารับราชการทหาร"){
+            else if (request.type == "การผ่อนผันเข้ารับราชการทหาร") {
                 result = {
                     ...request,
                     form: request.Ponpan[0].id,
@@ -33,7 +33,7 @@ export async function getRequestById(id) {
                 }
                 return result
             }
-            else if(request.type == "โครงการหลักประกันสุขภาพถ้วนหน้า"){
+            else if (request.type == "โครงการหลักประกันสุขภาพถ้วนหน้า") {
                 console.log("sdfdsfsdfsdf")
                 result = {
                     ...request,
@@ -41,17 +41,17 @@ export async function getRequestById(id) {
                     path: "golden_card"
                 }
                 return result
-            }            else if(request.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร"){
+            } else if (request.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
                 result = {
                     ...request,
-                    form: request.Military_info[0].id,
+                    form: request.RD_info[0].id,
                     path: "rordor"
                 }
                 return result
             }
             // return request
         }
-        else{
+        else {
             return "Not found"
         }
     }
@@ -62,54 +62,55 @@ export async function getShowRequestNotQueue(data) {
         where: {
             status: {
                 in: ["รอจองคิว"]
-            }, 
+            },
             stu_id: data,
-            deleted_at: null},
+            deleted_at: null
+        },
         include: {
             accident_info: true,
             Ponpan: true,
             UHC_request: true
         }
     })
-    if(requests){            
+    if (requests) {
         return requests
     }
-    else{
+    else {
         return "Not found"
     }
 }
 
 
 export async function cancleRequest(id) {
-    if(id){
+    if (id) {
         const request = await getRequestById(id)
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "คำขอถูกยกเลิก", deleted_at: new Date()}
+            where: { id: request.id },
+            data: { status: "คำขอถูกยกเลิก", deleted_at: new Date() }
         })
         return changeStatusRequest
     }
 }
 
 export async function getRequestByIdFast(data) {
-    if(data.id){
+    if (data.id) {
         const request = await prisma.request.findUnique({
-            where: {id: Number(data.id), deleted_at: null},
+            where: { id: Number(data.id), deleted_at: null },
         })
-        if(request){
+        if (request) {
             return request
         }
-        else{
+        else {
             return "Not found"
         }
     }
 }
 
-export async function getRequestPrakanInAdmin(year){
+export async function getRequestPrakanInAdmin(year) {
     const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
     const endOfYear = new Date(year + 1, 0, 1);
     let requests = null
-    if(year !== 0){
+    if (year !== 0) {
         requests = await prisma.request.findMany({
             where: {
                 status: {
@@ -137,7 +138,7 @@ export async function getRequestPrakanInAdmin(year){
             }
         })
     }
-    else{
+    else {
         requests = await prisma.request.findMany({
             where: {
                 status: {
@@ -161,200 +162,200 @@ export async function getRequestPrakanInAdmin(year){
             }
         })
     }
-    if(requests){
+    if (requests) {
         return requests
     }
-    else{
+    else {
         return "Not found"
     }
 }
 
 export async function changeStatusToWaitBook(id) {
-    if(id){
-        const request = await getRequestByIdFast({id: id})
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "รอจองคิว" }
+            where: { id: request.id },
+            data: { status: "รอจองคิว" }
         })
         return changeStatusRequest
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 
 export async function changeStatusToProcess(id) {
-    if(id){
-        const request = await getRequestByIdFast({id: id})
-        console.log('request',request);
-        
-        if(request.status !== "รอเข้ารับบริการ"){
-            throw {code: 400,error: new Error("Bad Request")}
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        console.log('request', request);
+
+        if (request.status !== "รอเข้ารับบริการ") {
+            throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "รอเจ้าหน้าที่ดำเนินการ" }
+            where: { id: request.id },
+            data: { status: "รอเจ้าหน้าที่ดำเนินการ" }
         })
         return changeStatusRequest
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 
 export async function changeStatusToSended(id) {
-    if(id){
-        const request = await getRequestByIdFast({id: id})
-        if(request.status !== "รอเจ้าหน้าที่ดำเนินการ" &&  request.status !== "ขอข้อมูลเพิ่มเติม"){
-            throw {code: 400,error: new Error("Bad Request")}
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        if (request.status !== "รอเจ้าหน้าที่ดำเนินการ" && request.status !== "ขอข้อมูลเพิ่มเติม") {
+            throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "ส่งเอกสารแล้ว" }
+            where: { id: request.id },
+            data: { status: "ส่งเอกสารแล้ว" }
         })
         return changeStatusRequest
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 
 export async function changeStatusToWantInfo(id) {
-    if(id){
-        const request = await getRequestByIdFast({id: id})
-        if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "รอเจ้าหน้าที่ดำเนินการ"){
-            throw {code: 400,error: new Error("Bad Request")}
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "รอเจ้าหน้าที่ดำเนินการ") {
+            throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "ขอข้อมูลเพิ่มเติม" }
+            where: { id: request.id },
+            data: { status: "ขอข้อมูลเพิ่มเติม" }
         })
         return changeStatusRequest
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 
 export async function changeStatusToNotApprove(id) {
-    if(id){
-        const request = await getRequestByIdFast({id: id})        
-        if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"){      
-            throw {code: 400,error: new Error("Bad Request")}
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม") {
+            throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "ไม่อนุมัติ" }
+            where: { id: request.id },
+            data: { status: "ไม่อนุมัติ" }
         })
         return changeStatusRequest
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 
 export async function changeStatusRecieveDoc(id) {
-    if(id){
-        const request = await getRequestByIdFast({id: id})        
-        if(request.status !== "ส่งเอกสารแล้ว"){            
-            throw {code: 400,error: new Error("Bad Request")}
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        if (request.status !== "ส่งเอกสารแล้ว") {
+            throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "ติดต่อรับเอกสาร" }
+            where: { id: request.id },
+            data: { status: "ติดต่อรับเอกสาร" }
         })
         return changeStatusRequest
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 
 export async function changeStatusFinishRecieve(id) {
-    if(id){
-        const request = await getRequestByIdFast({id: id})
-        if(request.status !== "ติดต่อรับเอกสาร"){            
-            throw {code: 400,error: new Error("Bad Request")}
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        if (request.status !== "ติดต่อรับเอกสาร") {
+            throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "รับเอกสารเรียบร้อย" }
+            where: { id: request.id },
+            data: { status: "รับเอกสารเรียบร้อย" }
         })
         return changeStatusRequest
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 
 export async function changeStatusToFinish(id) {
-    if(id){
-        const request = await getRequestByIdFast({id: id})
-        if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"){            
-            throw {code: 400,error: new Error("Bad Request")}
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม") {
+            throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "โอนเงินเรียบร้อย" }
+            where: { id: request.id },
+            data: { status: "โอนเงินเรียบร้อย" }
         })
         return changeStatusRequest
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 export async function changeToTranApprove(id) {
-    if(id){
-        const request = await getRequestByIdFast({id: id})        
-        if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"){      
-            throw {code: 400,error: new Error("Bad Request")}
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม") {
+            throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "ย้ายสิทธิสำเร็จ" }
+            where: { id: request.id },
+            data: { status: "ย้ายสิทธิสำเร็จ" }
         })
         return changeStatusRequest
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 export async function changeToTranNotApprove(id) {
-    if(id){
-        const request = await getRequestByIdFast({id: id})        
-        if(request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"){      
-            throw {code: 400,error: new Error("Bad Request")}
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม") {
+            throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
-            where: {id: request.id},
-            data: {status: "ย้ายสิทธิไม่สำเร็จ" }
+            where: { id: request.id },
+            data: { status: "ย้ายสิทธิไม่สำเร็จ" }
         })
         return changeStatusRequest
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 
 export async function downloadPrakanAdmin(id) {
-    if(id){
+    if (id) {
         const thisPrakan = await prisma.accident_info.findUnique({
-            where: {id: id},
+            where: { id: id },
             include: {
-                Student:true
+                Student: true
             }
         })
         const mergedData = {
             ...thisPrakan,
             ...thisPrakan.Student, // Spread the `Student` object into the main object
-          };
+        };
         const filePath = await prakan(mergedData)
-        console.log('fileeee',filePath);
-        
+        console.log('fileeee', filePath);
+
         return filePath
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 
@@ -378,11 +379,11 @@ export async function getUniqueYearPrakan() {
     return uniqueYears;
 }
 
-export async function getRequestPonpanInAdmin(year){
+export async function getRequestPonpanInAdmin(year) {
     const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
     const endOfYear = new Date(year + 1, 0, 1);
     let requests = null
-    if(year !== 0){
+    if (year !== 0) {
         requests = await prisma.request.findMany({
             where: {
                 status: {
@@ -412,7 +413,7 @@ export async function getRequestPonpanInAdmin(year){
             }
         })
     }
-    else{
+    else {
         requests = await prisma.request.findMany({
             where: {
                 status: {
@@ -438,10 +439,10 @@ export async function getRequestPonpanInAdmin(year){
             }
         })
     }
-    if(requests){
+    if (requests) {
         return requests
     }
-    else{
+    else {
         return "Not found"
     }
 }

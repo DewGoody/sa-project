@@ -17,14 +17,13 @@ const gold = () => {
     const int_req_id = parseInt(form)
     const filepdf = async () => {
         try {
-            const response = await axios.get("/api/export/UHC_Reg", { responseType: 'blob' });
+            // console.log("golden id form",int_req_id);
+            const response = await axios.get(`/api/export/UHC_Reg?id=${int_req_id}`, { responseType: 'blob' });
             return response.data;
         } catch (error) {
             console.log(error);
         }
     };
-
-
     const [selectedFiles, setSelectedFiles] = useState([]); // เริ่มต้นเป็น Array
 
 
@@ -123,6 +122,7 @@ const gold = () => {
             link.href = URL.createObjectURL(pdfBlob);
             link.download = 'file.pdf';
             document.body.appendChild(link);
+            // console.log(link)
             link.click();
             document.body.removeChild(link);
         }
