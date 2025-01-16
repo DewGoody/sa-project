@@ -12,7 +12,9 @@ export async function POST(req,res){
     const showRequest = await getRequestById(data.id)
     return NextResponse.json({ data: convertBigIntToString(showRequest) });
     }
-    catch(error){        
+    catch(error){
+        console.log(error);
+                
         if(!error.code){
             return NextResponse.json({ error: "Server error" }, { status: 500 });
         }

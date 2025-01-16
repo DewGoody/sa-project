@@ -25,6 +25,7 @@ export const Form = () => {
     const [error, setError] = useState(null);
     const [prakanDone,setPrakanDone] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalEditFormOpen, setIsModalEditFormOpen] = useState(false);
     const [deleteQueueId, setDeleteQueueId] = useState('');
     const [deleteNotQueueId, setDeleteNotQueueId] = useState('');
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -32,14 +33,24 @@ export const Form = () => {
     const [formId, setFormId] = useState(0);
     const [notQueueLength, setNotQueueLength] = useState(0);
     const [notQueue, setNotQueue] = useState([]);
+    const [reqIdEdit, setReqIdEdit] = useState(0);
     const router = useRouter();
-    const showModal = (id) => {
-      console.log("deleteId1 :",id);
-      setDeleteQueueId(id);
+    const showModal = (item) => {
+      console.log("item :",item);
+      setDeleteQueueId(item.id);
       setPrakanDataLength(prakanData.length);
+      setReqIdEdit(item.Request.id)
       console.log("comfirm",confirmDelete);
       console.log("prakanDataLength",prakanDataLength);
       setIsModalOpen(true);
+    };
+
+    const showModalEditForm = (item) => {
+      console.log("item:",item);
+      setReqIdEdit(item.Request.id)
+      setDeleteQueueId(item.id);
+      setPrakanDataLength(prakanData.length);
+      setIsModalEditFormOpen(true);
     };
 
     const showModalNotQueue = (id) => {
@@ -54,6 +65,7 @@ export const Form = () => {
   
     const handleCancel = () => {
       setIsModalOpen(false);
+      setIsModalEditFormOpen(false);
     };
     const timeSlots = 
   [
@@ -123,10 +135,10 @@ export const Form = () => {
     return new Date(dateString).toLocaleDateString('en-GB', options);
   };
 
-  const handleBookQueue = async (queueID,reqID) => {
-    const queueId = queueID
-    const id = reqID;
-    console.log("req_Id",id);
+  const handleBookQueue = async (item) => {
+    console.log("item",item);
+    const queueId = item.id
+    const id = item.req_id;
     router.push(`/appointment/${id}/${queueId}`);
 
   }
@@ -141,6 +153,7 @@ export const Form = () => {
   const handleDeleteQueue = async () => {
     try {
       const response = await axios.post('/api/queue/delete',{id: deleteQueueId}); // Example API
+      const res = await axios.post('/api/request/delete',{id: reqIdEdit}); // Example API
       setConfirmDelete(true);
       setPrakanDone(false);
       setDeleteQueueId(0);
@@ -175,11 +188,27 @@ export const Form = () => {
     router.push(`/${response.data.data.path}/${response.data.data.form}`);
   }
 
+  const handleEditFormDeleteQueue = async (id) => {
+    console.log("editFormReqId : ",id);
+    const res = await axios.post('/api/queue/delete',{id: deleteQueueId}); // Example API
+   
+    setConfirmDelete(true);
+    setPrakanDone(false);
+    setDeleteQueueId(0);
+    const response = await axios.post('/api/request/getById',{id: reqIdEdit}); // Example API
+    // const resDelete = await axios.post('/api/request/delete',{id: reqIdEdit}); // Example API
+    console.log("editFormResponse :",response.data.data);
+    router.push(`/${response.data.data.path}/${response.data.data.form}`);
+    setIsModalEditFormOpen(false);
+    
+  }
+ 
+
   let count = 1;
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      
+    <div className="min-h-screen" >
+       <div className="absolute -top-2/4 -left-3/4 w-11/12 h-4/6 bg-pink-200 rounded-full"></div>
       <div className="flex justify-center items-center">
         <div className="mt-8">
         <img src="https://www.car.chula.ac.th/carweb2/images/chula_logo.png" alt="profile"
@@ -196,11 +225,13 @@ export const Form = () => {
           </div>
         </div>
       </div>
-      <div className="min-h-screen bg-gray-100 relative overflow-hidden">
+      <div className="min-h-screen  relative overflow-hidden">
       {/* <div className="absolute right-0  w-1/4 h-full rounded-tl-2xl bg-pink-300 z-0"></div> */}
 
       <main className="flex justify-center items-center  ">
-        <div className="bg-gray-100 p-8  w-full mx-72 z-10">
+     
+        
+        <div className=" p-8  w-full mx-72 z-10">
           <div>
             <ServiceCard
               title={profileData ? profileData.fnameTH + " " + profileData.lnameTH + " " + profileData.id : ""}
@@ -217,58 +248,63 @@ export const Form = () => {
               {prakanData.length > 0 ? (
                 prakanData.map((item, index) => (
                   <div key={index} className="flex justify-between items-center mt-5">
-                    
-                    <div className="flex justify-between bg-white shadow-md rounded-xl p-6 w-full">
+                    {(item.status === "จองคิวสำเร็จ" || item.status === "เข้ารับบริการแล้ว") && (
+                    <div className="flex justify-between border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full">
                       <div className="">
                       {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " ( " + timeSlots[item.period] + " น.)" + " " + item.Request.status}
                       </div>
-                      <div className="flex">
-                      <div className=" ml-10 ">
-                        <button
-                          className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded"
-                          onClick={() => { handleBookQueue(item.id, item.req_id) }}
-                        >
-                          เลื่อนนัดหมาย
-                        </button>
-                      </div>
-                      <div className="ml-2">
-                        <button
-                          className="bg-green-500 hover:bg-green-400 text-white text-xs py-2 px-4 rounded"
-                          onClick={() => { showModal(item.id) }}
-                        >
-                          แก้ไขฟอร์ม
-                        </button>
-                      </div>
-                      </div>
+                      
+                          <div className="flex">
+                            <button 
+                              className="bg-stone-500 hover:bg-stone-400 text-white text-xs py-2 px-4 rounded"
+                              onClick={() => { showModalEditForm(item) }}
+                            >
+                              Edit form
+                            </button>
+                            <button 
+                              className="bg-pink-400 hover:bg-pink-300 text-white text-xs py-2 px-4 rounded ml-2"
+                              onClick={() => { handleBookQueue(item) }}
+                            >
+                              Reschedule
+                            </button>
+                            <button 
+                              className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-2"
+                              onClick={() => { showModal(item) }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        
                     </div>
+                    )}
                   </div>
                 ))
               ) : null}
               {notQueue.length > 0 && (
                 notQueue.map((item, index) => (
                   
-                  <div key={index} className="flex justify-between items-center bg-white shadow-md rounded-xl p-6 w-full mt-5">
+                  <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
                    <div>
                     {count++ + ". " + item.type + "  " + item.status}
                    </div>
                      <div className="flex">
                     <button 
-                      className="bg-green-500 hover:bg-green-400 text-white text-xs py-2 px-4 rounded"
+                      className="bg-stone-500 hover:bg-stone-400 text-white text-xs py-2 px-4 rounded"
                       onClick={() => { handleEditForm(item.id) }}
                       >
-                    แก้ไขฟอร์ม
+                    Edit form
                     </button>
                     <button className="
                       bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded ml-2"
                       onClick={() => { handleBookNotQueue(item.id) }}
                       >
-                        เลื่อนนัดหมาย
+                        Reschedule
                     </button>
                     <button 
                       className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-2"
                       onClick={() => { showModalNotQueue(item.id) }}
                       >
-                      ยกเลิก
+                      cancel
                     </button>
                   </div>
                   </div>
@@ -306,7 +342,7 @@ export const Form = () => {
                 title="4. โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)"
               />
             </a>
-            <a href="/prakan-inter">
+            <a href="/prakan-inter/0">
               <ServiceCard
                 title="5. Health Insurance For Foreigner Student"
               />
@@ -317,9 +353,25 @@ export const Form = () => {
               />
             </a>
           </div>
+         
         </div>
+       
       </main>
+        <div className="absolute -bottom-2/4 -right-3/4 w-11/12 h-4/6 bg-pink-200 rounded-full"></div>
       </div>
+
+      <Modal 
+      title="ต้องการยกเลิกคิวแล้วแก้ไขฟอร์มใช่ไหม (Are you sure to delete queue and edit form ?)" 
+      open={isModalEditFormOpen} 
+      onOk={handleEditFormDeleteQueue} 
+      onCancel={handleCancel} 
+      okButtonProps={{ 
+        style: { backgroundColor: '#f9a8d4' }, 
+        onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
+        onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
+      }}
+    >
+    </Modal>
       
       
     <Modal 
@@ -352,7 +404,7 @@ export const Form = () => {
 
 const ServiceCard = ({ title, icon }) => {
   return (
-    <div className="flex justify-start items-center shadow-md mt-8 rounded-xl p-8 bg-white" >
+    <div className="flex justify-start items-center border border-gray-200 shadow-md mt-8 rounded-xl p-8 bg-white" >
       <div className="text-xl">{icon}</div>
       <div className=" ">
         <div className=" ml-6 border-gray-300"></div>
@@ -361,7 +413,7 @@ const ServiceCard = ({ title, icon }) => {
       <div className="ml-5 text-gray-700">{title}</div>
     ) : (
       <div className="px-16">
-        <p className=" -ml-24 text-gray-700 font-medium">{title}</p>
+        <p className=" -ml-24 text-gray-700 font-normal">{title}</p>
 
       </div>
     )}

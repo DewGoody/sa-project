@@ -1,6 +1,36 @@
+"use client";
 import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useRouter,useParams } from 'next/navigation';
 
 function AccidentForm({ handleChange }) {
+  const [alreadyData, setAlreadyData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const router = useRouter();
+  const {form} = useParams();
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.post("/api/prakanInter/getDataById", { id: parseInt(form) });
+      console.log("responseFetch", response.data.data);
+      setAlreadyData(response.data.data);
+      setClaimType(response.data.data.claimType);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if(form!=="0"){
+      fetchData();
+    }
+  }, []);
+
+  console.log("Component :", alreadyData);
   return (
     <div>
       <h3 className="text-lg font-semibold my-4 flex gap-4">
@@ -15,8 +45,11 @@ function AccidentForm({ handleChange }) {
           <input
             type="date"
             name="accidentDate"
-            // value={formData.birthDate}
-            onChange={(event) => handleChange(event, "accidentDate")}
+            value={alreadyData?.accidentDate}
+            onChange={(event) => {
+              handleChange(event, "accidentDate");
+              setAlreadyData({ ...alreadyData, accidentDate: event.target.value });
+            }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Date of Accident"
             max={new Date()?.toISOString()?.slice(0, 10)}
@@ -27,8 +60,11 @@ function AccidentForm({ handleChange }) {
           <input
             type="time"
             name="accidentTime"
-            //value={formData.religion}
-            onChange={(event) => handleChange(event, "accidentTime")}
+            value={alreadyData?.accidentTime}
+            onChange={(event) => {
+              handleChange(event, "accidentTime");
+              setAlreadyData({ ...alreadyData, accidentTime: event.target.value });
+            }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
         </div>
@@ -37,9 +73,13 @@ function AccidentForm({ handleChange }) {
           <textarea
             name="accidentCause"
             rows="4"
-            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+            value={alreadyData?.accidentCause}
+            className="block p-2.5 w-full text-sm text-gray-900  rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
             placeholder="Cause of Accident"
-            onChange={(event) => handleChange(event, "accidentCause")}
+            onChange={(event) => {
+              handleChange(event, "accidentCause");
+              setAlreadyData({ ...alreadyData, accidentCause: event.target.value });
+            }}
           ></textarea>
         </div>
 
@@ -50,8 +90,11 @@ function AccidentForm({ handleChange }) {
           <input
             type="text"
             name="hospitalName"
-            //value={formData.citizenId}
-            onChange={(event) => handleChange(event, "hospitalName")}
+            value={alreadyData?.hospitalName}
+            onChange={(event) => {
+              handleChange(event, "hospitalName");
+              setAlreadyData({ ...alreadyData, hospitalName: event.target.value });
+            }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Hospital / Clinic Name"
           />
@@ -62,8 +105,11 @@ function AccidentForm({ handleChange }) {
             <input
               type="text"
               name="hospitalProvince"
-              // value={formData.birthDate}
-              onChange={(event) => handleChange(event, "hospitalProvince")}
+              value={alreadyData?.hospitalProvince}
+              onChange={(event) => {
+                handleChange(event, "hospitalProvince");
+                setAlreadyData({ ...alreadyData, hospitalProvince: event.target.value });
+              }}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               placeholder="Hospital / Clinic's Province"
             />
@@ -73,8 +119,11 @@ function AccidentForm({ handleChange }) {
             <input
               type="text"
               name="hospitalPhoneNumber"
-              //value={formData.religion}
-              onChange={(event) => handleChange(event, "hospitalPhoneNumber")}
+              value={alreadyData?.hospitalPhoneNumber}
+              onChange={(event) => {
+                handleChange(event, "hospitalPhoneNumber");
+                setAlreadyData({ ...alreadyData, hospitalPhoneNumber: event.target.value });
+              }}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               placeholder="Hospital / Clinic's Phone number"
             />
@@ -87,8 +136,11 @@ function AccidentForm({ handleChange }) {
           <input
             type="date"
             name="hospitalAmittedDate"
-            // value={formData.birthDate}
-            onChange={(event) => handleChange(event, "hospitalAmittedDate")}
+            value={alreadyData?.hospitalAmittedDate}
+            onChange={(event) => {
+              handleChange(event, "hospitalAmittedDate");
+              setAlreadyData({ ...alreadyData, hospitalAmittedDate: event.target.value });
+            }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Date Amitted"
             max={new Date()?.toISOString()?.slice(0, 10)}
@@ -101,8 +153,11 @@ function AccidentForm({ handleChange }) {
           <input
             type="date"
             name="hospitalDischargedDate"
-            // value={formData.birthDate}
-            onChange={(event) => handleChange(event, "hospitalDischargedDate")}
+            value={alreadyData?.hospitalDischargedDate}
+            onChange={(event) => {
+              handleChange(event, "hospitalDischargedDate");
+              setAlreadyData({ ...alreadyData, hospitalDischargedDate: event.target.value });
+            }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Date discharged"
           />

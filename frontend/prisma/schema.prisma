@@ -211,9 +211,9 @@ model Request {
   status            String?
   stu_id            Decimal?            @db.Decimal
   deleted_at        DateTime?           @db.Timestamptz(6)
+  Military_info     Military_info[]
   Ponpan            Ponpan[]
   Queue             Queue[]
-  RD_info           RD_info[]
   Student           Student?            @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   UHC_request       UHC_request[]
   accident_info     accident_info[]
