@@ -87,7 +87,7 @@ function Page() {
       .post("/api/vendorService", allData)
       .then((response) => {
         console.log("Form submitted successfully:", response.data);
-        //window.location.href = "/vendor/checkVendor";
+        window.location.href = "/vendor/checkVendor";
       })
       .catch((error) => {
         console.error("Error submitting form:", error);

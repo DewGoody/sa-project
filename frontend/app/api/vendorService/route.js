@@ -6,49 +6,44 @@ import { vendorFormBuilder } from "../../../document_build/vendorFormBuilder";
 const prisma = new PrismaClient();
 
 export async function POST(req, res) {
-  //let data = await req.json();
-  // generate PDF Document
-  // await vendorFormBuilder(data);
-  //console.log("-----------------");
-  //console.log("data", data);
-  //return NextResponse.json({ message: "success" }, { status: 200 });
   try {
     let data = await req.json();
     // generate PDF Document
     await vendorFormBuilder(data);
     console.log("data", data);
-    return NextResponse.json({ message: "success" }, { status: 200 });
 
     //Push data to database
-    /*const createPrakan = await prisma.prakan_inter_info.create({
+    const createVendor = await prisma.vendor_info.create({
       data: {
         stu_id: data.id,
-        phone_num: data.phone_num,
+        nameTH: data.nameTH,
+        faculty: data.faculty,
+        houseID: data.houseID,
+        moo: data.moo,
+        buildingVillage: data.buildingVillage,
+        soi: data.soi,
+        road: data.road,
+        subDistrict: data.subDistrict,
+        district: data.district,
+        province: data.province,
+        postalCode: data.postalCode,
+        tel: data.tel,
+        citizenId: data.citizenId,
+        citizenIssueDate: data.citizenIssueDate,
+        citizenExpireDate: data.citizenExpireDate,
         claimType: data.claimType,
-        accidentDate: data.accidentDate || null,
-        accidentTime: data.accidentTime || null,
-        accidentCause: data.accidentCause || null,
-        hospitalName: data.hospitalName,
-        hospitalProvince: data.hospitalProvince,
-        hospitalPhoneNumber: data.hospitalPhoneNumber,
-        hospitalAmittedDate: data.hospitalAmittedDate,
-        hospitalDischargedDate: data.hospitalDischargedDate,
-        presentAddress: data.presentAddress,
-        title: data.title,
+        amount: data.amount,
+        bankCompany: data.bankCompany,
+        bankBranch: data.bankBranch,
+        bankAccountType: data.bankAccountType,
+        bankAccountName: data.bankAccountName,
+        bankAccountNumber: data.bankAccountNumber,
+        claimOtherReason: data.claimOtherReason,
       },
     });
     return NextResponse.json({ message: "success" }, { status: 200 });
 
     //error handling
-  } catch (error) {
-    console.error("Error submitting form:", error);
-    return NextResponse.json(
-      { error: "Error submitting form" },
-      { status: 500 }
-    );
-  }
-    
-}*/
   } catch (error) {
     console.error("Error submitting form:", error);
     return NextResponse.json(

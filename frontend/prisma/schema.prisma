@@ -35,7 +35,7 @@ model Address_Desc {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model District {
-  id          BigInt  @id @default(autoincrement())
+  id          BigInt  @id(map: "District_pkey1") @default(autoincrement())
   code        String  @db.VarChar
   name_th     String? @db.VarChar
   name_en     String? @db.VarChar
@@ -145,9 +145,13 @@ model Student {
   thai_id_card_issured DateTime?            @db.Date
   thai_id_card_expired DateTime?            @db.Date
   personal_email       String?
+  phone_num            String?
+  degree               String?
   Address              Address[]
   Military_info        Military_info?
+  Ponpan               Ponpan[]
   Queue                Queue[]
+  RD_info              RD_info[]
   Request              Request[]
   UHC_reg_info         UHC_reg_info?
   UHC_request          UHC_request[]
@@ -194,19 +198,20 @@ model accident_claim_info {
 }
 
 model accident_info {
-  id              BigInt    @id @default(autoincrement())
-  created_at      DateTime  @default(now()) @db.Timestamptz(6)
-  stu_id          Decimal?  @db.Decimal
-  acc_desc        String?
-  acc_date        DateTime? @db.Date
-  accident_place  String?
-  treatment_place String?
-  hospital_type   String?
-  medical_fee     Int?
-  req_id          BigInt?
-  des_injury      String?
-  Request         Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student         Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id               BigInt    @id @default(autoincrement())
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  stu_id           Decimal?  @db.Decimal
+  acc_desc         String?
+  acc_date         DateTime? @db.Date
+  accident_place   String?
+  treatment_place  String?
+  hospital_type    String?
+  medical_fee      Int?
+  req_id           BigInt?
+  des_injury       String?
+  medical_fee_text String?
+  Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student          Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model father_mother_info {
@@ -245,15 +250,19 @@ model Queue {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Request {
-  id            BigInt          @id @default(autoincrement())
-  created_at    DateTime        @default(now()) @db.Timestamptz(6)
-  type          String?
-  status        String?
-  stu_id        Decimal?        @db.Decimal
-  deleted_at    DateTime?       @db.Timestamptz(6)
-  Queue         Queue[]
-  Student       Student?        @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  accident_info accident_info[]
+  id                BigInt              @id @default(autoincrement())
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  type              String?
+  status            String?
+  stu_id            Decimal?            @db.Decimal
+  deleted_at        DateTime?           @db.Timestamptz(6)
+  Ponpan            Ponpan[]
+  Queue             Queue[]
+  RD_info           RD_info[]
+  Student           Student?            @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  UHC_request       UHC_request[]
+  accident_info     accident_info[]
+  prakan_inter_info prakan_inter_info[]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -298,6 +307,8 @@ model prakan_inter_info {
   presentAddress         String?
   title                  String?
   stu_id                 Decimal? @db.Decimal
+  req_id                 BigInt?
+  Request                Request? @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student                Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -311,9 +322,11 @@ model Dayoff {
 model UHC_request {
   id               BigInt    @id @default(autoincrement())
   created_at       DateTime  @default(now()) @db.Timestamptz(6)
-  update_at        DateTime? @db.Timetz(6)
+  update_at        DateTime? @default(now()) @db.Timetz(6)
   student_id       Decimal   @db.Decimal
   binary_file_data Bytes?
+  req_id           BigInt?
+  Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student   @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -323,4 +336,100 @@ model pdffile {
   content    Bytes
   size       Int
   created_at DateTime? @default(now()) @db.Timestamp(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model District_old {
+  id          BigInt  @id(map: "District_pkey") @default(autoincrement())
+  code        String  @db.VarChar
+  name_th     String? @db.VarChar
+  name_en     String? @db.VarChar
+  province_id BigInt?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Max_student {
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  max_stu    BigInt?
+  date       DateTime @id @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Ponpan {
+  id             BigInt    @id @default(autoincrement())
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  deleted_at     DateTime? @db.Timestamptz(6)
+  sdnine_id      BigInt?
+  stu_id         Decimal?  @db.Decimal
+  req_id         BigInt?
+  degree         String?
+  father_name    String?
+  mother_name    String?
+  house_num      String?
+  house_moo      BigInt?
+  district       String?
+  sub_district   String?
+  province       String?
+  house_moo_sd   BigInt?
+  house_num_sd   String?
+  district_sd    String?
+  subdistrict_sd String?
+  province_sd    String?
+  phone_num      String?
+  email          String?
+  year           BigInt?
+  Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student        Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model RD_info {
+  id           BigInt   @id @default(autoincrement())
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+  RD_type      Decimal? @db.Decimal
+  student_id   Decimal? @db.Decimal
+  json_history Json?    @db.Json
+  req_id       BigInt?
+  Request      Request? @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student      Student? @relation(fields: [student_id], references: [id], onDelete: Cascade)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Subdistrict_old {
+  id        String  @id @db.VarChar
+  zipCode   BigInt
+  nameTh    String? @db.VarChar
+  nameEn    String? @db.VarChar
+  amphureId BigInt?
+}
+
+model vendor_info {
+  id                BigInt   @id @default(autoincrement())
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  stu_id            String?
+  nameTH            String?
+  faculty           String?
+  houseID           String?
+  moo               String?
+  buildingVillage   String?
+  soi               String?
+  road              String?
+  subDistrict       String?
+  district          String?
+  province          String?
+  postalCode        String?
+  tel               String?
+  citizenId         String?
+  citizenIssueDate  String?
+  citizenExpireDate String?
+  claimType         String?
+  amount            Decimal? @db.Decimal
+  bankCompany       String?
+  bankBranch        String?
+  bankAccountType   String?
+  bankAccountName   String?
+  bankAccountNumber String?
+  claimOtherReason  String?
 }
