@@ -5,12 +5,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Header } from '../../../components/Header';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+
 
 
 
 
 const RD = () => {
     const { formData, updateFormData } = useFormData();
+    const { form } = useParams()
+    const int_form = parseInt(form)
+    const router = useRouter();
 
     useEffect(() => {
         console.log(formData);
@@ -18,12 +23,17 @@ const RD = () => {
 
     const filepdf = async () => {
         try {
-            const response = await axios.get("/api/export/RD2", { responseType: 'blob' });
+            const response = await axios.get(`/api/export/RD2?id=${int_form}`, { responseType: 'blob' });
             return response.data;
         } catch (error) {
             console.log(error);
         }
     };
+    const handleback = () => {
+        console.log("Doc", int_form);
+
+        router.push(`/rordor/${int_form}/checkData2`)
+    }
 
     const handleDownload = async () => {
         const pdfBlob = await filepdf();

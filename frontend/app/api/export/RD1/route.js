@@ -8,10 +8,18 @@ import { getID } from '../../../../lib/session'
 
 export async function GET(req) {
   try {
-    const cookie = req.headers.get('cookie') || '';
-    const id = await getID(req) || getIDbyToken(cookie);
-    if (!id) {
-      return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
+    // const cookie = req.headers.get('cookie') || '';
+    let id = 0
+    const formId = req.nextUrl.searchParams.get('id')
+    if (formId == 0) {
+        id = await getID(req)
+        console.log("in frist");
+    } else {
+        console.log("in else");
+        const idbefore = await prisma.uHC_request.findFirst({
+            where: { id: parseInt(formId) }
+        })
+        id = idbefore.student_id
     }
     const studentData = await getMilitaryInfo(id);
     if (!studentData) {

@@ -158,6 +158,9 @@ const CheckData = () => {
     };
     const formatDateToISO = (dateString) => {
         const date = new Date(dateString);
+        if (isNaN(date)) {
+            return;
+        }
         return date.toISOString();
     };
     useEffect(() => {

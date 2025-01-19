@@ -191,6 +191,7 @@ model Queue {
   Timeslot    Timeslot? @relation(fields: [timeslot_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model RD_info {
   id           BigInt   @id @default(autoincrement())
@@ -211,9 +212,9 @@ model Request {
   status            String?
   stu_id            Decimal?            @db.Decimal
   deleted_at        DateTime?           @db.Timestamptz(6)
-  Military_info     Military_info[]
   Ponpan            Ponpan[]
   Queue             Queue[]
+  RD_info           RD_info[]
   Student           Student?            @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   UHC_request       UHC_request[]
   accident_info     accident_info[]
@@ -406,4 +407,33 @@ model prakan_inter_info {
   req_id                 BigInt?
   Request                Request? @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student                Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model vendor_info {
+  id                BigInt   @id @default(autoincrement())
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  stu_id            String?
+  nameTH            String?
+  faculty           String?
+  houseID           String?
+  moo               String?
+  buildingVillage   String?
+  soi               String?
+  road              String?
+  subDistrict       String?
+  district          String?
+  province          String?
+  postalCode        String?
+  tel               String?
+  citizenId         String?
+  citizenIssueDate  String?
+  citizenExpireDate String?
+  claimType         String?
+  amount            Decimal? @db.Decimal
+  bankCompany       String?
+  bankBranch        String?
+  bankAccountType   String?
+  bankAccountName   String?
+  bankAccountNumber String?
+  claimOtherReason  String?
 }

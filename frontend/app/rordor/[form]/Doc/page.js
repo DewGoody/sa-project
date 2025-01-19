@@ -22,7 +22,7 @@ const RD = () => {
 
     const filepdf = async () => {
         try {
-            const response = await axios.get("/api/export/RD1", { responseType: 'blob' });
+            const response = await axios.get(`/api/export/RD1?id=${int_form}`, { responseType: 'blob' });
             return response.data;
         } catch (error) {
             console.log(error);

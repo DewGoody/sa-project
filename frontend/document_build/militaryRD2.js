@@ -41,7 +41,7 @@ try {
 }
 
 export async function militaryRD2(data) {
-  //console.log(data);
+  // console.log("in export pdf",data);
   // const mockdata = require('../../test.json');
 
 
@@ -72,8 +72,9 @@ export async function militaryRD2(data) {
   const firstPage = pages[0];
 
   let isFemaleTitile = student.title === 'นาย' ? '' : 'หญิง ';
+  // console.log("tesetsdmnfdmsnfsdfdsfnll");
 
-  // Get the width and height of the first page
+  //Get the width and height of the first page
   const { width, height } = firstPage.getSize();
   console.log(width, height);
 
@@ -149,6 +150,7 @@ export async function militaryRD2(data) {
     });
   }
 
+  // console.log("tesetsdmnfdmsnfsdfdsfnll");
 
 
   // Next line
@@ -277,6 +279,8 @@ export async function militaryRD2(data) {
   const studentYear = parseInt(String(student.student_id).substring(0, 2));
   const studentClass = (currentDate.getFullYear() + 543) - (studentYear + 2500);
   const stu_year = "ปี " + studentClass.toString();
+  // console.log("tesetsdmnfdmsnfsdfdsfnll");
+
   firstPage.drawText(stu_year, {
     x: 240,
     y: height - 262,
@@ -530,6 +534,7 @@ export async function militaryRD2(data) {
   });
 
   // next line 
+  // console.log("tesetsdmnfdmsnfsdfdsfnll");
 
   // guardian signature
   firstPage.drawText(gaurdianName.toString(), {
@@ -758,6 +763,8 @@ export async function militaryRD2(data) {
 
   // Mother address
   const motherAddress = addresses.Mother_address;
+  // console.log("tesetsdmnfdmsnfsdfdsfnll");
+
 
   // House number'
   const motherHouseNumber = motherAddress.house_num;
@@ -877,6 +884,8 @@ export async function militaryRD2(data) {
     font: thSarabunFont,
     color: rgb(0, 0, 0), // black
   });
+  // console.log("tesetsdmnfdmsnfsdfdsfnll");
+
 
   // Next line
 
@@ -884,88 +893,108 @@ export async function militaryRD2(data) {
 
   // academic grade2
   const academicGrade2 = Military_info.academic_grade2;
-  secondPage.drawText(academicGrade2.toString(), {
-    x: 100,
-    y: height2 - 295,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (academicGrade2) {
+    secondPage.drawText(academicGrade2.toString(), {
+      x: 100,
+      y: height2 - 295,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // academic_class2
+  // console.log("tesetsdmnfdmsnfsdfdsfnll");
+
   const academicClass2 = Military_info.academic_class2;
-  secondPage.drawText(academicClass2.toString(), {
-    x: 170,
-    y: height2 - 295,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (academicClass2) {
+    secondPage.drawText(academicClass2.toString(), {
+      x: 170,
+      y: height2 - 295,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
+  // console.log("tesetsdmnfdmsnfsdfdsfnll");
 
   // academic_major2
   const academicMajor2 = Military_info.academic_major2;
-  secondPage.drawText(academicMajor2, {
-    x: 305,
-    y: height2 - 295,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (academicMajor2) {
+    secondPage.drawText(academicMajor2, {
+      x: 305,
+      y: height2 - 295,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // academic_school2
   const academicSchool2 = Military_info.academic_school2;
-  secondPage.drawText(academicSchool2.toString(), {
-    x: 450,
-    y: height2 - 295,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (academicSchool2) {
+    secondPage.drawText(academicSchool2.toString(), {
+      x: 450,
+      y: height2 - 295,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
 
   // Next line
 
   // tab 3
+  // console.log("tesetsdmnfdmsnfsdfdsfnll");
 
   // academic grade3
   const academicGrade3 = Military_info.academic_grade3;
-  secondPage.drawText(academicGrade3.toString(), {
-    x: 100,
-    y: height2 - 313,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (academicGrade3) {
+    secondPage.drawText(academicGrade3.toString(), {
+      x: 100,
+      y: height2 - 313,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // academic_class3
   const academicClass3 = Military_info.academic_class3;
-  secondPage.drawText(academicClass3.toString(), {
-    x: 170,
-    y: height2 - 313,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (academicClass3) {
+    secondPage.drawText(academicClass3.toString(), {
+      x: 170,
+      y: height2 - 313,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // academic_major3
   const academicMajor3 = Military_info.academic_major3;
-  secondPage.drawText(academicMajor3.toString(), {
-    x: 305,
-    y: height2 - 313,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (academicMajor3) {
+    secondPage.drawText(academicMajor3.toString(), {
+      x: 305,
+      y: height2 - 313,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // academic_school3
   const academicSchool3 = Military_info.academic_school3;
-  secondPage.drawText(academicSchool3.toString(), {
-    x: 450,
-    y: height2 - 313,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (academicSchool3) {
+    secondPage.drawText(academicSchool3.toString(), {
+      x: 450,
+      y: height2 - 313,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
 
   // Next line
@@ -973,45 +1002,55 @@ export async function militaryRD2(data) {
   // tab 4
 
   // academic grade4
+  // console.log("tesetsdmnfdmsnfsdfdsfnll");
+
   const academicGrade4 = Military_info.academic_grade4;
-  secondPage.drawText(academicGrade4.toString(), {
-    x: 100,
-    y: height2 - 331,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (academicGrade4) {
+    secondPage.drawText(academicGrade4.toString(), {
+      x: 100,
+      y: height2 - 331,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // academic_class4
   const academicClass4 = Military_info.academic_class4;
-  secondPage.drawText(academicClass4.toString(), {
-    x: 170,
-    y: height2 - 331,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (academicClass4) {
+    secondPage.drawText(academicClass4.toString(), {
+      x: 170,
+      y: height2 - 331,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // academic_major4
   const academicMajor4 = Military_info.academic_major4;
-  secondPage.drawText(academicMajor4.toString(), {
-    x: 305,
-    y: height2 - 331,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+
+  if (academicMajor4) {
+    secondPage.drawText(academicMajor4.toString(), {
+      x: 305,
+      y: height2 - 331,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // academic_school4
   const academicSchool4 = Military_info.academic_school4;
-  secondPage.drawText(academicSchool4.toString(), {
-    x: 450,
-    y: height2 - 331,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
-
+  if (academicSchool4) {
+    secondPage.drawText(academicSchool4.toString(), {
+      x: 450,
+      y: height2 - 331,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // Next section
   // Military training information
@@ -1020,42 +1059,50 @@ export async function militaryRD2(data) {
 
   // military_grade1
   const militaryGrade1 = Military_info.military_grade1;
-  secondPage.drawText(militaryGrade1.toString(), {
-    x: 130,
-    y: height2 - 367,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militaryGrade1) {
+    secondPage.drawText(militaryGrade1.toString(), {
+      x: 130,
+      y: height2 - 367,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // military_year1
   const militaryYear1 = Military_info.military_year1;
-  secondPage.drawText(militaryYear1.toString(), {
-    x: 180,
-    y: height2 - 367,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militaryYear1) {
+    secondPage.drawText(militaryYear1.toString(), {
+      x: 180,
+      y: height2 - 367,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // military_school1
   const militarySchool1 = Military_info.military_school1;
-  secondPage.drawText(militarySchool1.toString(), {
-    x: 295,
-    y: height2 - 367,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militarySchool1) {
+    secondPage.drawText(militarySchool1.toString(), {
+      x: 295,
+      y: height2 - 367,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   const military_province1 = Military_info.military_province1;
-  secondPage.drawText(military_province1.toString(), {
-    x: 480,
-    y: height2 - 367,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (military_province1) {
+    secondPage.drawText(military_province1.toString(), {
+      x: 480,
+      y: height2 - 367,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // next line
 
@@ -1063,42 +1110,50 @@ export async function militaryRD2(data) {
 
   // military_grade2
   const militaryGrade2 = Military_info.military_grade2;
-  secondPage.drawText(militaryGrade2.toString(), {
-    x: 130,
-    y: height2 - 385,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militaryGrade2) {
+    secondPage.drawText(militaryGrade2.toString(), {
+      x: 130,
+      y: height2 - 385,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // military_year2
   const militaryYear2 = Military_info.military_year2;
-  secondPage.drawText(militaryYear2.toString(), {
-    x: 180,
-    y: height2 - 385,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militaryYear2) {
+    secondPage.drawText(militaryYear2.toString(), {
+      x: 180,
+      y: height2 - 385,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // military_school2
   const militarySchool2 = Military_info.military_school2;
-  secondPage.drawText(militarySchool2.toString(), {
-    x: 295,
-    y: height2 - 385,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militarySchool2) {
+    secondPage.drawText(militarySchool2.toString(), {
+      x: 295,
+      y: height2 - 385,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   const military_province2 = Military_info.military_province2;
-  secondPage.drawText(military_province2.toString(), {
-    x: 480,
-    y: height2 - 385,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (military_province2) {
+    secondPage.drawText(military_province2.toString(), {
+      x: 480,
+      y: height2 - 385,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // next line
 
@@ -1106,42 +1161,50 @@ export async function militaryRD2(data) {
 
   // military_grade3
   const militaryGrade3 = Military_info.military_grade3;
-  secondPage.drawText(militaryGrade3.toString(), {
-    x: 130,
-    y: height2 - 403,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militaryGrade3) {
+    secondPage.drawText(militaryGrade3.toString(), {
+      x: 130,
+      y: height2 - 403,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // military_year3
   const militaryYear3 = Military_info.military_year3;
-  secondPage.drawText(militaryYear3.toString(), {
-    x: 180,
-    y: height2 - 403,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militaryYear3) {
+    secondPage.drawText(militaryYear3.toString(), {
+      x: 180,
+      y: height2 - 403,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // military_school3
   const militarySchool3 = Military_info.military_school3;
-  secondPage.drawText(militarySchool3.toString(), {
-    x: 295,
-    y: height2 - 403,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militarySchool3) {
+    secondPage.drawText(militarySchool3.toString(), {
+      x: 295,
+      y: height2 - 403,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   const military_province3 = Military_info.military_province3;
-  secondPage.drawText(military_province3.toString(), {
-    x: 480,
-    y: height2 - 403,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (military_province3) {
+    secondPage.drawText(military_province3.toString(), {
+      x: 480,
+      y: height2 - 403,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // next line
 
@@ -1149,42 +1212,50 @@ export async function militaryRD2(data) {
 
   // military_grade4
   const militaryGrade4 = Military_info.military_grade4;
-  secondPage.drawText(militaryGrade4.toString(), {
-    x: 130,
-    y: height2 - 421,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militaryGrade4) {
+    secondPage.drawText(militaryGrade4.toString(), {
+      x: 130,
+      y: height2 - 421,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // military_year4
   const militaryYear4 = Military_info.military_year4;
-  secondPage.drawText(militaryYear4.toString(), {
-    x: 180,
-    y: height2 - 421,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militaryYear4) {
+    secondPage.drawText(militaryYear4.toString(), {
+      x: 180,
+      y: height2 - 421,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // military_school4
   const militarySchool4 = Military_info.military_school4;
-  secondPage.drawText(militarySchool4.toString(), {
-    x: 295,
-    y: height2 - 421,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (militarySchool4) {
+    secondPage.drawText(militarySchool4.toString(), {
+      x: 295,
+      y: height2 - 421,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   const military_province4 = Military_info.military_province4;
-  secondPage.drawText(military_province4.toString(), {
-    x: 480,
-    y: height2 - 421,
-    size: 14,
-    font: thSarabunFont,
-    color: rgb(0, 0, 0), // black
-  });
+  if (military_province4) {
+    secondPage.drawText(military_province4.toString(), {
+      x: 480,
+      y: height2 - 421,
+      size: 14,
+      font: thSarabunFont,
+      color: rgb(0, 0, 0), // black
+    });
+  }
 
   // Next section
   // military address
@@ -1468,7 +1539,7 @@ export async function militaryRD2(data) {
   });
 
   // postal code  
-  const contactablePostalCode = contactableAddress?.postal_code  || '';
+  const contactablePostalCode = contactableAddress?.postal_code || '';
   secondPage.drawText(contactablePostalCode.toString(), {
     x: 400,
     y: height2 - 584,
@@ -1774,6 +1845,10 @@ export async function militaryRD2(data) {
 
 
   // return pdf
+  // console.log("before end");
+
   const pdfBytes = await pdfDoc.save();
+  // console.log("after end");
+
   return pdfBytes;
 }

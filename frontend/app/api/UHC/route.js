@@ -14,7 +14,7 @@ export async function GET(req) {
         console.log("in frist");
     } else {
         console.log("in else");
-        const idbefore = await prisma.uHC_request.findFirst({
+        const idbefore = await prisma.rD_info.findFirst({
             where: { id: parseInt(formId) }
         })
         id = idbefore.student_id
