@@ -1,13 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
-    DeleteOutlined,
-    DownloadOutlined
+    SearchOutlined
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space,Select,Modal } from 'antd';
 import axios from 'axios';
@@ -17,6 +11,8 @@ import { useRouter,useParams } from 'next/navigation';
 const { Header, Sider, Content } = Layout;
 
 const AppointmentManagement = () => {
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
     const [dataSource, setDataSource] = useState([]);
     const [stuData, setStuData] = useState([]);
     const {
@@ -39,6 +35,46 @@ const AppointmentManagement = () => {
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const handleSearch = (value, dataIndex) => {
+    setSearchText(value);
+    setSearchedColumn(dataIndex);
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, confirm }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          placeholder={`Search ${dataIndex}`}
+          value={searchText}
+          onChange={(e) => {
+            const value = e.target.value;
+            setSelectedKeys(value ? [value] : []);
+            handleSearch(value, dataIndex);
+            confirm({ closeDropdown: false }); // Keep the dropdown open
+          }}
+          style={{ marginBottom: 8, display: "block" }}
+        />
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ?.toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
+          {text}
+        </span>
+      ) : (
+        text
+      ),
+  });
 
 const showModal = async () => {
     setIsModalOpen(true);
@@ -171,10 +207,12 @@ const columns = [
     {
         title: 'ประเภทการเข้ารับบริการ',
         dataIndex: 'type',
+        ...getColumnSearchProps("type"),
     },
     {
         title: 'วันที่',
         dataIndex: 'date',
+
     },
     {
         title: 'เวลา',
@@ -183,10 +221,12 @@ const columns = [
     {
         title: 'ชื่อ-นามสกุล',
         dataIndex: 'name',
+        ...getColumnSearchProps("name"),
     },
     {
         title: 'รหัสนิสิต',
         dataIndex: 'student_ID',
+        ...getColumnSearchProps("student_ID"),
     },
 ];
 
@@ -283,12 +323,7 @@ const columns = [
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
                             จัดการการนัดหมาย
-                        </div>
-                        <div className='mr-10'>
-                            <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
-                        </div>
-                        
-                        
+                        </div> 
                     </div>
                     <div className="flex justify-between">
                         <div className='mt-10 mb-6'>

@@ -220,7 +220,7 @@ export const Form = () => {
             ฝ่ายทุนการศึกษาและบริการนิสิต สำนักบริหารกิจการนิสิต จุฬาลงกรณ์มหาวิทยาลัย
           </div>
           <div className="text-xs font-medium ml-9">
-            Departmet of Schorships & Students Service. Office of the Student Affairs. Chulalongkorn University
+          Department of Scholarships & Students Service, Office of the Student Affairs, Chulalongkorn University
           </div>
         </div>
       </div>
@@ -251,11 +251,12 @@ export const Form = () => {
                     <div className="flex justify-between border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full">
                       <div className="">
                       {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " ( " + timeSlots[item.period] + " น.)" + " "}
-                      <span className="ml-4 mt-1 font-semibold text-xl text-blue-500">{item.Request.status}</span>
+
+                      <div className="ml-4 mt-1 font-semibold text-xl text-blue-500">{item.Request.status}</div>
                       </div>
                       
                          {item.Request.status === "รอเข้ารับบริการ" && (
-                           <div className="ml-3 flex">
+                           <div className="ml-3 mt- mb-3 flex">
                            <button 
                              className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
                              onClick={() => { showModalEditForm(item) }}
@@ -288,11 +289,11 @@ export const Form = () => {
                   <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
                    <div>
                     {count++ + ". " + item.type + "  " + item.status}
-                    <span className="ml-4 mt-1 font-semibold text-xl text-blue-500">{item.status}</span>
+                    <div className="ml-4 mt-1 font-semibold text-xl text-blue-500">{item.status}</div>
                    </div>
                      <div className="flex">
                     <button 
-                      className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
+                      className="bg-blue-500  hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
                       onClick={() => { handleEditForm(item.id) }}
                       >
                     Edit form
@@ -352,7 +353,7 @@ export const Form = () => {
             </a>
             <a href="/">
               <ServiceCard
-                title="6. กู้กองทุนเงินให้กู้ยืมเพื่อการศึกษา"
+                title="6. กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) "
               />
             </a>
           </div>

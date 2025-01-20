@@ -1,12 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
-    DeleteOutlined,
+    SearchOutlined,
     DownloadOutlined
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space,Select } from 'antd';
@@ -18,6 +13,8 @@ const { Header, Sider, Content } = Layout;
 
 
 const App = () => {
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
     const [dataSource, setDataSource] = useState([]);
     const [stuData, setStuData] = useState([]);
     const {
@@ -66,7 +63,8 @@ const App = () => {
                     presentAddress: data.prakan_inter_info[0].presentAddress || "-",
                     type: data.prakan_inter_info[0].claimType || "-",
                     status: data.status || "-",
-                    reqId: data.prakan_inter_info[0].req_id
+                    reqId: data.prakan_inter_info[0].req_id,
+                    prakanId: data.prakan_inter_info[0].id
                 }
             }
             ));
@@ -106,7 +104,7 @@ const App = () => {
 
     const handleDownload = async (dataDownload) => {
 
-        console.log("dataDownloadJaa", typeof dataDownload);
+        console.log("dataDownloadJaa", dataDownload);
 
         try {
             const res = await axios.post('/api/request/downloadPrakanInter', { id: parseInt(dataDownload) }, {
@@ -170,6 +168,44 @@ const App = () => {
         }
        }
     }
+    const handleSearch = (value, dataIndex) => {
+        setSearchText(value);
+        setSearchedColumn(dataIndex);
+      };
+    
+      const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, confirm }) => (
+          <div style={{ padding: 8 }}>
+            <Input
+              placeholder={`Search ${dataIndex}`}
+              value={searchText}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSelectedKeys(value ? [value] : []);
+                handleSearch(value, dataIndex);
+                confirm({ closeDropdown: false }); // Keep the dropdown open
+              }}
+              style={{ marginBottom: 8, display: "block" }}
+            />
+          </div>
+        ),
+        filterIcon: (filtered) => (
+          <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
+        ),
+        onFilter: (value, record) =>
+          record[dataIndex]
+            ?.toString()
+            .toLowerCase()
+            .includes(value.toLowerCase()),
+        render: (text) =>
+          searchedColumn === dataIndex ? (
+            <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
+              {text}
+            </span>
+          ) : (
+            text
+          ),
+      });
 
 
     const columns = [
@@ -190,7 +226,7 @@ const App = () => {
                     fontSize: '21px', // Increase the size (e.g., 24px)
                     cursor: 'pointer', // Optional: changes the cursor to a pointer
                   }}
-                  onClick={() => handleDownload(record.id)}
+                  onClick={() => handleDownload(record.prakanId)}
                 />
               </div>
             ),
@@ -264,14 +300,17 @@ const App = () => {
         {
             title: 'ประเภท',
             dataIndex: 'type',
+
         },
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'name',
+            ...getColumnSearchProps('name'),
         },
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
+            ...getColumnSearchProps('student_ID'),
         },
         {
             title: 'สาเหตุการเกิดอุบัติเหตุ',

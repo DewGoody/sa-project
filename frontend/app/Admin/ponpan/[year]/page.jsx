@@ -1,13 +1,7 @@
 'use client'
 import React, { Children, useEffect, useState } from 'react';
 import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
-    DeleteOutlined,
-    DownloadOutlined
+    SearchOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space,Select } from 'antd';
 import axios from 'axios';
@@ -18,6 +12,8 @@ import * as XLSX from 'xlsx';
 const { Header, Sider, Content } = Layout;
 
 const AppointmentManagement = () => {
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
     const [dataSource, setDataSource] = useState('');
     const [stuData, setStuData] = useState([]);
     const {
@@ -150,6 +146,45 @@ const AppointmentManagement = () => {
        } 
     }
 
+    const handleSearch = (value, dataIndex) => {
+        setSearchText(value);
+        setSearchedColumn(dataIndex);
+      };
+    
+      const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, confirm }) => (
+          <div style={{ padding: 8 }}>
+            <Input
+              placeholder={`Search ${dataIndex}`}
+              value={searchText}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSelectedKeys(value ? [value] : []);
+                handleSearch(value, dataIndex);
+                confirm({ closeDropdown: false }); // Keep the dropdown open
+              }}
+              style={{ marginBottom: 8, display: "block" }}
+            />
+          </div>
+        ),
+        filterIcon: (filtered) => (
+          <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
+        ),
+        onFilter: (value, record) =>
+          record[dataIndex]
+            ?.toString()
+            .toLowerCase()
+            .includes(value.toLowerCase()),
+        render: (text) =>
+          searchedColumn === dataIndex ? (
+            <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
+              {text}
+            </span>
+          ) : (
+            text
+          ),
+      });
+
 
 
 const columns = [
@@ -216,11 +251,13 @@ const columns = [
         title: 'รหัสนิสิต',
         dataIndex: 'stu_id',
         align: 'center',
+        ...getColumnSearchProps('stu_id'),
     },
     {
         title: 'เลขประจำตัวประชาชน',
         dataIndex: 'thai_id',
         align: 'center',
+        ...getColumnSearchProps('thai_id'),
     },
     {
         title: 'ศึกษาในระดับปริญญา',
@@ -236,11 +273,13 @@ const columns = [
         title: 'ชื่อ',
         dataIndex: 'fnameTH',
         align: 'center',
+        ...getColumnSearchProps('fnameTH'),
     },
     {
         title: 'นามสกุล',
         dataIndex: 'lnameTH',
         align: 'center',
+        ...getColumnSearchProps('lnameTH'),
     },
     {
         title: 'เบอร์โทรศัพท์',

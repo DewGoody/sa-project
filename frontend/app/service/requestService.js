@@ -493,13 +493,13 @@ export async function downloadPrakanInterAdmin(id) {
         const thisPrakan = await prisma.prakan_inter_info.findUnique({
             where: {id: id},
             include: {
-                Student:true
+                Student:true,
             }
-        })
+        })        
         const mergedData = {
             ...thisPrakan,
-            ...thisPrakan.Student, // Spread the `Student` object into the main object
-          };
+            ...thisPrakan.Student,
+       };
         const filePath = await prakanFormBuilder(mergedData)
         console.log('fileeee',filePath);
         

@@ -1,12 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
-    DeleteOutlined,
+    SearchOutlined,
     DownloadOutlined
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space,Select } from 'antd';
@@ -18,6 +13,8 @@ const { Header, Sider, Content } = Layout;
 
 
 const App = () => {
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
     const [dataSource, setDataSource] = useState([]);
     const [stuData, setStuData] = useState([]);
     const {
@@ -30,6 +27,45 @@ const App = () => {
     const { year } = useParams();
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
+
+    const handleSearch = (value, dataIndex) => {
+        setSearchText(value);
+        setSearchedColumn(dataIndex);
+      };
+    
+      const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, confirm }) => (
+          <div style={{ padding: 8 }}>
+            <Input
+              placeholder={`Search ${dataIndex}`}
+              value={searchText}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSelectedKeys(value ? [value] : []);
+                handleSearch(value, dataIndex);
+                confirm({ closeDropdown: false }); // Keep the dropdown open
+              }}
+              style={{ marginBottom: 8, display: "block" }}
+            />
+          </div>
+        ),
+        filterIcon: (filtered) => (
+          <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
+        ),
+        onFilter: (value, record) =>
+          record[dataIndex]
+            ?.toString()
+            .toLowerCase()
+            .includes(value.toLowerCase()),
+        render: (text) =>
+          searchedColumn === dataIndex ? (
+            <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
+              {text}
+            </span>
+          ) : (
+            text
+          ),
+      });
 
     
 
@@ -252,10 +288,12 @@ const App = () => {
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'name',
+            ...getColumnSearchProps('name'),
         },
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
+            ...getColumnSearchProps('student_ID'),
         },
         {
             title: 'อาการบาดเจ็บ',

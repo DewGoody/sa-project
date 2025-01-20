@@ -169,7 +169,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        5. Your copy of bank account passbook
+                        5. Copy of bank account passbook
                       </strong>
                     </div>
                   </label>
