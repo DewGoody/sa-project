@@ -30,6 +30,8 @@ export async function POST(req) {
 
         const body = await req.json();
         console.log(body);
+        console.log("jdfskhfdskhfjdkshfjdshjfkdsh",body.registeryear);
+        
         
 
         
@@ -37,7 +39,7 @@ export async function POST(req) {
         const pdf = await prisma.rD_info.create({
             data: {
                 student_id: id,
-                RD_type:1,
+                RD_type:body.registeryear,
                 json_history: body,
             },
         });

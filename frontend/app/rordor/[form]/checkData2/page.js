@@ -381,6 +381,7 @@ const CheckData = () => {
     }
     const id = formData.id
     const dataforsentlog = {
+        registeryear: formData.YearGradeRD,
         student: {
             title: formData.Nametitle,
             fnameTH: formData.Name,
@@ -804,7 +805,7 @@ const CheckData = () => {
             })
             if (int_form !== 0) { await axios.post(`/api/logRd/update?id=${int_form}`, (dataforsentlog)) }
             else {
-                await axios.post(`/api/logRd/create`, (dataforsentlog))
+                await axios.post(`/api/logRd/create2`, (dataforsentlog))
             }
             notifysuccess()
             router.push(`/rordor/${int_form}/Doc2`)
@@ -815,6 +816,11 @@ const CheckData = () => {
             // router.push("/rordor/Doc2")
         }
     };
+    const handleback = () => {
+        console.log("Doc", int_form);
+
+        router.push(`/rordor/${int_form}`)
+    }
     return (
         <div><Header req1="รายงานตัวเข้าฝึกนักศึกษาวิชาทหาร" req2="" />
             <div className="min-h-screen bg-whites 2xl:mx-24 xl:mx-24 lg:mx-24 md:mx-24 ">
@@ -2021,14 +2027,12 @@ const CheckData = () => {
 
 
                                 <div className="flex justify-between mt-8">
-                                    <a href="/rordor">
-                                        <button
-                                            type="button"
-                                            className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
-                                        >
-                                            หน้าก่อนหน้า
-                                        </button>
-                                    </a>
+                                    <button
+                                        onClick={event => handleback()}
+                                        type = "button"
+                                        className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                        Back
+                                    </button>
                                     <button
                                         type="submit"
                                         // onClick={notify}

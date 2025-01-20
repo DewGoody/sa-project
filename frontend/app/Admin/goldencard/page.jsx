@@ -114,8 +114,8 @@ const App = () => {
     const handleEditForm = async (id) => {
         console.log("editFormReqId : ", id);
         const response = await axios.post('/api/request/getById', { id: id }); // Example API
-        console.log("editFormResponse :", response.data.data);
-        router.push(`/${response.data.data.path}/${response.data.data.form}`);
+        console.log("editFormResponse :", response.data.data.path);
+        router.push(`/Admin/goldencard/${response.data.data.form}`);
     }
     const handleChangeStatus = async (record) => {
         console.log("status11", record.status)

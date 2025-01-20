@@ -14,11 +14,28 @@ const RD = () => {
     const { form } = useParams()
     const int_form = parseInt(form)
     const router = useRouter();
+    const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
 
 
     useEffect(() => {
-        // console.log(formData);
-    }, [formData]);
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('/api/profile'); // Example API
+                console.log(response.data);
+
+                setProfileData(response.data);
+                setLoading(false);
+                console.log(response.data);
+            } catch (error) {
+                setError(error.message);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const filepdf = async () => {
         try {
@@ -97,6 +114,7 @@ const RD = () => {
         }
     };
     const handleAllCheck = () => {
+
         const newState = Object.values(checkboxes).some(value => !value);
         setCheckboxes(Object.keys(checkboxes).reduce((acc, key) => {
             acc[key] = newState;
@@ -108,6 +126,20 @@ const RD = () => {
 
         router.push(`/rordor/${int_form}/checkData`)
     }
+    console.log("studentIDJaaa ", profileData?.id);
+    const handlequeue = async (event) => {
+        const response = await axios.post(`/api/request/create`, { type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร", status: "รอจองคิว", stuId: profileData.id, formId: int_form });
+        const param = response.data.data.id;
+        console.log("responseRequest", response.data);
+        console.log("param", param);
+
+        if (!allChecked()) {
+            event.preventDefault();
+            alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
+        } else {
+            router.push(`/appointment/${param}/0`);
+        }
+    };
 
 
     return (
@@ -283,7 +315,7 @@ const RD = () => {
                         <div className="flex justify-between mt-8">
 
                             <button
-                                onClick={event =>  handleback() }
+                                onClick={event => handleback()}
                                 className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
                                 Back
                             </button>
@@ -295,14 +327,13 @@ const RD = () => {
                             </button> */}
 
                             <a
-                                href="/home"
-                                onClick={(event) => handleNavigation(event, "/home")}
+                                onClick={(event) => handlequeue(event)}
                             >
                                 <button
                                     type="submit"
-                                    className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                    className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                 >
-                                    Next
+                                    Book queue
                                     <ToastContainer />
                                 </button>
                             </a>
