@@ -63,19 +63,20 @@ export default function Form() {
     }
 
     const fetchDataForm = async () => {
-      const response = await axios.post(`/api/request/getById`, { id: parseInt(form) });
-          console.log(response.data.data);
-          setPrepareData(response.data.data);
-          setAlreadyData(response.data.data.Ponpan[0]);
-          setLoading(false);
-          console.log(response.data);
+      const response = await axios.post(`/api/ponpan/getDataById`, { id: parseInt(form) });
+      console.log("resFormData",response.data);
+      setPrepareData(response.data.data);
+      setAlreadyData(response.data.data);
+      setLoading(false);
+      console.log(response.data);
     }
           
 
     useEffect(() => {
       fetchStudentData();
-      if(form != '0'){
+      if(form !== '0'){
         fetchDataForm();
+        console.log("formKKK : ", form);
       }
 
     }, []);
