@@ -151,8 +151,6 @@ export default function Form() {
   console.log("prakanDataJaa",prakanData);
 
   const handleSubmit = async (event) => {
-    
-
     try {
       if(form !== '0'){
         let allData = { ...alreadyData, ...studentInfo, ...thaiText, ...profileData };

@@ -1,7 +1,6 @@
 
-import '../globals.css';
-import { Header } from '../components/Header';
-import { FormDataProvider } from '../contexts/RDDataContext'; // Adjust the import path as necessary
+import '../../../globals.css';
+import { GoldenDataProvider } from '../../../contexts/GoldenData'; // Adjust the import path as necessary
 
 export const metadata = {
   title: 'Your App Title',
@@ -12,10 +11,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        
-        <FormDataProvider>
+        <GoldenDataProvider>
           {children}
-        </FormDataProvider>
+        </GoldenDataProvider>
       </body>
     </html>
   );

@@ -14,16 +14,31 @@ export async function GET(req) {
   try {
 
     const cookie = req.headers.get('cookie') || '';
-    const id = await getID(req) || getIDbyToken(cookie);
-    if (!id) {
-      return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
+    let id = 0
+    const formId = req.nextUrl.searchParams.get('id')
+    if (formId == 0) {
+      id = await getID(req) || getIDbyToken(cookie);
+      // console.log("in frist");
+      // console.log("test ID export",id);
+      
+    } else {
+      // console.log("in else");
+      const idbefore = await prisma.rD_info.findFirst({
+        where: { id: parseInt(formId) }
+      })
+      id = idbefore.student_id
     }
     const data = await getMilitaryInfo(id);
+    // console.log('test data export ',data);
+    
     if (!data) {
       return NextResponse.json({ error: "Student data not found" }, { status: 404 });
     }
-
+    // console.log("kdsnflksdmfksldmfkldsmfkdsmfkldsmfkldsmfkldslfksdkfjsdkflsdjf");
+    
     const pdfBytes = await militaryRD2(data)
+    // console.log("test pdf export",pdfBytes);
+    
 
     const response = new NextResponse(pdfBytes, {
       headers: {

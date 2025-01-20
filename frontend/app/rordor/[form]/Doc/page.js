@@ -1,23 +1,45 @@
 "use client"
 import { ToastContainer, toast } from 'react-toastify';
-import { useFormData } from '../../contexts/RDDataContext'; // Adjust the import path as necessary
+import { useFormData } from '../../../contexts/RDDataContext'; // Adjust the import path as necessary
 import 'react-toastify/dist/ReactToastify.css';
-import { Header } from '../../components/Header';
+import { Header } from '../../../components/Header';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 
 
 
 const RD = () => {
     const { formData, updateFormData } = useFormData();
+    const { form } = useParams()
+    const int_form = parseInt(form)
+    const router = useRouter();
+    const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+
 
     useEffect(() => {
-        // console.log(formData);
-    }, [formData]);
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('/api/profile'); // Example API
+                console.log(response.data);
+
+                setProfileData(response.data);
+                setLoading(false);
+                console.log(response.data);
+            } catch (error) {
+                setError(error.message);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const filepdf = async () => {
         try {
-            const response = await axios.get("/api/export/RD1", { responseType: 'blob' });
+            const response = await axios.get(`/api/export/RD1?id=${int_form}`, { responseType: 'blob' });
             return response.data;
         } catch (error) {
             console.log(error);
@@ -92,11 +114,33 @@ const RD = () => {
         }
     };
     const handleAllCheck = () => {
+
         const newState = Object.values(checkboxes).some(value => !value);
         setCheckboxes(Object.keys(checkboxes).reduce((acc, key) => {
             acc[key] = newState;
             return acc;
         }, {}));
+    };
+    const handleback = () => {
+        console.log("Doc", int_form);
+
+        router.push(`/rordor/${int_form}/checkData`)
+    }
+    console.log("studentIDJaaa ", profileData?.id);
+    const handlequeue = async (event) => {
+        console.log("formmm", int_form);
+        
+        const response = await axios.post(`/api/request/create`, { type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร", status: "รอจองคิว", stuId: profileData.id, formId: int_form });
+        const param = response.data.data.id;
+        console.log("responseRequest", response.data);
+        console.log("param", param);
+
+        if (!allChecked()) {
+            event.preventDefault();
+            alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
+        } else {
+            router.push(`/appointment/${param}/0`);
+        }
     };
 
 
@@ -106,12 +150,26 @@ const RD = () => {
             <div className="min-h-screen bg-white">
                 <main className="flex justify-center items-center">
                     <div className="bg-white p-8 w-full max-w-4xl">
-                        <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
-                            นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
+
+                        <h1 className="text-lg font-bold text-center mb-4 text-gray-800" >
+                            Download เอกสารน้ำมายื่นให้เจ้าหน้าที่
+                        </h1>
+                        <button
+                            onClick={handleDownload}
+                            className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300 w-full h-16">
+                            Download
+                        </button>
+
+                        <h2 className="text-mb pt-4 font-bold text-center mb-4 text-gray-800">
+                            โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่ (Please prepare the following documents to submit to the staff)
+                        </h2>
+
+                        {/* <h2 className="text-lg pt-4 font-bold text-center mb-4 text-gray-800">
+                            โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
                         </h2>
                         <h1 className="text-mb text-gray-700 mb-6 text-center">
-                            Students, please prepare the following documents to submit to the staff
-                        </h1>
+                            Please prepare the following documents to submit to the staff
+                        </h1> Old version  */}
 
                         {/* Personal & Contact Information Section */}
                         <section>
@@ -257,30 +315,27 @@ const RD = () => {
 
                         {/* Navigation Buttons */}
                         <div className="flex justify-between mt-8">
-                            <a
-                                href="/rordor/checkData"
-
-                            >
-                                <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                Back
-                                </button>
-                            </a>
 
                             <button
+                                onClick={event => handleback()}
+                                className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                Back
+                            </button>
+
+                            {/* <button
                                 onClick={handleDownload}
                                 className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300">
                                 Download
-                            </button>
+                            </button> */}
 
                             <a
-                                href="/home"
-                                onClick={(event) => handleNavigation(event, "/home")}
+                                onClick={(event) => handlequeue(event)}
                             >
                                 <button
                                     type="submit"
-                                    className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                    className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                 >
-                                    Confrim
+                                    Book queue
                                     <ToastContainer />
                                 </button>
                             </a>

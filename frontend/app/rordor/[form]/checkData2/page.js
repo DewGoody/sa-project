@@ -2,9 +2,9 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Header } from '../../components/Header';
-import { useFormData } from '../../contexts/RDDataContext';
-import { useRouter } from 'next/navigation';
+import { Header } from '../../../components/Header';
+import { useFormData } from '../../../contexts/RDDataContext';
+import { useRouter, useParams } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Personal } from './RD2_personal';
@@ -50,6 +50,16 @@ const notifysuccess = () => {
 }
 
 const CheckData = () => {
+
+    const { updateDataid } = useFormData()
+    const { form } = useParams()
+    const int_form = parseInt(form)
+    useEffect(() => {
+        if (form) {
+            console.log("เลขform", int_form)
+            updateDataid({ int_form })
+        }
+    }, [form, updateDataid])
     const [inputlist_education, setinputlist_education] = useState([
         { RD2_Grade1: '', RD2_Level1: '', RD2_Major1: '', RD2_Academy1: '' },
     ]);
@@ -360,20 +370,229 @@ const CheckData = () => {
     };
     const formatDateToISO = (dateString) => {
         const date = new Date(dateString);
+        if (isNaN(date)) {
+            return;
+        }
         return date.toISOString();
     };
     function parseDateString(dateString) {
         const [year, month, day] = dateString.split('-').map(Number);
         return { year, month, day };
     }
+    const id = formData.id
+    const dataforsentlog = {
+        registeryear: formData.YearGradeRD,
+        student: {
+            title: formData.Nametitle,
+            fnameTH: formData.Name,
+            lnameTH: formData.Surname,
+            fnameEN: formData.fnameEN || "", // Ensure fnameEN is provided
+            lnameEN: formData.lnameEN || "",
+            facultyNameTH: formData.Major,
+            year: formData.Collage_Year,
+            thai_id: formData.citizenId,
+            bd: formatDateToISO(formData.birthDate),
+            religion: formData.religion,
+            race: formData.ethnicity,
+            nationality: formData.nationality,
+            tel_num: formData.tel_num,
+            phone_num: formData.phone_num,
+            personal_email: formData.email,
+        },
+        Military_info: {
+            id: id,
+            military_id: formData.citizenRD,
+            military_class: formData.YearGradeRD,
+            register_type: parseInt(formData.register_type),
+            grade9_gpax: formData.grade9GPAX,
+            grade9_school: formData.school,
+            prev_military_class: formData.BeforeMilitartYear,
+            prev_school: formData.Whereform,
+            prev_year: formData.YearBefore,
+            academic_grade1: formData.RD2_Academy1,
+            academic_class1: formData.RD2_Level1,
+            academic_major1: formData.RD2_Major1,
+            academic_school1: formData.RD2_Academy1,
+            academic_grade2: formData.RD2_Academy2,
+            academic_class2: formData.RD2_Level2,
+            academic_major2: formData.RD2_Major2,
+            academic_school2: formData.RD2_Academy2,
+            academic_grade3: formData.RD2_Academy3,
+            academic_class3: formData.RD2_Level3,
+            academic_major3: formData.RD2_Major3,
+            academic_school3: formData.RD2_Academy3,
+            academic_grade4: formData.RD2_Academy4,
+            academic_class4: formData.RD2_Level4,
+            academic_major4: formData.RD2_Major4,
+            academic_school4: formData.RD2_Academy4,
+            military_grade1: formData.RD2_LevelRD1,
+            military_year1: formData.RD2_LevelRD12,
+            military_school1: formData.RD2_AcademyRD1,
+            military_province1: formData.RD2_ProvinceRD1,
+            military_grade2: formData.RD2_LevelRD2,
+            military_year2: formData.RD2_LevelRD22,
+            military_school2: formData.RD2_AcademyRD2,
+            military_province2: formData.RD2_ProvinceRD2,
+            military_grade3: formData.RD2_LevelRD3,
+            military_year3: formData.RD2_LevelRD32,
+            military_school3: formData.RD2_AcademyRD3,
+            military_province3: formData.RD2_ProvinceRD3,
+            military_grade4: formData.RD2_LevelRD4,
+            military_year4: formData.RD2_LevelRD42,
+            military_school4: formData.RD2_AcademyRD4,
+            military_province4: formData.RD2_ProvinceRD4,
+            reg_army: formData.Branches,
+            reg_corp: formData.corps,
+            promo_title1: formData.military_rank1,
+            promo_corp1: formData.corps_rank1,
+            promo_order1: formData.command_rank1,
+            promo_date1: formatDateToISO(formData.date_rank1),
+            promo_title2: formData.military_rank2,
+            promo_corp2: formData.corps_rank2,
+            promo_order2: formData.command_rank2,
+            promo_date2: formatDateToISO(formData.date_rank2),
+            grade9_province: formData.schoolProvince,
+            follower_name1: formData.follower1_name,
+            follower_school1: formData.follower1_school,
+            follower_telnum1: formData.follower1_telnum,
+            follower_phonenum1: formData.follower1_phonenum,
+            follower_name2: formData.follower2_name,
+            follower_school2: formData.follower2_school,
+            follower_telnum2: formData.follower2_telnum,
+            follower_phonenum2: formData.follower2_phonenum,
+            prev_province: formData.militaryProvince2,
+            date_of_study: formatDateToISO(formData.Fristdata_in_U),
+        },
+        addresses: {
+            DOPA_address: {
+                id: id,
+                house_num: formData.domicileNumber,
+                street: formData.road,
+                soi: formData.soi,
+                house_moo: formData.moo,
+                district: formData.amphure,
+                province: formData.province,
+                postal_code: formData.zipCode,
+                subdistrict: formData.district
+            },
+            Military_address: {
+                id: id,
+                street: "",
+                district: formData.militaryDistrict,
+                province: formData.militaryProvince,
+                subdistrict: formData.militaryAmphure,
+                house_num: formData.militaryDomicileNumber,
+                house_moo: formData.militaryMoo,
+                soi: formData.militarySoi,
+                postal_code: ""
+            },
+            Father_address: {
+                id: id,
+                street: "",
+                house_num: formData.fatherhome,
+                house_moo: formData.fathermoo,
+                district: formData.fatherdistrict,
+                province: formData.fatherprovince,
+                postal_code: (formData.fatherzipcode),
+                subdistrict: formData.fathersubdistrict,
+
+            },
+            Mother_address: {
+                id: id,
+                street: "",
+                house_num: formData.motherhome,
+                house_moo: formData.mothermoo,
+                district: formData.motherdistrict,
+                province: formData.motherprovince,
+                postal_code: (formData.motherzipcode),
+                subdistrict: formData.mothersubdistrict,
+
+            },
+
+            Follower_address1: {
+                id: id,
+                street: "",
+                house_num: formData.follower1_housenum,
+                house_moo: formData.follower1_housemoo,
+                soi: formData.follower1_housemoo,
+                district: formData.follower1_district,
+                province: formData.follower1_province,
+                postal_code: (formData.follower1_postal_code),
+                subdistrict: formData.follower1_subdistrict,
+
+            },
+
+            Follower_address2: {
+                id: id,
+                house_num: formData.follower2_housenum,
+                street: "",
+                house_moo: formData.follower2_housemoo,
+                soi: formData.follower2_housemoo,
+                district: formData.follower2_district,
+                province: formData.follower2_province,
+                postal_code: (formData.follower2_postal_code),
+                subdistrict: formData.follower2_subdistrict,
+
+            },
+            Contactable_address: {
+                id: id,
+                house_num: formData.domicileNumber_contactable,
+                street: "",
+                soi: formData.soi_contactable,
+                house_moo: formData.moo_contactable,
+                district: formData.amphure_contactable,
+                province: formData.province_contactable,
+                postal_code: formData.zipCode_contactable,
+                subdistrict: formData.district_contactable,
+            }
+        },
+        guardian_info: {
+            id: id,
+            guardian_fname: formData.ParentName,
+            guardian_lname: formData.ParentSurname,
+            guardian_title: formData.Parenttitle,
+            guardian_occupation: formData.Parentjob,
+            guardian_age: parseInt(formData.Parentage),
+            guardian_relation: formData.Parentrelated,
+            guardian_address: formData.ParentworkAddress
+        },
+
+        father_mother_info: {
+            father: {
+                id: id,
+                title: "",
+                fname: formData.fatherName,
+                lname: formData.fatherSurname,
+                working_place: formData.fatherwherejob,
+                phone_num: formData.fatherphone,
+                tel_num: formData.fatherjobTST,
+                nationality: formData.fatherNationality,
+                occupation: formData.occupationfather,
+                home_tel: formData.fatherhomeTST,
+
+            },
+            mother: {
+                id: id,
+                title: "",
+                fname: formData.motherName,
+                lname: formData.motherSurname,
+                working_place: formData.motherwherejob,
+                phone_num: formData.motherphone,
+                tel_num: formData.motherjobTST,
+                nationality: formData.motherNationality,
+                occupation: formData.occupationmother,
+                home_tel: formData.motherhomeTST,
+            }
+        },
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
         // console.log(formData)
         const id = formData.id
-        console.log("formData.fatherzipCodeformData.fatherzipCodeformData.fatherzipCodeformData.fatherzipCodeformData.fatherzipCode",formData.fatherzipcode)
+
         try {
             notifyinprocess()
-            await axios.put(`/api/profile`, {
+            await axios.put(`/api/militaryapi/student?id=${int_form}`, {
                 title: formData.Nametitle,
                 fnameTH: formData.Name,
                 lnameTH: formData.Surname,
@@ -391,14 +610,11 @@ const CheckData = () => {
                 nationality: formData.nationality,
 
             })
-
-            console.log("suc profile",formData.militaryDomicileNumber)
-
-            await axios.put(`/api/military`, {
+            await axios.put(`/api/military?id=${int_form}`, {
                 student: {
-                    tel_num:formData.tel_num,
-                    phone_num:formData.phone_num,
-                    personal_email:formData.email,
+                    tel_num: formData.tel_num,
+                    phone_num: formData.phone_num,
+                    personal_email: formData.email,
                 },
                 Military_info: {
                     id: id,
@@ -535,8 +751,8 @@ const CheckData = () => {
                         subdistrict: formData.follower2_subdistrict,
 
                     },
-                    Contactable_address:{
-                       id: id,
+                    Contactable_address: {
+                        id: id,
                         house_num: formData.domicileNumber_contactable,
                         street: "",
                         soi: formData.soi_contactable,
@@ -587,8 +803,19 @@ const CheckData = () => {
                 },
 
             })
-            notifysuccess()
-            router.push("/rordor/Doc2")
+            if (int_form !== 0) {
+                await axios.post(`/api/logRd/update?id=${int_form}`, (dataforsentlog))
+                router.push(`/rordor/${int_form}/Doc2`)
+
+            }
+            else {
+                const response = await axios.post(`/api/logRd/create2`, (dataforsentlog))
+                const formId = response.data.data.id
+                console.log("generate formID",formId);
+                
+                router.push(`/rordor/${formId}/Doc2`)
+
+            }
         } catch (error) {
             notifyerror()
             console.log(formData)
@@ -596,6 +823,11 @@ const CheckData = () => {
             // router.push("/rordor/Doc2")
         }
     };
+    const handleback = () => {
+        console.log("Doc", int_form);
+
+        router.push(`/rordor/${int_form}`)
+    }
     return (
         <div><Header req1="รายงานตัวเข้าฝึกนักศึกษาวิชาทหาร" req2="" />
             <div className="min-h-screen bg-whites 2xl:mx-24 xl:mx-24 lg:mx-24 md:mx-24 ">
@@ -1802,14 +2034,12 @@ const CheckData = () => {
 
 
                                 <div className="flex justify-between mt-8">
-                                    <a href="/rordor">
-                                        <button
-                                            type="button"
-                                            className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
-                                        >
-                                            หน้าก่อนหน้า
-                                        </button>
-                                    </a>
+                                    <button
+                                        onClick={event => handleback()}
+                                        type = "button"
+                                        className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                        Back
+                                    </button>
                                     <button
                                         type="submit"
                                         // onClick={notify}

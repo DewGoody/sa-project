@@ -1,30 +1,32 @@
 "use client"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Header } from '../../components/Header';
+import { Header } from '../../../components/Header';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
+import { useRouter, useParams } from 'next/navigation';
 const { Dragger } = Upload;
 
 
 
 const gold = () => {
-
+    const { form } = useParams()
+    const router = useRouter();
+    const int_req_id = parseInt(form)
     const filepdf = async () => {
         try {
-            const response = await axios.get("/api/export/UHC_Reg", { responseType: 'blob' });
+            // console.log("golden id form",int_req_id);
+            const response = await axios.get(`/api/export/UHC_Reg?id=${int_req_id}`, { responseType: 'blob' });
             return response.data;
         } catch (error) {
             console.log(error);
         }
     };
-
-
     const [selectedFiles, setSelectedFiles] = useState([]); // เริ่มต้นเป็น Array
 
-    
+
 
     const handleFileChange = (info) => {
         const { status } = info.file;
@@ -35,37 +37,50 @@ const gold = () => {
             setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
-    
+
 
     const handleConfirm = async (event) => {
         event.preventDefault();
-    
         if (!allChecked()) {
             notifyerror();
             return;
         }
-    
+
         if (!selectedFiles || selectedFiles.length === 0) { // ตรวจสอบไฟล์
             toast.error("กรุณาเลือกไฟล์ก่อนทำการอัปโหลด");
             return;
         }
-    
+
         const formData = new FormData();
         selectedFiles.forEach(file => {
             formData.append("file", file); // เพิ่มไฟล์ลงใน FormData
         });
-    
+
         try {
-            const response = await axios.post(
-                `/api/POSTPDF`, // เรียก API endpoint
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-    
+            console.log(int_req_id)
+            if (int_req_id !== 0) {
+                const response = await axios.post(
+                    `/api/POSTPDF/update?id=${int_req_id}`, // เรียก API endpoint
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+            } else {
+                const response = await axios.post(
+                    `/api/POSTPDF/create`, // เรียก API endpoint
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+            }
+
+
             // console.log(response.data);
             window.location.href = "/home";
         } catch (error) {
@@ -73,7 +88,7 @@ const gold = () => {
             toast.error("การอัปโหลดล้มเหลว");
         }
     };
-    
+
 
     const props = {
         name: 'file',
@@ -95,7 +110,7 @@ const gold = () => {
             console.log('Dropped files', e.dataTransfer.files);
         },
     };
-    
+
 
 
 
@@ -107,6 +122,7 @@ const gold = () => {
             link.href = URL.createObjectURL(pdfBlob);
             link.download = 'file.pdf';
             document.body.appendChild(link);
+            // console.log(link)
             link.click();
             document.body.removeChild(link);
         }
@@ -167,20 +183,41 @@ const gold = () => {
             return acc;
         }, {}));
     };
+    const handleback = () => {
+        router.push(`/golden_card/${int_req_id}`)
+    }
 
 
     return (
         <div>
-            <Header req1="รายงานตัวเข้าฝึกนักศึกษาวิชาทหาร " req2="" />
+            <Header req1="แบบคำขอรับรองคุณสมบัติในการเข้าร่วมโครงการประกันสุขภาพถ้วนหน้า (กรุงเทพมหานคร) สำหรับนิสิตจุฬาลงกรณ์มหาวิทยาลัย และ หนังสือข้อตกลงขอขึ้นทะเบียนบัตรประกันสุขภาพถ้วนหน้า โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย" req2="" />
             <div className="min-h-screen bg-white">
                 <main className="flex justify-center items-center">
                     <div className="bg-white p-8 w-full max-w-4xl">
-                        <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
+
+                        <h1 className="text-lg font-bold text-center mb-4 text-gray-800" >
+                            Download เอกสารเพื่อเซ็นรับรอง
+                        </h1>
+                        <button
+                            onClick={handleDownload}
+                            className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300 w-full h-16">
+                            Download
+                        </button>
+
+
+                        <h2 className="pt-5 text-lg font-bold text-center mb-4 text-gray-800">
+                            อัพโหลดเอกสารที่นี่ (Upload documents here.)
+                        </h2>
+
+                        {/* <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
                             นิสิตโหลดและอัพโหลดเอกสารที่นี่
                         </h2>
                         <h1 className="text-mb text-gray-700 mb-6 text-center">
                             Students can download and upload documents here.
-                        </h1>
+                        </h1> OLD Version */ }
+
+
+
 
                         {/* Personal & Contact Information Section */}
                         <section>
@@ -249,20 +286,18 @@ const gold = () => {
 
                         {/* Navigation Buttons */}
                         <div className="flex justify-between mt-8">
-                            <a
-                                href="/golden_card"
-
-                            >
-                                <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                    Back
-                                </button>
-                            </a>
 
                             <button
+                                onClick={handleback}
+                                className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                Back
+                            </button>
+
+                            {/* <button
                                 onClick={handleDownload}
                                 className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300">
                                 Download
-                            </button>
+                            </button> */}
 
                             <a
                                 href="/home"
@@ -271,7 +306,7 @@ const gold = () => {
                                     type="submit"
                                     className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                 >
-                                    Confrim
+                                    Home page
                                     <ToastContainer />
                                 </button>
                             </a>

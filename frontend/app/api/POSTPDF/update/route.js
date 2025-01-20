@@ -2,7 +2,6 @@
 
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
-import { getID, getIDbyToken } from "../../../lib/session"
 
 
 const prisma = new PrismaClient()
@@ -21,19 +20,19 @@ export async function GET(req) {
         const file = await prisma.uHC_request.findFirst({
             where: { student_id: fileId }
         });
-        
+
         if (!file) {
             return NextResponse.json({ error: 'File not found' }, { status: 404 });
         }
-        
+
         const fileContentBase64 = file.binary_file_data
             ? Buffer.from(file.binary_file_data).toString('base64')
             : null;
-        
+
         return NextResponse.json({
             binary_file_data: fileContentBase64
         });
-        
+
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'An error occurred while fetching the file' }, { status: 500 });
@@ -44,9 +43,15 @@ export async function GET(req) {
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(req) {
+    
     try {
-        const cookie = req.headers.get('cookie') || '';
-        const id = await getID(req) || getIDbyToken(cookie);
+        const formId = req.nextUrl.searchParams.get('id')
+        const idbefore = await prisma.uHC_request.findFirst({
+            where: { id: parseInt(formId) }
+        })
+        const id = idbefore.student_id
+        // const cookie = req.headers.get('cookie') || '';
+        // const id = await getID(req) || getIDbyToken(cookie);
         if (!id) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
         }
@@ -73,16 +78,25 @@ export async function POST(req) {
                 binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
             },
         });
+
+        await prisma.request.updateMany({
+            where: { stu_id: pdf.student_id },
+            data: {
+                type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
+                status: "ประวัติการแก้ไข",
+                stu_id: id,
+            }
+        });
         const createRequest = await prisma.request.create({
             data: {
                 type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
-                status: "รอจองคิว",
+                status: "รอเจ้าหน้าที่ดำเนินการ",
                 stu_id: id,
             }
-        }) 
+        })
         await prisma.uHC_request.update({
-            where: {id: pdf.id},
-            data: {req_id: createRequest.id}
+            where: { id: pdf.id },
+            data: { req_id: createRequest.id }
         })
 
         // Convert BigInt fields to strings

@@ -181,6 +181,7 @@ export const Form = () => {
   }
 
   const handleEditForm = async (id) => {
+    // console.log("sfjkfhksjdfnsmd,nfsdm,nfds,mnfsd,",id);
     console.log("editFormReqId : ",id);
     const response = await axios.post('/api/request/getById',{id: id}); // Example API
     console.log("editFormResponse :",response.data.data);
@@ -331,7 +332,7 @@ export const Form = () => {
                 title="1. การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)"
               />
             </a>
-            <a href="/rordor">
+            <a href="/rordor/0">
               <ServiceCard
                 title="2. การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)"
               />
@@ -341,7 +342,7 @@ export const Form = () => {
                 title="3. การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)"
               />
             </a>
-            <a>
+            <a href="/golden_card/0"> 
               <ServiceCard
                 title="4. โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)"
               />
