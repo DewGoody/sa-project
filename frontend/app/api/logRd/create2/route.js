@@ -3,6 +3,8 @@
 import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { getID, getIDbyToken } from "../../../../lib/session";
+import { convertBigIntToString} from '../../../../utills/convertBigInt'
+
 
 const prisma = new PrismaClient();
 
@@ -45,27 +47,27 @@ export async function POST(req) {
         });
 
         // Create a new request
-        const createRequest = await prisma.request.create({
-            data: {
-                type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
-                status: "รอจองคิว",
-                stu_id: id,
-            },
-        });
+        // const createRequest = await prisma.request.create({
+        //     data: {
+        //         type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
+        //         status: "รอจองคิว",
+        //         stu_id: id,
+        //     },
+        // });
 
-        // Update RD info with request ID
-        await prisma.rD_info.update({
-            where: { id: pdf.id },
-            data: { req_id: createRequest.id },
-        });
+        // // Update RD info with request ID
+        // await prisma.rD_info.update({
+        //     where: { id: pdf.id },
+        //     data: { req_id: createRequest.id },
+        // });
 
         // Prepare the response, ensuring no BigInt values
-        const response = handleBigInt({
-            message: "Request created successfully",
-            requestId: createRequest.id,
-        });
+        // const response = handleBigInt({
+        //     message: "Request created successfully",
+        //     requestId: createRequest.id,
+        // });
 
-        return NextResponse.json(response, { status: 200 });
+        return NextResponse.json({data:convertBigIntToString(pdf)});
     } catch (error) {
         console.error("Error in POST /api/logRd/create:", error);
         return NextResponse.json({ error: "An error occurred while processing the request" }, { status: 500 });

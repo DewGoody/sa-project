@@ -128,6 +128,8 @@ const RD = () => {
     }
     console.log("studentIDJaaa ", profileData?.id);
     const handlequeue = async (event) => {
+        console.log("formmm", int_form);
+        
         const response = await axios.post(`/api/request/create`, { type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร", status: "รอจองคิว", stuId: profileData.id, formId: int_form });
         const param = response.data.data.id;
         console.log("responseRequest", response.data);

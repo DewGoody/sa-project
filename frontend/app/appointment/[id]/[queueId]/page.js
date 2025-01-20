@@ -28,7 +28,7 @@ export default function ScholarshipPage() {
   const router = useRouter();
   const { id } = useParams(); //id is reqId
   const {queueId} = useParams();
-  console.log("id", id);
+  console.log("reqid", id);
   console.log("queueId",queueId)
  
   const timeSlotsMorning = 
@@ -61,6 +61,7 @@ export default function ScholarshipPage() {
       setLoading(false);
     }
   }
+  console.log("profileDataKuy",profileData)
   
   useEffect(() => {
     fetchAllDate();
@@ -203,7 +204,7 @@ export default function ScholarshipPage() {
     <>
       <RedirectOnBack />
       <Header 
-        req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "การเบิกจ่ายประกันอุบัติเหตุ" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "แบบคำขอผ่อนผันเข้ารับราชการทหาร" : reqType === "Health insurance" ? "Health insurance" : ""} 
+        req1={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "การเบิกจ่ายประกันอุบัติเหตุ" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "แบบคำขอผ่อนผันเข้ารับราชการทหาร" : reqType === "Health insurance" ? "Health insurance" :reqType === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" ? "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร": ""} 
         req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accident insurance claim" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "Military Service Postponement Request Form" : ""} 
       />
       <div className="flex flex-col items-center text-center p-6 font-sans min-h-screen bg-gray-50">

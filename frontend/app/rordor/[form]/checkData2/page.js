@@ -803,12 +803,19 @@ const CheckData = () => {
                 },
 
             })
-            if (int_form !== 0) { await axios.post(`/api/logRd/update?id=${int_form}`, (dataforsentlog)) }
-            else {
-                await axios.post(`/api/logRd/create2`, (dataforsentlog))
+            if (int_form !== 0) {
+                await axios.post(`/api/logRd/update?id=${int_form}`, (dataforsentlog))
+                router.push(`/rordor/${int_form}/Doc2`)
+
             }
-            notifysuccess()
-            router.push(`/rordor/${int_form}/Doc2`)
+            else {
+                const response = await axios.post(`/api/logRd/create2`, (dataforsentlog))
+                const formId = response.data.data.id
+                console.log("generate formID",formId);
+                
+                router.push(`/rordor/${formId}/Doc2`)
+
+            }
         } catch (error) {
             notifyerror()
             console.log(formData)

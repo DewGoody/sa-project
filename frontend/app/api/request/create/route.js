@@ -32,6 +32,14 @@ export async function POST(req,res){
             }
         })
     }
+    else if(data.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร"){
+        await prisma.rD_info.update({
+            where: {id: data.formId},
+            data: {
+                req_id: createRequest.id
+            }
+        })
+    }
     console.log("createRequest",createRequest);
     return NextResponse.json({ data: convertBigIntToString(createRequest) });
 }
