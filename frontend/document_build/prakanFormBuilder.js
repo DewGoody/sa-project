@@ -111,5 +111,7 @@ async function prakanFormBuilder(data) {
     "public/documents/prakan-inter/Health-claim-form-filled.pdf",
     pdfBytes
   );
+  return 'public/documents/prakan-inter/Health-claim-form-filled.pdf';
+
 }
 module.exports = { prakanFormBuilder };

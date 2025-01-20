@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { prakan } from '../../document_build/prakan'
+import { prakanFormBuilder } from '../../document_build/prakanFormBuilder'
 
 const prisma = new PrismaClient();
 
@@ -464,4 +465,90 @@ export async function getUniqueYearPonpan() {
     );
 
     return uniqueYears;
+}
+
+export async function getRequestPrakanInterInAdmin(year){
+    const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
+    const endOfYear = new Date(year + 1, 0, 1);
+    let requests = null
+    if(year !== 0){
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                },
+                type: "Health insurance",
+                deleted_at: null,
+                created_at: {
+                    gte: startOfYear, // Greater than or equal to start of year
+                    lt: endOfYear, // Less than start of the next year
+                },
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameEN: true,
+                        lnameEN: true
+                    },
+                },
+                prakan_inter_info: true
+            }
+        })
+    }
+    else{
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                },
+                type: "Health insurance",
+                deleted_at: null
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameEN: true,
+                        lnameEN: true
+                    },
+                },
+                prakan_inter_info: true
+            }
+        })
+    }
+    if(requests){
+        return requests
+    }
+    else{
+        return "Not found"
+    }
+}
+
+export async function downloadPrakanInterAdmin(id) {
+    if(id){
+        const thisPrakan = await prisma.prakan_inter_info.findUnique({
+            where: {id: id},
+            include: {
+                Student:true,
+            }
+        })        
+        const mergedData = {
+            ...thisPrakan,
+            ...thisPrakan.Student,
+       };
+        const filePath = await prakanFormBuilder(mergedData)
+        console.log('fileeee',filePath);
+        
+        return filePath
+    }
+    else{
+        throw {code: 400,error: new Error("Bad Request")}
+    }
 }

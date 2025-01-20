@@ -178,7 +178,7 @@ function page() {
     <>
       <div className=" bg-white min-h-screen">
         <Header
-          req1="Health Insurance For Foreigner Student (Claim Injury/Illness)"
+          req1="Health insurance"
           req2=""
         />
         <div className=" mx-24 ">

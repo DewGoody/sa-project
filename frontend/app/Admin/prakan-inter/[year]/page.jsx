@@ -20,80 +20,54 @@ const App = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const [selectedKey, setSelectedKey] = useState('2');
+    const [selectedKey, setSelectedKey] = useState('6');
     const [fetchYear, setfetchYear] = useState([]);
     const [statusRequest, setStatusRequest] = useState('');
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
-
-    const handleSearch = (value, dataIndex) => {
-        setSearchText(value);
-        setSearchedColumn(dataIndex);
-      };
-    
-      const getColumnSearchProps = (dataIndex) => ({
-        filterDropdown: ({ setSelectedKeys, confirm }) => (
-          <div style={{ padding: 8 }}>
-            <Input
-              placeholder={`Search ${dataIndex}`}
-              value={searchText}
-              onChange={(e) => {
-                const value = e.target.value;
-                setSelectedKeys(value ? [value] : []);
-                handleSearch(value, dataIndex);
-                confirm({ closeDropdown: false }); // Keep the dropdown open
-              }}
-              style={{ marginBottom: 8, display: "block" }}
-            />
-          </div>
-        ),
-        filterIcon: (filtered) => (
-          <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
-        ),
-        onFilter: (value, record) =>
-          record[dataIndex]
-            ?.toString()
-            .toLowerCase()
-            .includes(value.toLowerCase()),
-        render: (text) =>
-          searchedColumn === dataIndex ? (
-            <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
-              {text}
-            </span>
-          ) : (
-            text
-          ),
-      });
-
+    console.log("selectedKey", selectedKey);
     
 
     const fetchStuData = async () => {
         try {
-            const res = await axios.post('/api/request/getPrakanAdmin', { year: parseInt(year) });
+            const res = await axios.post('/api/request/getPrakanInterAdmin', { year: parseInt(year) });
             console.log("stuData", res.data.data);
             setStuData(res.data.data);
-            setDataSource(...dataSource, res.data.data.map((item, index) => {
-                const accDate = new Date(item.accident_info[0].acc_date);
-                const formattedDate = `${accDate.getDate().toString().padStart(2, '0')}/${(accDate.getMonth() + 1).toString().padStart(2, '0')}/${accDate.getFullYear()}`;
+            setDataSource(...dataSource, res.data.data.map((data, index) => {
+                const formatDate = (dateString) => {
+                    if (!dateString) return "-";
+                    const date = new Date(dateString);
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = date.getFullYear();
+                    return `${day}/${month}/${year}`;
+                };
+
                 return {
                     key: index,
-                    name: item.Student.fnameTH + ' ' + item.Student.lnameTH,
-                    student_ID: item.Student.id,
-                    des_injury: item.accident_info[0].des_injury,
-                    acc_desc: item.accident_info[0].acc_desc,
-                    accident_place: item.accident_info[0].accident_place,
-                    acc_date: formattedDate,
-                    treatment_place: item.accident_info[0].treatment_place,
-                    hospital_type: item.accident_info[0].hospital_type,
-                    medical_fee: item.accident_info[0].medical_fee + ' บาท',
-                    status: item.status,
-                    id: item.accident_info[0].id,
-                    reqId: item.id
-                };
-            }));
-            console.log("dataSource :", dataSource);
+                    id: data.id,
+                    reqId: data.reqId,
+                    name: data.Student.fnameEN + " " + data.Student.lnameEN,
+                    student_ID: data.Student.id,
+                    accidentCause: data.prakan_inter_info[0].accidentCause || "-",
+                    accidentDate: formatDate(data.prakan_inter_info[0].accidentDate),
+                    accidentTime: data.prakan_inter_info[0].accidentTime + " น." || "-",
+                    hospitalAmittedDate: formatDate(data.prakan_inter_info[0].hospitalAmittedDate),
+                    hospitalDischargedDate: formatDate(data.prakan_inter_info[0].hospitalDischargedDate),
+                    hospitalName: data.prakan_inter_info[0].hospitalName || "-",
+                    hospitalPhoneNumber: data.prakan_inter_info[0].hospitalPhoneNumber || "-",
+                    hospitalProvince: data.prakan_inter_info[0].hospitalProvince || "-",
+                    phone_num: data.prakan_inter_info[0].phone_num || "-",
+                    presentAddress: data.prakan_inter_info[0].presentAddress || "-",
+                    type: data.prakan_inter_info[0].claimType || "-",
+                    status: data.status || "-",
+                    reqId: data.prakan_inter_info[0].req_id,
+                    prakanId: data.prakan_inter_info[0].id
+                }
+            }
+            ));
         } catch (error) {
             console.error('Error fetching student data:', error);
         }
@@ -130,10 +104,10 @@ const App = () => {
 
     const handleDownload = async (dataDownload) => {
 
-        console.log("dataDownloadJaa", typeof dataDownload);
+        console.log("dataDownloadJaa", dataDownload);
 
         try {
-            const res = await axios.post('/api/request/downloadPrakan', { id: parseInt(dataDownload) }, {
+            const res = await axios.post('/api/request/downloadPrakanInter', { id: parseInt(dataDownload) }, {
                 responseType: 'blob',
             });
             const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -194,6 +168,44 @@ const App = () => {
         }
        }
     }
+    const handleSearch = (value, dataIndex) => {
+        setSearchText(value);
+        setSearchedColumn(dataIndex);
+      };
+    
+      const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, confirm }) => (
+          <div style={{ padding: 8 }}>
+            <Input
+              placeholder={`Search ${dataIndex}`}
+              value={searchText}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSelectedKeys(value ? [value] : []);
+                handleSearch(value, dataIndex);
+                confirm({ closeDropdown: false }); // Keep the dropdown open
+              }}
+              style={{ marginBottom: 8, display: "block" }}
+            />
+          </div>
+        ),
+        filterIcon: (filtered) => (
+          <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
+        ),
+        onFilter: (value, record) =>
+          record[dataIndex]
+            ?.toString()
+            .toLowerCase()
+            .includes(value.toLowerCase()),
+        render: (text) =>
+          searchedColumn === dataIndex ? (
+            <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
+              {text}
+            </span>
+          ) : (
+            text
+          ),
+      });
 
 
     const columns = [
@@ -214,7 +226,7 @@ const App = () => {
                     fontSize: '21px', // Increase the size (e.g., 24px)
                     cursor: 'pointer', // Optional: changes the cursor to a pointer
                   }}
-                  onClick={() => handleDownload(record.id)}
+                  onClick={() => handleDownload(record.prakanId)}
                 />
               </div>
             ),
@@ -286,6 +298,11 @@ const App = () => {
             }
         },
         {
+            title: 'ประเภท',
+            dataIndex: 'type',
+
+        },
+        {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'name',
             ...getColumnSearchProps('name'),
@@ -296,33 +313,49 @@ const App = () => {
             ...getColumnSearchProps('student_ID'),
         },
         {
-            title: 'อาการบาดเจ็บ',
-            dataIndex: 'des_injury',
-        },
-        {
-            title: 'การเกิดอุบัติเหตุ',
-            dataIndex: 'acc_desc',
-        },
-        {
-            title: 'สถานที่เกิดอุบัติเหตุ',
-            dataIndex: 'accident_place',
+            title: 'สาเหตุการเกิดอุบัติเหตุ',
+            dataIndex: 'accidentCause',
         },
         {
             title: 'วันที่เกิดอุบัติเหตุ',
-            dataIndex: 'acc_date',
+            dataIndex: 'accidentDate',
+        },
+       
+        {
+            title: 'เวลาเกิดอุบัติเหตุ',
+            dataIndex: 'accidentTime',
+        },
+        
+       
+        {
+            title: 'วันที่เข้ารักษา',
+            dataIndex: 'hospitalAmittedDate',
         },
         {
-            title: 'สถานที่รักษา',
-            dataIndex: 'treatment_place',
+            title: 'วันที่ออกโรงพยาบาล',
+            dataIndex: 'hospitalDischargedDate',
         },
         {
-            title: 'ประเภทสถานพยาบาล',
-            dataIndex: 'hospital_type',
+            title: 'ชื่อโรงพยาบาล',
+            dataIndex: 'hospitalName',
         },
         {
-            title: 'ค่ารักษาพบาบาล',
-            dataIndex: 'medical_fee',
+            title: 'เบอร์โรงพยาบาล',
+            dataIndex: 'hospitalPhoneNumber',
         },
+        {
+            title: 'จังหวัดโรงพยาบาล',
+            dataIndex: 'hospitalProvince',
+        },
+        {
+            title: 'เบอร์โทรนิสิต',
+            dataIndex: 'phone_num',
+        },
+        {
+            title: 'ที่อยู่ปัจจุบัน',
+            dataIndex: 'presentAddress',
+        },
+        
         
     ];
 
@@ -420,7 +453,7 @@ const App = () => {
                 >
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
-                            ประกันอุบัติเหตุ
+                            ประกันนิสิตต่างชาติ
                         </div>
                         <div className='mr-10'>
                             <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
