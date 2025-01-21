@@ -175,8 +175,14 @@ const page = () => {
                     postal_code: Data.zipCode,
                 }
             })
+            if(int_req_id !== 0 ){
+                console.log("gfgjgfgjgjhfjghvgjhgjvvgjgjgjjgjjgjjghjgh",int_req_id);
+                
+                const response = await axios.post(`/api/POSTPDF/updatestatusadmin?id=${int_req_id}`)
+                console.log("ID return",response.data.id);
+                router.push(`/Admin/goldencard`)
+            }
             notifysuccess()
-            router.push(`/Admin/goldencard`)
         } catch (error) {
             notifyerror()
             console.error('Form submission error:', error);

@@ -72,7 +72,8 @@ export async function POST(req) {
         }
 
         // บันทึกไฟล์ลงฐานข้อมูล
-        const pdf = await prisma.uHC_request.create({
+        const pdf = await prisma.uHC_request.update({
+            where : {id: parseInt(formId)},
             data: {
                 student_id: id,
                 binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
@@ -87,7 +88,8 @@ export async function POST(req) {
                 stu_id: id,
             }
         });
-        const createRequest = await prisma.request.create({
+        const createRequest = await prisma.request.update({
+            where :{id:parseInt(idbefore.req_id)},
             data: {
                 type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
                 status: "รอเจ้าหน้าที่ดำเนินการ",
@@ -99,13 +101,8 @@ export async function POST(req) {
             data: { req_id: createRequest.id }
         })
 
-        // Convert BigInt fields to strings
-        const serializedPdf = {
-            ...pdf,
-            id: pdf.id.toString(), // Ensure BigInt fields are serialized
-        };
 
-        return NextResponse.json(serializedPdf, { status: 201 });
+        return NextResponse.json({ status: 201 });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: error.message }, { status: 500 });

@@ -14,19 +14,39 @@ import { Button, Layout, Menu, theme, Input, Table, Space, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
 const App = () => {
     const [Data, setData] = useState([])
+    const formatDateToDMYWithTime = (dateString) => {
+        if (!dateString) return 'N/A'; // Handle null or undefined dates
+
+        const date = new Date(dateString); // Parse the input date string
+
+        const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits for day
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const year = String(date.getFullYear()).slice(-2); // Get the last 2 digits of the year
+
+        const hours = String(date.getHours()).padStart(2, '0'); // Ensure 2 digits for hours
+        const minutes = String(date.getMinutes()).padStart(2, '0'); // Ensure 2 digits for minutes
+
+        return `${day}/${month}/${year} เวลา:${hours}:${minutes}`; // Return in dd/mm/yy-hour:min format
+    };
+
     const fetchData = async () => {
         try {
             const response = await axios.get(`/api/Admin/getrordor`)
-            console.log(response.data)
+            // response.data.map((item) => {
+            //     console.log(item.entry);
+
+            // });
+            
             setData(...Data, response.data.map((item, index) => ({
                 key: index, // Unique key for each row
-                fullname: `${item.Student?.lnameTH || ''} ${item.Student?.fnameTH || ''}`,
-                student_ID: item.Student?.id,
-                citizen_ID: item.Student?.thai_id || 'N/A',
-                birthdate: item.Student?.bd || 'N/A',
-                status:item.status,
-                reqId: item.id,
-                rd_ID: item.Military_info.military_id || 'N/A',
+                fullname: `${item.entry?.json.student?.lnameTH || ''} ${item.entry?.json.student?.fnameTH || ''}`,
+                student_ID: item.entry?.stu_id,
+                citizen_ID: item.entry?.json.student.thai_id || 'N/A',
+                birthdate: formatDateToDMYWithTime(item.entry?.json.student?.bd) || 'N/A',
+                status:item.entry?.status,
+                reqId: item.entry?.id,
+                rd_ID: item.entry?.json.Military_info.military_id || 'ปี1 ไม่มีเลขประจำตัว',
+                yearRD : item.entry?.yearRD
             })))
         } catch (error) {
             console.log(error)
@@ -94,6 +114,9 @@ const App = () => {
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'fullname',
+        },{
+            title: 'ชั้นปี นศท',
+            dataIndex: 'yearRD',
         },
         {
             title: 'รหัสนิสิต',

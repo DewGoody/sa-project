@@ -3,6 +3,8 @@
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server'
 import { getID, getIDbyToken } from "../../../../lib/session"
+import { convertBigIntToString} from '../../../../utills/convertBigInt'
+
 
 
 const prisma = new PrismaClient()
@@ -41,7 +43,7 @@ export async function GET(req) {
 }
 
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+// const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(req) {
     try {
@@ -51,32 +53,32 @@ export async function POST(req) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
         }
         // ดึงข้อมูลจาก FormData
-        const formData = await req.formData();
-        const file = formData.get('file'); // ดึงไฟล์ที่อัปโหลด
+        // const formData = await req.formData();
+        // const file = formData.get('file'); // ดึงไฟล์ที่อัปโหลด
 
-        if (!file) {
-            return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
-        }
+        // if (!file) {
+        //     return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
+        // }
 
-        const fileSize = file.size;
-        const fileBuffer = await file.arrayBuffer();
+        // const fileSize = file.size;
+        // const fileBuffer = await file.arrayBuffer();
 
-        // ตรวจสอบขนาดไฟล์
-        if (fileSize > MAX_FILE_SIZE) {
-            return NextResponse.json({ error: 'File size exceeds 5MB limit.' }, { status: 400 });
-        }
+        // // ตรวจสอบขนาดไฟล์
+        // if (fileSize > MAX_FILE_SIZE) {
+        //     return NextResponse.json({ error: 'File size exceeds 5MB limit.' }, { status: 400 });
+        // }
 
         // บันทึกไฟล์ลงฐานข้อมูล
         const pdf = await prisma.uHC_request.create({
             data: {
                 student_id: id,
-                binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
+                // binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
             },
         });
         const createRequest = await prisma.request.create({
             data: {
                 type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
-                status: "รอเจ้าหน้าที่ดำเนินการ",
+                status: "รออัปโหลดเอกสาร",
                 stu_id: id,
             }
         }) 
@@ -84,14 +86,9 @@ export async function POST(req) {
             where: {id: pdf.id},
             data: {req_id: createRequest.id}
         })
-
-        // Convert BigInt fields to strings
-        const serializedPdf = {
-            ...pdf,
-            id: pdf.id.toString(), // Ensure BigInt fields are serialized
-        };
-
-        return NextResponse.json(serializedPdf, { status: 201 });
+        console.log("pdf.id",convertBigIntToString(pdf.id));
+        
+        return NextResponse.json({id:convertBigIntToString(pdf.id)}, { status: 201 });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: error.message }, { status: 500 });
