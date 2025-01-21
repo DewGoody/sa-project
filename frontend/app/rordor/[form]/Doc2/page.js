@@ -18,6 +18,8 @@ const RD = () => {
     const router = useRouter();
     const [profileData, setProfileData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isDownload, setIsDownload] = useState(false);
+
 
 
 
@@ -46,7 +48,7 @@ const RD = () => {
             console.log(error);
         }
     };
-    const handleback = () => {
+    const handleBack = () => {
         console.log("Doc", int_form);
 
         router.push(`/rordor/${int_form}/checkData2`)
@@ -61,6 +63,8 @@ const RD = () => {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            setIsDownload(true);
+
         }
     };
 
@@ -77,12 +81,7 @@ const RD = () => {
         Option1: false,
         Option2: false,
         Option3: false,
-        Option4: false,
-        Option5: false,
-        Option6: false,
-        Option7: false,
-        Option8: false,
-        Option9: false,
+
     });
 
     // Function to handle checkbox change
@@ -197,7 +196,12 @@ const RD = () => {
 
 
                                 </fieldset>
-                                <div className="flex space-x-4">
+                                <button
+                                    onClick={handleDownload}
+                                    className="px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
+                                    Download
+                                </button>
+                                <div className="">
                                     <label
                                         htmlFor="Option9"
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
@@ -210,11 +214,12 @@ const RD = () => {
                                                 id="Option9"
                                                 checked={checkboxes.Option9}
                                                 onChange={handleCheckboxChange}
+
                                             />
                                         </div>
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">รับทราบรายการเอกสาร</strong>
+                                            <strong className="font-medium text-gray-900">จัดเตรียมเอกสารตามข้อมูลข้างต้น (Prepare the documents as per the information above)</strong>
                                         </div>
                                     </label>
 
@@ -231,47 +236,45 @@ const RD = () => {
                                                 id="allCheck"
                                                 checked={allChecked()}
                                                 onChange={handleAllCheck}
+                                                disabled={!isDownload}
                                             />
                                         </div>
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">ดาวน์โหลดไฟล์และตรวจสอบข้อมูลแล้ว</strong>
+                                            <strong className="font-medium text-gray-900">ดาวน์โหลดไฟล์และตรวจสอบข้อมูลแล้ว (Download the file and verify the information)</strong>
                                         </div>
                                     </label>
                                 </div>
                             </div>
-
-
                         </section>
 
-                        {/* Navigation Buttons */}
-                        <div className="flex justify-between mt-8">
+                        {Object.values(checkboxes).filter(Boolean).length >= 2 && (
+                            <div className="flex justify-end mt-8">
 
-                            <button
-                                onClick={event => handleback()}
-                                className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                Back
-                            </button>
-
-
-                            <button
-                                onClick={handleDownload}
-                                className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300">
-                                Download
-                            </button>
-
-                            <a
-                                onClick={(event) => handlequeue(event)}
-                            >
                                 <button
-                                    type="submit"
-                                    className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                    className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+                                    onClick={handleBack}
                                 >
-                                    Book queue
-                                    <ToastContainer />
+                                    Back
                                 </button>
-                            </a>
-                        </div>
+
+
+
+
+                                <a
+                                    onClick={(event) => handleNavigation(event)}
+                                >
+                                    <button
+                                        type="submit"
+                                        className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                    >
+                                        Book queue
+                                        <ToastContainer />
+                                    </button>
+                                </a>
+                            </div>
+                        )}
+
                     </div>
                 </main>
             </div>

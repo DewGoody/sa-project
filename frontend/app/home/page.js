@@ -297,7 +297,10 @@ export const Form = () => {
                   <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
                    <div>
                     {count++ + ". " + item.type + "  " + item.status}
+                    <div className="flex">
                     <div className="ml-4 mt-1 font-semibold text-xl text-blue-500">{item.status}</div>
+                    <div className=" ml-1 mt-1 font-semibold text-xl text-pink-400"> {item.more_info}</div>
+                      </div>
                    </div>
                      <div className="flex">
                     <button 

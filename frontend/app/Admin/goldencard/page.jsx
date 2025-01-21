@@ -9,10 +9,13 @@ import {
     UserOutlined,
     VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Input, Table, Space, Select } from 'antd';
+import { Button, Layout, Menu, theme, Input, Table, Space, Modal, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
 const App = () => {
     const router = useRouter()
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [reqMoreInfo, setReqMoreInfo] = useState('');
+    const [moreInfoValue, setMoreInfoValue] = useState('');
     async function fetchPdfFile(form) {
         try {
             const response = await fetch(`/api/POSTPDF/getpdfadmin?id=${form}`);
@@ -48,6 +51,21 @@ const App = () => {
             console.error('Error fetching file:', error);
         }
     }
+    const showModal = (record) => {
+        setReqMoreInfo(record);
+        console.log("recordModalJa :", typeof record);
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        const response = axios.post('/api/request/createMoreInfo', { id: parseInt(reqMoreInfo), more_info: moreInfoValue });
+
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
     const formatDateToDMY = (dateString) => {
         if (!dateString) return 'N/A'; // Handle null or undefined dates
 
@@ -243,12 +261,18 @@ const App = () => {
                     ]
                 }
                 return (
-                    <Select
-                        defaultValue={status}
-                        style={{ width: "180px" }}
-                        options={options}
-                        onChange={(value) => handleChangeStatus({ ...record, status: value })}
-                    />)
+                    <>
+                        <Select
+                            defaultValue={status}
+                            style={{ width: "180px" }}
+                            options={options}
+                            onChange={(value) => handleChangeStatus({ ...record, status: value })}
+                        />
+                        {record.status === "ขอข้อมูลเพิ่มเติม" ?
+                            <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
+                            : null}
+                    </>
+                )
             }
         }, {
             title: 'วันที่อัพโหลดเอกสาร',
@@ -368,6 +392,28 @@ const App = () => {
                             index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
                         }
                     />
+                    <Modal 
+                        title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม" 
+                        open={isModalOpen} 
+                        onOk={handleOk} 
+                        onCancel={handleCancel}
+                        footer={[
+                            <Button key="back" onClick={handleCancel}>
+                              ปิด
+                            </Button>,
+                            <Button key="submit" type="primary" onClick={handleOk}>
+                              ยืนยัน
+                            </Button>,
+                           
+                          ]}
+                    >
+                       <textarea 
+                            style={{width: "100%", height: "200px", border:"gray solid", borderRadius:"15px", padding:"15px", fontSize:"18px"}}
+                            
+                            onChange={(e) => setMoreInfoValue(e.target.value)}
+                        >
+                         </textarea>
+                    </Modal>
                 </Content>
             </Layout>
         </Layout>

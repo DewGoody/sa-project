@@ -13,6 +13,7 @@ const { Dragger } = Upload;
 
 const gold = () => {
     const { form } = useParams()
+    const [isDownload, setIsDownload] = useState(false);
     const router = useRouter();
     const int_req_id = parseInt(form)
     const filepdf = async () => {
@@ -125,6 +126,8 @@ const gold = () => {
             // console.log(link)
             link.click();
             document.body.removeChild(link);
+            setIsDownload(true);
+
         }
     };
 
@@ -134,12 +137,6 @@ const gold = () => {
         Option1: false,
         Option2: false,
         Option3: false,
-        Option4: false,
-        Option5: false,
-        Option6: false,
-        Option7: false,
-        Option8: false,
-        Option9: false,
     });
 
     // Function to handle checkbox change
@@ -271,6 +268,7 @@ const gold = () => {
                                                 id="allCheck"
                                                 checked={allChecked()}
                                                 onChange={handleAllCheck}
+                                                disabled={!isDownload}
                                             />
                                         </div>
 
@@ -283,38 +281,30 @@ const gold = () => {
 
 
                         </section>
-
-                        {/* Navigation Buttons */}
-                        <div className="flex justify-between mt-8">
-
-                            <button
-                                onClick={handleback}
-                                className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                Back
-                            </button>
-
-                            {/* <button
-                                onClick={handleDownload}
-                                className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300">
-                                Download
-                            </button> */}
-
-                            <a
-                                href="/home"
-                                onClick={handleConfirm}>
+                        {Object.values(checkboxes).filter(Boolean).length >= 2 && (
+                            <div className="flex justify-between mt-8">
                                 <button
-                                    type="submit"
-                                    className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
-                                >
-                                    Home page
-                                    <ToastContainer />
+                                    onClick={handleback}
+                                    className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                    Back
                                 </button>
-                            </a>
-                        </div>
+                                <a
+                                    href="/home"
+                                    onClick={handleConfirm}>
+                                    <button
+                                        type="submit"
+                                        className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                    >
+                                        Home page
+                                        <ToastContainer />
+                                    </button>
+                                </a>
+                            </div>
+                        )}
                     </div>
                 </main>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
