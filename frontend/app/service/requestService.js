@@ -552,3 +552,26 @@ export async function downloadPrakanInterAdmin(id) {
         throw {code: 400,error: new Error("Bad Request")}
     }
 }
+
+export async function createMoreInfo(data) {
+    const existingRequest = await prisma.request.findFirst({
+        where: {
+          id: data.id, // Find the first record where more_info is null
+        },
+    });
+    let request;
+    if (existingRequest) {
+        request = await prisma.request.update({
+            where: {
+                id: existingRequest.id,
+            },
+            data: {
+                more_info: data.more_info,
+            },
+        });
+        return request
+    }
+    else{
+        throw {code: 404,error: new Error("Request not found")}
+    }
+}

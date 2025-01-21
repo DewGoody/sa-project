@@ -256,7 +256,7 @@ export const Form = () => {
                       <div className="ml-4 mt-1 font-semibold text-xl text-blue-500">{item.Request.status}</div>
                       </div>
                       
-                         {item.Request.status === "รอเข้ารับบริการ" && (
+                         {item.Request.status === "รอเข้ารับบริการ" ? (
                            <div className="ml-3 mt- mb-3 flex">
                            <button 
                              className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
@@ -277,7 +277,14 @@ export const Form = () => {
                              Cancel
                            </button>
                          </div>
+                        ): (item.Request.status === "ขอข้อมูลเพิ่มเติม") && (
+                          <div className="ml-3 mt- mb-3 flex">
+                            {item.Request.more_info}
+                          
+                        </div>
+  
                         )}
+
                         
                     </div>
                     )}
