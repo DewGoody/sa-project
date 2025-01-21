@@ -46,9 +46,12 @@ export async function GET(req) {
         const flattenedQueue = queue.map((entry) => {
             // Merge RD_info properties with the main entry
             if (entry.RD_info) {
+                entry.yearRD = entry.RD_info[0].RD_type              
+                entry.json = entry.RD_info[0].json_history
                 return {
-                    ...entry,
-                    ...entry.RD_info, // Flatten RD_info into the parent
+                    entry,
+                    // ...entry.RD_info, // Flatten RD_info into the parent
+                    // ...entry.json = entry.RD_info.json_history,
                 };
             }
             return entry; // In case RD_info is null or missing

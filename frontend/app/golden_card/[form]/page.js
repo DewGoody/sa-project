@@ -114,6 +114,11 @@ const page = () => {
         fetchProvinces();
 
     }, []);
+    useEffect(() => {
+        console.log(Data)
+        
+
+    }, [Data]);
     const formatDateToISO = (dateString) => {
         const date = new Date(dateString);
         return date.toISOString();
@@ -174,8 +179,18 @@ const page = () => {
                     postal_code: Data.zipCode,
                 }
             })
+
+            if(int_req_id !== 0 ){
+                const response = await axios.post(`/api/POSTPDF/updatestatus?id=${int_req_id}`)
+                console.log("ID return",response.data.id);
+                router.push(`/golden_card/Doc/${response.data.id}`)
+            }else {
+                const response = await axios.post(`/api/POSTPDF/create`)
+                console.log("ID return",response.data.id);
+                router.push(`/golden_card/Doc/${response.data.id}`)
+            }
             notifysuccess()
-            router.push(`/golden_card/Doc/${int_req_id}`)
+            // router.push(`/golden_card/Doc/${response.id}`)
         } catch (error) {
             notifyerror()
             console.error('Form submission error:', error);

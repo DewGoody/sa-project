@@ -7,19 +7,20 @@ import { getMilitaryInfo } from '../../../../lib/prisma/prisma'
 import { getID } from '../../../../lib/session'
 
 export async function GET(req) {
+  const prisma = new PrismaClient()
+  // const cookie = req.headers.get('cookie') || '';
   try {
-    // const cookie = req.headers.get('cookie') || '';
     let id = 0
     const formId = req.nextUrl.searchParams.get('id')
     if (formId == 0) {
-        id = await getID(req)
-        console.log("in frist");
+      id = await getID(req)
+      console.log("in frist");
     } else {
-        console.log("in else");
-        const idbefore = await prisma.uHC_request.findFirst({
-            where: { id: parseInt(formId) }
-        })
-        id = idbefore.student_id
+      console.log("in else");
+      const idbefore = await prisma.rD_info.findFirst({
+        where: { id: parseInt(formId) }
+      })
+      id = idbefore.student_id
     }
     const studentData = await getMilitaryInfo(id);
     if (!studentData) {
