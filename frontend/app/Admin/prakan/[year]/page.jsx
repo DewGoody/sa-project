@@ -4,7 +4,7 @@ import {
     SearchOutlined,
     DownloadOutlined
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Input, Table, Space,Select } from 'antd';
+import { Button, Layout, Menu, theme, Input, Table, Modal ,Select } from 'antd';
 import axios from 'axios';
 import { useRouter,useParams } from 'next/navigation';
 
@@ -16,6 +16,7 @@ const App = () => {
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [dataSource, setDataSource] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [stuData, setStuData] = useState([]);
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -23,10 +24,28 @@ const App = () => {
     const [selectedKey, setSelectedKey] = useState('2');
     const [fetchYear, setfetchYear] = useState([]);
     const [statusRequest, setStatusRequest] = useState('');
+    const [reqMoreInfo, setReqMoreInfo] = useState('');
+    const [moreInfoValue, setMoreInfoValue] = useState('');
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
+    console.log("moreInfoValue :", moreInfoValue);
+    const showModal = (record) => {
+        setReqMoreInfo(record);
+        console.log("recordModalJa :", typeof record);
+        setIsModalOpen(true);
+      };
+    
+      const handleOk = () => {
+        const response = axios.post('/api/request/createMoreInfo', {id: parseInt(reqMoreInfo), more_info: moreInfoValue});
+        
+        setIsModalOpen(false);
+      };
+    
+      const handleCancel = () => {
+        setIsModalOpen(false);
+      };
 
     const handleSearch = (value, dataIndex) => {
         setSearchText(value);
@@ -276,12 +295,18 @@ const App = () => {
                     ];
                 }
                 return (
+                    <>
                     <Select
                         defaultValue={record.status}
                         style={{ width: "180px" }}
                         options={options}
                         onChange={(value) => handleChangeStatus({ ...record, status: value })}
                     />
+                     {record.status === "ขอข้อมูลเพิ่มเติม" ? 
+                        <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.id)}>เขียนรายละเอียด</Button> 
+                        : null}
+                    </>
+                   
                 );
             }
         },
@@ -449,6 +474,28 @@ const App = () => {
                         scroll={{ x: 'max-content' }}
                         
                     />
+                     <Modal 
+                        title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม" 
+                        open={isModalOpen} 
+                        onOk={handleOk} 
+                        onCancel={handleCancel}
+                        footer={[
+                            <Button key="back" onClick={handleCancel}>
+                              ปิด
+                            </Button>,
+                            <Button key="submit" type="primary" onClick={handleOk}>
+                              ยืนยัน
+                            </Button>,
+                           
+                          ]}
+                    >
+                       <textarea 
+                            style={{width: "100%", height: "200px", border:"gray solid", borderRadius:"15px", padding:"15px", fontSize:"18px"}}
+                            
+                            onChange={(e) => setMoreInfoValue(e.target.value)}
+                        >
+                         </textarea>
+                    </Modal>
                
                 </Content>
             </Layout>

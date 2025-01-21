@@ -212,6 +212,7 @@ model Request {
   status            String?
   stu_id            Decimal?            @db.Decimal
   deleted_at        DateTime?           @db.Timestamptz(6)
+  more_info         String?
   Ponpan            Ponpan[]
   Queue             Queue[]
   RD_info           RD_info[]
