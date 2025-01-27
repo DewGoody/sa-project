@@ -22,11 +22,18 @@ const AppointmentManagement = () => {
     const [selectedKey, setSelectedKey] = useState('3');
     const [fetchYear, setfetchYear] = useState([]);
     const [statusRequest, setStatusRequest] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [shouldReload, setShouldReload] = useState(false);
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
 
+     useEffect(() => {
+            if (shouldReload) {
+            window.location.reload();
+            }
+        }, [shouldReload]);
     
 
     const fetchStuData = async () => {
@@ -142,7 +149,11 @@ const AppointmentManagement = () => {
         console.log("record", record);
        if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -150,7 +161,11 @@ const AppointmentManagement = () => {
        }
        else if(record.status === "ส่งเอกสารแล้ว"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -158,7 +173,11 @@ const AppointmentManagement = () => {
        } 
        else if(record.status === "ติดต่อรับเอกสาร"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToRecieveDoc', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -166,7 +185,11 @@ const AppointmentManagement = () => {
        } 
        else if(record.status === "รับเอกสารเรียบร้อย"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToFinishRecieve', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -457,12 +480,12 @@ const columns = [
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd/0'
+                            onClick: () => window.location.href = '/Admin/rd/'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard/0'
+                            onClick: () => window.location.href = '/Admin/goldencard/'
                         },
                         {
                             key: '6',
@@ -523,6 +546,7 @@ const columns = [
                     <Table
                         dataSource={dataSource}
                         columns={columns}
+                        loading={loading}
                         style={{ borderRadius: borderRadiusLG  }}
                         scroll={{ x: 'max-content' }}
                         

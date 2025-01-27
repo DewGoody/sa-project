@@ -26,11 +26,20 @@ const App = () => {
     const [statusRequest, setStatusRequest] = useState('');
     const [reqMoreInfo, setReqMoreInfo] = useState('');
     const [moreInfoValue, setMoreInfoValue] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [shouldReload, setShouldReload] = useState(false);
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
     console.log("moreInfoValue :", moreInfoValue);
+
+    useEffect(() => {
+        if (shouldReload) {
+        window.location.reload();
+        }
+    }, [shouldReload]);
+
     const showModal = (record) => {
         setReqMoreInfo(record);
         console.log("recordModalJa :", typeof record);
@@ -173,7 +182,11 @@ const App = () => {
         console.log("record", record);
        if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -181,7 +194,11 @@ const App = () => {
        }
        else if(record.status === "ส่งเอกสารแล้ว"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -190,7 +207,11 @@ const App = () => {
        
        else if(record.status === "ขอข้อมูลเพิ่มเติม"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("resPerm", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -198,7 +219,11 @@ const App = () => {
        }
        else if(record.status === "ไม่อนุมัติ"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -206,7 +231,11 @@ const App = () => {
        }
        else if(record.status === "โอนเงินเรียบร้อย"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("resOwn", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -412,12 +441,12 @@ const App = () => {
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd/0'
+                            onClick: () => window.location.href = '/Admin/rd/'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard/0'
+                            onClick: () => window.location.href = '/Admin/goldencard/'
                         },
                         {
                             key: '6',
@@ -470,6 +499,7 @@ const App = () => {
                     <Table
                         dataSource={dataSource}
                         columns={columns}
+                        loading = {loading}
                         style={{ borderRadius: borderRadiusLG  }}
                         scroll={{ x: 'max-content' }}
                         

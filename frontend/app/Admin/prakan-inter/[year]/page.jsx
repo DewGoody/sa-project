@@ -23,11 +23,19 @@ const App = () => {
     const [selectedKey, setSelectedKey] = useState('6');
     const [fetchYear, setfetchYear] = useState([]);
     const [statusRequest, setStatusRequest] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [shouldReload, setShouldReload] = useState(false);
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
     console.log("selectedKey", selectedKey);
+
+    useEffect(() => {
+            if (shouldReload) {
+            window.location.reload();
+            }
+        }, [shouldReload]);
     
 
     const fetchStuData = async () => {
@@ -128,7 +136,11 @@ const App = () => {
         console.log("record", record);
        if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -136,7 +148,11 @@ const App = () => {
        }
        else if(record.status === "ส่งเอกสารแล้ว"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -145,7 +161,11 @@ const App = () => {
        
        else if(record.status === "ขอข้อมูลเพิ่มเติม"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("resPerm", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -153,7 +173,11 @@ const App = () => {
        }
        else if(record.status === "ไม่อนุมัติ"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("res", res);
         } catch (error) {
             console.error('Error fetching status:', error);
@@ -161,7 +185,11 @@ const App = () => {
        }
        else if(record.status === "โอนเงินเรียบร้อย"){
         try {
+            setLoading(true);
+            setShouldReload(true);
             const res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
+            setLoading(false);
+            setShouldReload(false);
             console.log("resOwn", res);
         } catch (error) {
             console.error('Error fetching status:', error);

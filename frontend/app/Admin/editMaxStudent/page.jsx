@@ -23,7 +23,7 @@ const AppointmentManagement = () => {
     } = theme.useToken();
     const [selectedKey, setSelectedKey] = useState('7');
     const [statusRequest, setStatusRequest] = useState([]);
-
+    const [shouldReload, setShouldReload] = useState(false);
     const [dateMaxStu, setDateMaxStu] = useState([])
     const [selectDate, setSelectDate] = useState();
     const [maxStu, setMaxStu] = useState();
@@ -34,7 +34,12 @@ const AppointmentManagement = () => {
     '13:00-13:30', '13:30-14:00','14:00-14:30', '14:30-15:00','15:00-15:30', '15:30-16:00','16:00-16:30', '16.30-17.00',
   ];
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        if (shouldReload) {
+        window.location.reload();
+        }
+    }, [shouldReload]);
 
 const fetchGetAllTimeSlots = async () => {
     try {
@@ -59,15 +64,19 @@ useEffect(() => {
 
 console.log("dateMaxStu", dateMaxStu);
 
-  const handleOk = () => {
-    const res = axios.post('/api/timeslot/editMaxStudent', { date: selectDate, maxStu: maxStu });
-    console.log("resEditMx", res);
-    setIsModalOpen(false);
-  };
+const handleOk = async () => {
+    setShouldReload(true);
+    try {
+        const res = await axios.post('/api/timeslot/editMaxStudent', { date: selectDate, maxStu: maxStu });
+        console.log("resEditMx", res);
+    } catch (error) {
+        console.error('Error editing max student:', error);
+    } finally {
+        setShouldReload(false);
+    }
+};
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+
 
   const handleSelectDate = async (date) => {
     const formattedDate = new Date(date)
@@ -138,12 +147,12 @@ console.log("dateMaxStu", dateMaxStu);
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd/0'
+                            onClick: () => window.location.href = '/Admin/rd/'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard/0'
+                            onClick: () => window.location.href = '/Admin/goldencard/'
                         },
                         {
                             key: '6',

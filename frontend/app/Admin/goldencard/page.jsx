@@ -13,6 +13,15 @@ const App = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [reqMoreInfo, setReqMoreInfo] = useState('');
     const [moreInfoValue, setMoreInfoValue] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [shouldReload, setShouldReload] = useState(false);
+
+     useEffect(() => {
+            if (shouldReload) {
+            window.location.reload();
+            }
+        }, [shouldReload]);
+
     async function fetchPdfFile(form) {
         try {
             const response = await fetch(`/api/POSTPDF/getpdfadmin?id=${form}`);
@@ -150,14 +159,22 @@ const App = () => {
         console.log("status11", record.status)
         if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
             try {
+                setLoading(true);
+                setShouldReload(true);
                 const res = await axios.post('/api/request/changeStatusProcess', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
                 console.log("res", res);
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
         } else if (record.status === "ขอข้อมูลเพิ่มเติม") {
             try {
+                setLoading(true);
+                setShouldReload(true);
                 const res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
                 console.log("res", res);
             } catch (error) {
                 console.error('Error fetching status:', error);
@@ -165,21 +182,33 @@ const App = () => {
         }
         else if (record.status === "ส่งเอกสารแล้ว") {
             try {
+                setLoading(true);
+                setShouldReload(true);
                 const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
                 console.log("res", res);
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
         } else if (record.status === "ย้ายสิทธิสำเร็จ") {
             try {
+                setLoading(true);
+                setShouldReload(true);
                 const res = await axios.post('/api/request/changeToTranApprove', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
                 console.log("res", res);
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
         } else if (record.status === "ย้ายสิทธิไม่สำเร็จ") {
             try {
+                setLoading(true);
+                setShouldReload(true);
                 const res = await axios.post('/api/request/changeToTranNotApprove', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
                 console.log("res", res);
             } catch (error) {
                 console.error('Error fetching status:', error);
@@ -357,35 +386,37 @@ const App = () => {
                         {
                             key: '1',
                             label: <span style={{ color: selectedKey === '1' ? 'black' : 'white' }}>จัดการการนัดหมาย</span>,
-                            onClick: () => window.location.href = '/Admin/home'
+                            onClick: () => window.location.href = '/Admin/home/0'
                         },
                         {
                             key: '2',
                             label: <span style={{ color: selectedKey === '2' ? 'black' : 'white' }}>ประกันอุบัติเหตุ</span>,
-                            onClick: () => window.location.href = '/Admin/prakan'
-
+                            onClick: () => window.location.href = '/Admin/prakan/0'
                         },
                         {
                             key: '3',
                             label: <span style={{ color: selectedKey === '3' ? 'black' : 'white' }}>การขอผ่อนผันการเข้ารับราชการทหาร</span>,
+                            onClick: () => window.location.href = '/Admin/ponpan/0'
                         },
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd'
+                            onClick: () => window.location.href = '/Admin/rd/'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard'
+                            onClick: () => window.location.href = '/Admin/goldencard/'
                         },
                         {
                             key: '6',
                             label: <span style={{ color: selectedKey === '6' ? 'black' : 'white' }}>Health Insurance For Foreigner Student</span>,
+                            onClick: () => window.location.href = '/Admin/prakan-inter/0'
                         },
                         {
                             key: '7',
-                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>แบบคำขอรับเงินผ่านธนาคาร</span>,
+                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
+                             onClick: () => window.location.href = '/Admin/editMaxStudent'
                         }
                     ]}
                 />
@@ -420,6 +451,7 @@ const App = () => {
                         title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม" 
                         open={isModalOpen} 
                         onOk={handleOk} 
+                        loading={loading}
                         onCancel={handleCancel}
                         footer={[
                             <Button key="back" onClick={handleCancel}>

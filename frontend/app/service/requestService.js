@@ -14,8 +14,9 @@ export async function getRequestById(id) {
                 Student: true,
                 UHC_request: true,
                 RD_info: true,
+                prakan_inter_info: true
             }
-        })
+        })        
         if (request) {
             let result
             if (request.type == "การเบิกจ่ายประกันอุบัติเหตุ") {
@@ -50,6 +51,14 @@ export async function getRequestById(id) {
                 }
                 return result
             }
+            else if (request.type == "Health insurance") {
+                result = {
+                    ...request,
+                    form: request.prakan_inter_info[0].id,
+                    path: "prakan-inter"
+                }                
+                return result
+            }
             // return request
         }
         else {
@@ -65,7 +74,7 @@ export async function getShowRequestNotQueue(data) {
                 not:"โครงการหลักประกันสุขภาพถ้วนหน้า"
             },
             status: {
-                in: ["รอจองคิว","ขอข้อมูลเพิ่มเติม","รอเจ้าหน้าที่ดำเนินการ"],
+                in: ["รอจองคิว"],
                 
             },
             stu_id: data,
@@ -74,7 +83,8 @@ export async function getShowRequestNotQueue(data) {
         include: {
             accident_info: true,
             Ponpan: true,
-            UHC_request: true
+            UHC_request: true,
+            prakan_inter_info: true,
         }
     })
     if (requests) {
@@ -88,6 +98,7 @@ export async function getShowRequestNotQueue(data) {
 export async function getShowRequestNotQueueGoldenCard(data) {
     const requests = await prisma.request.findMany({
         where: {
+            type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
             status: {
                 notIn: ["ประวัติการแก้ไข"]
             },

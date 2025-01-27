@@ -266,7 +266,7 @@ export const Form = () => {
                 {prakanData.length > 0 ? (
                   prakanData.map((item, index) => (
                     <div key={index} className="flex justify-between items-center mt-5">
-                      {(item.status === "จองคิวสำเร็จ" || item.status === "เข้ารับบริการแล้ว") && (
+                      {((item.Request.status !== "คำขอถูกยกเลิก")&&(item.status === "จองคิวสำเร็จ" || item.status === "เข้ารับบริการแล้ว")) && (
                         <div className="flex justify-between border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full">
                           <div className="">
                             {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " ( " + timeSlots[item.period] + " น.)" + " "}

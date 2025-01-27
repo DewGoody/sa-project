@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import {
     SearchOutlined
 } from '@ant-design/icons';
@@ -27,6 +27,7 @@ const AppointmentManagement = () => {
     const [selectDate, setSelectDate] = useState();
     const [maxStu, setMaxStu] = useState();
     const [loading, setLoading] = useState(false);
+    const [shouldReload, setShouldReload] = useState(false);
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
     const timeSlots = 
@@ -37,11 +38,24 @@ const AppointmentManagement = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+// useEffect(() => {
+//     if (!loading) {
+//        window.location.reload();
+//     }
+// }, [statusRequest])
+    useEffect(() => {
+        if (shouldReload) {
+        window.location.reload();
+        }
+    }, [shouldReload]);
+
 
   const handleSearch = (value, dataIndex) => {
     setSearchText(value);
     setSearchedColumn(dataIndex);
   };
+
+ console.log("statusRequest", statusRequest);
 
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, confirm }) => (
@@ -120,22 +134,39 @@ console.log("dateMaxStu", dateMaxStu);
                 const date = new Date(item.Timeslot.date);
                 const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
 
-                return {
-                    key: index,
-                    name: item.Student.fnameTH + ' ' + item.Student.lnameTH,
-                    student_ID: item.Student.id,
-                    status: item.status,
-                    id: item.id,
-                    reqId: item.Request.id,
-                    type: item.Request.type,
-                    date:formattedDate,
-                    period: timeSlots[item.period] + " น.",
-                };
+                if(item.Request.status !== "คำขอถูกยกเลิก"){
+                    return {
+                        key: index,
+                        name: item.Student.fnameTH + ' ' + item.Student.lnameTH,
+                        student_ID: item.Student.id,
+                        status: item.status,
+                        id: item.id,
+                        reqId: item.Request.id,
+                        type: item.Request.type,
+                        date:formattedDate,
+                        period: timeSlots[item.period] + " น.",
+                    }
+                }else{
+                    return {
+                        key: index,
+                        name: item.Student.fnameTH + ' ' + item.Student.lnameTH,
+                        student_ID: item.Student.id,
+                        status: item.status,
+                        id: item.id,
+                        reqId: item.Request.id,
+                        type: item.Request.type,
+                        date:formattedDate,
+                        period: timeSlots[item.period] + " น.",
+                    }
+                }
             }));
             console.log("dataSource :", dataSource);
         } catch (error) {
             console.error('Error fetching student data:', error);
         }
+        // finally{
+        //     setLoading(false)
+        // }
     }
 
     const fetchUniqueYear = async () => {
@@ -172,13 +203,17 @@ console.log("dateMaxStu", dateMaxStu);
         try {
             if(reocrd.status === "ไม่มาเข้ารับบริการ"){
                 setLoading(true)
+                setShouldReload(true);
                 await axios.post('/api/queue/changeStatusToLate', { id: reocrd.id });
                 setLoading(false)
+                setShouldReload(false);
             }
             else if(reocrd.status === "เข้ารับบริการแล้ว"){
                 setLoading(true)
+                setShouldReload(true);
                 await axios.post('/api/queue/changeStatusToReceiveService', { id: reocrd.id });
                 setLoading(false)
+                setShouldReload(false);
             }
         } catch (error) {
             console.error('Error changing status:', error);
@@ -294,12 +329,12 @@ const columns = [
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd/0'
+                            onClick: () => window.location.href = '/Admin/rd/'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard/0'
+                            onClick: () => window.location.href = '/Admin/goldencard/'
                         },
                         {
                             key: '6',

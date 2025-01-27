@@ -14,6 +14,8 @@ import { Button, Layout, Menu, theme, Input, Table, Space, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
 const App = () => {
     const [Data, setData] = useState([])
+    const [loading, setLoading] = useState(false);
+    const [shouldReload, setShouldReload] = useState(false);
     const formatDateToDMYWithTime = (dateString) => {
         // console.log(dateString);
         
@@ -30,6 +32,12 @@ const App = () => {
 
         return `${day}/${month}/${year}`; // Return in dd/mm/yy-hour:min format
     };
+
+    useEffect(() => {
+            if (shouldReload) {
+            window.location.reload();
+            }
+        }, [shouldReload]);
 
     const fetchData = async () => {
         try {
@@ -69,10 +77,14 @@ const App = () => {
     } = theme.useToken();
     const [selectedKey, setSelectedKey] = useState('4');
     const handleChangeStatus = async (record) => {
-        console.log("status11",record.status)
+        
         if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
             try {
-                const res = await axios.post('/api/request/changePrakanProcess', { id: parseInt(record.reqId) });
+                setLoading(true);
+                setShouldReload(true);
+                const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
                 console.log("res", res);
             } catch (error) {
                 console.error('Error fetching status:', error);
@@ -80,7 +92,11 @@ const App = () => {
            }
            else if(record.status === "ส่งเอกสารแล้ว"){
             try {
-                const res = await axios.post('/api/request/changePrakanToSended', { id: parseInt(record.reqId) });
+                setLoading(true);
+                setShouldReload(true);
+                const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
                 console.log("res", res);
             } catch (error) {
                 console.error('Error fetching status:', error);
@@ -99,10 +115,15 @@ const App = () => {
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
                     ]
-                }else if(status == "ส่งเอกสารแล้ว"){
+                }else if(status == "รอเจ้าหน้าที่ดำเนินการ"){
                     options=[
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
+                    ]
+                }else if(status == "ส่งเอกสารแล้ว"){
+                    options=[
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', disabled: true},
                     ]
                 }
                 return(
@@ -215,35 +236,37 @@ const App = () => {
                         {
                             key: '1',
                             label: <span style={{ color: selectedKey === '1' ? 'black' : 'white' }}>จัดการการนัดหมาย</span>,
-                            onClick: () => window.location.href = '/Admin/home'
+                            onClick: () => window.location.href = '/Admin/home/0'
                         },
                         {
                             key: '2',
                             label: <span style={{ color: selectedKey === '2' ? 'black' : 'white' }}>ประกันอุบัติเหตุ</span>,
-                            onClick: () => window.location.href = '/Admin/prakan'
-
+                            onClick: () => window.location.href = '/Admin/prakan/0'
                         },
                         {
                             key: '3',
                             label: <span style={{ color: selectedKey === '3' ? 'black' : 'white' }}>การขอผ่อนผันการเข้ารับราชการทหาร</span>,
+                            onClick: () => window.location.href = '/Admin/ponpan/0'
                         },
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd'
+                            onClick: () => window.location.href = '/Admin/rd/'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard'
+                            onClick: () => window.location.href = '/Admin/goldencard/'
                         },
                         {
                             key: '6',
                             label: <span style={{ color: selectedKey === '6' ? 'black' : 'white' }}>Health Insurance For Foreigner Student</span>,
+                             onClick: () => window.location.href = '/Admin/prakan-inter/0'
                         },
                         {
                             key: '7',
-                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>แบบคำขอรับเงินผ่านธนาคาร</span>,
+                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
+                             onClick: () => window.location.href = '/Admin/editMaxStudent'
                         }
                     ]}
                 />
@@ -274,6 +297,7 @@ const App = () => {
                     <Table
                         dataSource={Data}
                         columns={columns}
+                        loading={loading}
                         rowClassName={(record, index) =>
                             index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
                         }

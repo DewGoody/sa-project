@@ -83,6 +83,9 @@ export async function getQueueById(id) {
 export async function cancleQueue(id) {
     if(id){
         const queue = await getQueueById(id)
+        if(!queue){
+            return "Dont have queue"
+        }
         await delStuInPeriod(queue.period, queue.timeslot_id)
         await prisma.request.update({
             where: {id: queue.req_id},
@@ -187,13 +190,17 @@ export async function getShowQueueInAdmin(year) {
 
 export async function changeStatusToLate(id) {
     if(id){
-        const request = await getQueueById(id)        
-        if(request.status !== "จองคิวสำเร็จ"){
+        const queue = await getQueueById(id)        
+        if(queue.status !== "จองคิวสำเร็จ"){
             throw {code: 400,error: new Error("Bad Request")}
         }
         const changeStatusQueue = await prisma.queue.update({
             where: {id: id},
             data: {status: "ไม่มาเข้ารับบริการ" }
+        })
+        await prisma.request.update({
+            where: {id: queue.req_id},
+            data: {status: "รอจองคิว"}
         })
         return changeStatusQueue
     }
@@ -204,13 +211,17 @@ export async function changeStatusToLate(id) {
 
 export async function changeStatusToReceiveService(id) {
     if(id){
-        const request = await getQueueById(id)        
-        if(request.status !== "จองคิวสำเร็จ"){
+        const queue = await getQueueById(id)        
+        if(queue.status !== "จองคิวสำเร็จ"){
             throw {code: 400,error: new Error("Bad Request")}
         }
         const changeStatusQueue = await prisma.queue.update({
             where: {id: id},
             data: {status: "เข้ารับบริการแล้ว" }
+        })
+        await prisma.request.update({
+            where: {id: queue.req_id},
+            data: {status: "รอเจ้าหน้าที่ดำเนินการ"}
         })
         return changeStatusQueue
     }
