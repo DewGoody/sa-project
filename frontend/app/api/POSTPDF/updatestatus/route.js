@@ -22,6 +22,9 @@ export async function POST(req) {
         if (!id) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
         }
+        const pdf = await prisma.uHC_request.findFirst({
+            where:{student_id : id},
+        });
         const createRequest = await prisma.request.update({
             where:{id:idbefore.req_id},
             data: {

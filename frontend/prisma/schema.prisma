@@ -315,6 +315,9 @@ model UHC_request {
   student_id       Decimal   @db.Decimal
   binary_file_data Bytes?
   req_id           BigInt?
+  file_citizen     Bytes?
+  file_house       Bytes?
+  file_student     Bytes?
   Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student   @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

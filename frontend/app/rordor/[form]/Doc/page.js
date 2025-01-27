@@ -102,14 +102,14 @@ const RD = () => {
         });
     }
     // Function to handle navigation attempt
-    const handleNavigation = (event, targetUrl) => {
-        if (!allChecked()) {
-            event.preventDefault();
-            notifyerror()
-        } else {
-            window.location.href = targetUrl;
-        }
-    };
+    // const handleNavigation = (event, targetUrl) => {
+    //     if (!allChecked()) {
+    //         event.preventDefault();
+    //         notifyerror()
+    //     } else {
+    //         window.location.href = targetUrl;
+    //     }
+    // };
     const handleAllCheck = () => {
 
         const newState = Object.values(checkboxes).some(value => !value);
@@ -124,7 +124,7 @@ const RD = () => {
         router.push(`/rordor/${int_form}/checkData`)
     }
     console.log("studentIDJaaa ", profileData?.id);
-    const handlequeue = async (event) => {
+    const handleNavigation = async (event) => {
         console.log("formmm", int_form);
 
         const response = await axios.post(`/api/request/create`, { type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร", status: "รอจองคิว", stuId: profileData.id, formId: int_form });

@@ -15,31 +15,33 @@ const { Header, Sider, Content } = Layout;
 const App = () => {
     const [Data, setData] = useState([])
     const formatDateToDMYWithTime = (dateString) => {
+        // console.log(dateString);
+        
         if (!dateString) return 'N/A'; // Handle null or undefined dates
 
         const date = new Date(dateString); // Parse the input date string
 
         const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits for day
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-        const year = String(date.getFullYear()).slice(-2); // Get the last 2 digits of the year
+        const year = String(date.getFullYear()).slice(); // Get the last 2 digits of the year
 
         const hours = String(date.getHours()).padStart(2, '0'); // Ensure 2 digits for hours
         const minutes = String(date.getMinutes()).padStart(2, '0'); // Ensure 2 digits for minutes
 
-        return `${day}/${month}/${year} เวลา:${hours}:${minutes}`; // Return in dd/mm/yy-hour:min format
+        return `${day}/${month}/${year}`; // Return in dd/mm/yy-hour:min format
     };
 
     const fetchData = async () => {
         try {
             const response = await axios.get(`/api/Admin/getrordor`)
-            // response.data.map((item) => {
-            //     console.log(item.entry);
+            response.data.map((item) => {
+                console.log("กหดหกดกหดกหดกหดหก",item.entry?.json.student);
 
-            // });
+            });
             
             setData(...Data, response.data.map((item, index) => ({
                 key: index, // Unique key for each row
-                fullname: `${item.entry?.json.student?.lnameTH || ''} ${item.entry?.json.student?.fnameTH || ''}`,
+                fullname: `${item.entry?.json.student?.fnameTH || ''} ${item.entry?.json.student?.lnameTH || ''}`,
                 student_ID: item.entry?.stu_id,
                 citizen_ID: item.entry?.json.student.thai_id || 'N/A',
                 birthdate: formatDateToDMYWithTime(item.entry?.json.student?.bd) || 'N/A',
@@ -48,13 +50,15 @@ const App = () => {
                 rd_ID: item.entry?.json.Military_info.military_id || 'ปี1 ไม่มีเลขประจำตัว',
                 yearRD : item.entry?.yearRD
             })))
+            console.log(Data.fullname)
         } catch (error) {
             console.log(error)
         }
     }
     useEffect(() => {
-        console.log(Data)
+        
         fetchData()
+        // console.log(Data.fullname)
     }, [])
     const [collapsed, setCollapsed] = useState(false);
 
@@ -148,13 +152,37 @@ const App = () => {
 
 
     const exportToExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(Data); // แปลงข้อมูลเป็น worksheet
-        const workbook = XLSX.utils.book_new(); // สร้าง workbook ใหม่
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Data"); // เพิ่ม worksheet เข้า workbook
-        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' }); // สร้างไฟล์ excel
-        const data = new Blob([excelBuffer], { type: "application/octet-stream" }); // สร้าง blob
-        saveAs(data, "exported_data.xlsx"); // บันทึกไฟล์
+        // กำหนดชื่อ Columns ที่ต้องการ
+        const columnHeaders = [
+            // { header: "ลำดับ", key: "key" },
+            { header: "ชื่อ-นามสกุล", key: "fullname" },
+            { header: "รหัสนักศึกษา", key: "student_ID" },
+            { header: "เลขบัตรประชาชน", key: "citizen_ID" },
+            { header: "วันเกิด", key: "birthdate" },
+            { header: "สถานะ", key: "status" },
+            { header: "เลขประจำตัว นศท", key: "rd_ID" },
+            { header: "ชั้นปี นศท", key: "yearRD" }
+        ];
+    
+        // เพิ่มชื่อ Columns เข้าไปเป็น Row แรก
+        const dataWithHeaders = [
+            columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+            ...Data.map((item) => columnHeaders.map(col => item[col.key] || '')) // ข้อมูลตามลำดับ
+        ];
+    
+        // สร้าง Worksheet ด้วยข้อมูลที่มี Header
+        const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+    
+        // สร้าง Workbook และเพิ่ม Worksheet
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+    
+        // เขียนไฟล์ Excel และดาวน์โหลด
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(data, "exported_data.xlsx");
     };
+    
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>

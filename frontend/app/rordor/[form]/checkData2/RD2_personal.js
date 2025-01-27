@@ -393,31 +393,25 @@ export const Personal = () => {
                 </div>
                 <div>
                     <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
-                    <select
+                    <input
+                        type="text"
                         name="district"
                         value={formData.district}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    >
-                        <option value={formData.district}>{formData.district}</option>
-                        {districts.map((district, index) => (
-                            <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                        ))}
-                    </select>
+                        placeholder="Subdistrict"
+                    />
                 </div>
                 <div>
                     <label className="block text-gray-700 mb-2">รหัสไปรษณีย์ (Zip code)</label>
-                    <select
+                    <input
+                        type="text"
                         name="zipCode"
                         value={formData.zipCode}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    >
-                        <option value={formData.zipCode}>{formData.zipCode}</option>
-                        {districts.map((district, index) => (
-                            <option key={index} value={district.zipCode}>{district.zipCode}</option>
-                        ))}
-                    </select>
+                        placeholder="Zip code"
+                    />
                 </div>
             </div>
         </div >

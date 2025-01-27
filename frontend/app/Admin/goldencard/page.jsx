@@ -3,11 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    UploadOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
+    SearchOutlined,
+    DownloadOutlined
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space, Modal, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
@@ -31,16 +28,10 @@ const App = () => {
                 }
                 const byteArray = new Uint8Array(byteNumbers);
                 const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-                // Create a URL for the Blob and trigger download
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
-                // console.log('Generated link:', link);
-                // console.log('Generated URL:', url);
-                // console.log('Generated Blob:', blob);
-                // window.open(url, '_blank');
                 link.href = url;
-                link.download = `student_${form}_file.pdf`;
+                link.download = `student_${form}_file.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -51,6 +42,26 @@ const App = () => {
             console.error('Error fetching file:', error);
         }
     }
+    async function fetchZipFile(form) {
+        try {
+            const response = await fetch(`/api/POSTPDF/getpdfadmin?id=${form}`);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `student_${form}_files.zip`; 
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error fetching ZIP file:', error);
+        }
+    }
+    
     const showModal = (record) => {
         setReqMoreInfo(record);
         console.log("recordModalJa :", typeof record);
@@ -100,7 +111,7 @@ const App = () => {
             const response = await axios.get(`/api/Admin/getgoldenbyreq_id`)
             setData(...Data, response.data.map((item, index) => ({
                 key: index, // Unique key for each row
-                fullname: `${item.Student?.lnameTH || ''} ${item.Student?.fnameTH || ''}`,
+                fullname: `${item.Student?.fnameTH || ''} ${item.Student?.lnameTH || ''}`,
                 student_ID: item.stu_id?.toString(),
                 citizen_ID: item.Student?.thai_id || 'N/A',
                 birthdate: formatDateToDMY(item.Student?.bd) || 'N/A',
@@ -156,7 +167,6 @@ const App = () => {
             try {
                 const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
                 console.log("res", res);
-                console.log("dfsfdsfdsfdsfdsfdsf")
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
@@ -190,11 +200,25 @@ const App = () => {
             },
         },
         {
-            title: 'ดาวน์โหลด PDF',
+            align: 'right', // เพิ่ม align ขวา
+            title: 'ดาวน์โหลด',
             render: (_, record) => (
-                <Space size="middle">
-                    <Button onClick={() => fetchPdfFile(record.reqId)}>PDF</Button>
-                </Space>
+                <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%', // Optional: ensures full height centering within the parent
+                }}
+              >
+                <DownloadOutlined
+                  style={{
+                    fontSize: '21px', // Increase the size (e.g., 24px)
+                    cursor: 'pointer', // Optional: changes the cursor to a pointer
+                  }}
+                  onClick={() => fetchZipFile(record.reqId)}
+                />
+              </div>
             ),
         },
         {

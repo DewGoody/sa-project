@@ -21,11 +21,13 @@ async function uhc(data) {
     id,
     lnameTH,
     fnameTH,
-    fac_name,
+    facultyNameTH,
     year,
     bd,
     title,
-    thai_id
+    thai_id,
+    phone_num,
+    personal_email,
   } = data.Student;
   const {
     last_update,
@@ -120,6 +122,14 @@ async function uhc(data) {
     font: thSarabunFont,
     color: rgb(0, 0, 0),
   });
+//115 : 138 : 98,
+  firstPage.drawCircle({
+    x: title !== 'นาย' ? title === 'นาง' ? 220 : 244 : 200,
+    y: height -234,
+    size: title === 'นางสาว' ? 12 : 7,
+    borderWidth: 0.5,
+    borderColor: rgb(0, 0, 0),
+  });
 
   firstPage.drawText(`${fnameTH || ''}`, {
     x: 270,
@@ -139,9 +149,9 @@ async function uhc(data) {
 
   // next line
   // the possible longest name is สถาบันบัณฑิตบริหารธุรกิจศศินทร์แห่งจุฬาลงกรณ์มหาวิทยาลัย which is 40 characters
-  //if (fac_name.length > 20)  we need to split the text into 2 lines
+  //if (facultyNameTH.length > 20)  we need to split the text into 2 lines
 
-  firstPage.drawText(`${fac_name || ''}`, {
+  firstPage.drawText(`${facultyNameTH || ''}`, {
     x: 92,
     y: height - 255,
     size: 9,
@@ -304,9 +314,8 @@ async function uhc(data) {
     color: rgb(0, 0, 0),
   });
 
-  // email
-  const email = '-';
-  firstPage.drawText(`${email || ''}`, {
+
+  firstPage.drawText(`${personal_email || ''}`, {
     x: 370,
     y: height - 352,
     size: 14,
@@ -499,6 +508,13 @@ async function uhc(data) {
 
   // phone number
   secondPage.drawText(`${tel_num || ''}`, {
+    x: 90,
+    y: height2 - 240,
+    size: 10,
+    font: thSarabunFont,
+    color: rgb(0, 0, 0),
+  });
+  secondPage.drawText(`${phone_num || ''}`, {
     x: 220,
     y: height2 - 240,
     size: 10,
@@ -738,8 +754,15 @@ async function uhc(data) {
   })
 
   // next line
-  // phone num 
   secondPage.drawText(`${tel_num || ''}`, {
+    x: 330,
+    y: height2 - 328,
+    size: 10,
+    font: thSarabunFont,
+    color: rgb(0, 0, 0),
+  })
+  // phone num 
+  secondPage.drawText(`${phone_num || ''}`, {
     x: 450,
     y: height2 - 328,
     size: 10,
@@ -769,7 +792,7 @@ async function uhc(data) {
 
 
   // faculty name
-  secondPage.drawText(`${fac_name || ''}`, {
+  secondPage.drawText(`${facultyNameTH || ''}`, {
     x: 560,
     y: height2 - 70,
     size: 10,

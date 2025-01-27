@@ -1,10 +1,10 @@
 'use server'
 
-import { PrismaClient } from '@prisma/client'
-import { NextResponse } from 'next/server'
+import { PrismaClient } from '@prisma/client';
+import { NextResponse } from 'next/server';
+import JSZip from 'jszip';
 
-
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 export async function GET(req) {
     try {
@@ -25,12 +25,32 @@ export async function GET(req) {
             return NextResponse.json({ error: 'File not found' }, { status: 404 });
         }
 
-        const fileContentBase64 = file.binary_file_data
-            ? Buffer.from(file.binary_file_data).toString('base64')
-            : null;
+        // Initialize JSZip
+        const zip = new JSZip();
 
-        return NextResponse.json({
-            binary_file_data: fileContentBase64
+        // Add files to the zip if they exist
+        if (file.binary_file_data) {
+            zip.file('binary_file_data.pdf', file.binary_file_data);
+        }
+        if (file.file_citizen) {
+            zip.file('file_citizen.pdf', file.file_citizen);
+        }
+        if (file.file_house) {
+            zip.file('file_house.pdf', file.file_house);
+        }
+        if (file.file_student) {
+            zip.file('file_student.pdf', file.file_student);
+        }
+
+        // Generate the zip file
+        const zipContent = await zip.generateAsync({ type: 'nodebuffer' });
+
+        // Return the zip file as a response
+        return new Response(zipContent, {
+            headers: {
+                'Content-Type': 'application/zip',
+                'Content-Disposition': 'attachment; filename="files.zip"',
+            },
         });
 
     } catch (error) {

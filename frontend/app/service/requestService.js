@@ -61,8 +61,12 @@ export async function getRequestById(id) {
 export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
         where: {
+            type :{
+                not:"โครงการหลักประกันสุขภาพถ้วนหน้า"
+            },
             status: {
-                in: ["รอจองคิว","ขอข้อมูลเพิ่มเติม"]
+                in: ["รอจองคิว","ขอข้อมูลเพิ่มเติม","รอเจ้าหน้าที่ดำเนินการ"],
+                
             },
             stu_id: data,
             deleted_at: null
@@ -80,6 +84,28 @@ export async function getShowRequestNotQueue(data) {
         return "Not found"
     }
 }
+
+export async function getShowRequestNotQueueGoldenCard(data) {
+    const requests = await prisma.request.findMany({
+        where: {
+            status: {
+                notIn: ["ประวัติการแก้ไข"]
+            },
+            stu_id: data,
+            deleted_at: null
+        },
+        include: {
+            UHC_request: true
+        }
+    })
+    if (requests) {
+        return requests
+    }
+    else {
+        return "Not found"
+    }
+}
+
 
 
 export async function cancleRequest(id) {

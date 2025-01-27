@@ -43,7 +43,7 @@ export async function GET(req) {
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(req) {
-    
+
     try {
         const formId = req.nextUrl.searchParams.get('id')
         const idbefore = await prisma.uHC_request.findFirst({
@@ -58,13 +58,26 @@ export async function POST(req) {
         // ดึงข้อมูลจาก FormData
         const formData = await req.formData();
         const file = formData.get('file'); // ดึงไฟล์ที่อัปโหลด
+        const file_citizen = formData.get('file_citizen'); // ดึงไฟล์ที่อัปโหลด
+        const file_house = formData.get('file_house'); // ดึงไฟล์ที่อัปโหลด
+        const file_student = formData.get('file_student'); // ดึงไฟล์ที่อัปโหลด
 
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
         }
+        if (!file_citizen) {
+            return NextResponse.json({ error: 'No file citizen uploaded.' }, { status: 400 });
+        } if (!file_house) {
+            return NextResponse.json({ error: 'No file house uploaded.' }, { status: 400 });
+        } if (!file_student) {
+            return NextResponse.json({ error: 'No file student uploaded.' }, { status: 400 });
+        }
 
         const fileSize = file.size;
         const fileBuffer = await file.arrayBuffer();
+        const fileBuffercitizen = await file_citizen.arrayBuffer();
+        const fileBufferhouse = await file_house.arrayBuffer();
+        const fileBufferstudent = await file_student.arrayBuffer();
 
         // ตรวจสอบขนาดไฟล์
         if (fileSize > MAX_FILE_SIZE) {
@@ -73,10 +86,13 @@ export async function POST(req) {
 
         // บันทึกไฟล์ลงฐานข้อมูล
         const pdf = await prisma.uHC_request.update({
-            where : {id: parseInt(formId)},
+            where: { id: parseInt(formId) },
             data: {
                 student_id: id,
                 binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
+                file_citizen:Buffer.from(fileBuffercitizen),
+                file_house:Buffer.from(fileBufferhouse),
+                file_student:Buffer.from(fileBufferstudent)
             },
         });
 
@@ -89,7 +105,7 @@ export async function POST(req) {
             }
         });
         const createRequest = await prisma.request.update({
-            where :{id:parseInt(idbefore.req_id)},
+            where: { id: parseInt(idbefore.req_id) },
             data: {
                 type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
                 status: "รอเจ้าหน้าที่ดำเนินการ",

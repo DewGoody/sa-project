@@ -116,7 +116,7 @@ const page = () => {
     }, []);
     useEffect(() => {
         console.log(Data)
-        
+
 
     }, [Data]);
     const formatDateToISO = (dateString) => {
@@ -143,8 +143,8 @@ const page = () => {
             await axios.put(`/api/UHC?id=${int_req_id}`, {
                 Student: {
                     id: id,
-                    lnameTH: Data.Name,
-                    fnameTH: Data.Surname,
+                    lnameTH: Data.Surname,
+                    fnameTH: Data.Name,
                     facultyNameTH: Data.facultyNameTH,
                     year: Data.year,
                     bd: formatDateToISO(Data.birthDate),
@@ -180,13 +180,13 @@ const page = () => {
                 }
             })
 
-            if(int_req_id !== 0 ){
+            if (int_req_id !== 0) {
                 const response = await axios.post(`/api/POSTPDF/updatestatus?id=${int_req_id}`)
-                console.log("ID return",response.data.id);
+                console.log("ID return", response.data.id);
                 router.push(`/golden_card/Doc/${response.data.id}`)
-            }else {
+            } else {
                 const response = await axios.post(`/api/POSTPDF/create`)
-                console.log("ID return",response.data.id);
+                console.log("ID return", response.data.id);
                 router.push(`/golden_card/Doc/${response.data.id}`)
             }
             notifysuccess()
@@ -213,7 +213,7 @@ const page = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="flex space-x-4 w-full  ">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">คำนำหน้า (Prefix)</label>
+                                            <label className="block text-gray-700 mb-2">คำนำหน้า (Title)</label>
                                             <input
                                                 type="text"
                                                 name="Nametitle"
@@ -435,31 +435,25 @@ const page = () => {
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             name="district"
                                             value={Data.district}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={Data.district}>{Data.district}</option>
-                                            {districts.map((district, index) => (
-                                                <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Subdistrict"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">รหัสไปรษณีย์ (Zip code)</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             name="zipCode"
                                             value={Data.zipCode}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={Data.zipCode}>{Data.zipCode}</option>
-                                            {districts.map((district, index) => (
-                                                <option key={index} value={district.zipCode}>{district.zipCode}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Zip code"
+                                        />
                                     </div>
                                     <div >
                                         <label className="block text-gray-700 mb-2">โทรศัพท์ (Tel number)</label>
@@ -557,7 +551,7 @@ const page = () => {
                                 </div>
 
 
-                                <h3 className="text-lg font-semibold mb-4 pt-10 ">
+                                {/* <h3 className="text-lg font-semibold mb-4 pt-10 ">
                                     หลักฐานที่ยื่นมากับแบบคำขอลงทะเบียน (Identification document)
                                 </h3>
 
@@ -603,7 +597,7 @@ const page = () => {
                                             สำเนาบัตรประจำตัวนิสิต
                                         </label>
                                     </div>
-                                </div>
+                                </div> */}
 
 
                                 <div className="pt-10"><label className="text-lg font-semibold text-black pt-10">ท่านมีแนวโน้มที่จะใช้บริการ รพ.จุฬาลงกรณ์</label></div>

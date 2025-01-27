@@ -205,7 +205,7 @@ const page = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="flex space-x-4 w-full  ">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">คำนำหน้า (Prefix)</label>
+                                            <label className="block text-gray-700 mb-2">คำนำหน้า (Title)</label>
                                             <input
                                                 type="text"
                                                 name="Nametitle"
@@ -547,56 +547,6 @@ const page = () => {
                                         </label>
                                     </div>
                                 </div>
-
-
-                                <h3 className="text-lg font-semibold mb-4 pt-10 ">
-                                    หลักฐานที่ยื่นมากับแบบคำขอลงทะเบียน (Identification document)
-                                </h3>
-
-                                <div className="flex space-x-4 w-full pt-2 ">
-                                    <div className="flex items-center space-x-4 w-1/3">
-                                        <input
-                                            type="checkbox"
-                                            id="CiticenidforDoc"
-                                            name="CiticenidforDoc"
-                                            value="true"
-                                            onChange={handleChange}
-                                            checked={Data.CiticenidforDoc === "true"}
-                                        />
-                                        <label htmlFor="CiticenidforDoc" className="block text-gray-700">
-                                            สำเนาบัตรประชาชนพร้อมเซ็นรับรองสำเนา
-                                        </label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4 w-1/3">
-                                        <input
-                                            type="checkbox"
-                                            id="house"
-                                            name="house"
-                                            value="true"
-                                            onChange={handleChange}
-                                            checked={Data.house === "true"}
-                                        />
-                                        <label htmlFor="house" className="block text-gray-700">
-                                            สำเนาทะเบียนที่ผู้ขอมีชื่ออยู่
-                                        </label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4 w-1/3">
-                                        <input
-                                            type="checkbox"
-                                            id="Studentcard"
-                                            name="Studentcard"
-                                            value="true"
-                                            onChange={handleChange}
-                                            checked={Data.Studentcard === "true"}
-                                        />
-                                        <label htmlFor="Studentcard" className="block text-gray-700">
-                                            สำเนาบัตรประจำตัวนิสิต
-                                        </label>
-                                    </div>
-                                </div>
-
 
                                 <div className="pt-10"><label className="text-lg font-semibold text-black pt-10">ท่านมีแนวโน้มที่จะใช้บริการ รพ.จุฬาลงกรณ์</label></div>
                                 <div className="flex space-x-4 w-full pt-4">

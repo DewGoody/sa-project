@@ -173,7 +173,7 @@ const CheckData = () => {
             id: formData.id,
             title: formData.Nametitle,
             fnameTH: formData.Name,
-            lnameTH: formData.lnameTH,
+            lnameTH: formData.Surname,
             thai_id: formData.citizenId,
             bd: formData.birthDate,
             religion: formData.religion,
@@ -324,8 +324,8 @@ const CheckData = () => {
             else {
                 const response = await axios.post(`/api/logRd/create`, (dataforsentlog))
                 const formId = response.data.data.id
-                console.log("generate formID",formId);
-                
+                console.log("generate formID", formId);
+
                 router.push(`/rordor/${formId}/Doc`)
 
             }
@@ -356,7 +356,7 @@ const CheckData = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                                     <div className="flex space-x-4 w-full  ">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">คำนำหน้า (Prefix)</label>
+                                            <label className="block text-gray-700 mb-2">คำนำหน้า (Title)</label>
                                             <input
                                                 type="text"
                                                 name="Nametitle"
@@ -585,31 +585,25 @@ const CheckData = () => {
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             name="district"
                                             value={formData.district}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.district}>{formData.district}</option>
-                                            {districts.map((district, index) => (
-                                                <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Subdistrict"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">รหัสไปรษณีย์ (Zip code)</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             name="zipCode"
                                             value={formData.zipCode}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.zipCode}>{formData.zipCode}</option>
-                                            {districts.map((district, index) => (
-                                                <option key={index} value={district.zipCode}>{district.zipCode}</option>
-                                            ))}
-                                        </select>
+                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            placeholder="Zip code"
+                                        />
                                     </div>
 
                                 </div>
@@ -623,7 +617,7 @@ const CheckData = () => {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ภูมิลำเนาทหารเลขที่ (Military domicile number)</label>
+                                        <label className="block text-gray-700 mb-2">ภูมิลำเนาเลขที่ (Military domicile number)</label>
                                         <input
                                             type="text"
                                             name="militaryDomicileNumber"
@@ -634,7 +628,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">จังหวัดทหาร (Military province)</label>
+                                        <label className="block text-gray-700 mb-2">จังหวัด (Military province)</label>
                                         <select
                                             name="militaryProvince"
                                             value={formData.militaryProvince}
@@ -648,7 +642,7 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อำเภอทหาร (Military district)</label>
+                                        <label className="block text-gray-700 mb-2">อำเภอ (Military district)</label>
                                         <select
                                             name="militaryDistrict"
                                             value={formData.militaryDistrict}
@@ -662,19 +656,23 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ตำบลทหาร (Military amphure)</label>
-                                        <select
+                                        <label className="block text-gray-700 mb-2">ตำบล (Military subdistrict)</label>
+                                        <input
+                                            type="text"
                                             name="militaryAmphure"
                                             value={formData.militaryAmphure}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.militaryAmphure}>{formData.militaryAmphure}</option>
-                                            {districtsmilitary.map((district, index) => (
-                                                <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Subdistrict"
+                                        />
                                     </div>
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-4 py-10 ">
+                                        ประวัติการเรียน (School)
+                                    </h3>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-gray-700 mb-2">สำเร็จชั้น ม.๓ คะแนนเฉลี่ย (Grade 9 GPAX)</label>
                                         <input
@@ -698,7 +696,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">จังหวัดโรงเรียน (School province)</label>
+                                        <label className="block text-gray-700 mb-2">จังหวัด (School province)</label>
                                         <select
                                             name="schoolProvince"
                                             value={formData.schoolProvince}
@@ -823,8 +821,8 @@ const CheckData = () => {
                         </section>
                     </div>
                 </main>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

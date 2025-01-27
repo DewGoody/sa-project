@@ -25,7 +25,10 @@ const gold = () => {
             console.log(error);
         }
     };
-    const [selectedFiles, setSelectedFiles] = useState([]); // เริ่มต้นเป็น Array
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [selectedFilescitizen, setSelectedFilescitizen] = useState([]);
+    const [selectedFilesstudent, setSelectedFilesstudent] = useState([]);
+    const [selectedFileshouse, setSelectedFileshouse] = useState([]);
 
 
 
@@ -34,6 +37,33 @@ const gold = () => {
         if (status === 'done') {
             const fileList = info.fileList.map(file => file.originFileObj); // ดึงไฟล์ออกมาเป็น Array
             setSelectedFiles(fileList); // เก็บไฟล์ลง state
+        } else if (status === 'error') {
+            setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+        }
+    };
+    const handleFilecitizen = (info) => {
+        const { status } = info.file;
+        if (status === 'done') {
+            const fileList = info.fileList.map(file => file.originFileObj); // ดึงไฟล์ออกมาเป็น Array
+            setSelectedFilescitizen(fileList); // เก็บไฟล์ลง state
+        } else if (status === 'error') {
+            setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+        }
+    };
+    const handleFilehouse = (info) => {
+        const { status } = info.file;
+        if (status === 'done') {
+            const fileList = info.fileList.map(file => file.originFileObj); // ดึงไฟล์ออกมาเป็น Array
+            setSelectedFileshouse(fileList); // เก็บไฟล์ลง state
+        } else if (status === 'error') {
+            setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+        }
+    };
+    const handleFilestudent = (info) => {
+        const { status } = info.file;
+        if (status === 'done') {
+            const fileList = info.fileList.map(file => file.originFileObj); // ดึงไฟล์ออกมาเป็น Array
+            setSelectedFilesstudent(fileList); // เก็บไฟล์ลง state
         } else if (status === 'error') {
             setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
@@ -56,6 +86,15 @@ const gold = () => {
         selectedFiles.forEach(file => {
             formData.append("file", file); // เพิ่มไฟล์ลงใน FormData
         });
+        selectedFilescitizen.forEach(file => {
+            formData.append("file_citizen", file)
+        })
+        selectedFileshouse.forEach(file => {
+            formData.append("file_house", file)
+        })
+        selectedFilesstudent.forEach(file => {
+            formData.append("file_student", file)
+        })
 
         try {
             console.log(int_req_id)
@@ -93,7 +132,7 @@ const gold = () => {
 
     const props = {
         name: 'file',
-        multiple: true, // อนุญาตให้อัปโหลดหลายไฟล์
+        multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
         onChange(info) {
             handleFileChange(info); // ใช้ฟังก์ชันใหม่ที่แก้ไขแล้ว
             const { status } = info.file;
@@ -112,6 +151,66 @@ const gold = () => {
         },
     };
 
+    const citizen = {
+        name: 'file',
+        multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        onChange(info) {
+            handleFilecitizen(info); // ใช้ฟังก์ชันใหม่ที่แก้ไขแล้ว
+            const { status } = info.file;
+            if (status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (status === 'done') {
+                message.success(`${info.file.name} file uploaded successfully.`);
+            } else if (status === 'error') {
+                message.error(`${info.file.name} file upload failed.`);
+                console.log(info);
+            }
+        },
+        onDrop(e) {
+            console.log('Dropped files', e.dataTransfer.files);
+        },
+    };
+    const house = {
+        name: 'file',
+        multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        onChange(info) {
+            handleFilehouse(info); // ใช้ฟังก์ชันใหม่ที่แก้ไขแล้ว
+            const { status } = info.file;
+            if (status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (status === 'done') {
+                message.success(`${info.file.name} file uploaded successfully.`);
+            } else if (status === 'error') {
+                message.error(`${info.file.name} file upload failed.`);
+                console.log(info);
+            }
+        },
+        onDrop(e) {
+            console.log('Dropped files', e.dataTransfer.files);
+        },
+    };
+    const student = {
+        name: 'file',
+        multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        onChange(info) {
+            handleFilestudent(info); // ใช้ฟังก์ชันใหม่ที่แก้ไขแล้ว
+            const { status } = info.file;
+            if (status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (status === 'done') {
+                message.success(`${info.file.name} file uploaded successfully.`);
+            } else if (status === 'error') {
+                message.error(`${info.file.name} file upload failed.`);
+                console.log(info);
+            }
+        },
+        onDrop(e) {
+            console.log('Dropped files', e.dataTransfer.files);
+        },
+    };
 
 
 
@@ -205,33 +304,43 @@ const gold = () => {
                         <h2 className="pt-5 text-lg font-bold text-center mb-4 text-gray-800">
                             อัพโหลดเอกสารที่นี่ (Upload documents here.)
                         </h2>
-
-                        {/* <h2 className="text-lg font-bold text-center mb-4 text-gray-800">
-                            นิสิตโหลดและอัพโหลดเอกสารที่นี่
-                        </h2>
-                        <h1 className="text-mb text-gray-700 mb-6 text-center">
-                            Students can download and upload documents here.
-                        </h1> OLD Version */ }
-
-
-
-
-                        {/* Personal & Contact Information Section */}
                         <section>
 
                             <div className="grid grid-cols-1 gap-6">
                                 <fieldset>
-                                    <div>
-                                        <Dragger {...props}>
-                                            <p className="ant-upload-drag-icon">
-                                                <InboxOutlined />
-                                            </p>
-                                            <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                                            <p className="ant-upload-hint">
-                                                Support for a single or bulk upload. Strictly prohibited from uploading company data or other
-                                                banned files.
-                                            </p>
-                                        </Dragger>
+                                    <div >
+                                        <div className =" py-4"> 
+                                            <Dragger {...props}>
+                                                {/* <p className="ant-upload-drag-icon">
+                                                    <InboxOutlined />
+                                                </p> */}
+                                                <p className="ant-upload-text">เอกสารพร้อมเซ็นรับรอง</p>
+                                            </Dragger>
+                                        </div>
+                                        <div className =" py-4" > 
+                                            <Dragger {...citizen}>
+                                                {/* <p className="ant-upload-drag-icon">
+                                                    <InboxOutlined />
+                                                </p> */}
+                                                <p className="ant-upload-text">สำเนาบัตรประชาชนพร้อมเซ็นรับรองสำเนา</p>
+                                            </Dragger>
+                                        </div>
+                                        <div className =" py-4">
+                                            <Dragger {...house}>
+                                                {/* <p className="ant-upload-drag-icon">
+                                                    <InboxOutlined />
+                                                </p> */}
+                                                <p className="ant-upload-text">สำเนาทะเบียนที่ผู้ขอมีชื่ออยู่</p>
+                                            </Dragger>
+                                        </div>
+                                        <div className =" py-4">
+                                            <Dragger {...student}>
+                                                {/* <p className="ant-upload-drag-icon">
+                                                    <InboxOutlined />
+                                                </p> */}
+                                                <p className="ant-upload-text">สำเนาบัตรประจำตัวนิสิต</p>
+                                            </Dragger>
+                                        </div>
                                     </div>
                                 </fieldset>
                                 <div className="flex space-x-4">

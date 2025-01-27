@@ -811,8 +811,8 @@ const CheckData = () => {
             else {
                 const response = await axios.post(`/api/logRd/create2`, (dataforsentlog))
                 const formId = response.data.data.id
-                console.log("generate formID",formId);
-                
+                console.log("generate formID", formId);
+
                 router.push(`/rordor/${formId}/Doc2`)
 
             }
@@ -1057,7 +1057,7 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อำเภอ (District)</label>
+                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
                                         <select
                                             name="fatherdistrict"
                                             value={formData.fatherdistrict}
@@ -1071,32 +1071,26 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ตำบล (Amphure)</label>
-                                        <select
+                                        <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
+                                        <input
+                                            type="text"
                                             name="fathersubdistrict"
                                             value={formData.fathersubdistrict}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.fathersubdistrict}>{formData.fathersubdistrict}</option>
-                                            {districtsfather.map((district, index) => (
-                                                <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Subdistrict"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">รหัสไปรษณีย์ (Zip code)</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             name="fatherzipcode"
                                             value={formData.fatherzipcode}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.fatherzipcode}>{formData.fatherzipcode}</option>
-                                            {districtsfather.map((district, index) => (
-                                                <option key={index} value={district.zipCode}>{district.zipCode}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Zip code"
+                                        />
                                     </div>
                                 </div>
 
@@ -1240,7 +1234,7 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อำเภอ (district)</label>
+                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (district)</label>
                                         <select
                                             name="motherdistrict"
                                             value={formData.motherdistrict}
@@ -1253,33 +1247,28 @@ const CheckData = () => {
                                             ))}
                                         </select>
                                     </div>
+
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ตำบล (Subdistrict)</label>
-                                        <select
+                                        <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
+                                        <input
+                                            type="text"
                                             name="mothersubdistrict"
                                             value={formData.mothersubdistrict}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.mothersubdistrict}>{formData.mothersubdistrict}</option>
-                                            {districtsmother.map((district, index) => (
-                                                <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Subdistrict"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">รหัสไปรษณีย์ (Zip code)</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             name="motherzipcode"
                                             value={formData.motherzipcode}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.motherzipcode}>{formData.motherzipcode}</option>
-                                            {districtsmother.map((district, index) => (
-                                                <option key={index} value={district.zipCode}>{district.zipCode}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Zip code"
+                                        />
                                     </div>
                                 </div>
                                 <div>
@@ -1524,19 +1513,17 @@ const CheckData = () => {
                                             </select>
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">ตำบลทหาร (Military amphure)</label>
-                                            <select
+                                            <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
+                                            <input
+                                                type="text"
                                                 name="militaryAmphure"
                                                 value={formData.militaryAmphure}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            >
-                                                <option value={formData.militaryAmphure}>{formData.militaryAmphure}</option>
-                                                {districtsmilitary.map((district, index) => (
-                                                    <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                                                ))}
-                                            </select>
+                                                placeholder="Subdistrict"
+                                            />
                                         </div>
+
                                     </div>
                                 </div>
                                 <div>
@@ -1717,32 +1704,27 @@ const CheckData = () => {
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             name="district_contactable"
                                             value={formData.district_contactable}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.district_contactable}>{formData.district_contactable}</option>
-                                            {districts_contactable.map((district, index) => (
-                                                <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Subdistrict"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">รหัสไปรษณีย์ (Zip code)</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             name="zipCode_contactable"
                                             value={formData.zipCode_contactable}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.zipCode_contactable}>{formData.zipCode_contactable}</option>
-                                            {districts_contactable.map((district, index) => (
-                                                <option key={index} value={district.zipCode}>{district.zipCode}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Zip code"
+                                        />
                                     </div>
+
                                 </div>
 
                                 <div>
@@ -1837,34 +1819,31 @@ const CheckData = () => {
                                             ))}
                                         </select>
                                     </div>
+
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ตำบล (Subdistrict)</label>
-                                        <select
+                                        <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
+                                        <input
+                                            type="text"
                                             name="follower1_subdistrict"
                                             value={formData.follower1_subdistrict}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.follower1_subdistrict}>{formData.follower1_subdistrict}</option>
-                                            {districtsfollower1.map((district, index) => (
-                                                <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Subdistrict"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">รหัสไปรษณีย์ (Zip code)</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             name="follower1_postal_code"
                                             value={formData.follower1_postal_code}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.follower1_postal_code}>{formData.follower1_postal_code}</option>
-                                            {districtsfollower1.map((district, index) => (
-                                                <option key={index} value={district.zipCode}>{district.zipCode}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Zip code"
+                                        />
                                     </div>
+
+
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
                                             <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
@@ -1979,32 +1958,26 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ตำบล (Subdistrict)</label>
-                                        <select
+                                        <label className="block text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
+                                        <input
+                                            type="text"
                                             name="follower2_subdistrict"
                                             value={formData.follower2_subdistrict}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.follower2_subdistrict}>{formData.follower2_subdistrict}</option>
-                                            {districtsfollower2.map((district, index) => (
-                                                <option key={index} data-id={district.id} value={district.nameTh}>{district.nameTh}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Subdistrict"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">รหัสไปรษณีย์ (Zip code)</label>
-                                        <select
+                                        <input
+                                            type="text"
                                             name="follower2_postal_code"
                                             value={formData.follower2_postal_code}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                        >
-                                            <option value={formData.follower2_postal_code}>{formData.follower2_postal_code}</option>
-                                            {districtsfollower2.map((district, index) => (
-                                                <option key={index} value={district.zipCode}>{district.zipCode}</option>
-                                            ))}
-                                        </select>
+                                            placeholder="Zip code"
+                                        />
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
@@ -2036,7 +2009,7 @@ const CheckData = () => {
                                 <div className="flex justify-between mt-8">
                                     <button
                                         onClick={event => handleback()}
-                                        type = "button"
+                                        type="button"
                                         className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
                                         Back
                                     </button>
