@@ -90,14 +90,17 @@ export async function POST(req) {
             data: {
                 student_id: id,
                 binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
-                file_citizen:Buffer.from(fileBuffercitizen),
-                file_house:Buffer.from(fileBufferhouse),
-                file_student:Buffer.from(fileBufferstudent)
+                file_citizen: Buffer.from(fileBuffercitizen),
+                file_house: Buffer.from(fileBufferhouse),
+                file_student: Buffer.from(fileBufferstudent)
             },
         });
 
         await prisma.request.updateMany({
-            where: { stu_id: pdf.student_id },
+            where: {
+                stu_id: pdf.student_id,
+                type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
+            },
             data: {
                 type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
                 status: "ประวัติการแก้ไข",
