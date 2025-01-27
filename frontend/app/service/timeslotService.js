@@ -107,6 +107,15 @@ export async function delStuInPeriod(periodIndex, timeslotId) {
             where: {id: timeslotId},
             data: {period: newStuInPeriod}
         })
+        let newStatus = timeslot.is_full
+        const maxStu = timeslot.max_stu
+        newStatus[periodIndex] = false
+        if(updatedTimeslot.period[periodIndex] < maxStu){
+            await prisma.timeslot.update({
+                where: {id: timeslotId},
+                data: {is_full: newStatus}
+            })
+        }
         return updatedTimeslot
     }
 }

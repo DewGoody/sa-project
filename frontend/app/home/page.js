@@ -153,7 +153,8 @@ export const Form = () => {
   };
 
   const handleBookQueue = async (item) => {
-    console.log("item", item);
+    console.log("item",item);
+    const response = await axios.post('/api/queue/delete',{id: item.id}); // Example API
     const queueId = item.id
     const id = item.req_id;
     router.push(`/appointment/${id}/${queueId}`);

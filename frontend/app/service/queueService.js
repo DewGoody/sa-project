@@ -99,7 +99,7 @@ export async function cancleQueue(id) {
 export async function changeQueue(queueId,studentId, reqId, timeslotId, period, uid) {    
     const timeslot = await getTimeslotById(timeslotId)
 
-    const deleteCurrentQueue = await cancleQueue(queueId)
+    // const deleteCurrentQueue = await cancleQueue(queueId)
     if (!timeslot) {
         throw {code: 404,error: new Error("Timeslot not found")}
     }

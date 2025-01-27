@@ -26,6 +26,7 @@ const AppointmentManagement = () => {
     const [dateMaxStu, setDateMaxStu] = useState([])
     const [selectDate, setSelectDate] = useState();
     const [maxStu, setMaxStu] = useState();
+    const [loading, setLoading] = useState(false);
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
     const timeSlots = 
@@ -170,10 +171,14 @@ console.log("dateMaxStu", dateMaxStu);
         console.log("record : ", reocrd);
         try {
             if(reocrd.status === "ไม่มาเข้ารับบริการ"){
+                setLoading(true)
                 await axios.post('/api/queue/changeStatusToLate', { id: reocrd.id });
+                setLoading(false)
             }
             else if(reocrd.status === "เข้ารับบริการแล้ว"){
+                setLoading(true)
                 await axios.post('/api/queue/changeStatusToReceiveService', { id: reocrd.id });
+                setLoading(false)
             }
         } catch (error) {
             console.error('Error changing status:', error);
@@ -329,6 +334,7 @@ const columns = [
                         <div className='mt-10 mb-6'>
                                 <Select
                                     defaultValue={year}
+                                    value={year === '0' ? 'ทั้งหมด' : year}
                                     style={{ width: 120, marginLeft: 10 }}
                                     onChange={handleYearChange}
                                 >
@@ -344,6 +350,7 @@ const columns = [
                     <Table
                         dataSource={dataSource}
                         columns={columns}
+                        loading = {loading}
                         style={{ borderRadius: borderRadiusLG  }}
                         scroll={{ x: 'max-content' }}
                         

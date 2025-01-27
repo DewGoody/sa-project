@@ -14,7 +14,7 @@ const { Header, Sider, Content } = Layout;
 const AppointmentManagement = () => {
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
-    const [dataSource, setDataSource] = useState('');
+    const [dataSource, setDataSource] = useState([]);
     const [stuData, setStuData] = useState([]);
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -26,6 +26,9 @@ const AppointmentManagement = () => {
     const { year } = useParams();
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
+
+    
+
     const fetchStuData = async () => {
         try {
             const res = await axios.post('/api/request/getPonpanAdmin', { year: parseInt(year) });
@@ -88,8 +91,33 @@ const AppointmentManagement = () => {
         fetchUniqueYear()
     }, [])
 
+    const formattedData = dataSource.map((row) => ({
+        'พ.ศ. เกิด': row.bd,
+        'รหัสนิสิต': row.stu_id,
+        'เลขประจำตัวประชาชน': row.thai_id,
+        'ศึกษาในระดับปริญญา': row.degree,
+        'ชั้นปีที่': row.year,
+        'ชื่อ': row.fnameTH,
+        'นามสกุล': row.lnameTH,
+        'เบอร์โทรศัพท์': row.phone_num,
+        'อีเมลล์': row.email,
+        'ชื่อบิดา': row.father_name,
+        'ชื่อมารดา': row.mother_name,
+        'ที่อยู่ตามทะเบียนบ้าน บ้านเลขที่': row.house_num,
+        'ที่อยู่ตามทะเบียนบ้าน หมู่': row.house_moo,
+        'ที่อยู่ตามทะเบียนบ้าน แขวง/ตำบล': row.sub_district,
+        'ที่อยู่ตามทะเบียนบ้าน อำเภอ': row.district,
+        'ที่อยู่ตามทะเบียนบ้าน จังหวัด': row.province,
+        'ใบสำคัญ สด. 9': row.sdnine_id,
+        'ที่อยู่ตาม สด.9 บ้านเลขที่': row.house_num_sd,
+        'ที่อยู่ตาม สด.9 หมู่': row.house_moo_sd,
+        'ที่อยู่ตาม สด.9 แขวง/ตำบล': row.subdistrict_sd,
+        'ที่อยู่ตาม สด.9 อำเภอ': row.district_sd,
+        'ที่อยู่ตาม สด.9 จังหวัด': row.province_sd,
+      }));
+
     const handleExport = async () => {
-        const worksheet = XLSX.utils.json_to_sheet(dataSource);
+        const worksheet = XLSX.utils.json_to_sheet(formattedData);
         // Create a new workbook
         const workbook = XLSX.utils.book_new();
         // Append the worksheet to the workbook
@@ -473,6 +501,7 @@ const columns = [
                     <div className='mt-10 mb-6'>
                             <Select
                                 defaultValue={year}
+                                value={year === '0' ? 'ทั้งหมด' : year}
                                 style={{ width: 120, marginLeft: 10 }}
                                 onChange={handleYearChange}
                             >
