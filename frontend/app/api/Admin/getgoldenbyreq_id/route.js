@@ -5,18 +5,41 @@ import { convertBigIntToString } from '../../../../utills/convertBigInt';
 
 const prisma = new PrismaClient();
 
-export async function GET(req) {
+export async function POST(req,res) {
     try {
-        // Fetch rows including related data
-        const queue = await prisma.request.findMany({
-            where: {
-                type: "โครงการหลักประกันสุขภาพถ้วนหน้า"
-            },
-            include: {
-                UHC_request: true, // Fixed case sensitivity
-                Student: true,
-            },
-        });
+        const data = await req.json()
+        const year = data.year
+        const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
+        const endOfYear = new Date(year + 1, 0, 1);
+        let queue = null
+        console.log("YEARRRRRRRRR",year);
+        
+        if (year == 0) {
+            queue = await prisma.request.findMany({
+                where: {
+                    type: "โครงการหลักประกันสุขภาพถ้วนหน้า"
+                },
+                include: {
+                    UHC_request: true, // Fixed case sensitivity
+                    Student: true,
+                },
+            });
+        } else {
+            queue = await prisma.request.findMany({
+                where: {
+                    type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
+                    created_at: {
+                        gte: startOfYear, // Greater than or equal to start of year
+                        lt: endOfYear, // Less than start of the next year
+                    },
+                },
+                include: {
+                    UHC_request: true, // Fixed case sensitivity
+                    Student: true,
+                },
+            });
+
+        }
 
         // console.log("Fetched data:", queue); // Debug log for inspection
 
@@ -33,7 +56,7 @@ export async function GET(req) {
             UHC_request: row.UHC_request.map((request) => ({
                 ...request,
                 id: request.id.toString(), // Convert BigInt to string
-                req_id: convertBigIntToString(request.req_id) , // Handle nullable BigInt
+                req_id: convertBigIntToString(request.req_id), // Handle nullable BigInt
                 student_id: convertBigIntToString(request.student_id.toString()), // Convert Decimal to string
             })),
         }));
