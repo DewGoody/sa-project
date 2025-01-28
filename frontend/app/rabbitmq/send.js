@@ -4,8 +4,7 @@ export async function sendMessageToQueue(data) {
   if (!data) {
     throw new Error('Data is required to send a message to the queue');
   }
-
-  const connection = await amqplib.connect('amqp://localhost:3002',{ heartbeat: 30 }); // RabbitMQ server URL
+  const connection = await amqplib.connect(`amqp://${process.env.RABBITMQ_HOST}:5672`,{ heartbeat: 30 }); // RabbitMQ server URL
   const channel = await connection.createChannel();
 
   const queue = 'queue'; // Queue name
