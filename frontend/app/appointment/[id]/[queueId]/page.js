@@ -361,7 +361,7 @@ export default function ScholarshipPage() {
                 </button>
               </a>
               <a>
-                <button className="-mr-6 py-2 px-6 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-400"
+                <button className="-mr-6 py-2 px-6 bg-pink-500 text-white rounded-lg shadow-md hover:bg-pink-400"
                   onClick={handleSubmit}
                   htmlType="submit"
                 >

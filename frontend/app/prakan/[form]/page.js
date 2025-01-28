@@ -189,13 +189,13 @@ export default function Form() {
             <div>
               <form className="grid grid-cols-2 gap-7 m-6 bg-white">
                 <div className="flex">
-                  <label>ชื่อและนามสกุล (Name-Surname) :</label>
+                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Name-Surname) :</label>
                   <div>
                     <input
                       type="text"
                       name="name"
                       defaultValue={profileData.fnameTH + " " + profileData.lnameTH}
-                      className="ml-2 w-full border border-solid rounded-md border-gray-800"
+                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={
                         profileData.fnameTH + " " + profileData.lnameTH
                       }
@@ -203,26 +203,26 @@ export default function Form() {
                   </div>
                 </div>
                 <div className="flex">
-                <label>รหัสนิสิต (Student ID) :</label>
+                <label className="block text-gray-700 mt-1">รหัสนิสิต (Student ID) :</label>
                   <div>
                     <input
                       type="text"
                       name="id"
                       defaultValue={profileData.id}
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                      className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       
                     />
                   </div>
                 </div>
 
                 <div className="flex">
-                  <label>คณะ (Faculty) :</label>
+                  <label className="block text-gray-700 mt-1">คณะ (Faculty) :</label>
                   <div className="">
                     <input
                       type="text"
                       name="faculty"
                      defaultValue={profileData.facultyNameTH}
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-56"
+                      className="ml-2 w-96 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={studentInfo.facultyNameTH}
                     />
                   </div>
@@ -231,25 +231,25 @@ export default function Form() {
                   
                 </div>
                 <div className="flex">
-                  <label>หมายเลขโทรศัพท์ (Phone number) :</label>
+                  <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Phone number) :</label>
                   <div>
                     <input
                       type="text"
                       name="phone"
                       onChange={handleChangePhone}
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                     className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData.tel_num}
                     />
                   </div>
                 </div>
                 <div>
-                <label>
+                <label className="block text-gray-700 mt-1" >
                     อีเมลล์ (Email) :
                     <input
                       type="email"
                       name="email"
                       onChange={handleChangeEmail}
-                      className="ml-2 border border-solid rounded-md border-gray-800"
+                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData.personal_email}
                     />
                   </label>
@@ -269,11 +269,11 @@ export default function Form() {
               <form className="grid grid-cols-2  gap-y-12 gap-x-7 m-6 bg-white">
                 <div>
                   <label className="flex">
-                    <div>
+                    <div className="block text-gray-700 mt-1" >
                     อาการบาดเจ็บ (Description of injury) :
                     </div>
                     <textarea 
-                      className="ml-2 border border-solid rounded-md border-black" cols="32" rows="2" 
+                      className="ml-2 px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" cols="32" rows="2" 
                       onChange={handleChangeDesInj}
                       value={alreadyData.des_injury}
                     >
@@ -287,11 +287,11 @@ export default function Form() {
                 <div>
                 <label className="flex">
                     
-                    <div>
+                    <div className="block text-gray-700 mt-1" >
                     การเกิดอุบัติเหตุ (Description of accident) :
                     </div>
                     <textarea 
-                      className="ml-2 border border-solid rounded-md border-black" cols="23" rows="2" 
+                      className="ml-2 px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" cols="23" rows="2" 
                       onChange={handleChangeDesAcc}
                       value={alreadyData.acc_desc}
                       >
@@ -304,26 +304,26 @@ export default function Form() {
                   </div>
                 </div>
                 <div>
-                <label>
+                <label className="block text-gray-700 mt-1" >
                     ชื่อสถานพยาบาลที่เข้ารับการรักษา (Place of treatment) :
                     <input
                       type="text"
                       name="phone"
                       onChange={handleChangePlaceTreat}
                       value={alreadyData.treatment_place}
-                      className="ml-2 border border-solid rounded-md border-gray-800"
+                      className="ml-2  px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </label>
                 </div>
                 
                 <div className="flex">
-                <label>
+                <label className="block text-gray-700 mt-1" >
                     ประเภทสถานพยาบาล (Type of hospital) :
                   </label>
                   <div className="ml-2">
                     <select
                       onChange={handleChangeTypeHos}
-                      className="border border-solid rounded-md border-gray-800 text-gray-800 "
+                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       defaultValue="เลือกประเภทสถานพยาบาล"
                       value={alreadyData.hospital_type}
                       
@@ -339,25 +339,25 @@ export default function Form() {
                   </div>
                 </div>
                 <div className="flex">
-                <label>
+                <label className="block text-gray-700 mt-1" >
                     วันที่เกิดอุบัติเหตุ (Date of accident) :
                     <input
                       type="date"
                       onChange={handleChangeDateAcc}
                       value={date}
-                      className="ml-2 border border-solid rounded-md border-gray-800"
+                     className="ml-2 px-5 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </label>
                 </div>
                 <div>
-                  <label>
+                  <label className="block text-gray-700 mt-1" >
                     สถานที่เกิดอุบัติเหตุ (Place of accident) :
                     <input
                       type="text"
                       name="id"
                       onChange={handleChangePlaceAcc}
                       value={alreadyData.accident_place}
-                      className="ml-2 border border-solid rounded-md border-gray-800"
+                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </label>
                 </div>
@@ -374,13 +374,13 @@ export default function Form() {
             <div>
               <form className="grid grid-cols-2 gap-7 m-6 bg-white">
                 <div className="">
-                  <label>
+                  <label className="block text-gray-700 mt-1" >
                     ตัวเลข (in numbers) :
                     <input
                       type="num"
                       onChange={handleChangeThai}
                       value={alreadyData.medical_fee}
-                      className="ml-2 w-fit border border-solid  rounded-md border-gray-800"
+                      className="ml-2  px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </label>
                 </div>

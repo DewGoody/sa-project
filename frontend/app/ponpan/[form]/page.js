@@ -364,68 +364,68 @@ const handleDistrictSD9Change = (e) => {
             <div>
               <form className="grid grid-cols-2 gap-7 m-6 bg-white">
                 <div className="flex">
-                  <label>ชื่อและนามสกุล (Name-Surname) :</label>
+                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Name-Surname) :</label>
                   <div>
                     <input
                       type="text"
                       name="name"
-                      className="ml-2 w-full border border-solid rounded-md border-gray-800"
+                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.fnameTH+" "+profileData?.lnameTH}
                     />
                   </div>
                 </div>
                 <div className="flex">
-                <label>รหัสนิสิต (Student ID) :</label>
+                <label className="block text-gray-700 mt-1" >รหัสนิสิต (Student ID) :</label>
                   <div>
                     <input
                       type="text"
                       name="id"
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                       className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.id}
                     />
                   </div>
                 </div>
 
                 <div className="flex">
-                  <label>คณะ (Faculty) :</label>
+                  <label className="block text-gray-700 mt-1" >คณะ (Faculty) :</label>
                   <div className="">
                     <input
                       type="text"
                       name="faculty"
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-56"
+                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.facultyNameTH}
                     />
                   </div>
                 </div>
                 <div className="flex">
-                  <label>รหัสประจำตัวประชาชน (Citizen ID) :</label>
+                  <label className="block text-gray-700 mt-1" >รหัสประจำตัวประชาชน (Citizen ID) :</label>
                   <div className="">
                     <input
                       type="text"
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-56"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={prepareData?.Student?.thai_id || null}
                       onChange={handleChangeCitizenId}
                     />
                   </div>
                 </div>
                 <div className="flex">
-                  <label>ชั้นปีที่ (Year level) :</label>
+                  <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Year level) :</label>
                   <div>
                     <input
                       type="text"
                       name="phone"
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.year}
                       onChange={handleChangeYearLevel}
                     />
                   </div>
                 </div>
                 <div className="flex">
-                  <label>ศึกษาในระดับ (Degree) :</label>
+                  <label className="block text-gray-700 mt-1" >ศึกษาในระดับ (Degree) :</label>
                   <div>
                     <select
                       name="degree"
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.degree}
                       onChange={handleChangeDegree}
                     >
@@ -437,36 +437,36 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex">
-                  <label>ปีเกิด (Birth date) :</label>
+                  <label className="block text-gray-700 mt-1" >ปีเกิด (Birth date) :</label>
                   <div>
                     <input
                       type="text"
                       name="phone"
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={buddhistYear}
                       onChange={handleChangeBdDate}
                     />
                   </div>
                 </div>
                 <div className="flex">
-                  <label>หมายเลขโทรศัพท์ (Phone number) :</label>
+                  <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Phone number) :</label>
                   <div>
                     <input
                       type="text"
                       name="phone"
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.phone_num}
                       onChange={handleChangePhoneNum}
                     />
                   </div>
                 </div>
                 <div>
-                <label>
+                <label className="block text-gray-700 mt-1" >
                     อีเมลล์ (Email) :
                     <input
                       type="email"
                       name="email"
-                      className="ml-2 border border-solid rounded-md border-gray-800"
+                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.email}
                       onChange={handleChangeEmail}
                     />
@@ -477,12 +477,12 @@ const handleDistrictSD9Change = (e) => {
                 </div>
                 <div>
                   <div className="flex">
-                    <div>ชื่อบิดา (Father name) :</div>
+                    <div className="block text-gray-700 mt-1" >ชื่อบิดา (Father name) :</div>
                     <div>
                       <input
                         type="text"
                         name="phone"
-                        className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                         className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         value={alreadyData?.father_name}
                         onChange={handleChangeFatherName}
                       />
@@ -494,12 +494,12 @@ const handleDistrictSD9Change = (e) => {
                 </div>
                 <div>
                   <div className="flex">
-                    <div>ชื่อมารดา (Mother name) :</div>
+                    <div className="block text-gray-700 mt-1" >ชื่อมารดา (Mother name) :</div>
                     <div>
                       <input
                         type="text"
                         name="phone"
-                        className="ml-2 border border-solid rounded-md border-gray-800 w-full"
+                         className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         value={alreadyData?.mother_name}
                         onChange={handleChangeMotherName}
                       />
@@ -524,7 +524,7 @@ const handleDistrictSD9Change = (e) => {
                       name="province"
                       value={provinceSelected}
                       onChange={handleProvinceChange}
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-72"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
                       <option value="" >{alreadyData.province !== undefined ? alreadyData.province : 'เลือกจังหวัด (Select province)'}</option>
                       
@@ -539,7 +539,7 @@ const handleDistrictSD9Change = (e) => {
                   name="amphure"
                   value={amphureSelected}
                   onChange={handleAmphureChange}
-                  className="ml-2 border border-solid rounded-md border-gray-800 w-72"
+                   className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                  <option value="" >{alreadyData.district !== undefined ? alreadyData.district : 'เลือกอำเภอ (Select District)'}</option>
                   {amphures.map((amphure, index) => (
@@ -553,7 +553,7 @@ const handleDistrictSD9Change = (e) => {
                   name="district"
                   value={districtSelected}
                   onChange={handleDistrictChange}
-                  className="ml-2 border border-solid rounded-md border-gray-800 w-72"
+                   className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                   <option value="" >{alreadyData.sub_district !== undefined ? alreadyData.sub_district : 'เลือกตำบล (Select subdistrict)'}</option>
                   {districts.map((district, index) => (
@@ -571,7 +571,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       name="name"
                       value={alreadyData.house_num}
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-72"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseNum}
                     />
                   </div>
@@ -583,7 +583,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       name="name"
                       value={alreadyData.house_moo}
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-72"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseMoo}
                     />
                   </div>
@@ -605,7 +605,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       name="name"
                       value={alreadyData.sdnine_id}
-                      className="ml-2 w-full border border-solid rounded-md border-gray-800"
+                       className="ml-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeSd9Num}
                     />
                   </div>
@@ -619,7 +619,7 @@ const handleDistrictSD9Change = (e) => {
                       name="province"
                       value={provinceSD9Selected}
                       onChange={handleProvinceSD9Change}
-                      className="ml-2 border border-solid rounded-md border-gray-800 w-72"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
                       <option value="" >{alreadyData.province_sd !== undefined ? alreadyData.province_sd : 'เลือกจังหวัด (Select province)'}</option>
                       {provincesSD9.map((item, index) => (
@@ -633,7 +633,7 @@ const handleDistrictSD9Change = (e) => {
                   name="amphure"
                   value={amphureSD9Selected}
                   onChange={handleAmphureSD9Change}
-                  className="ml-2 border border-solid rounded-md border-gray-800 w-72"
+                   className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                   <option value="" >{alreadyData.district_sd !== undefined ? alreadyData.district_sd : 'เลือกอำเภอ (Select District)'}</option>
                   {amphuresSD9.map((amphure, index) => (
@@ -647,7 +647,7 @@ const handleDistrictSD9Change = (e) => {
                   name="district"
                   value={districtSD9Selected}
                   onChange={handleDistrictSD9Change}
-                  className="ml-2 border border-solid rounded-md border-gray-800 w-72"
+                   className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                   <option value="" >{alreadyData.subdistrict_sd !== undefined ? alreadyData.subdistrict_sd : 'เลือกตำบล (Select subdistrict)'}</option>
                   {districtsSD9.map((district, index) => (
@@ -665,7 +665,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       name="name"
                       value={alreadyData.house_num_sd}
-                      className="ml-2 w-full border border-solid rounded-md border-gray-800"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseNumSD9}
                     />
                   </div>
@@ -677,7 +677,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       name="name"
                       value={alreadyData.house_moo_sd}
-                      className="ml-2 w-full border border-solid rounded-md border-gray-800"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseMooSD9}
                     />
                   </div>
