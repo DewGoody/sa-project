@@ -374,12 +374,12 @@ const columns = [
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd/'
+                            onClick: () => window.location.href = '/Admin/rd/0'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard/'
+                            onClick: () => window.location.href = '/Admin/goldencard/page/0'
                         },
                         {
                             key: '6',
@@ -389,7 +389,7 @@ const columns = [
                         {
                             key: '7',
                             label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
-                             onClick: () => window.location.href = '/Admin/editMaxStudent'
+                            onClick: () => window.location.href = '/Admin/editMaxStudent'
                         }
                     ]}
                 />

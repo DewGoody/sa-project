@@ -15,16 +15,20 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
+import { useParams, useRouter } from 'next/navigation';
 const App = () => {
+    const router = useRouter()
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [Data, setData] = useState([])
     const [loading, setLoading] = useState(false);
     const [shouldReload, setShouldReload] = useState(false)
-     const [filteredInfo, setFilteredInfo] = useState({});;
+    const [filteredInfo, setFilteredInfo] = useState({});
+    const [fetchYear, setfetchYear] = useState([]);
+    const { year } = useParams();
     const formatDateToDMYWithTime = (dateString) => {
         // console.log(dateString);
-        
+
         if (!dateString) return 'N/A'; // Handle null or undefined dates
 
         const date = new Date(dateString); // Parse the input date string
@@ -42,66 +46,80 @@ const App = () => {
     const handleSearch = (value, dataIndex) => {
         setSearchText(value);
         setSearchedColumn(dataIndex);
-      };
-    
-      const getColumnSearchProps = (dataIndex) => ({
+    };
+
+    const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, confirm }) => (
-          <div style={{ padding: 8 }}>
-            <Input
-              placeholder={`Search ${dataIndex}`}
-              value={searchText}
-              onChange={(e) => {
-                const value = e.target.value;
-                setSelectedKeys(value ? [value] : []);
-                handleSearch(value, dataIndex);
-                confirm({ closeDropdown: false }); // Keep the dropdown open
-              }}
-              style={{ marginBottom: 8, display: "block" }}
-            />
-          </div>
+            <div style={{ padding: 8 }}>
+                <Input
+                    placeholder={`Search ${dataIndex}`}
+                    value={searchText}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setSelectedKeys(value ? [value] : []);
+                        handleSearch(value, dataIndex);
+                        confirm({ closeDropdown: false }); // Keep the dropdown open
+                    }}
+                    style={{ marginBottom: 8, display: "block" }}
+                />
+            </div>
         ),
         filterIcon: (filtered) => (
-          <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
+            <SearchOutlined style={{ color: "white", fontSize: "18px" }} />
         ),
         onFilter: (value, record) =>
-          record[dataIndex]
-            ?.toString()
-            .toLowerCase()
-            .includes(value.toLowerCase()),
+            record[dataIndex]
+                ?.toString()
+                .toLowerCase()
+                .includes(value.toLowerCase()),
         render: (text) =>
-          searchedColumn === dataIndex ? (
-            <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
-              {text}
-            </span>
-          ) : (
-            text
-          ),
-      });
+            searchedColumn === dataIndex ? (
+                <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
+                    {text}
+                </span>
+            ) : (
+                text
+            ),
+    });
 
     useEffect(() => {
-            if (shouldReload) {
+        if (shouldReload) {
             window.location.reload();
-            }
-        }, [shouldReload]);
+        }
+    }, [shouldReload]);
+
+    const fetchUniqueYear = async () => {
+        try {
+            const res = await axios.post('/api/Admin/getyearrordor');
+            setfetchYear(res.data.data);
+        }
+        catch (error) {
+            console.error('Error fetching unique year:', error);
+        }
+    }
+    const handleYearChange = async (year) => {
+        console.log("year", year);
+        router.push(`/Admin/rd/${year}`);
+    }
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`/api/Admin/getrordor`)
+            const response = await axios.post(`/api/Admin/getrordor`, { year: parseInt(year) })
             response.data.map((item) => {
-                console.log("กหดหกดกหดกหดกหดหก",item.entry?.json.student);
+                console.log("กหดหกดกหดกหดกหดหก", item.entry?.json.student);
 
             });
-            
+
             setData(...Data, response.data.map((item, index) => ({
                 key: index, // Unique key for each row
                 fullname: `${item.entry?.json.student?.fnameTH || ''} ${item.entry?.json.student?.lnameTH || ''}`,
                 student_ID: item.entry?.stu_id,
                 citizen_ID: item.entry?.json.student.thai_id || 'N/A',
                 birthdate: formatDateToDMYWithTime(item.entry?.json.student?.bd) || 'N/A',
-                status:item.entry?.status,
+                status: item.entry?.status,
                 reqId: item.entry?.id,
                 rd_ID: item.entry?.json.Military_info.military_id || 'ปี1 ไม่มีเลขประจำตัว',
-                yearRD : item.entry?.yearRD
+                yearRD: item.entry?.yearRD
             })))
             console.log(Data.fullname)
         } catch (error) {
@@ -109,7 +127,7 @@ const App = () => {
         }
     }
     useEffect(() => {
-        
+        fetchUniqueYear()
         fetchData()
         // console.log(Data.fullname)
     }, [])
@@ -122,8 +140,8 @@ const App = () => {
     } = theme.useToken();
     const [selectedKey, setSelectedKey] = useState('4');
     const handleChangeStatus = async (record) => {
-        
-        if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
+
+        if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
             try {
                 setLoading(true);
                 setShouldReload(true);
@@ -134,8 +152,8 @@ const App = () => {
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
-           }
-           else if(record.status === "ส่งเอกสารแล้ว"){
+        }
+        else if (record.status === "ส่งเอกสารแล้ว") {
             try {
                 setLoading(true);
                 setShouldReload(true);
@@ -146,39 +164,39 @@ const App = () => {
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
-           } 
-    } 
+        }
+    }
     const columns = [
         {
             title: 'สถานะ',
             dataIndex: 'status',
             width: "200px",
             render: (status, record) => {
-                console.log("status", status )
+                console.log("status", status)
                 let options = [];
-                if(status == "รอเข้ารับบริการ"){
-                    options=[
+                if (status == "รอเข้ารับบริการ") {
+                    options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
                     ]
-                }else if(status == "รอเจ้าหน้าที่ดำเนินการ"){
-                    options=[
+                } else if (status == "รอเจ้าหน้าที่ดำเนินการ") {
+                    options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
                     ]
-                }else if(status == "ส่งเอกสารแล้ว"){
-                    options=[
+                } else if (status == "ส่งเอกสารแล้ว") {
+                    options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', disabled: true},
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', disabled: true },
                     ]
                 }
-                return(
-                <Select
-                    defaultValue={status}
-                    style={{ width: "180px" }}
-                    options={options}
-                    onChange={(value) => handleChangeStatus({ ...record, status: value })}
-                />
+                return (
+                    <Select
+                        defaultValue={status}
+                        style={{ width: "180px" }}
+                        options={options}
+                        onChange={(value) => handleChangeStatus({ ...record, status: value })}
+                    />
                 )
             },
             filters: [
@@ -191,7 +209,7 @@ const App = () => {
             ellipsis: true,
             filterIcon: (filtered) => (
                 <div>
-                <FilterOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
         },
@@ -199,7 +217,7 @@ const App = () => {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'fullname',
             ...getColumnSearchProps('fullname'),
-        },{
+        }, {
             title: 'ชั้นปี นศท',
             dataIndex: 'yearRD',
             ...getColumnSearchProps('yearRD'),
@@ -248,26 +266,26 @@ const App = () => {
             { header: "เลขประจำตัว นศท", key: "rd_ID" },
             { header: "ชั้นปี นศท", key: "yearRD" }
         ];
-    
+
         // เพิ่มชื่อ Columns เข้าไปเป็น Row แรก
         const dataWithHeaders = [
             columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
             ...Data.map((item) => columnHeaders.map(col => item[col.key] || '')) // ข้อมูลตามลำดับ
         ];
-    
+
         // สร้าง Worksheet ด้วยข้อมูลที่มี Header
         const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
-    
+
         // สร้าง Workbook และเพิ่ม Worksheet
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
-    
+
         // เขียนไฟล์ Excel และดาวน์โหลด
         const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
         const data = new Blob([excelBuffer], { type: "application/octet-stream" });
         saveAs(data, "exported_data.xlsx");
     };
-    
+
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
@@ -315,22 +333,22 @@ const App = () => {
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd/'
+                            onClick: () => window.location.href = '/Admin/rd/0'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard/'
+                            onClick: () => window.location.href = '/Admin/goldencard/page/0'
                         },
                         {
                             key: '6',
                             label: <span style={{ color: selectedKey === '6' ? 'black' : 'white' }}>Health Insurance For Foreigner Student</span>,
-                             onClick: () => window.location.href = '/Admin/prakan-inter/0'
+                            onClick: () => window.location.href = '/Admin/prakan-inter/0'
                         },
                         {
                             key: '7',
                             label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
-                             onClick: () => window.location.href = '/Admin/editMaxStudent'
+                            onClick: () => window.location.href = '/Admin/editMaxStudent'
                         }
                     ]}
                 />
@@ -351,6 +369,25 @@ const App = () => {
                         <div className='font-extrabold text-3xl'>
                             นักศึกษาวิชาทหาร
                         </div>
+                    </div>
+                    <div className='flex mt-12'>
+                        <div className='mt-2 ml-3 font-normal text-base'>
+                            เลือกปี
+                        </div>
+                        <div className='mt-1 mb-6'>
+                            <Select
+                                defaultValue={year}
+                                value={year === '0' ? 'ทั้งหมด' : year}
+                                style={{ width: 120, marginLeft: 10 }}
+                                onChange={handleYearChange}
+                            >
+                                <Select.Option value={0}>ทั้งหมด</Select.Option>
+                                {fetchYear.map((year) => (
+                                    <Select.Option key={year} value={year}>{year}</Select.Option>
+                                ))}
+                            </Select>
+                        </div>
+
                     </div>
                     <Button type="primary" onClick={exportToExcel} style={{ marginBottom: '16px' }}>
                         Export to Excel

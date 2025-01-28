@@ -522,6 +522,24 @@ export async function getUniqueYearGoldencard() {
 
     return uniqueYears;
 }
+export async function getUniqueYearRD() {
+    const requests = await prisma.request.findMany({
+        where: {
+            type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
+            deleted_at: null
+        },
+        select: {
+            created_at: true,
+        },
+    });
+
+    // Extract unique years
+    const uniqueYears = Array.from(
+        new Set(requests.map((request) => request.created_at.getFullYear()))
+    );
+
+    return uniqueYears;
+}
 
 export async function getRequestPrakanInterInAdmin(year){
     const startOfYear = new Date(year, 0, 1); // January 1st of the specified year

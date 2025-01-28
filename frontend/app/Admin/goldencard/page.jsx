@@ -13,7 +13,7 @@ const { Header, Sider, Content } = Layout;
 const App = () => {
     const router = useRouter()
     const [searchText, setSearchText] = useState("");
-        const [searchedColumn, setSearchedColumn] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [reqMoreInfo, setReqMoreInfo] = useState('');
     const [moreInfoValue, setMoreInfoValue] = useState('');
@@ -21,11 +21,11 @@ const App = () => {
     const [shouldReload, setShouldReload] = useState(false);
     const [filteredInfo, setFilteredInfo] = useState({});
 
-     useEffect(() => {
-            if (shouldReload) {
+    useEffect(() => {
+        if (shouldReload) {
             window.location.reload();
-            }
-        }, [shouldReload]);
+        }
+    }, [shouldReload]);
 
     async function fetchPdfFile(form) {
         try {
@@ -66,7 +66,7 @@ const App = () => {
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `student_${form}_files.zip`; 
+            link.download = `student_${form}_files.zip`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -75,7 +75,7 @@ const App = () => {
             console.error('Error fetching ZIP file:', error);
         }
     }
-    
+
     const showModal = (record) => {
         setReqMoreInfo(record);
         console.log("recordModalJa :", typeof record);
@@ -224,41 +224,41 @@ const App = () => {
     const handleSearch = (value, dataIndex) => {
         setSearchText(value);
         setSearchedColumn(dataIndex);
-        };
-    
-        const getColumnSearchProps = (dataIndex) => ({
+    };
+
+    const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, confirm }) => (
             <div style={{ padding: 8 }}>
-            <Input
-                placeholder={`Search ${dataIndex}`}
-                value={searchText}
-                onChange={(e) => {
-                const value = e.target.value;
-                setSelectedKeys(value ? [value] : []);
-                handleSearch(value, dataIndex);
-                confirm({ closeDropdown: false }); // Keep the dropdown open
-                }}
-                style={{ marginBottom: 8, display: "block" }}
-            />
+                <Input
+                    placeholder={`Search ${dataIndex}`}
+                    value={searchText}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setSelectedKeys(value ? [value] : []);
+                        handleSearch(value, dataIndex);
+                        confirm({ closeDropdown: false }); // Keep the dropdown open
+                    }}
+                    style={{ marginBottom: 8, display: "block" }}
+                />
             </div>
         ),
         filterIcon: (filtered) => (
-            <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
+            <SearchOutlined style={{ color: "white", fontSize: "18px" }} />
         ),
         onFilter: (value, record) =>
             record[dataIndex]
-            ?.toString()
-            .toLowerCase()
-            .includes(value.toLowerCase()),
+                ?.toString()
+                .toLowerCase()
+                .includes(value.toLowerCase()),
         render: (text) =>
             searchedColumn === dataIndex ? (
-            <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
-                {text}
-            </span>
+                <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
+                    {text}
+                </span>
             ) : (
-            text
+                text
             ),
-        });
+    });
 
     const columns = [
         {
@@ -279,27 +279,27 @@ const App = () => {
             title: 'ดาวน์โหลด',
             render: (_, record) => (
                 <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '100%', // Optional: ensures full height centering within the parent
-                }}
-              >
-                <DownloadOutlined
-                  style={{
-                    fontSize: '21px', // Increase the size (e.g., 24px)
-                    cursor: 'pointer', // Optional: changes the cursor to a pointer
-                  }}
-                  onClick={() => fetchZipFile(record.reqId)}
-                />
-              </div>
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%', // Optional: ensures full height centering within the parent
+                    }}
+                >
+                    <DownloadOutlined
+                        style={{
+                            fontSize: '21px', // Increase the size (e.g., 24px)
+                            cursor: 'pointer', // Optional: changes the cursor to a pointer
+                        }}
+                        onClick={() => fetchZipFile(record.reqId)}
+                    />
+                </div>
             ),
         },
         {
             title: 'สถานะ',
             dataIndex: 'status',
-            width:200,
+            width: 200,
             render: (status, record) => {
                 let options = [];
                 if (status == "ยังไม่ได้ Upload เอกสาร") {
@@ -387,7 +387,7 @@ const App = () => {
             ellipsis: true,
             filterIcon: (filtered) => (
                 <div>
-                <FilterOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
         }, {
@@ -395,9 +395,9 @@ const App = () => {
             dataIndex: 'updateat',
             sorter: (a, b) => new Date(a.updateat) - new Date(b.updateat),
             sortIcon: (sorted) => (
-                            <div>
-                                <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
-                            </div>
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
+                </div>
             ),
         },
         {
@@ -435,13 +435,13 @@ const App = () => {
                     </div>
                     <div className='ml-3 mt-3'>
                         <p className='font-mono font-semibold text-white'>
-                        Department of Scholarships & Students 
+                            Department of Scholarships & Students
                         </p>
                         <p className='font-mono font-semibold text-white'>
-                        Service, Office of the Student Affairs, 
+                            Service, Office of the Student Affairs,
                         </p>
                         <p className='font-mono font-semibold text-white'>
-                        Chulalongkorn University
+                            Chulalongkorn University
                         </p>
                     </div>
                     <div className="flex justify-center mt-5">
@@ -479,12 +479,12 @@ const App = () => {
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd/'
+                            onClick: () => window.location.href = '/Admin/rd/0'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard/'
+                            onClick: () => window.location.href = '/Admin/goldencard/page/0'
                         },
                         {
                             key: '6',
@@ -494,7 +494,7 @@ const App = () => {
                         {
                             key: '7',
                             label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
-                             onClick: () => window.location.href = '/Admin/editMaxStudent'
+                            onClick: () => window.location.href = '/Admin/editMaxStudent'
                         }
                     ]}
                 />
@@ -521,28 +521,28 @@ const App = () => {
                             index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
                         }
                     />
-                    <Modal 
-                        title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม" 
-                        open={isModalOpen} 
-                        onOk={handleOk} 
+                    <Modal
+                        title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม"
+                        open={isModalOpen}
+                        onOk={handleOk}
                         loading={loading}
                         onCancel={handleCancel}
                         footer={[
                             <Button key="back" onClick={handleCancel}>
-                              ปิด
+                                ปิด
                             </Button>,
                             <Button key="submit" type="primary" onClick={handleOk}>
-                              ยืนยัน
+                                ยืนยัน
                             </Button>,
-                           
-                          ]}
+
+                        ]}
                     >
-                       <textarea 
-                            style={{width: "100%", height: "200px", border:"gray solid", borderRadius:"15px", padding:"15px", fontSize:"18px"}}
-                            
+                        <textarea
+                            style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
+
                             onChange={(e) => setMoreInfoValue(e.target.value)}
                         >
-                         </textarea>
+                        </textarea>
                     </Modal>
                 </Content>
             </Layout>

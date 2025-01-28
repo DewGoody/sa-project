@@ -467,17 +467,17 @@ const App = () => {
                         {
                             key: '3',
                             label: <span style={{ color: selectedKey === '3' ? 'black' : 'white' }}>การขอผ่อนผันการเข้ารับราชการทหาร</span>,
-                             onClick: () => window.location.href = '/Admin/ponpan/0'
+                            onClick: () => window.location.href = '/Admin/ponpan/0'
                         },
                         {
                             key: '4',
                             label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd/'
+                            onClick: () => window.location.href = '/Admin/rd/0'
                         },
                         {
                             key: '5',
                             label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard/'
+                            onClick: () => window.location.href = '/Admin/goldencard/page/0'
                         },
                         {
                             key: '6',
@@ -487,7 +487,7 @@ const App = () => {
                         {
                             key: '7',
                             label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
-                             onClick: () => window.location.href = '/Admin/editMaxStudent'
+                            onClick: () => window.location.href = '/Admin/editMaxStudent'
                         }
                     ]}
                 />

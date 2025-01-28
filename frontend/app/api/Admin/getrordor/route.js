@@ -30,23 +30,45 @@ function serializeBigInt(obj) {
 }
 
 
-export async function GET(req) {
+export async function POST(req, res) {
     try {
         // Fetch data with related RD_info
-        const queue = await prisma.request.findMany({
-            where: {
-                type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร"
-            },
-            include: {
-                RD_info: true, // Include related RD_info
-            },
-        });
+        const data = await req.json()
+        const year = data.year
+        const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
+        const endOfYear = new Date(year + 1, 0, 1);
+        let queue = null
+        if (year == 0) {
+            queue = await prisma.request.findMany({
+                where: {
+                    type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร"
+                },
+                include: {
+                    RD_info: true, // Include related RD_info
+                },
+            });
+        }
+        else {
+            queue = await prisma.request.findMany({
+                where: {
+                    type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
+                    created_at: {
+                        gte: startOfYear, // Greater than or equal to start of year
+                        lt: endOfYear, // Less than start of the next year
+                    },
+                },
+                include: {
+                    RD_info: true, // Include related RD_info
+                },
+            });
+
+        }
 
         // Flatten RD_info into the parent object
         const flattenedQueue = queue.map((entry) => {
             // Merge RD_info properties with the main entry
             if (entry.RD_info) {
-                entry.yearRD = entry.RD_info[0].RD_type              
+                entry.yearRD = entry.RD_info[0].RD_type
                 entry.json = entry.RD_info[0].json_history
                 return {
                     entry,
