@@ -9,13 +9,19 @@ import {
     UploadOutlined,
     UserOutlined,
     VideoCameraOutlined,
+    SearchOutlined,
+    FilterOutlined,
+    OrderedListOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
 const App = () => {
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
     const [Data, setData] = useState([])
     const [loading, setLoading] = useState(false);
-    const [shouldReload, setShouldReload] = useState(false);
+    const [shouldReload, setShouldReload] = useState(false)
+     const [filteredInfo, setFilteredInfo] = useState({});;
     const formatDateToDMYWithTime = (dateString) => {
         // console.log(dateString);
         
@@ -32,6 +38,45 @@ const App = () => {
 
         return `${day}/${month}/${year}`; // Return in dd/mm/yy-hour:min format
     };
+
+    const handleSearch = (value, dataIndex) => {
+        setSearchText(value);
+        setSearchedColumn(dataIndex);
+      };
+    
+      const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, confirm }) => (
+          <div style={{ padding: 8 }}>
+            <Input
+              placeholder={`Search ${dataIndex}`}
+              value={searchText}
+              onChange={(e) => {
+                const value = e.target.value;
+                setSelectedKeys(value ? [value] : []);
+                handleSearch(value, dataIndex);
+                confirm({ closeDropdown: false }); // Keep the dropdown open
+              }}
+              style={{ marginBottom: 8, display: "block" }}
+            />
+          </div>
+        ),
+        filterIcon: (filtered) => (
+          <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
+        ),
+        onFilter: (value, record) =>
+          record[dataIndex]
+            ?.toString()
+            .toLowerCase()
+            .includes(value.toLowerCase()),
+        render: (text) =>
+          searchedColumn === dataIndex ? (
+            <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
+              {text}
+            </span>
+          ) : (
+            text
+          ),
+      });
 
     useEffect(() => {
             if (shouldReload) {
@@ -107,6 +152,7 @@ const App = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
+            width: "200px",
             render: (status, record) => {
                 console.log("status", status )
                 let options = [];
@@ -134,41 +180,59 @@ const App = () => {
                     onChange={(value) => handleChangeStatus({ ...record, status: value })}
                 />
                 )
-            }
+            },
+            filters: [
+                { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
+                { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
+                { text: "ส่งเอกสารแล้ว", value: "ส่งเอกสารแล้ว" },
+            ],
+            filteredValue: filteredInfo?.status,
+            onFilter: (value, record) => record?.status.includes(value),
+            ellipsis: true,
+            filterIcon: (filtered) => (
+                <div>
+                <FilterOutlined style={{ color: "white", fontSize:"18px" }}/>
+                </div>
+            ),
         },
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'fullname',
+            ...getColumnSearchProps('fullname'),
         },{
             title: 'ชั้นปี นศท',
             dataIndex: 'yearRD',
+            ...getColumnSearchProps('yearRD'),
         },
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
+            ...getColumnSearchProps('student_ID'),
         },
         {
             title: 'รหัสนักศึกษาวิชาทหาร',
             dataIndex: 'rd_ID',
+            ...getColumnSearchProps('rd_ID'),
         },
         {
             title: 'เลขบัตรประชาชน',
             dataIndex: 'citizen_ID',
+            ...getColumnSearchProps('citizen_ID'),
         },
         {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
         },
 
-        {
-            title: '',
-            align: 'right', // เพิ่ม align ขวา
-            render: (_, record) => (
-                <Space size="middle">
-                    {/* <a>Delete</a> */}
-                </Space>
-            ),
-        },
+        // {
+        //     title: '',
+        //     align: 'right', // เพิ่ม align ขวา
+        //     render: (_, record) => (
+        //         <Space size="middle">
+        //             {/* <a>Delete</a> */}
+        //         </Space>
+        //     ),
+        // },
     ];
 
 
@@ -286,9 +350,6 @@ const App = () => {
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
                             นักศึกษาวิชาทหาร
-                        </div>
-                        <div className='mr-10'>
-                            <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
                         </div>
                     </div>
                     <Button type="primary" onClick={exportToExcel} style={{ marginBottom: '16px' }}>

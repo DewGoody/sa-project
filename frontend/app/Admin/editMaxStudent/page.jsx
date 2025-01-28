@@ -106,13 +106,13 @@ const handleOk = async () => {
                     </div>
                     <div className='text-center mt-4 ml-3 mr-3'>
                         <p className='font-mono font-semibold text-white'>
-                            Departmet of Scholarship & Students
+                        Department of Scholarships & Students 
                         </p>
                         <p className='font-mono font-semibold text-white'>
-                            Service, Office of the Student Affairs,
+                        Service, Office of the Student Affairs, 
                         </p>
                         <p className='font-mono font-semibold text-white'>
-                            Chulalongkorn University
+                        Chulalongkorn University
                         </p>
                     </div>
                     <div className="flex justify-center mt-5">

@@ -1,9 +1,11 @@
 'use client'
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    SearchOutlined
+    SearchOutlined,
+    FilterOutlined,
+    OrderedListOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Input, Table, Space,Select,Modal } from 'antd';
+import { Button, Layout, Menu, theme, Input, Table ,Select,Modal } from 'antd';
 import axios from 'axios';
 import { useRouter,useParams } from 'next/navigation';
 
@@ -28,6 +30,9 @@ const AppointmentManagement = () => {
     const [maxStu, setMaxStu] = useState();
     const [loading, setLoading] = useState(false);
     const [shouldReload, setShouldReload] = useState(false);
+    const [filteredInfo, setFilteredInfo] = useState({});
+    
+
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
     const timeSlots = 
@@ -38,11 +43,6 @@ const AppointmentManagement = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-// useEffect(() => {
-//     if (!loading) {
-//        window.location.reload();
-//     }
-// }, [statusRequest])
     useEffect(() => {
         if (shouldReload) {
         window.location.reload();
@@ -55,7 +55,7 @@ const AppointmentManagement = () => {
     setSearchedColumn(dataIndex);
   };
 
- console.log("statusRequest", statusRequest);
+  
 
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, confirm }) => (
@@ -164,9 +164,6 @@ console.log("dateMaxStu", dateMaxStu);
         } catch (error) {
             console.error('Error fetching student data:', error);
         }
-        // finally{
-        //     setLoading(false)
-        // }
     }
 
     const fetchUniqueYear = async () => {
@@ -243,20 +240,68 @@ const columns = [
                 <Select.Option value="เข้ารับบริการแล้ว">เข้ารับบริการแล้ว</Select.Option>
             </Select>
         ),
+        filters: [
+            { text: "จองคิวสำเร็จ", value: "จองคิวสำเร็จ" },
+            { text: "ไม่มาเข้ารับบริการ", value: "ไม่มาเข้ารับบริการ" },
+            { text: "เข้ารับบริการแล้ว", value: "เข้ารับบริการแล้ว" },
+          ],
+          filteredValue: filteredInfo?.status,
+          onFilter: (value, record) => record?.status.includes(value),
+          ellipsis: true,
+          filterIcon: (filtered) => (
+             <div>
+               <FilterOutlined style={{ color: "white", fontSize:"18px" }}/>
+             </div>
+          ),
     },
     {
         title: 'ประเภทการเข้ารับบริการ',
         dataIndex: 'type',
-        ...getColumnSearchProps("type"),
+        filters: [
+            { text: "การเบิกจ่ายประกันอุบัติเหตุ", value: "การเบิกจ่ายประกันอุบัติเหตุ" },
+            { text: "การผ่อนผันเข้ารับราชการทหาร", value: "การผ่อนผันเข้ารับราชการทหาร" },
+            { text: "โครงการหลักประกันสุขภาพถ้วนหน้า", value: "โครงการหลักประกันสุขภาพถ้วนหน้า" },
+            { text: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร", value: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" },
+            { text: "Health insurance", value: "Health insurance" },
+            
+          ],
+          filteredValue: filteredInfo?.type,
+          onFilter: (value, record) => record?.type.includes(value),
+          ellipsis: true,
+          filterIcon: (filtered) => (
+             <div>
+               <FilterOutlined style={{ color: "white", fontSize:"18px" }}/>
+             </div>
+          ),
+       
     },
     {
         title: 'วันที่',
         dataIndex: 'date',
-
+        sorter: (a, b) => {
+            const dateA = new Date(a.date.split('/').reverse().join('-'));
+            const dateB = new Date(b.date.split('/').reverse().join('-'));
+            return dateA - dateB;
+        },
+        sortIcon: (sorted) => (
+            <div>
+                <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+            </div>
+        ),
     },
     {
         title: 'เวลา',
         dataIndex: 'period',
+        sorter: (a, b) => {
+            const timeA = timeSlots.indexOf(a.period.split(' ')[0]);
+            const timeB = timeSlots.indexOf(b.period.split(' ')[0]);
+            return timeA - timeB;
+        },
+        sortIcon: (sorted) => (
+            <div>
+                <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+            </div>
+        ),
     },
     {
         title: 'ชื่อ-นามสกุล',
@@ -365,8 +410,11 @@ const columns = [
                             จัดการการนัดหมาย
                         </div> 
                     </div>
-                    <div className="flex justify-between">
-                        <div className='mt-10 mb-6'>
+                    <div className='flex mt-12'>
+                        <div className='mt-2 ml-3 font-normal text-base'>
+                            เลือกปี
+                        </div>
+                        <div className='mt-1 mb-6'>
                                 <Select
                                     defaultValue={year}
                                     value={year === '0' ? 'ทั้งหมด' : year}
@@ -390,27 +438,6 @@ const columns = [
                         scroll={{ x: 'max-content' }}
                         
                     />
-
-                    <Modal title="เลือกจำนวนนิสิตที่รับได้ในแต่ละรอบ" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                         <div>
-                            <p>เลือกวัน</p>
-                            <Input 
-                                type="date" 
-                                min = {dateMaxStu[0]?.date}
-                                onClick={ (e) => handleSelectDate(e.target.value)}
-                           
-                            />
-                         </div>
-                         <div className="mt-4">
-                            <p>เลือกจำนวนนิสิต</p>
-                            <Input 
-                                placeholder="จำนวนนิสิต" 
-                                type="number"
-                                onChange={(e) => handleMaxStuChange(e.target.value)}
-
-                            />
-                         </div>
-                    </Modal>
                
                 </Content>
             </Layout>

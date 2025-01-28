@@ -2,7 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import {
     SearchOutlined,
-    DownloadOutlined
+    DownloadOutlined,
+    FilterOutlined,
+    OrderedListOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Modal ,Select } from 'antd';
 import axios from 'axios';
@@ -28,6 +30,7 @@ const App = () => {
     const [moreInfoValue, setMoreInfoValue] = useState('');
     const [loading, setLoading] = useState(false);
     const [shouldReload, setShouldReload] = useState(false);
+    const [filteredInfo, setFilteredInfo] = useState({});
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
@@ -337,7 +340,23 @@ const App = () => {
                     </>
                    
                 );
-            }
+            },
+            filters: [
+                { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
+                { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
+                { text: "ส่งเอกสารแล้ว", value: "ส่งเอกสารแล้ว" },
+                { text: "ขอข้อมูลเพิ่มเติม", value: "ขอข้อมูลเพิ่มเติม" },
+                { text: "ไม่อนุมัติ", value: "ไม่อนุมัติ" },
+                { text: "โอนเงินเรียบร้อย", value: "โอนเงินเรียบร้อย" },
+              ],
+              filteredValue: filteredInfo?.status,
+              onFilter: (value, record) => record?.status.includes(value),
+              ellipsis: true,
+              filterIcon: (filtered) => (
+                 <div>
+                   <FilterOutlined style={{ color: "white", fontSize:"18px" }}/>
+                 </div>
+              ),
         },
         {
             title: 'ชื่อ-นามสกุล',
@@ -348,6 +367,21 @@ const App = () => {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
             ...getColumnSearchProps('student_ID'),
+        },
+        {
+            title: 'วันที่เกิดอุบัติเหตุ',
+            dataIndex: 'acc_date',
+            width: 160,
+            sorter: (a, b) => {
+                    const dateA = new Date(a.acc_date.split('/').reverse().join('-'));
+                    const dateB = new Date(b.acc_date.split('/').reverse().join('-'));
+                    return dateA - dateB;
+                },
+            sortIcon: (sorted) => (
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                </div>
+            ),
         },
         {
             title: 'อาการบาดเจ็บ',
@@ -361,10 +395,7 @@ const App = () => {
             title: 'สถานที่เกิดอุบัติเหตุ',
             dataIndex: 'accident_place',
         },
-        {
-            title: 'วันที่เกิดอุบัติเหตุ',
-            dataIndex: 'acc_date',
-        },
+        
         {
             title: 'สถานที่รักษา',
             dataIndex: 'treatment_place',
@@ -476,24 +507,25 @@ const App = () => {
                         <div className='font-extrabold text-3xl'>
                             ประกันอุบัติเหตุ
                         </div>
-                        <div className='mr-10'>
-                            <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
+                    </div>
+                   <div className='flex mt-12'>
+                        <div className='mt-2 ml-3 font-normal text-base'>
+                            เลือกปี
+                        </div>
+                        <div className='mt-1 mb-6'>
+                                <Select
+                                    defaultValue={year}
+                                    value={year === '0' ? 'ทั้งหมด' : year}
+                                    style={{ width: 120, marginLeft: 10 }}
+                                    onChange={handleYearChange}
+                                >
+                                    <Select.Option value={0}>ทั้งหมด</Select.Option>
+                                    {fetchYear.map((year) => (
+                                        <Select.Option key={year} value={year}>{year}</Select.Option>
+                                    ))}
+                                </Select>
                         </div>
                         
-                        
-                    </div>
-                    <div className='mt-10 mb-6'>
-                            <Select
-                                defaultValue={year}
-                                value={year === '0' ? 'ทั้งหมด' : year}
-                                style={{ width: 120, marginLeft: 10 }}
-                                onChange={handleYearChange}
-                            >
-                                <Select.Option value={0}>ทั้งหมด</Select.Option>
-                                {fetchYear.map((year) => (
-                                    <Select.Option key={year} value={year}>{year}</Select.Option>
-                                ))}
-                            </Select>
                     </div>
                     
                     <Table

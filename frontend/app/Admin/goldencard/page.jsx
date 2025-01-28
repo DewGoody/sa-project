@@ -4,17 +4,22 @@ import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import {
     SearchOutlined,
-    DownloadOutlined
+    DownloadOutlined,
+    FilterOutlined,
+    OrderedListOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space, Modal, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
 const App = () => {
     const router = useRouter()
+    const [searchText, setSearchText] = useState("");
+        const [searchedColumn, setSearchedColumn] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [reqMoreInfo, setReqMoreInfo] = useState('');
     const [moreInfoValue, setMoreInfoValue] = useState('');
     const [loading, setLoading] = useState(false);
     const [shouldReload, setShouldReload] = useState(false);
+    const [filteredInfo, setFilteredInfo] = useState({});
 
      useEffect(() => {
             if (shouldReload) {
@@ -215,8 +220,49 @@ const App = () => {
             }
         }
     }
+
+    const handleSearch = (value, dataIndex) => {
+        setSearchText(value);
+        setSearchedColumn(dataIndex);
+        };
+    
+        const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, confirm }) => (
+            <div style={{ padding: 8 }}>
+            <Input
+                placeholder={`Search ${dataIndex}`}
+                value={searchText}
+                onChange={(e) => {
+                const value = e.target.value;
+                setSelectedKeys(value ? [value] : []);
+                handleSearch(value, dataIndex);
+                confirm({ closeDropdown: false }); // Keep the dropdown open
+                }}
+                style={{ marginBottom: 8, display: "block" }}
+            />
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+            ?.toString()
+            .toLowerCase()
+            .includes(value.toLowerCase()),
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+            <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
+                {text}
+            </span>
+            ) : (
+            text
+            ),
+        });
+
     const columns = [
         {
+            align: 'center',
             title: 'แก้ไขข้อมูล',
             dataIndex: 'status',
             render: (status, record) => {
@@ -229,7 +275,7 @@ const App = () => {
             },
         },
         {
-            align: 'right', // เพิ่ม align ขวา
+            align: 'center', // เพิ่ม align ขวา
             title: 'ดาวน์โหลด',
             render: (_, record) => (
                 <div
@@ -253,6 +299,7 @@ const App = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
+            width:200,
             render: (status, record) => {
                 let options = [];
                 if (status == "ยังไม่ได้ Upload เอกสาร") {
@@ -326,23 +373,48 @@ const App = () => {
                             : null}
                     </>
                 )
-            }
+            },
+            filters: [
+                { text: "ยังไม่ได้ Upload เอกสาร", value: "ยังไม่ได้ Upload เอกสาร" },
+                { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
+                { text: "ขอข้อมูลเพิ่มเติม", value: "ขอข้อมูลเพิ่มเติม" },
+                { text: "ส่งเอกสารแล้ว", value: "ส่งเอกสารแล้ว" },
+                { text: "ย้ายสิทธิสำเร็จ", value: "ย้ายสิทธิสำเร็จ" },
+                { text: "ย้ายสิทธิไม่สำเร็จ", value: "ย้ายสิทธิไม่สำเร็จ" },
+            ],
+            filteredValue: filteredInfo?.status,
+            onFilter: (value, record) => record?.status.includes(value),
+            ellipsis: true,
+            filterIcon: (filtered) => (
+                <div>
+                <FilterOutlined style={{ color: "white", fontSize:"18px" }}/>
+                </div>
+            ),
         }, {
             title: 'วันที่อัพโหลดเอกสาร',
             dataIndex: 'updateat',
+            sorter: (a, b) => new Date(a.updateat) - new Date(b.updateat),
+            sortIcon: (sorted) => (
+                            <div>
+                                <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                            </div>
+            ),
         },
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'fullname',
+            ...getColumnSearchProps('fullname'),
         },
 
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
+            ...getColumnSearchProps('student_ID'),
         },
         {
             title: 'เลขบัตรประชาชน',
             dataIndex: 'citizen_ID',
+            ...getColumnSearchProps('citizen_ID'),
         },
         {
             title: 'วันเดือนปีเกิด',
@@ -362,8 +434,14 @@ const App = () => {
                         </p>
                     </div>
                     <div className='ml-3 mt-3'>
-                        <p className='font-mono font-medium text-white'>
-                            Departmet of Scholarship & Students Service, Office of the Student Affairs, Chulalongkorn University
+                        <p className='font-mono font-semibold text-white'>
+                        Department of Scholarships & Students 
+                        </p>
+                        <p className='font-mono font-semibold text-white'>
+                        Service, Office of the Student Affairs, 
+                        </p>
+                        <p className='font-mono font-semibold text-white'>
+                        Chulalongkorn University
                         </p>
                     </div>
                     <div className="flex justify-center mt-5">
@@ -434,10 +512,6 @@ const App = () => {
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
                             บัตรทอง
-                        </div>
-                        <div className='mr-10'>
-
-                            <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
                         </div>
                     </div>
                     <Table

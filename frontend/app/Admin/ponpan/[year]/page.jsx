@@ -2,6 +2,8 @@
 import React, { Children, useEffect, useState } from 'react';
 import {
     SearchOutlined,
+    FilterOutlined,
+    OrderedListOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space,Select } from 'antd';
 import axios from 'axios';
@@ -24,6 +26,7 @@ const AppointmentManagement = () => {
     const [statusRequest, setStatusRequest] = useState([]);
     const [loading, setLoading] = useState(false);
     const [shouldReload, setShouldReload] = useState(false);
+    const [filteredInfo, setFilteredInfo] = useState({});
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
@@ -291,7 +294,22 @@ const columns = [
                     onChange={(value) => handleChangeStatus({ ...record, status: value })}
                 />
             );
-        }
+        },
+        filters: [
+                        { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
+                        { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
+                        { text: "ส่งเอกสารแล้ว", value: "ส่งเอกสารแล้ว" },
+                        { text: "ติดต่อรับเอกสาร", value: "ติดต่อรับเอกสาร" },
+                        { text: "รับเอกสารเรียบร้อย", value: "รับเอกสารเรียบร้อย" },
+                      ],
+                      filteredValue: filteredInfo?.status,
+                      onFilter: (value, record) => record?.status.includes(value),
+                      ellipsis: true,
+                      filterIcon: (filtered) => (
+                         <div>
+                           <FilterOutlined style={{ color: "white", fontSize:"18px" }}/>
+                         </div>
+                      ),
     },
     {
         title: 'พ.ศ. เกิด',
@@ -319,6 +337,7 @@ const columns = [
         title: 'ชั้นปีที่',
         dataIndex: 'year',
         align: 'center',
+        ...getColumnSearchProps('year'),
     },
     {
         title: 'ชื่อ',
@@ -336,21 +355,30 @@ const columns = [
         title: 'เบอร์โทรศัพท์',
         dataIndex: 'phone_num',
         align: 'center',
+        ...getColumnSearchProps('phone_num'),
+    },
+    {
+        title: "อีเมลล์",
+        dataIndex: "email",
+        align: 'center',
     },
     {
         title: 'ชื่อบิดา',
         dataIndex: 'father_name',
         align: 'center',
+        ...getColumnSearchProps('father_name'),
     },
     {
         title: 'ชื่อมารดา',
         dataIndex: 'mother_name',
         align: 'center',
+        ...getColumnSearchProps('mother_name'),
     },
     {
         title: 'ใบสำคัญ สด. 9',
         dataIndex: 'sdnine_id',
         align: 'center',
+        ...getColumnSearchProps('sdnine_id'),
     },
     {
         title: 'ที่อยู่ตามทะเบียนบ้าน',
@@ -414,11 +442,7 @@ const columns = [
             },
         ]
     },
-    {
-        title: "อีเมลล์",
-        dataIndex: "email",
-        align: 'center',
-    }
+    
 ];
 
   return (
@@ -515,28 +539,29 @@ const columns = [
                         <div className='font-extrabold text-3xl'>
                             การขอผ่อนผันการเข้ารับราชการทหาร
                         </div>
-                        <div className='mr-10'>
-                            <Input style={{ paddingRight: "100px" }} placeholder="ค้นหานิสิต" />
-                        </div>
-                        
-                        
                     </div>
-                    <div className='mt-10 mb-6'>
-                            <Select
-                                defaultValue={year}
-                                value={year === '0' ? 'ทั้งหมด' : year}
-                                style={{ width: 120, marginLeft: 10 }}
-                                onChange={handleYearChange}
-                            >
-                                <Select.Option value={0}>ทั้งหมด</Select.Option>
-                                {fetchYear.map((year) => (
-                                    <Select.Option key={year} value={year}>{year}</Select.Option>
-                                ))}
-                            </Select>
-                    </div>
+                   <div className='flex mt-12'>
+                                           <div className='mt-2 ml-3 font-normal text-base'>
+                                               เลือกปี
+                                           </div>
+                                           <div className='mt-1 mb-6'>
+                                                   <Select
+                                                       defaultValue={year}
+                                                       value={year === '0' ? 'ทั้งหมด' : year}
+                                                       style={{ width: 120, marginLeft: 10 }}
+                                                       onChange={handleYearChange}
+                                                   >
+                                                       <Select.Option value={0}>ทั้งหมด</Select.Option>
+                                                       {fetchYear.map((year) => (
+                                                           <Select.Option key={year} value={year}>{year}</Select.Option>
+                                                       ))}
+                                                   </Select>
+                                           </div>
+                                          
+                                       </div>
                     <div>
                         <button 
-                            className="bg-blue-500 p-4 rounded-md text-white mb-3"
+                            className="bg-blue-500 p-2 rounded-md text-white mb-3"
                             onClick={handleExport}
                         >
                             Export Excel
