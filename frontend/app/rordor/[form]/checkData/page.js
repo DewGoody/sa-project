@@ -534,7 +534,7 @@ const CheckData = () => {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เลขที่บ้าน (Domicile number)</label>
+                                        <label className="block text-gray-700 mb-2">เลขที่ (Address number)</label>
                                         <input
                                             type="text"
                                             name="domicileNumber"
@@ -617,7 +617,7 @@ const CheckData = () => {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ภูมิลำเนาเลขที่ (Military domicile number)</label>
+                                        <label className="block text-gray-700 mb-2">เลขที่ (Address number)</label>
                                         <input
                                             type="text"
                                             name="militaryDomicileNumber"
@@ -628,7 +628,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">จังหวัด (Military province)</label>
+                                        <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
                                         <select
                                             name="militaryProvince"
                                             value={formData.militaryProvince}
@@ -642,7 +642,7 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อำเภอ (Military district)</label>
+                                        <label className="block text-gray-700 mb-2">อำเภอ (District)</label>
                                         <select
                                             name="militaryDistrict"
                                             value={formData.militaryDistrict}
@@ -656,7 +656,7 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ตำบล (Military subdistrict)</label>
+                                        <label className="block text-gray-700 mb-2">ตำบล (Subdistrict)</label>
                                         <input
                                             type="text"
                                             name="militaryAmphure"
@@ -669,7 +669,7 @@ const CheckData = () => {
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-semibold mb-4 py-10 ">
-                                        ประวัติการเรียน (School)
+                                        ประวัติการเรียน (Academic record)
                                     </h3>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

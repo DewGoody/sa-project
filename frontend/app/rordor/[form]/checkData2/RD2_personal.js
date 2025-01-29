@@ -159,7 +159,7 @@ export const Personal = () => {
         <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-gray-700 mb-2">ชั้นปี (Collage year)</label>
+                    <label className="block text-gray-700 mb-2">ชั้นปี (College year)</label>
                     <input
                         type="text"
                         name="Collage_Year"
@@ -195,7 +195,7 @@ export const Personal = () => {
             </div>
             <div>
                 <h3 className="text-lg font-semibold mb-4 py-10 ">
-                    สำเร็จการฝึกวิชาทหาร (Completion of military training from)
+                    ประวัติการฝึกวิชาทหาร (Military training record)
                 </h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -218,7 +218,7 @@ export const Personal = () => {
                     </div>
 
                     <div className="w-1/2">
-                        <label className="block text-gray-700 mb-2">ประจำปีการศึกษา (Academic year)</label>
+                        <label className="block text-gray-700 mb-2">ปีการศึกษา (Academic year)</label>
                         <input
                             type="text"
                             name="YearBefore"
