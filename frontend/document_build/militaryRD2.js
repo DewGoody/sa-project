@@ -1624,9 +1624,11 @@ export async function militaryRD2(data) {
   // follower_address1
 
   // house_num
-  console.log(addresses.Follwer_address1);
+  console.log("fdsafdsaklgm;kfsamgk;dsmfg;kfmds;klgmf;dksmgk;dfsmg;kfdsmg;kdsmgk;dsk;gdf;kslkg;kdsfkgk;dfgmk;sdmf;kgmdkflgmld");
   
-  const followerHouseNumber1 = addresses.Follwer_address1.house_num;
+  console.log(addresses);
+  
+  const followerHouseNumber1 = addresses.Follower_address1.house_num;
   console.log("[poijhgbjkmbhjklbhjk");
 
   console.log(followerHouseNumber1);
@@ -1642,7 +1644,7 @@ export async function militaryRD2(data) {
 
 
   // moo
-  const followerMoo1 = addresses.Follwer_address1.house_moo;
+  const followerMoo1 = addresses.Follower_address1.house_moo;
   secondPage.drawText(followerMoo1.toString(), {
     x: 540,
     y: height2 - 638,
@@ -1654,7 +1656,7 @@ export async function militaryRD2(data) {
   // next line
 
   // soi
-  const followerSoi1 = addresses.Follwer_address1.soi;
+  const followerSoi1 = addresses.Follower_address1.soi;
   secondPage.drawText(followerSoi1.toString(), {
     x: 150,
     y: height2 - 656,
@@ -1664,7 +1666,7 @@ export async function militaryRD2(data) {
   });
 
   // subdistrict
-  const followerSubdistrict1 = addresses.Follwer_address1.subdistrict;
+  const followerSubdistrict1 = addresses.Follower_address1.subdistrict;
   secondPage.drawText(followerSubdistrict1.toString(), {
     x: 315,
     y: height2 - 656,
@@ -1674,7 +1676,7 @@ export async function militaryRD2(data) {
   });
 
   // district
-  const followerDistrict1 = addresses.Follwer_address1.district;
+  const followerDistrict1 = addresses.Follower_address1.district;
   secondPage.drawText(followerDistrict1.toString(), {
     x: 470,
     y: height2 - 656,
@@ -1686,7 +1688,7 @@ export async function militaryRD2(data) {
   // next line
 
   // province
-  const followerProvince1 = addresses.Follwer_address1.province;
+  const followerProvince1 = addresses.Follower_address1.province;
   secondPage.drawText(followerProvince1.toString(), {
     x: 150,
     y: height2 - 674,
@@ -1696,7 +1698,7 @@ export async function militaryRD2(data) {
   });
 
   // postal code
-  const followerPostalCode1 = addresses.Follwer_address1.postal_code;
+  const followerPostalCode1 = addresses.Follower_address1.postal_code;
   secondPage.drawText(followerPostalCode1.toString(), {
     x: 328,
     y: height2 - 674,
@@ -1749,7 +1751,7 @@ export async function militaryRD2(data) {
   // follower_address2
 
   // house_num
-  const followerHouseNumber2 = addresses.Follwer_address2.house_num;
+  const followerHouseNumber2 = addresses.Follower_address2.house_num;
   secondPage.drawText(followerHouseNumber2.toString(), {
     x: 480,
     y: height2 - 692,
@@ -1759,7 +1761,7 @@ export async function militaryRD2(data) {
   });
 
   // moo
-  const followerMoo2 = addresses.Follwer_address2.house_moo;
+  const followerMoo2 = addresses.Follower_address2.house_moo;
   secondPage.drawText(followerMoo2.toString(), {
     x: 540,
     y: height2 - 692,
@@ -1771,7 +1773,7 @@ export async function militaryRD2(data) {
   // next line
 
   // soi
-  const followerSoi2 = addresses.Follwer_address2.soi;
+  const followerSoi2 = addresses.Follower_address2.soi;
   secondPage.drawText(followerSoi2.toString(), {
     x: 150,
     y: height2 - 710,
@@ -1781,7 +1783,7 @@ export async function militaryRD2(data) {
   });
 
   // subdistrict
-  const followerSubdistrict2 = addresses.Follwer_address2.subdistrict;
+  const followerSubdistrict2 = addresses.Follower_address2.subdistrict;
   secondPage.drawText(followerSubdistrict2.toString(), {
     x: 315,
     y: height2 - 710,
@@ -1791,7 +1793,7 @@ export async function militaryRD2(data) {
   });
 
   // district
-  const followerDistrict2 = addresses.Follwer_address2.district;
+  const followerDistrict2 = addresses.Follower_address2.district;
   secondPage.drawText(followerDistrict2.toString(), {
     x: 470,
     y: height2 - 710,
@@ -1803,7 +1805,7 @@ export async function militaryRD2(data) {
   // next line
 
   // province
-  const followerProvince2 = addresses.Follwer_address2.province;
+  const followerProvince2 = addresses.Follower_address2.province;
   secondPage.drawText(followerProvince2.toString(), {
     x: 150,
     y: height2 - 728,
@@ -1813,7 +1815,7 @@ export async function militaryRD2(data) {
   });
 
   // postal code
-  const followerPostalCode2 = addresses.Follwer_address2.postal_code;
+  const followerPostalCode2 = addresses.Follower_address2.postal_code;
   secondPage.drawText(followerPostalCode2.toString(), {
     x: 328,
     y: height2 - 728,

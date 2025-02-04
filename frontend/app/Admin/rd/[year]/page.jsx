@@ -9,6 +9,7 @@ import {
     UploadOutlined,
     UserOutlined,
     VideoCameraOutlined,
+    DownloadOutlined,
     SearchOutlined,
     FilterOutlined,
     OrderedListOutlined,
@@ -47,17 +48,17 @@ const App = () => {
         setSearchText(value);
         setSearchedColumn(dataIndex);
     };
-    const handleEditForm = async (id ,year) => {
+    const handleEditForm = async (id, year) => {
         console.log("editFormReqId : ", id);
         const response = await axios.post('/api/request/getById', { id: id }); // Example API
         console.log("editFormResponse :", response.data.data.path);
-        console.log("sjdlfhjkdsfjkldsahfjkdsahflsadjfhdisakljf",year);
-        
-        if(year == 1){
+        console.log("sjdlfhjkdsfjkldsahfjkdsahflsadjfhdisakljf", year);
+
+        if (year == 1) {
             router.push(`/rordor/${response.data.data.form}/1/checkData`);
 
         }
-        else{
+        else {
 
             router.push(`/rordor/${response.data.data.form}/1/checkData2`);
 
@@ -184,6 +185,31 @@ const App = () => {
             }
         }
     }
+    const filepdf = async (reqId, year) => {
+        try {
+            if (year == 1) {
+                const response = await axios.get(`/api/export/AdminRD1?id=${reqId}`, { responseType: 'blob' });
+                return response.data;
+            } else {
+                const response = await axios.get(`/api/export/AdminRD2?id=${reqId}`, { responseType: 'blob' });
+                return response.data;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const handleDownload = async (student_ID,reqId, year) => {
+        const pdfBlob = await filepdf(reqId, year);
+        if (pdfBlob) {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(pdfBlob);
+            link.download = `RD${year} ${student_ID}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+        }
+    };
     const columns = [
         {
             align: 'center',
@@ -193,10 +219,32 @@ const App = () => {
                 if (status !== "ประวัติการแก้ไข") {
                     return (
                         <Space size="middle">
-                            <Button onClick={() => handleEditForm(record.reqId ,record.yearRD )}>แก้ไข</Button>
+                            <Button onClick={() => handleEditForm(record.reqId, record.yearRD)}>แก้ไข</Button>
                         </Space>)
                 }
             },
+        },
+        {
+            align: 'center', // เพิ่ม align ขวา
+            title: 'ดาวน์โหลด',
+            render: (_, record) => (
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%', // Optional: ensures full height centering within the parent
+                    }}
+                >
+                    <DownloadOutlined
+                        style={{
+                            fontSize: '21px', // Increase the size (e.g., 24px)
+                            cursor: 'pointer', // Optional: changes the cursor to a pointer
+                        }}
+                        onClick={() => handleDownload(record.student_ID,record.reqId, record.yearRD)}
+                    />
+                </div>
+            ),
         },
         {
             title: 'สถานะ',

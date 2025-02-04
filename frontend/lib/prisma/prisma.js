@@ -193,7 +193,7 @@ export async function getMilitaryInfo(id) {
             };
         }
         else if (address.address_type === "Follower_address1") {
-            data.addresses.Follwer_address1 = {
+            data.addresses.Follower_address1 = {
                 house_num: address.house_num || '',
                 house_moo: address.house_moo || '',
                 soi: address.soi || '',
@@ -205,7 +205,7 @@ export async function getMilitaryInfo(id) {
             };
         }
         else if (address.address_type === "Follower_address2") {
-            data.addresses.Follwer_address2 = {
+            data.addresses.Follower_address2 = {
                 house_num: address.house_num || '',
                 house_moo: address.house_moo || '',
                 soi: address.soi || '',

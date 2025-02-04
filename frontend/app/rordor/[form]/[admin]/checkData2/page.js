@@ -402,6 +402,7 @@ const CheckData = () => {
             tel_num: formData.tel_num,
             phone_num: formData.phone_num,
             personal_email: formData.email,
+            birthdate: formData.birthDate,
         },
         Military_info: {
             id: id,
