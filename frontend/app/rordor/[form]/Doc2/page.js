@@ -51,7 +51,7 @@ const RD = () => {
     const handleBack = () => {
         console.log("Doc", int_form);
 
-        router.push(`/rordor/${int_form}/checkData2`)
+        router.push(`/rordor/${int_form}/0/checkData2`)
     }
 
     const handleDownload = async () => {
@@ -110,14 +110,6 @@ const RD = () => {
         });
     }
     // Function to handle navigation attempt
-    const handleNavigation = (event, targetUrl) => {
-        if (!allChecked()) {
-            event.preventDefault();
-            notifyerror()
-        } else {
-            window.location.href = targetUrl;
-        }
-    };
     const handleAllCheck = () => {
         const newState = Object.values(checkboxes).some(value => !value);
         setCheckboxes(Object.keys(checkboxes).reduce((acc, key) => {
@@ -125,7 +117,7 @@ const RD = () => {
             return acc;
         }, {}));
     };
-    const handlequeue = async (event) => {
+    const handleNavigation = async (event) => {
         const response = await axios.post(`/api/request/create`, { type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร", status: "รอจองคิว", stuId: profileData.id, formId: int_form });
         const param = response.data.data.id;
         console.log("responseRequest", response.data);

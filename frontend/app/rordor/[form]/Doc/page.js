@@ -121,7 +121,7 @@ const RD = () => {
     const handleBack = () => {
         console.log("Doc", int_form);
 
-        router.push(`/rordor/${int_form}/checkData`)
+        router.push(`/rordor/${int_form}/0/checkData`)
     }
     console.log("studentIDJaaa ", profileData?.id);
     const handleNavigation = async (event) => {

@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useFormData } from '../../../contexts/RDDataContext';
+import { useFormData } from '../../../../contexts/RDDataContext';
 
 export const Personal = () => {
     const { formData, updateFormData } = useFormData();
@@ -101,19 +101,19 @@ export const Personal = () => {
                     value={formData.citizenRD}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Ror dor citizen"
+                    placeholder="Reserve officer training corps student ID"
                 />
             </div>
 
             <div>
-                <label className="block text-gray-700 mb-2">เลขบัตรประชาชน (Citizen ID)</label>
+                <label className="block text-gray-700 mb-2">เลขบัตรประชาชน (Identification number)</label>
                 <input
                     type="text"
                     name="citizenId"
                     value={formData.citizenId}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Citizen ID"
+                    placeholder="Identification number"
                 />
             </div>
             <div>
@@ -128,36 +128,54 @@ export const Personal = () => {
                 />
             </div>
             <div>
-                <label className="block text-gray-700 mb-2">โทรศัพท์มือถือ (Phone number)</label>
+                <label className="block text-gray-700 mb-2">โทรศัพท์มือถือ (Mobile number)</label>
                 <input
                     type="text"
                     name="phone_num"
                     value={formData.phone_num}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Phone num"
+                    placeholder="Mobile number"
                 />
             </div>
             <div>
-                <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
+                <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Phone number)</label>
                 <input
                     type="text"
                     name="tel_num"
                     value={formData.tel_num}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    placeholder="Tel number"
+                    placeholder="Phone number"
                 />
             </div>
         </div>
         {/* {check} */}
         <div>
             <h3 className="text-lg font-semibold mb-4 py-10 ">
-                สถานศึกษาปัจจุบัน (Current educational institution)
+                ประวัติการศึกษาวิชาทหาร (Reserve officer traning record)
             </h3>
         </div>
         <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-gray-700 mb-2">สถานศึกษาปัจจุบัน (Current institution)</label>
+                    <input
+                        type="text"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="จุฬาลงกรณ์"
+                        disabled="true"
+                    />
+                </div>
+                <div>
+                    <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
+                    <input
+                        type="text"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="กรุงเทพมหานคร"
+                        disabled="true"
+                    />
+                </div>
                 <div>
                     <label className="block text-gray-700 mb-2">ชั้นปี (College year)</label>
                     <input
@@ -182,7 +200,7 @@ export const Personal = () => {
                     />
                 </div>
                 <div>
-                    <label className="block text-gray-700 mb-2">เข้าศึกษาในสถานศึกษาแห่งนี้วันที่ (Date of admission to this institution)</label>
+                    <label className="block text-gray-700 mb-2">วันที่เข้าศึกษาในสถานศึกษาแห่งนี้ (Frist entry date)</label>
                     <input
                         type="date"
                         name="Fristdata_in_U"
@@ -193,12 +211,42 @@ export const Personal = () => {
                     />
                 </div>
             </div>
-            <div>
-                <h3 className="text-lg font-semibold mb-4 py-10 ">
-                    ประวัติการฝึกวิชาทหาร (Military training record)
-                </h3>
-            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h3 className="grid text-lg font-semibold mb-4  content-center  h-full">
+                        ประวัติการฝึกวิชาทหาร (Military training record)
+                    </h3>
+                </div>
+                <div className="flex space-x-4 w-full ">
+
+                    <div className="w-1/2 grid content-center">
+                        <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
+                        <select
+                            name="militaryProvince2"
+                            value={formData.militaryProvince2}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        >
+                            <option value={formData.militaryProvince2}>{formData.militaryProvince2}</option>
+                            {provinces.map((item, index) => (
+                                <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="w-1/2 grid content-center">
+                        <label className="block text-gray-700 mb-2">จากสถานศึกษาวิชาทหาร (From the military education institution)</label>
+                        <input
+                            type="text"
+                            name="Whereform"
+                            value={formData.Whereform}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            placeholder="Academic year"
+                        />
+
+                    </div>
+                </div>
                 <div className="flex space-x-4 w-full  ">
                     <div className="w-1/2">
                         <label className="block text-gray-700 mb-2">ชั้นปี (Year level)</label>
@@ -230,43 +278,18 @@ export const Personal = () => {
                     </div>
 
                 </div>
-                <div >
-                    <label className="block text-gray-700 mb-2">จากสถานศึกษาวิชาทหาร (From the military education institution)</label>
-                    <input
-                        type="text"
-                        name="Whereform"
-                        value={formData.Whereform}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Academic year"
-                    />
-                </div>
+
+            </div>
+
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
                 <div>
-                    <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
-                    <select
-                        name="militaryProvince2"
-                        value={formData.militaryProvince2}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    >
-                        <option value={formData.militaryProvince2}>{formData.militaryProvince2}</option>
-                        {provinces.map((item, index) => (
-                            <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
-                        ))}
-                    </select>
+                    <h3 className="grid content-center text-lg font-semibold mb-4 h-full ">
+                        ขอรายงานตัวเข้าฝึกวิชาทหาร (Requeue for military traning)
+                    </h3>
                 </div>
-
-            </div>
-
-            <div>
-                <h3 className="text-lg font-semibold mb-4 py-10 ">
-                    ขอรายงานตัวเข้าฝึกวิชาทหาร (Completion of military training.)
-                </h3>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex space-x-4 w-full  ">
-
-                    <div className="w-1/2">
+                    <div className="w-1/2 grid content-center">
                         <label className="block text-gray-700 mb-2">ชั้นปี (Year level)</label>
                         <select
                             name="YearGradeRD"
@@ -283,7 +306,7 @@ export const Personal = () => {
                         </select>
                     </div>
 
-                    <div className="w-1/2">
+                    <div className="w-1/2 grid content-center" >
                         <label className="block text-gray-700 mb-2">ประจำปีการศึกษา (Academic year)</label>
                         <input
                             type="text"
@@ -297,7 +320,7 @@ export const Personal = () => {
                     </div>
                 </div>
                 <div>
-                    <label className="block text-gray-700 mb-2">ประเภทรายงานตัว (Type of reporting)</label>
+                    <label className="block text-gray-700 mb-2">ประเภทรายงานตัว (Type of requeue)</label>
                     <select
                         name="register_type"
                         value={formData.register_type}
@@ -305,10 +328,10 @@ export const Personal = () => {
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
                         <option value="" disabled>Select type of reporting</option>
-                        <option value="1">เลื่อนชั้น (Promotion to the next year)</option>
-                        <option value="2">ซ้ำชั้น (Repeating the year)</option>
-                        <option value="3">รอรับสิทธิ (Awaiting eligibility)</option>
-                        <option value="4">โอนย้ายสถานศึกษาวิชาทหาร (Transfer of military training school)</option>
+                        <option value="1">เลื่อนชั้น (Promotion)</option>
+                        <option value="2">ซ้ำชั้น (Repeat)</option>
+                        <option value="3">รอรับสิทธิ (Postporement)</option>
+                        <option value="4">โอนย้ายสถานศึกษาวิชาทหาร (Transfer)</option>
                     </select>
                 </div>
             </div>
@@ -320,14 +343,14 @@ export const Personal = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-gray-700 mb-2">เลขที่บ้าน (Domicile number)</label>
+                    <label className="block text-gray-700 mb-2">เลขที่ (Address number)</label>
                     <input
                         type="text"
                         name="domicileNumber"
                         value={formData.domicileNumber}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Domicile Number"
+                        placeholder="Address Number"
                     />
                 </div>
                 <div>

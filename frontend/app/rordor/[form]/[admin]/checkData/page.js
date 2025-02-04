@@ -2,8 +2,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Header } from '../../../components/Header';
-import { useFormData } from '../../../contexts/RDDataContext'; // Adjust the import path as necessary
+import { Header } from '../../../../components/Header';
+import { useFormData } from '../../../../contexts/RDDataContext'; // Adjust the import path as necessary
 import { useParams, useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -61,6 +61,7 @@ const CheckData = () => {
     const [amphuresmilitary, setAmphuresmilitary] = useState([]);
     const [districtsmilitary, setDistrictsmilitary] = useState([]);
     const { form } = useParams()
+    const { admin } = useParams()
     const int_form = parseInt(form)
     useEffect(() => {
         if (form) {
@@ -130,11 +131,17 @@ const CheckData = () => {
 
     const handleback = () => {
         console.log("Button clicked, int_form value:", int_form);
-        if (!int_form || isNaN(int_form)) {
-            console.error("Invalid int_form value:", int_form);
-            return;
+        if (admin == 0) {
+            if (!int_form || isNaN(int_form)) {
+                console.error("Invalid int_form value:", int_form);
+                return;
+            }
+            router.push(`/rordor/${int_form}`);
         }
-        router.push(`/rordor/${int_form}`);
+        if (admin == 1) {
+            router.push(`/Admin/rd/0`);
+            return
+        }
     };
 
 
@@ -316,18 +323,21 @@ const CheckData = () => {
             })
             notifysuccess()
 
-            if (int_form !== 0) {
-                await axios.post(`/api/logRd/update?id=${int_form}`, (dataforsentlog))
-                router.push(`/rordor/${int_form}/Doc`)
+            if (admin == 0) {
+                if (int_form !== 0) {
+                    await axios.post(`/api/logRd/update?id=${int_form}`, (dataforsentlog))
+                    router.push(`/rordor/${int_form}/Doc`)
 
+                }
+                else {
+                    const response = await axios.post(`/api/logRd/create`, (dataforsentlog))
+                    const formId = response.data.data.id
+                    console.log("generate formID", formId);
+                    router.push(`/rordor/${formId}/Doc`)
+                }
             }
             else {
-                const response = await axios.post(`/api/logRd/create`, (dataforsentlog))
-                const formId = response.data.data.id
-                console.log("generate formID", formId);
-
-                router.push(`/rordor/${formId}/Doc`)
-
+                router.push(`/Admin/rd/0`)
             }
 
 
@@ -391,14 +401,14 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เลขบัตรประชาชน (Citizen ID)</label>
+                                        <label className="block text-gray-700 mb-2">เลขบัตรประชาชน (Identification number)</label>
                                         <input
                                             type="text"
                                             name="citizenId"
                                             value={formData.citizenId}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Citizen ID"
+                                            placeholder="Identification number"
                                         />
                                     </div>
                                     <div>
@@ -601,7 +611,7 @@ const CheckData = () => {
                                             name="zipCode"
                                             value={formData.zipCode}
                                             onChange={handleChange}
-                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                             placeholder="Zip code"
                                         />
                                     </div>
@@ -716,10 +726,10 @@ const CheckData = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                                     <div>
-                                        <label className="block text-gray-700 mb-2">คำนำหน้าชื่อผู้ปกครอง (Parent name title)</label>
+                                        <label className="block text-gray-700 mb-2">คำนำหน้าชื่อผู้ปกครอง (Parent's name title)</label>
                                         <input
                                             type="text"
-                                            name="Parenttitle"
+                                            name="'stitle"
                                             value={formData.Parenttitle}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -727,7 +737,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ชื่อผู้ปกครอง (Parent name)</label>
+                                        <label className="block text-gray-700 mb-2">ชื่อผู้ปกครอง (Parent's name)</label>
                                         <input
                                             type="text"
                                             name="ParentName"
@@ -739,7 +749,7 @@ const CheckData = () => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-gray-700 mb-2">นามสกุลผู้ปกครอง (Parent surname)</label>
+                                        <label className="block text-gray-700 mb-2">นามสกุลผู้ปกครอง (Parent's surname)</label>
                                         <input
                                             type="text"
                                             name="ParentSurname"
@@ -751,7 +761,7 @@ const CheckData = () => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อายุผู้ปกครอง (Parent age)</label>
+                                        <label className="block text-gray-700 mb-2">อายุผู้ปกครอง (Parent's age)</label>
                                         <input
                                             type="text"
                                             name="Parentage"
@@ -762,7 +772,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อาชีพผู้ปกครอง (Parent job)</label>
+                                        <label className="block text-gray-700 mb-2">อาชีพผู้ปกครอง (Parent's occupation)</label>
                                         <input
                                             type="text"
                                             name="Parentjob"
@@ -773,7 +783,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ที่อยู่ที่ทำงานผู้ปกครอง (Parent work address)</label>
+                                        <label className="block text-gray-700 mb-2">ที่อยู่ที่ทำงานผู้ปกครอง (Parent's work address)</label>
                                         <input
                                             type="text"
                                             name="ParentworkAddress"
@@ -795,28 +805,46 @@ const CheckData = () => {
                                         />
                                     </div>
                                 </div>
-                                <div className="flex justify-between mt-8">
+                                {admin == 0 && (
+                                    <div className="flex justify-between mt-8">
 
-                                    <button
-                                        onClick={event => handleback()}
-                                        type="button"
-                                        className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
-                                    >
-                                        Back
-                                    </button>
+                                        <button
+                                            onClick={event => handleback()}
+                                            type="button"
+                                            className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+                                        >
+                                            Back
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            // onClick={notify}
 
+                                            className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                        >
+                                            Next
+                                            <ToastContainer />
+                                        </button>
+                                    </div>
+                                )}
+                                {admin == 1 && (
+                                    <div className="flex justify-between mt-8">
+                                        <button
+                                            onClick={event => handleback()}
+                                            type="button"
+                                            className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                            Back
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            // onClick={notify}
 
-
-                                    <button
-                                        type="submit"
-                                        // onClick={notify}
-
-                                        className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
-                                    >
-                                        Next
-                                        <ToastContainer />
-                                    </button>
-                                </div>
+                                            className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                        >
+                                            Confirm
+                                            <ToastContainer />
+                                        </button>
+                                    </div>
+                                )}
                             </form>
                         </section>
                     </div>

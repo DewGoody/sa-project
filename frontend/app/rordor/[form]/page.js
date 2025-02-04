@@ -33,7 +33,7 @@ const RD = () => {
                             <div className="flex justify-center">
                                 <button
                                     onClick={() =>
-                                        router.push(`/rordor/${parseInt(form)}/checkData`)
+                                        router.push(`/rordor/${parseInt(form)}/0/checkData`)
                                     }
                                     className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                 >
@@ -45,7 +45,7 @@ const RD = () => {
                             <div className="flex justify-center">
                                 <button
                                     onClick={() =>
-                                        router.push(`/rordor/${parseInt(form)}/checkData2`)
+                                        router.push(`/rordor/${parseInt(form)}/0/checkData2`)
                                     }
                                     className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                 >

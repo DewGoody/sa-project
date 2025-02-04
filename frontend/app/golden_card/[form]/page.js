@@ -4,8 +4,7 @@ import axios from 'axios';
 import { Header } from '../../components/Header';
 import { useGoldenContext } from '../../contexts/GoldenData';
 import { useParams, useRouter } from 'next/navigation';
-
-
+import { DatePicker } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const notifyerror = () => {
@@ -196,6 +195,10 @@ const page = () => {
             console.error('Form submission error:', error);
             // router.push("/golden_card/Doc")
         }
+
+    };
+    const onChange = (date, dateString) => {
+        console.log(date);
     };
 
 
@@ -301,6 +304,7 @@ const page = () => {
                                     </div>
                                     <div className="flex item-center space-x-4 w-full">
                                         <div className="w-1/2">
+
                                             <label className="block text-gray-700 mb-2">วันเกิด (Birth date)</label>
                                             <input
                                                 type="date"
@@ -310,6 +314,12 @@ const page = () => {
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                                 placeholder="Birth Date"
                                             />
+                                            {/* <DatePicker
+                                                type="date"
+                                                name="birthDate"
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                                onChange={onChange}
+                                            /> */}
                                         </div>
                                         <div className="w-1/2">
                                             <label className="block text-gray-700 mb-2">อาชีพ (Job)</label>

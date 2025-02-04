@@ -41,7 +41,7 @@ try {
 }
 
 export async function militaryRD2(data) {
-  // console.log("in export pdf",data);
+  console.log("in export pdf",data);
   // const mockdata = require('../../test.json');
 
 
@@ -85,7 +85,7 @@ export async function militaryRD2(data) {
   for (let i = 0; i < currentDate.getDate().toString().length; i++) {
     thaidatenum += thaiDigits[currentDate.getDate().toString()[i]];
   }
-  console.log(thaidatenum);
+  console.log("thaidatenum",thaidatenum);
   firstPage.drawText(thaidatenum, {
     x: 220,
     y: height - 105,
@@ -275,7 +275,7 @@ export async function militaryRD2(data) {
   });
 
   // student class obtained from 2 first digit of student ID - current year
-  console.log(student.student_id)
+  // console.log(student)
   const studentYear = parseInt(String(student.student_id).substring(0, 2));
   const studentClass = (currentDate.getFullYear() + 543) - (studentYear + 2500);
   const stu_year = "ปี " + studentClass.toString();
@@ -387,7 +387,7 @@ export async function militaryRD2(data) {
 
   // military_class
   const militaryClass = Military_info.military_class || '';
-  console.log(militaryClass);
+  console.log("class",militaryClass);
   firstPage.drawText(militaryClass.toString(), {
     x: 320,
     y: height - 315,
@@ -423,6 +423,7 @@ export async function militaryRD2(data) {
   }
 
   // draw tick box
+  console.log("RegisterType",registerType);
   if (registerType == 2) {
     firstPage.drawImage(tick, {
       x: 228,
@@ -455,8 +456,11 @@ export async function militaryRD2(data) {
 
   // Next section
 
-  // Name signature
+  // Name signature  
+
+  
   const nameSignature = 'นศท.' + isFemaleTitile + studentFname + " " + studentLname;
+  // console.log("11111",nameSignature,gaurdianName,gaurdianNationality,guardian_age,guardian_occupation,guardian_relationship);
   firstPage.drawText(nameSignature.toString(), {
     x: 360,
     y: height - 425,
@@ -477,6 +481,8 @@ export async function militaryRD2(data) {
     font: thSarabunFont,
     color: rgb(0, 0, 0), // black
   });
+  console.log("222231321312321");
+
 
   // next line
 
@@ -490,6 +496,7 @@ export async function militaryRD2(data) {
     color: rgb(0, 0, 0), // black
   });
 
+  console.log("222231321312321");
 
   // Gaurdian age
   const guardian_age = guardian_info.guardian_age;
@@ -511,6 +518,8 @@ export async function militaryRD2(data) {
     font: thSarabunFont,
     color: rgb(0, 0, 0), // black
   });
+  console.log("222231321312321");
+
 
   // next line
 
@@ -532,6 +541,9 @@ export async function militaryRD2(data) {
     font: thSarabunFont,
     color: rgb(0, 0, 0), // black
   });
+  console.log("222231321312321");
+
+
 
   // next line 
   // console.log("tesetsdmnfdmsnfsdfdsfnll");
@@ -544,6 +556,8 @@ export async function militaryRD2(data) {
     font: thSarabunFont,
     color: rgb(0, 0, 0), // black
   });
+  console.log("222222");
+
 
 
 
@@ -1270,6 +1284,8 @@ export async function militaryRD2(data) {
     color: rgb(0, 0, 0), // black
   });
 
+  
+
   // moo
   const militaryMoo = addresses.Military_address.house_moo || '';
   secondPage.drawText(militaryMoo.toString(), {
@@ -1486,6 +1502,7 @@ export async function militaryRD2(data) {
     color: rgb(0, 0, 0), // black
   });
 
+
   // House moo
   const contactableMoo = contactableAddress?.house_moo || '';
   secondPage.drawText(contactableMoo.toString(), {
@@ -1607,7 +1624,13 @@ export async function militaryRD2(data) {
   // follower_address1
 
   // house_num
+  console.log(addresses.Follwer_address1);
+  
   const followerHouseNumber1 = addresses.Follwer_address1.house_num;
+  console.log("[poijhgbjkmbhjklbhjk");
+
+  console.log(followerHouseNumber1);
+  
   secondPage.drawText(followerHouseNumber1.toString(), {
     x: 480,
     y: height2 - 638,
@@ -1615,6 +1638,8 @@ export async function militaryRD2(data) {
     font: thSarabunFont,
     color: rgb(0, 0, 0), // black
   });
+  console.log("[poijhgbjkmbhjklbhjk");
+
 
   // moo
   const followerMoo1 = addresses.Follwer_address1.house_moo;

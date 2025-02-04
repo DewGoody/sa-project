@@ -47,6 +47,24 @@ const App = () => {
         setSearchText(value);
         setSearchedColumn(dataIndex);
     };
+    const handleEditForm = async (id ,year) => {
+        console.log("editFormReqId : ", id);
+        const response = await axios.post('/api/request/getById', { id: id }); // Example API
+        console.log("editFormResponse :", response.data.data.path);
+        console.log("sjdlfhjkdsfjkldsahfjkdsahflsadjfhdisakljf",year);
+        
+        if(year == 1){
+            router.push(`/rordor/${response.data.data.form}/1/checkData`);
+
+        }
+        else{
+
+            router.push(`/rordor/${response.data.data.form}/1/checkData2`);
+
+        }
+
+
+    }
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, confirm }) => (
@@ -167,6 +185,19 @@ const App = () => {
         }
     }
     const columns = [
+        {
+            align: 'center',
+            title: 'แก้ไขข้อมูล',
+            dataIndex: 'status',
+            render: (status, record) => {
+                if (status !== "ประวัติการแก้ไข") {
+                    return (
+                        <Space size="middle">
+                            <Button onClick={() => handleEditForm(record.reqId ,record.yearRD )}>แก้ไข</Button>
+                        </Space>)
+                }
+            },
+        },
         {
             title: 'สถานะ',
             dataIndex: 'status',

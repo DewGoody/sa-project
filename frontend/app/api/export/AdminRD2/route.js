@@ -25,8 +25,12 @@ export async function GET(req) {
       })
       id = idbefore.student_id
     }
-    const data = await getMilitaryInfo(id);
-    console.log('test data export ',data);
+    // const data = await getMilitaryInfo(id);
+    const RD_info = await prisma.rD_info.findFirst({
+      where :{ req_id : formId}
+    })
+    const data = RD_info.json_history
+    // console.log('test data export ',data);
     
     if (!data) {
       return NextResponse.json({ error: "Student data not found" }, { status: 404 });
@@ -34,7 +38,7 @@ export async function GET(req) {
     // console.log("kdsnflksdmfksldmfkldsmfkdsmfkldsmfkldsmfkldslfksdkfjsdkflsdjf");
     
     const pdfBytes = await militaryRD2(data)
-    // console.log("test pdf export",pdfBytes);
+    console.log("test pdf export",pdfBytes);
     
 
     const response = new NextResponse(pdfBytes, {
@@ -44,6 +48,8 @@ export async function GET(req) {
       },
     })
     return response
+    // const response = new NextResponse(data)
+    // return response
   } catch (error) {
     console.error(error)
     return NextResponse.error(new Error('An error occurred while fetching the profile'))

@@ -158,6 +158,7 @@ export const FormDataProvider = ({ children }) => {
         Parentjob: datafromapimilitary.guardian_info?.guardian_occupation,
         ParentworkAddress: datafromapimilitary.guardian_info?.guardian_address,
         Parentrelated: datafromapimilitary.guardian_info?.guardian_relation,
+        guardian_nationality:datafromapimilitary.guardian_info?.guardian_nationality,
 
         // rd2
         fatherNationality: datafromapimilitary.father_mother_info?.father.nationality,

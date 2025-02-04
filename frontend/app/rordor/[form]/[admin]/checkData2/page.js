@@ -2,8 +2,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Header } from '../../../components/Header';
-import { useFormData } from '../../../contexts/RDDataContext';
+import { Header } from '../../../../components/Header';
+import { useFormData } from '../../../../contexts/RDDataContext';
 import { useRouter, useParams } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -53,6 +53,7 @@ const CheckData = () => {
 
     const { updateDataid } = useFormData()
     const { form } = useParams()
+    const { admin } = useParams()
     const int_form = parseInt(form)
     useEffect(() => {
         if (form) {
@@ -380,9 +381,12 @@ const CheckData = () => {
         return { year, month, day };
     }
     const id = formData.id
+    console.log("dadshkfjshfkjashfkashfjkadshfjkashkd", id);
+
     const dataforsentlog = {
         registeryear: formData.YearGradeRD,
         student: {
+            student_id: id,
             title: formData.Nametitle,
             fnameTH: formData.Name,
             lnameTH: formData.Surname,
@@ -554,7 +558,8 @@ const CheckData = () => {
             guardian_occupation: formData.Parentjob,
             guardian_age: parseInt(formData.Parentage),
             guardian_relation: formData.Parentrelated,
-            guardian_address: formData.ParentworkAddress
+            guardian_address: formData.ParentworkAddress,
+            guardian_nationality: formData.guardian_nationality,
         },
 
         father_mother_info: {
@@ -771,7 +776,8 @@ const CheckData = () => {
                     guardian_occupation: formData.Parentjob,
                     guardian_age: parseInt(formData.Parentage),
                     guardian_relation: formData.Parentrelated,
-                    guardian_address: formData.ParentworkAddress
+                    guardian_address: formData.ParentworkAddress,
+                    guardian_nationality: formData.guardian_nationality,
                 },
 
                 father_mother_info: {
@@ -803,18 +809,20 @@ const CheckData = () => {
                 },
 
             })
-            if (int_form !== 0) {
-                await axios.post(`/api/logRd/update?id=${int_form}`, (dataforsentlog))
-                router.push(`/rordor/${int_form}/Doc2`)
-
+            if (admin == 0) {
+                if (int_form !== 0) {
+                    await axios.post(`/api/logRd/update?id=${int_form}`, (dataforsentlog))
+                    router.push(`/rordor/${int_form}/Doc2`)
+                }
+                else {
+                    const response = await axios.post(`/api/logRd/create2`, (dataforsentlog))
+                    const formId = response.data.data.id
+                    console.log("generate formID", formId);
+                    router.push(`/rordor/${formId}/Doc2`)
+                }
             }
-            else {
-                const response = await axios.post(`/api/logRd/create2`, (dataforsentlog))
-                const formId = response.data.data.id
-                console.log("generate formID", formId);
-
-                router.push(`/rordor/${formId}/Doc2`)
-
+            if (admin == 1) {
+                router.push(`/Admin/rd/0`)
             }
         } catch (error) {
             notifyerror()
@@ -825,8 +833,11 @@ const CheckData = () => {
     };
     const handleback = () => {
         console.log("Doc", int_form);
-
-        router.push(`/rordor/${int_form}`)
+        if (admin == 1) {
+            router.push(`/Admin/rd/0`);
+            return
+        }
+        else { router.push(`/rordor/${int_form}`) }
     }
     return (
         <div><Header req1="รายงานตัวเข้าฝึกนักศึกษาวิชาทหาร" req2="" />
@@ -840,12 +851,12 @@ const CheckData = () => {
                                     <Personal />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold mb-4 py-10 ">คำยินยอมจากผู้ปกครอง (Parental consent)</h3>
+                                    <h3 className="text-lg font-semibold mb-4 py-10 ">คำยินยอมของ บิดา/มารดา หรือ ผู้ปกครองตามกฎหมาย (Parental consent form)</h3>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex space-x-4 w-full">
-                                        <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">คำนำหน้าชื่อผู้ปกครอง (Parent name title)</label>
+                                    <div className="flex space-x-4 w-full ">
+                                        <div className="w-1/2 ">
+                                            <label className="block text-gray-700 mb-2">คำนำหน้าชื่อ (Parent's name title)</label>
                                             <input
                                                 type="text"
                                                 name="Parenttitle"
@@ -855,8 +866,8 @@ const CheckData = () => {
                                                 placeholder="Parent title"
                                             />
                                         </div>
-                                        <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">ชื่อผู้ปกครอง (Parent name)</label>
+                                        <div className="w-1/2 ">
+                                            <label className="block text-gray-700 mb-2">ชื่อ (Parent's name)</label>
                                             <input
                                                 type="text"
                                                 name="ParentName"
@@ -869,7 +880,7 @@ const CheckData = () => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-gray-700 mb-2">นามสกุลผู้ปกครอง (Parent surname)</label>
+                                        <label className="block text-gray-700 mb-2">นามสกุล (Parent's surname)</label>
                                         <input
                                             type="text"
                                             name="ParentSurname"
@@ -880,39 +891,56 @@ const CheckData = () => {
                                         />
                                     </div>
 
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">อายุผู้ปกครอง (Parent age)</label>
-                                        <input
-                                            type="text"
-                                            name="Parentage"
-                                            value={formData.Parentage}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Parent Age"
-                                        />
+                                    <div className="flex space-x-4 w-full">
+                                        <div className="w-1/2">
+                                            <label className="block text-gray-700 mb-2">อายุ (Parent's age)</label>
+                                            <input
+                                                type="text"
+                                                name="Parentage"
+                                                value={formData.Parentage}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                                placeholder="Parent Age"
+                                            />
+                                        </div>
+                                        <div className="w-1/2">
+                                            <label className="block text-gray-700 mb-2">เกี่ยวข้องเป็น (Related)</label>
+                                            <input
+                                                type="text"
+                                                name="Parentrelated"
+                                                value={formData.Parentrelated}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                                placeholder="Related"
+                                            />
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">อาชีพผู้ปกครอง (Parent job)</label>
-                                        <input
-                                            type="text"
-                                            name="Parentjob"
-                                            value={formData.Parentjob}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Parent Job"
-                                        />
+                                    <div className="flex space-x-4 w-full">
+                                        <div className="w-1/2">
+                                            <label className="block text-gray-700 mb-2">สัญชาติ (Nationality)</label>
+                                            <input
+                                                type="text"
+                                                name="guardian_nationality"
+                                                value={formData.guardian_nationality}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                                placeholder="Nationality"
+                                            />
+                                        </div>
+                                        <div className="w-1/2">
+                                            <label className="block text-gray-700 mb-2">อาชีพ (Parent's Occupation)</label>
+                                            <input
+                                                type="text"
+                                                name="Parentjob"
+                                                value={formData.Parentjob}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                                placeholder="Occupation"
+                                            />
+                                        </div>
+
                                     </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">เกี่ยวข้องเป็น (Related)</label>
-                                        <input
-                                            type="text"
-                                            name="Parentrelated"
-                                            value={formData.Parentrelated}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Related"
-                                        />
-                                    </div>
+
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-semibold mb-4 py-10 ">
@@ -957,86 +985,73 @@ const CheckData = () => {
                                             />
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">อาชีพ (Job)</label>
+                                            <label className="block text-gray-700 mb-2">อาชีพ (Occupation)</label>
                                             <input
                                                 type="text"
                                                 name="fatherjob"
                                                 value={formData.fatherjob}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Job"
+                                                placeholder="Occupation"
                                             />
                                         </div>
                                     </div>
                                     <div >
-                                        <label className="block text-gray-700 mb-2">ที่อยู่ที่ทำงาน (Work Address)</label>
+                                        <label className="block text-gray-700 mb-2">ที่อยู่ที่ทำงาน (Work address)</label>
                                         <input
                                             type="text"
                                             name="fatherwherejob"
                                             value={formData.fatherwherejob}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Work Address"
+                                            placeholder="Work address"
                                         />
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
+                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Phone number)</label>
                                             <input
                                                 type="text"
                                                 name="fatherjobTST"
                                                 value={formData.fatherjobTST}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Telephone"
+                                                placeholder="Phone number"
                                             />
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">มือถือ (Phone number)</label>
+                                            <label className="block text-gray-700 mb-2">มือถือ (Mobile number)</label>
                                             <input
                                                 type="text"
                                                 name="fatherphone"
                                                 value={formData.fatherphone}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Phone number"
+                                                placeholder="Mobile number"
                                             />
                                         </div>
                                     </div>
-
-                                    <div >
-                                        <label className="block text-gray-700 mb-2">ที่อยู่ปัจจุบัน บ้านเลขที่ (Current address, house number)</label>
-                                        <input
-                                            type="text"
-                                            name="fatherhome"
-                                            value={formData.fatherhome}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Current address, house number"
-                                        />
-                                    </div>
-
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">หมู่ที่ (Moo No)</label>
+                                            <label className="block text-gray-700 mb-2">ที่อยู่ปัจจุบัน บ้านเลขที่ (Address number)</label>
+                                            <input
+                                                type="text"
+                                                name="fatherhome"
+                                                value={formData.fatherhome}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                                placeholder="Address number"
+                                            />
+                                        </div>
+                                        <div className="w-1/2">
+                                            <label className="block text-gray-700 mb-2">หมู่ที่ (Moo)</label>
                                             <input
                                                 type="text"
                                                 name="fathermoo"
                                                 value={formData.fathermoo}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Moo No"
-                                            />
-                                        </div>
-                                        <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
-                                            <input
-                                                type="text"
-                                                name="fatherhomeTST"
-                                                value={formData.fatherhomeTST}
-                                                onChange={handleChange}
-                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Telephone"
+                                                placeholder="Moo"
                                             />
                                         </div>
                                     </div>
@@ -1092,7 +1107,19 @@ const CheckData = () => {
                                             placeholder="Zip code"
                                         />
                                     </div>
+                                    <div >
+                                        <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Phone number)</label>
+                                        <input
+                                            type="text"
+                                            name="fatherhomeTST"
+                                            value={formData.fatherhomeTST}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            placeholder="Phone number"
+                                        />
+                                    </div>
                                 </div>
+
 
                                 <div>
                                     <h3 className="text-lg font-semibold mb-4 py-10 ">
@@ -1137,14 +1164,14 @@ const CheckData = () => {
                                             />
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">อาชีพ (Job)</label>
+                                            <label className="block text-gray-700 mb-2">อาชีพ (Occupation)</label>
                                             <input
                                                 type="text"
                                                 name="motherjob"
                                                 value={formData.occupationmother}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Job"
+                                                placeholder="Occupation"
                                             />
                                         </div>
                                     </div>
@@ -1161,66 +1188,56 @@ const CheckData = () => {
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
+                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Phone number)</label>
                                             <input
                                                 type="text"
                                                 name="motherjobTST"
                                                 value={formData.motherjobTST}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Telephone"
+                                                placeholder="Phone number"
                                             />
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">มือถือ (Phone number)</label>
+                                            <label className="block text-gray-700 mb-2">มือถือ (Mobile number)</label>
                                             <input
                                                 type="text"
                                                 name="motherphone"
                                                 value={formData.motherphone}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Phone number"
+                                                placeholder="Mobile number"
                                             />
                                         </div>
                                     </div>
 
-                                    <div >
-                                        <label className="block text-gray-700 mb-2">ที่อยู่ปัจจุบัน บ้านเลขที่ (Current address, house number)</label>
-                                        <input
-                                            type="text"
-                                            name="motherhome"
-                                            value={formData.motherhome}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Current address, house number"
-                                        />
-                                    </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">หมู่ที่ (Moo No)</label>
+                                            <label className="block text-gray-700 mb-2">ที่อยู่ปัจจุบัน บ้านเลขที่ (Address number)</label>
+                                            <input
+                                                type="text"
+                                                name="motherhome"
+                                                value={formData.motherhome}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                                placeholder="Address number"
+                                            />
+                                        </div>
+                                        <div className="w-1/2">
+                                            <label className="block text-gray-700 mb-2">หมู่ที่ (Moo)</label>
                                             <input
                                                 type="text"
                                                 name="mothermoo"
                                                 value={formData.mothermoo}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Moo No"
+                                                placeholder="Moo"
                                             />
                                         </div>
-                                        <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
-                                            <input
-                                                type="text"
-                                                name="motherhomeTST"
-                                                value={formData.motherhomeTST}
-                                                onChange={handleChange}
-                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Telephone"
-                                            />
-                                        </div>
+
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">จังหวัด (province)</label>
+                                        <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
                                         <select
                                             name="motherprovince"
                                             value={formData.motherprovince}
@@ -1234,7 +1251,7 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (district)</label>
+                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
                                         <select
                                             name="motherdistrict"
                                             value={formData.motherdistrict}
@@ -1270,10 +1287,21 @@ const CheckData = () => {
                                             placeholder="Zip code"
                                         />
                                     </div>
+                                    <div >
+                                        <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Phone number)</label>
+                                        <input
+                                            type="text"
+                                            name="motherhomeTST"
+                                            value={formData.motherhomeTST}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            placeholder="Phone number"
+                                        />
+                                    </div>
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-semibold mb-4 py-10 ">
-                                        การศึกษาปัจจุบัน (Current education)
+                                        ประวัติการศึกษา (Academin record)
                                     </h3>
                                 </div>
                                 {
@@ -1325,7 +1353,9 @@ const CheckData = () => {
                                                                 value={formData[`RD2_Academy${i + 1}`] || ''}
                                                                 onChange={(e) => handleinputchange(e, i)}
                                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                                placeholder="Educational institution"
+                                                                placeholder="จุฬาลงกรณ์"
+                                                                disable="true"
+
                                                             />
                                                         </div>
 
@@ -1449,19 +1479,19 @@ const CheckData = () => {
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-gray-700 mb-2">ภูมิลำเนาทหารเลขที่ (Military domicile number)</label>
+                                        <label className="block text-gray-700 mb-2">เลขที่ (Address number)</label>
                                         <input
                                             type="text"
                                             name="militaryDomicileNumber"
                                             value={formData.militaryDomicileNumber}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Military Domicile Number"
+                                            placeholder="Address Number"
                                         />
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">หมู่ที่ (Moo no)</label>
+                                            <label className="block text-gray-700 mb-2">หมู่ที่ (Moo)</label>
                                             <input
                                                 type="text"
                                                 name="militaryMoo"
@@ -1484,7 +1514,7 @@ const CheckData = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">จังหวัดทหาร (Military province)</label>
+                                        <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
                                         <select
                                             name="militaryProvince"
                                             value={formData.militaryProvince}
@@ -1499,7 +1529,7 @@ const CheckData = () => {
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">อำเภอทหาร (Military district)</label>
+                                            <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
                                             <select
                                                 name="militaryDistrict"
                                                 value={formData.militaryDistrict}
@@ -1534,7 +1564,7 @@ const CheckData = () => {
                                 <h3 className="pl-8 pb-8 text-lg pt-4">ได้ขึ้นทะเบียนกองประจําการและนําปลดเป็นทหารกองหนุน (Registered for active duty and discharged to become a military reservist.)</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div >
-                                        <label className="block text-gray-700 mb-2">เหล่าทัพ (Branches of the military)</label>
+                                        <label className="block text-gray-700 mb-2">เหล่าทัพ (Army corps)</label>
                                         <input
                                             type="text"
                                             name="Branches"
@@ -1545,7 +1575,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เหล่า (corps)</label>
+                                        <label className="block text-gray-700 mb-2">เหล่า (Corps)</label>
                                         <input
                                             type="text"
                                             name="corps"
@@ -1562,31 +1592,31 @@ const CheckData = () => {
                                         <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="flex space-x-4 w-full">
                                                 <div className="w-1/2">
-                                                    <label className="block text-gray-700 mb-2">ยศ (Role)</label>
+                                                    <label className="block text-gray-700 mb-2">ยศ (Rank)</label>
                                                     <input
                                                         type="text"
                                                         name="military_rank1"
                                                         value={formData[`military_rank${i + 1}`] || ''}
                                                         onChange={(e) => handleinputchange_role(e, i)}
                                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                        placeholder="Role"
+                                                        placeholder="Rank"
                                                     />
                                                 </div>
                                                 <div className="w-1/2">
-                                                    <label className="block text-gray-700 mb-2">เหล่า (Corp)</label>
+                                                    <label className="block text-gray-700 mb-2">เหล่า (Corps)</label>
                                                     <input
                                                         type="text"
                                                         name="corps_rank1"
                                                         value={formData[`corps_rank${i + 1}`] || ''}
                                                         onChange={(e) => handleinputchange_role(e, i)}
                                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                        placeholder="Corp"
+                                                        placeholder="Corps"
                                                     />
                                                 </div>
                                             </div>
                                             <div className="flex space-x-4 w-full">
                                                 <div className="w-1/2">
-                                                    <label className="block text-gray-700 mb-2">คำสั่ง (Command)</label>
+                                                    <label className="block text-gray-700 mb-2">เลขที่คำสั่ง (Order number)</label>
                                                     <input
                                                         type="text"
                                                         name="command_rank1"
@@ -1642,14 +1672,14 @@ const CheckData = () => {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เลขที่บ้าน (Domicile number)</label>
+                                        <label className="block text-gray-700 mb-2">เลขที่ (Address number)</label>
                                         <input
                                             type="text"
                                             name="domicileNumber_contactable"
                                             value={formData.domicileNumber_contactable}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Domicile Number"
+                                            placeholder="Address Number"
                                         />
                                     </div>
                                     <div>
@@ -1726,24 +1756,27 @@ const CheckData = () => {
                                     </div>
 
                                 </div>
-
                                 <div>
                                     <h3 className="text-lg font-semibold mb-4 pt-10 ">
-                                        บุคคลที่ใกล้ชิดสามารถติดตามได้ (A close person who can be contacted)
+                                        บุคคลที่ใกล้ชิดสามารถติดตามได้ (Contact person)
                                     </h3>
                                 </div>
-                                <h3 className="pl-8 pb-8 text-lg pt-4">คนแรก (First)</h3>
+
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div >
-                                        <label className="block text-gray-700 mb-2">ชื่อ นามสกุล(Name surname)</label>
-                                        <input
-                                            type="text"
-                                            name="follower1_name"
-                                            value={formData.follower1_name}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Name surname"
-                                        />
+                                    <div className="flex space-x-4 w-full">
+                                        <div className="text-lg font-semibold mb-4 pt-10 " >1.</div>
+                                        <div className="w-full">
+                                            <label className="block text-gray-700 mb-2">ชื่อ นามสกุล(Fullname)</label>
+                                            <input
+                                                type="text"
+                                                name="follower1_name"
+                                                value={formData.follower1_name}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                                placeholder="Fullname"
+                                            />
+                                        </div>
                                     </div>
                                     <div >
                                         <label className="block text-gray-700 mb-2">สถานศึกษา (School)</label>
@@ -1769,14 +1802,14 @@ const CheckData = () => {
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">หมู่ที่ (Moo No)</label>
+                                            <label className="block text-gray-700 mb-2">หมู่ที่ (Moo)</label>
                                             <input
                                                 type="text"
                                                 name="follower1_housemoo"
                                                 value={formData.follower1_housemoo}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Moo No"
+                                                placeholder="Moo"
                                             />
                                         </div>
                                         <div className="w-1/2">
@@ -1792,7 +1825,7 @@ const CheckData = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">จังหวัด (province)</label>
+                                        <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
                                         <select
                                             name="follower1_province"
                                             value={formData.follower1_province}
@@ -1806,7 +1839,7 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อำเภอ (district)</label>
+                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
                                         <select
                                             name="follower1_district"
                                             value={formData.follower1_district}
@@ -1846,42 +1879,45 @@ const CheckData = () => {
 
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
+                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Phone number)</label>
                                             <input
                                                 type="text"
                                                 name="follower1_telnum"
                                                 value={formData.follower1_telnum}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Telephone"
+                                                placeholder="Phone number"
                                             />
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">มือถือ (Phone number)</label>
+                                            <label className="block text-gray-700 mb-2">มือถือ (Mobile number)</label>
                                             <input
                                                 type="text"
                                                 name="follower1_phonenum"
                                                 value={formData.follower1_phonenum}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Phone number"
+                                                placeholder="Mobile number"
                                             />
                                         </div>
                                     </div>
                                 </div>
 
-                                <h3 className="pl-8 pb-8 text-lg pt-10">คนสอง (Second)</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div >
-                                        <label className="block text-gray-700 mb-2">ชื่อ นามสกุล(Name surname)</label>
-                                        <input
-                                            type="text"
-                                            name="follower2_name"
-                                            value={formData.follower2_name}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Name surname"
-                                        />
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-10 py-4">
+                                    <div className="flex space-x-4 w-full">
+                                        <div className="text-lg font-semibold mb-4 pt-10 " >2.</div>
+                                        <div className="w-full">
+                                            <label className="block text-gray-700 mb-2">ชื่อ นามสกุล(Name surname)</label>
+                                            <input
+                                                type="text"
+                                                name="follower2_name"
+                                                value={formData.follower2_name}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                                placeholder="Name surname"
+                                            />
+                                        </div>
                                     </div>
                                     <div >
                                         <label className="block text-gray-700 mb-2">สถานศึกษา (School)</label>
@@ -1907,14 +1943,14 @@ const CheckData = () => {
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">หมู่ที่ (Moo No)</label>
+                                            <label className="block text-gray-700 mb-2">หมู่ที่ (Moo)</label>
                                             <input
                                                 type="text"
                                                 name="follower2_housemoo"
                                                 value={formData.follower2_housemoo}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Moo No"
+                                                placeholder="Moo"
                                             />
                                         </div>
                                         <div className="w-1/2">
@@ -1930,7 +1966,7 @@ const CheckData = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">จังหวัด (province)</label>
+                                        <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
                                         <select
                                             name="follower2_province"
                                             value={formData.follower2_province}
@@ -1944,7 +1980,7 @@ const CheckData = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อำเภอ (district)</label>
+                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
                                         <select
                                             name="follower2_district"
                                             value={formData.follower2_district}
@@ -1981,48 +2017,68 @@ const CheckData = () => {
                                     </div>
                                     <div className="flex space-x-4 w-full">
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Telephone)</label>
+                                            <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Phone number)</label>
                                             <input
                                                 type="text"
                                                 name="follower2_telnum"
                                                 value={formData.follower2_telnum}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Telephone"
+                                                placeholder="Phone number"
                                             />
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">มือถือ (Phone number)</label>
+                                            <label className="block text-gray-700 mb-2">มือถือ (Mobile number)</label>
                                             <input
                                                 type="text"
                                                 name="follower2_phonenum"
                                                 value={formData.follower2_phonenum}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Phone number"
+                                                placeholder="Mobile number"
                                             />
                                         </div>
                                     </div>
                                 </div>
 
+                                {admin == 0 && (
+                                    <div className="flex justify-between mt-8">
+                                        <button
+                                            onClick={event => handleback()}
+                                            type="button"
+                                            className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                            Back
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            // onClick={notify}
 
-                                <div className="flex justify-between mt-8">
-                                    <button
-                                        onClick={event => handleback()}
-                                        type="button"
-                                        className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                        Back
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        // onClick={notify}
+                                            className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                        >
+                                            หน้าถัดไป
+                                            <ToastContainer />
+                                        </button>
+                                    </div>
+                                )}
+                                {admin == 1 && (
+                                    <div className="flex justify-between mt-8">
+                                        <button
+                                            onClick={event => handleback()}
+                                            type="button"
+                                            className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                            Back
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            // onClick={notify}
 
-                                        className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
-                                    >
-                                        หน้าถัดไป
-                                        <ToastContainer />
-                                    </button>
-                                </div>
+                                            className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                        >
+                                            Confirm
+                                            <ToastContainer />
+                                        </button>
+                                    </div>
+                                )}
 
                             </form>
                         </section>
