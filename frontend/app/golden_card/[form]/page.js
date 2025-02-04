@@ -239,7 +239,7 @@ const page = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2 ">สกุล (Surname)</label>
+                                        <label className="block text-gray-700 mb-2 ">นามสกุล (Surname)</label>
                                         <input
                                             type="text"
                                             name="Surname"
@@ -272,14 +272,14 @@ const page = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เลขบัตรประชาชน (Citizen ID)</label>
+                                        <label className="block text-gray-700 mb-2">เลขบัตรประชาชน (Identification number)</label>
                                         <input
                                             type="text"
                                             name="citizenId"
                                             value={Data.citizenId}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Citizen ID"
+                                            placeholder="Identification number"
                                         />
                                     </div>
                                     <div>
@@ -322,27 +322,27 @@ const page = () => {
                                             /> */}
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">อาชีพ (Job)</label>
+                                            <label className="block text-gray-700 mb-2">อาชีพ (Occupation)</label>
                                             <input
                                                 type="text"
                                                 name="Job"
                                                 value={Data.Job}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Job"
+                                                placeholder="Occupation"
                                             />
                                         </div>
                                     </div>
 
                                     <div >
-                                        <label className="block text-gray-700 mb-2">โทรศัพท์มือถือ (Phone number)</label>
+                                        <label className="block text-gray-700 mb-2">โทรศัพท์มือถือ (Mobile number)</label>
                                         <input
                                             type="text"
                                             name="Phonenumber"
                                             value={Data.Phonenumber}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Phone number"
+                                            placeholder="Mobile number"
                                         />
                                     </div>
                                     <div>
@@ -374,14 +374,14 @@ const page = () => {
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เลขที่บ้าน (Domicile number)</label>
+                                        <label className="block text-gray-700 mb-2">เลขที่บ้าน (Address number)</label>
                                         <input
                                             type="text"
                                             name="domicileNumber"
                                             value={Data.domicileNumber}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Domicile Number"
+                                            placeholder="Address Number"
                                         />
                                     </div>                  <div>
                                         <label className="block text-gray-700 mb-2">หมู่ที่ (Moo)</label>
@@ -466,14 +466,14 @@ const page = () => {
                                         />
                                     </div>
                                     <div >
-                                        <label className="block text-gray-700 mb-2">โทรศัพท์ (Tel number)</label>
+                                        <label className="block text-gray-700 mb-2">โทรศัพท์ (Phone number)</label>
                                         <input
                                             type="text"
                                             name="Telnumber"
                                             value={Data.Telnumber}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Tel number"
+                                            placeholder="Phone number"
                                         />
                                     </div>
 

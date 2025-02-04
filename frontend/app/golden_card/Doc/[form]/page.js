@@ -292,7 +292,7 @@ const gold = () => {
                     <div className="bg-white p-8 w-full max-w-4xl">
 
                         <h1 className="text-lg font-bold text-center mb-4 text-gray-800" >
-                            Download เอกสารเพื่อเซ็นรับรอง
+                            Download เอกสารสำหรับเซ็นรับรอง
                         </h1>
                         <button
                             onClick={handleDownload}
@@ -302,7 +302,7 @@ const gold = () => {
 
 
                         <h2 className="pt-5 text-lg font-bold text-center mb-4 text-gray-800">
-                            อัพโหลดเอกสารที่นี่ (Upload documents here.)
+                            อัพโหลดเอกสารที่นี่ (Upload documents here)
                         </h2>
                         <section>
 
@@ -314,7 +314,7 @@ const gold = () => {
                                                 {/* <p className="ant-upload-drag-icon">
                                                     <InboxOutlined />
                                                 </p> */}
-                                                <p className="ant-upload-text">เอกสารพร้อมเซ็นรับรอง</p>
+                                                <p className="ant-upload-text">เอกสารที่เซ็นรับรอง</p>
                                             </Dragger>
                                         </div>
                                         <div className =" py-4" > 
@@ -322,7 +322,7 @@ const gold = () => {
                                                 {/* <p className="ant-upload-drag-icon">
                                                     <InboxOutlined />
                                                 </p> */}
-                                                <p className="ant-upload-text">สำเนาบัตรประชาชนพร้อมเซ็นรับรองสำเนา</p>
+                                                <p className="ant-upload-text">สำเนาบัตรประชาชนที่เซ็นรับรองสำเนา</p>
                                             </Dragger>
                                         </div>
                                         <div className =" py-4">
@@ -382,7 +382,7 @@ const gold = () => {
                                         </div>
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">ดาวน์โหลดไฟล์และอัพโหลดไฟล์แล้ว</strong>
+                                            <strong className="font-medium text-gray-900">ดาวน์โหลดไฟล์และอัปโหลดไฟล์แล้ว</strong>
                                         </div>
                                     </label>
                                 </div>
