@@ -130,15 +130,18 @@ const CheckData = () => {
     }, []);
 
     const handleback = () => {
+        // router.push(`/rordor/${int_form}`);
         console.log("Button clicked, int_form value:", int_form);
-        if (admin == 0) {
-            if (!int_form || isNaN(int_form)) {
-                console.error("Invalid int_form value:", int_form);
-                return;
-            }
+        if (admin == "0") {
+            console.log("in if");
+            // if (!int_form || isNaN(int_form)) {
+            //     console.error("Invalid int_form value:", int_form);
+            //     return;
+            // }
             router.push(`/rordor/${int_form}`);
+            return
         }
-        if (admin == 1) {
+        if (admin == "1") {
             router.push(`/Admin/rd/0`);
             return
         }
@@ -573,7 +576,7 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         >
-                                            <option value={formData.province}>{formData.province}</option>
+                                            <option value="">{formData.province !== undefined ? formData.province : 'เลือกจังหวัด (Select province)'}</option>
                                             {provinces.map((item, index) => (
                                                 <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
                                             ))}
@@ -587,7 +590,7 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         >
-                                            <option value={formData.amphure}>{formData.amphure}</option>
+                                            <option value="">{formData.amphure !== undefined ? formData.amphure : 'เลือกอำเภอ (Select District)'}</option>
                                             {amphures.map((amphure, index) => (
                                                 <option key={index} data-id={amphure.id} value={amphure.name_th}>{amphure.name_th}</option>
                                             ))}
@@ -645,7 +648,7 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         >
-                                            <option value={formData.militaryProvince}>{formData.militaryProvince}</option>
+                                            <option value="">{formData.militaryProvince !== undefined ? formData.militaryProvince : 'เลือกจังหวัด (Select province)'}</option>
                                             {provincesmilitary.map((item, index) => (
                                                 <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
                                             ))}
@@ -713,7 +716,7 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         >
-                                            <option value={formData.schoolProvince}>{formData.schoolProvince}</option>
+                                            <option value="">{formData.schoolProvince !== undefined ? formData.schoolProvince : 'เลือกจังหวัด (Select province)'}</option>
                                             {provinces.map((item, index) => (
                                                 <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
                                             ))}

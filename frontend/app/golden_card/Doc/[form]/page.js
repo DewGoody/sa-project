@@ -382,7 +382,7 @@ const gold = () => {
                                         </div>
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">ดาวน์โหลดไฟล์และอัปโหลดไฟล์แล้ว</strong>
+                                            <strong className="font-medium text-gray-900">อัปโหลดไฟล์แล้ว</strong>
                                         </div>
                                     </label>
                                 </div>
@@ -404,7 +404,7 @@ const gold = () => {
                                         type="submit"
                                         className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                     >
-                                        Home page
+                                        Confirm
                                         <ToastContainer />
                                     </button>
                                 </a>

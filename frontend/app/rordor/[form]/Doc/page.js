@@ -148,12 +148,9 @@ const RD = () => {
                 <main className="flex justify-center items-center">
                     <div className="bg-white p-8 w-full max-w-4xl">
 
-                        <h1 className="text-lg font-bold text-center mb-4 text-gray-800" >
-                            Download เอกสารน้ำมายื่นให้เจ้าหน้าที่
-                        </h1>
 
                         <h2 className="text-mb pt-4 font-bold text-center mb-4 text-gray-800">
-                            โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่ (Please prepare the following documents to submit to the staff)
+                            Download เอกสาร และโปรดเตรียมเอกสารดังนี้ (Please prepare the following documents to submit to the staff)
                         </h2>
 
                         {/* <h2 className="text-lg pt-4 font-bold text-center mb-4 text-gray-800">
@@ -195,8 +192,6 @@ const RD = () => {
                                             htmlFor="Option3"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
-
-
                                             <div>
                                                 <strong className="font-medium text-gray-900">3. ใบรับรองแพทย์ โดยแพทย์ปริญญา (ใบรับรองแพทย์มีอายุ 1 เดือนนับจากวันที่ตรวจร่างกาย) รอเติม link</strong>
                                             </div>
@@ -206,8 +201,6 @@ const RD = () => {
                                             htmlFor="Option4"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
-
-
                                             <div>
                                                 <strong className="font-medium text-gray-900">4. สำเนาใบสำคัญทหารกองเกิน (สด.9) กรณีเป็นผู้สมัครชายอายุ 17 ปีขึ้นไป (ถ้ามี)</strong>
                                             </div>
