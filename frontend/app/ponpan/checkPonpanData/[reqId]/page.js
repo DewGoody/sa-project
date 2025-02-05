@@ -103,7 +103,7 @@ const RD = () => {
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
-                                                <strong className="font-medium text-gray-900 ">1. สำเนา สด.9 (Copy of form sor. 9)</strong>
+                                                <strong className="font-medium text-gray-900 ">1. สำเนา สด.9 (Copy of certificate of Sor dor 9)</strong>
                                             </div>
                                         </label>
 
@@ -114,7 +114,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">2. สำเนาหมายเรียก สด.35 (Copy of summons form sor. 35)</strong>
+                                                <strong className="font-medium text-gray-900">2. สำเนาหมายเรียก สด.35 (Copy of certificate of Sor dor 35)</strong>
                                             </div>
                                         </label>
                                         <label
@@ -134,7 +134,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">4. สำเนาทะเบียนบ้าน (Copy of house registration)</strong>
+                                                <strong className="font-medium text-gray-900">4. สำเนาทะเบียนบ้าน (Copy of residential address)</strong>
                                             </div>
                                         </label>
                                         <label
@@ -154,7 +154,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">6. สำเนารับรองสถานภาพนิสิต (Copy of student status certification)</strong>
+                                                <strong className="font-medium text-gray-900">6. สำเนารับรองสถานภาพนิสิต (Copy of certificate of student status)</strong>
                                             </div>
                                         </label>
                                     </div>
