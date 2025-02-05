@@ -190,7 +190,7 @@ export default function Form() {
             <div>
               <form className="grid grid-cols-2 gap-7 m-6 bg-white">
                 <div className="flex">
-                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Name-Surname) :</label>
+                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname-Surname) :</label>
                   <div>
                     <input
                       type="text"
@@ -245,7 +245,7 @@ export default function Form() {
                 </div>
                 <div>
                 <label className="block text-gray-700 mt-1" >
-                    อีเมลล์ (Email) :
+                    อีเมล (Email) :
                     <input
                       type="email"
                       name="email"

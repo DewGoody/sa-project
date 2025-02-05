@@ -3,8 +3,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Header } from '../../components/Header.js';
-
+import {Input} from 'antd';
 import { useRouter,useParams } from 'next/navigation';
+
 
 export default function Form() {
     const [profileData, setProfileData] = useState(null);
@@ -319,11 +320,11 @@ const handleAmphureChange = (e) => {
 }
 
 const handleDistrictChange = (e) => {
-  const selectedDistrict = e.target.value;
-  console.log("selectedDistrict", selectedDistrict);
-  setDistrictSelected(selectedDistrict);
-  setDistrict(districts.find((district) => district.id === selectedDistrict).nameTh);
-  setAlreadyData({ ...alreadyData, sub_district: districts.find((district) => district.id === selectedDistrict).nameTh });
+  // const selectedDistrict = e.target.value;
+  // console.log("selectedDistrict", selectedDistrict);
+  // setDistrictSelected(selectedDistrict);
+  setDistrict(e.target.value);
+  setAlreadyData({ ...alreadyData, sub_district: e.target.value });
 }
 const handleProvinceSD9Change = (e) => {
   const selectedProvince = e.target.value;
@@ -346,10 +347,10 @@ const handleAmphureSD9Change = (e) => {
 
 const handleDistrictSD9Change = (e) => {
   const selectedDistrict = e.target.value;
-  console.log("selectedDistrict", selectedDistrict);
-  setDistrictSD9Selected(selectedDistrict);
-  setDistrictSD9(districtsSD9.find((district) => district.id === selectedDistrict).nameTh);
-  setAlreadyData({ ...alreadyData, subdistrict_sd: districtsSD9.find((district) => district.id === selectedDistrict).nameTh });
+  // console.log("selectedDistrict", selectedDistrict);
+  // setDistrictSD9Selected(selectedDistrict);
+  setDistrictSD9(e.target.value);
+  setAlreadyData({ ...alreadyData, subdistrict_sd: e.target.value });
 }
   return (
     <div className=" bg-white min-h-screen">
@@ -364,7 +365,7 @@ const handleDistrictSD9Change = (e) => {
             <div>
               <form className="grid grid-cols-2 gap-7 m-6 bg-white">
                 <div className="flex">
-                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Name-Surname) :</label>
+                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname-Surname) :</label>
                   <div>
                     <input
                       type="text"
@@ -392,13 +393,13 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="text"
                       name="faculty"
-                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.facultyNameTH}
                     />
                   </div>
                 </div>
                 <div className="flex">
-                  <label className="block text-gray-700 mt-1" >รหัสประจำตัวประชาชน (Citizen ID) :</label>
+                  <label className="block text-gray-700 mt-1" >รหัสประจำตัวประชาชน (Identification number) :</label>
                   <div className="">
                     <input
                       type="text"
@@ -409,7 +410,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex">
-                  <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Year level) :</label>
+                  <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Year) :</label>
                   <div>
                     <input
                       type="text"
@@ -437,7 +438,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex">
-                  <label className="block text-gray-700 mt-1" >ปีเกิด (Birth date) :</label>
+                  <label className="block text-gray-700 mt-1" >ปีเกิด (Birth year) :</label>
                   <div>
                     <input
                       type="text"
@@ -449,7 +450,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex">
-                  <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Phone number) :</label>
+                  <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Mobile number) :</label>
                   <div>
                     <input
                       type="text"
@@ -462,7 +463,7 @@ const handleDistrictSD9Change = (e) => {
                 </div>
                 <div>
                 <label className="block text-gray-700 mt-1" >
-                    อีเมลล์ (Email) :
+                    อีเมล (Email) :
                     <input
                       type="email"
                       name="email"
@@ -477,7 +478,7 @@ const handleDistrictSD9Change = (e) => {
                 </div>
                 <div>
                   <div className="flex">
-                    <div className="block text-gray-700 mt-1" >ชื่อบิดา (Father name) :</div>
+                    <div className="block text-gray-700 mt-1" >ชื่อบิดา (Father's name) :</div>
                     <div>
                       <input
                         type="text"
@@ -494,7 +495,7 @@ const handleDistrictSD9Change = (e) => {
                 </div>
                 <div>
                   <div className="flex">
-                    <div className="block text-gray-700 mt-1" >ชื่อมารดา (Mother name) :</div>
+                    <div className="block text-gray-700 mt-1" >ชื่อมารดา (Mother's name) :</div>
                     <div>
                       <input
                         type="text"
@@ -512,7 +513,7 @@ const handleDistrictSD9Change = (e) => {
                 
                 <div className="-ml-6">
                   <h3 className="text-md font-semibold mt-8 ml-3">
-                     ที่อยู่ตามทะเบียนบ้าน (House registration address)
+                     ที่อยู่ตามทะเบียนบ้าน (Residential address)
                   </h3>
                 </div>
                 <div>
@@ -526,7 +527,7 @@ const handleDistrictSD9Change = (e) => {
                       onChange={handleProvinceChange}
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
-                      <option value="" >{alreadyData.province !== undefined ? alreadyData.province : 'เลือกจังหวัด (Select province)'}</option>
+                      <option value="" >{alreadyData.province !== undefined ? alreadyData.province : 'เลือกจังหวัด (select province)'}</option>
                       
                       {provinces.map((item, index) => (
                           <option key={index} data-id={item.id} value={item.id}>{item.name_th +" ("+item.name_en+")"}</option>
@@ -541,31 +542,21 @@ const handleDistrictSD9Change = (e) => {
                   onChange={handleAmphureChange}
                    className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
-                 <option value="" >{alreadyData.district !== undefined ? alreadyData.district : 'เลือกอำเภอ (Select District)'}</option>
+                 <option value="" >{alreadyData.district !== undefined ? alreadyData.district : 'เลือกอำเภอ (select district)'}</option>
                   {amphures.map((amphure, index) => (
                       <option key={index} data-id={amphure.id} value={amphure.id}>{amphure.name_th +" ("+amphure.name_en+")"}</option>
                   ))}
               </select>
           </div>
-          <div>
+          <div className="flex">
               <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict) : </label>
-              <select
-                  name="district"
-                  value={districtSelected}
-                  onChange={handleDistrictChange}
-                   className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                  <option value="" >{alreadyData.sub_district !== undefined ? alreadyData.sub_district : 'เลือกตำบล (Select subdistrict)'}</option>
-                  {districts.map((district, index) => (
-                      <option key={index} data-id={district.id} value={district.id}>{district.nameTh+" ("+district.nameEn+")"}</option>
-                  ))}
-              </select>
+              <Input onChange={handleDistrictChange} style={{width:170, marginLeft:20}} value={alreadyData.sub_district} />
           </div>
           <div>
 
           </div>
           <div className="flex">
-                  <label>บ้านเลขที่ (House number) :</label>
+                  <label>บ้านเลขที่ (Address number) :</label>
                   <div>
                     <input
                       type="text"
@@ -577,7 +568,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex">
-                  <label>หมู่ (Moo number) :</label>
+                  <label>หมู่ (Moo) :</label>
                   <div>
                     <input
                       type="text"
@@ -592,14 +583,14 @@ const handleDistrictSD9Change = (e) => {
 
           <div className="-ml-6">
                   <h3 className="text-md font-semibold mt-8 ml-3">
-                     ข้อมูลและที่อยู่ตาม สด.9 (Address as per the S.D.9 certificate)
+                     ข้อมูลและที่อยู่ตาม สด.9 (Sor dor 9 address)
                   </h3>
                 </div>
                 <div>
                   
                 </div>
                 <div className="flex">
-                  <label>ใบสำคัญ สด.9 ที่ (Address as per the S.D.9 certificate) :</label>
+                  <label>ใบสำคัญ สด.9 ที่ (Address in Sor dor 9) :</label>
                   <div>
                     <input
                       type="text"
@@ -621,7 +612,7 @@ const handleDistrictSD9Change = (e) => {
                       onChange={handleProvinceSD9Change}
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
-                      <option value="" >{alreadyData.province_sd !== undefined ? alreadyData.province_sd : 'เลือกจังหวัด (Select province)'}</option>
+                      <option value="" >{alreadyData.province_sd !== undefined ? alreadyData.province_sd : 'เลือกจังหวัด (select province)'}</option>
                       {provincesSD9.map((item, index) => (
                           <option key={index} data-id={item.id} value={item.id}>{item.name_th +" ("+item.name_en+")"}</option>
                       ))}
@@ -635,31 +626,21 @@ const handleDistrictSD9Change = (e) => {
                   onChange={handleAmphureSD9Change}
                    className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
-                  <option value="" >{alreadyData.district_sd !== undefined ? alreadyData.district_sd : 'เลือกอำเภอ (Select District)'}</option>
+                  <option value="" >{alreadyData.district_sd !== undefined ? alreadyData.district_sd : 'เลือกอำเภอ (select district)'}</option>
                   {amphuresSD9.map((amphure, index) => (
                       <option key={index} data-id={amphure.id} value={amphure.id}>{amphure.name_th+" ("+amphure.name_en+")"}</option>
                   ))}
               </select>
           </div>
-          <div>
-              <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
-              <select
-                  name="district"
-                  value={districtSD9Selected}
-                  onChange={handleDistrictSD9Change}
-                   className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                  <option value="" >{alreadyData.subdistrict_sd !== undefined ? alreadyData.subdistrict_sd : 'เลือกตำบล (Select subdistrict)'}</option>
-                  {districtsSD9.map((district, index) => (
-                      <option key={index} data-id={district.id} value={district.id}>{district.nameTh+" ("+district.nameEn+")"}</option>
-                  ))}
-              </select>
+          <div className="flex">
+              <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict) : </label>
+              <Input onChange={handleDistrictSD9Change} style={{width:170, marginLeft:20}} value={alreadyData.subdistrict_sd} />
           </div>
           <div>
 
           </div>
           <div className="flex">
-                  <label>บ้านเลขที่ (House number) :</label>
+                  <label>บ้านเลขที่ (Address number) :</label>
                   <div>
                     <input
                       type="text"
@@ -671,7 +652,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex">
-                  <label>หมู่ (Moo number) :</label>
+                  <label>หมู่ (Moo) :</label>
                   <div>
                     <input
                       type="text"
