@@ -321,12 +321,12 @@ const App = () => {
             />
             <Form form={form} onFinish={onFinish} layout="vertical">
         {/* Username Field */}
-        <Form.Item name="username" label="Username" rules={[{ required: true, message: "Please enter your username" }]}>
+        <Form.Item name="username" label="ชื่อผู้ใช้งาน" rules={[{ required: true, message: "Please enter your username" }]}>
           <Input />
         </Form.Item>
 
         {/* Email Field */}
-        <Form.Item name="email" label="Email" rules={[{ required: true, type: "email", message: "Enter a valid email" }]}>
+        <Form.Item name="email" label="อีเมล" rules={[{ required: true, type: "email", message: "Enter a valid email" }]}>
           <Input />
         </Form.Item>
 
@@ -380,14 +380,14 @@ const App = () => {
       ]}
     >
       <Form layout="vertical">
-      <Form.Item label="Username">
+      <Form.Item label="ชื่อผู้ใช้งาน">
         <Input
         name="username"
         value={editingUser?.username}
         onChange={handleInputChange}
         />
       </Form.Item>
-      <Form.Item label="Email">
+      <Form.Item label="อีเมล">
         <Input
         name="email"
         value={editingUser?.email}

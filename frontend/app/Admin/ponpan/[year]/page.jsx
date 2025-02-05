@@ -358,7 +358,7 @@ const AppointmentManagement = () => {
             ...getColumnSearchProps('phone_num'),
         },
         {
-            title: "อีเมลล์",
+            title: "อีเมล",
             dataIndex: "email",
             align: 'center',
         },
