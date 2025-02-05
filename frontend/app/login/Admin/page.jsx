@@ -10,20 +10,7 @@ import Image from "next/image";
 const login = () => {
     const [dataSource, setDataSource] = useState([]);
     const router = useRouter();
-    const fetchAdmin = async () => {
-        try {
-            const response = await axios.post("/api/user/getAll");
-            console.log("response",response)
-            setDataSource(...dataSource, response.data.data);
-            message.success("Data fetched successfully!");
-        } catch (error) {
-            console.error("Error:", error);
-            message.error("Failed to fetch data!");
-        }
-    };
-    useEffect(() => {
-        fetchAdmin();
-    }, []);
+   
 
     const onFinish = async (values) => {
         console.log("Received values:", values);
@@ -38,6 +25,7 @@ const login = () => {
             }
         } catch (error) {
             console.error("Login error:", error);
+            console.log.error("Login error:", error);
             message.error("An error occurred during login. Please try again.");
         }
     };

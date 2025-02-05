@@ -163,7 +163,12 @@ const AppointmentManagement = () => {
                             key: '7',
                             label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
                             onClick: () => window.location.href = '/Admin/editMaxStudent'
-                        }
+                        },
+                        {
+                            key: '8',
+                            label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
+                            onClick: () => window.location.href = '/Admin/user'
+                          }
                     ]}
                 />
             </Sider>

@@ -21,7 +21,7 @@ const App = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const [selectedKey, setSelectedKey] = useState('6');
+    const [selectedKey, setSelectedKey] = useState('8');
     const [fetchYear, setfetchYear] = useState([]);
     const [statusRequest, setStatusRequest] = useState('');
     const [loading, setLoading] = useState(false);
@@ -285,6 +285,11 @@ const App = () => {
                 key: '7',
                 label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
                 onClick: () => window.location.href = '/Admin/editMaxStudent'
+              },
+              {
+                key: '8',
+                label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
+                onClick: () => window.location.href = '/Admin/user'
               }
             ]}
           />
@@ -367,10 +372,10 @@ const App = () => {
       onCancel={handleCancel}
       footer={[
       <Button key="cancel" onClick={handleCancel}>
-        Cancel
+        ปิดหน้าต่าง
       </Button>,
       <Button key="save" type="primary" loading={loading} onClick={handleSave}>
-        Save
+        แก้ไข
       </Button>,
       ]}
     >
@@ -390,15 +395,15 @@ const App = () => {
         />
       </Form.Item>
       <Form.Item
-          name="password"
           label="Password"
-          value={editingUser?.password}
+          name="password"
+          initialValue={editingUser?.password}
           rules={[
           { required: true, message: "Please enter your password" },
           { min: 6, message: "Password must be at least 6 characters" }
           ]}
         >
-          <Input.Password />
+          <Input.Password onChange={handleInputChange} />
         </Form.Item>
       </Form>
     </Modal>
@@ -409,14 +414,14 @@ const App = () => {
       onCancel={handleDeleteCancel}
       footer={[
         <Button key="cancel" onClick={handleDeleteCancel}>
-          Cancel
+          ปิดหน้าต่าง
         </Button>,
         <Button key="delete" type="primary" danger loading={loading} onClick={handleDeleteConfirm}>
-          Delete
+          ลบ
         </Button>,
       ]}
     >
-      <p>Are you sure you want to delete this user?</p>
+      <p>ต้องการลบผู้ใช้นี้ออกจากระบบใช่ไหม</p>
     </Modal>
            
           </Content>
