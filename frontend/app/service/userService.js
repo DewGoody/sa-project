@@ -6,6 +6,7 @@ export async function getAllUser(){
     const users = await prisma.user.findMany({
         where: {deleted_at: null}
     })
+    return users
 }
 
 export async function createUser(data) {    
@@ -39,4 +40,18 @@ export async function deleteUser(data) {
         }
     })
     return deletedUser
+}
+
+export async function login(data) {    
+    const user = await prisma.user.findFirst({
+        where: {
+            username: data.username,
+            password: data.password
+        }
+    })
+    if(user){
+        return true
+    }else{
+        return false
+    }
 }

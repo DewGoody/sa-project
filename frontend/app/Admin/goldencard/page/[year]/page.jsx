@@ -412,7 +412,7 @@ const App = () => {
                 </div>
             ),
         }, {
-            title: 'วันที่อัพโหลดเอกสาร',
+            title: 'วันที่อัปโหลดเอกสาร',
             dataIndex: 'updateat',
             sorter: (a, b) => new Date(a.updateat) - new Date(b.updateat),
             sortIcon: (sorted) => (
