@@ -106,14 +106,14 @@ function Page() {
                   <div className="grid grid-cols-1 md:grid-cols-2 md:space-x-4  w-full  ">
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        บ้านเลขที่ (House No.)
+                        บ้านเลขที่ (Address number)
                       </label>
                       <input
                         type="text"
                         name="houseID"
                         onChange={(event) => handleChange(event, "houseID")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="บ้านเลขที่ (House No.)"
+                        placeholder="บ้านเลขที่ (Address number)"
                       />
                     </div>
                     <div className="pt-4 md:pt-0">
@@ -230,14 +230,14 @@ function Page() {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      เลขบัตรประชาชน (ID card number)
+                      เลขบัตรประชาชน (Identification number)
                     </label>
                     <input
                       type="text"
                       name="citizenId"
                       onChange={(event) => handleChange(event, "citizenId")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="เลขบัตรประชาชน (ID card number)"
+                      placeholder="เลขบัตรประชาชน (Identification number)"
                     />
                   </div>
                   <div>
@@ -276,7 +276,7 @@ function Page() {
                   ข้อมูลการเงิน (Financial information)
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                <div className="pt-4 md:pt-0">
+                  <div className="pt-4 md:pt-0">
                     <label className="block text-gray-700 mb-2">
                       ประเภทการเบิกเงิน (Claim type)
                     </label>
@@ -288,11 +288,19 @@ function Page() {
                       <option defaultValue value="null">
                         เลือกประเภทการเบิกเงิน (Choose claim type)
                       </option>
-                      <option value="ค่าจ้างนิสิตทำงานพิเศษ">ค่าจ้างนิสิตทำงานพิเศษ</option>
+                      <option value="ค่าจ้างนิสิตทำงานพิเศษ">
+                        ค่าจ้างนิสิตทำงานพิเศษ
+                      </option>
                       <option value="ค่าเล่าเรียน">ค่าเล่าเรียน</option>
-                      <option value="ค่าธรรมเนียมการศึกษา">ค่าธรรมเนียมการศึกษา</option>
-                      <option value="เงินสมทบค่ารักษาพยาบาล">เงินสมทบค่ารักษาพยาบาล</option>
-                      <option value="เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ">เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ</option>
+                      <option value="ค่าธรรมเนียมการศึกษา">
+                        ค่าธรรมเนียมการศึกษา
+                      </option>
+                      <option value="เงินสมทบค่ารักษาพยาบาล">
+                        เงินสมทบค่ารักษาพยาบาล
+                      </option>
+                      <option value="เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ">
+                        เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ
+                      </option>
                       <option value="อื่นๆ (ระบุ)">อื่นๆ (ระบุ)</option>
                     </select>
                   </div>
@@ -354,7 +362,9 @@ function Page() {
                     </label>
                     <select
                       name="bankAccountType"
-                      onChange={(event) => handleChange(event, "bankAccountType")}
+                      onChange={(event) =>
+                        handleChange(event, "bankAccountType")
+                      }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
                       <option defaultValue value="null">
@@ -397,7 +407,6 @@ function Page() {
             </div>
             <div>
               <div className="flex justify-between mt-8">
-                {/*TODO Edit Link*/}
                 <a href="/home">
                   <button className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11">
                     Back
