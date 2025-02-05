@@ -2,18 +2,20 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useRouter,useParams } from 'next/navigation';
+import { useRouter, useParams } from "next/navigation";
 
 function AccidentForm({ handleChange }) {
   const [alreadyData, setAlreadyData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const {form} = useParams();
+  const { form } = useParams();
 
   const fetchData = async () => {
     try {
-      const response = await axios.post("/api/prakanInter/getDataById", { id: parseInt(form) });
+      const response = await axios.post("/api/prakanInter/getDataById", {
+        id: parseInt(form),
+      });
       console.log("responseFetch", response.data.data);
       setAlreadyData(response.data.data);
       setClaimType(response.data.data.claimType);
@@ -25,7 +27,7 @@ function AccidentForm({ handleChange }) {
   };
 
   useEffect(() => {
-    if(form!=="0"){
+    if (form !== "0") {
       fetchData();
     }
   }, []);
@@ -48,7 +50,10 @@ function AccidentForm({ handleChange }) {
             value={alreadyData?.accidentDate}
             onChange={(event) => {
               handleChange(event, "accidentDate");
-              setAlreadyData({ ...alreadyData, accidentDate: event.target.value });
+              setAlreadyData({
+                ...alreadyData,
+                accidentDate: event.target.value,
+              });
             }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Date of Accident"
@@ -63,7 +68,10 @@ function AccidentForm({ handleChange }) {
             value={alreadyData?.accidentTime}
             onChange={(event) => {
               handleChange(event, "accidentTime");
-              setAlreadyData({ ...alreadyData, accidentTime: event.target.value });
+              setAlreadyData({
+                ...alreadyData,
+                accidentTime: event.target.value,
+              });
             }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
@@ -78,7 +86,10 @@ function AccidentForm({ handleChange }) {
             placeholder="Cause of Accident"
             onChange={(event) => {
               handleChange(event, "accidentCause");
-              setAlreadyData({ ...alreadyData, accidentCause: event.target.value });
+              setAlreadyData({
+                ...alreadyData,
+                accidentCause: event.target.value,
+              });
             }}
           ></textarea>
         </div>
@@ -93,7 +104,10 @@ function AccidentForm({ handleChange }) {
             value={alreadyData?.hospitalName}
             onChange={(event) => {
               handleChange(event, "hospitalName");
-              setAlreadyData({ ...alreadyData, hospitalName: event.target.value });
+              setAlreadyData({
+                ...alreadyData,
+                hospitalName: event.target.value,
+              });
             }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Hospital / Clinic Name"
@@ -108,7 +122,10 @@ function AccidentForm({ handleChange }) {
               value={alreadyData?.hospitalProvince}
               onChange={(event) => {
                 handleChange(event, "hospitalProvince");
-                setAlreadyData({ ...alreadyData, hospitalProvince: event.target.value });
+                setAlreadyData({
+                  ...alreadyData,
+                  hospitalProvince: event.target.value,
+                });
               }}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               placeholder="Hospital / Clinic's Province"
@@ -122,7 +139,10 @@ function AccidentForm({ handleChange }) {
               value={alreadyData?.hospitalPhoneNumber}
               onChange={(event) => {
                 handleChange(event, "hospitalPhoneNumber");
-                setAlreadyData({ ...alreadyData, hospitalPhoneNumber: event.target.value });
+                setAlreadyData({
+                  ...alreadyData,
+                  hospitalPhoneNumber: event.target.value,
+                });
               }}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               placeholder="Hospital / Clinic's Phone number"
@@ -139,7 +159,10 @@ function AccidentForm({ handleChange }) {
             value={alreadyData?.hospitalAmittedDate}
             onChange={(event) => {
               handleChange(event, "hospitalAmittedDate");
-              setAlreadyData({ ...alreadyData, hospitalAmittedDate: event.target.value });
+              setAlreadyData({
+                ...alreadyData,
+                hospitalAmittedDate: event.target.value,
+              });
             }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Date Amitted"
@@ -156,9 +179,13 @@ function AccidentForm({ handleChange }) {
             value={alreadyData?.hospitalDischargedDate}
             onChange={(event) => {
               handleChange(event, "hospitalDischargedDate");
-              setAlreadyData({ ...alreadyData, hospitalDischargedDate: event.target.value });
+              setAlreadyData({
+                ...alreadyData,
+                hospitalDischargedDate: event.target.value,
+              });
             }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+            min={alreadyData?.hospitalAmittedDate}
             placeholder="Date discharged"
           />
         </div>

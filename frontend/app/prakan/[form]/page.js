@@ -1,10 +1,11 @@
 "use client";
-import React, { use } from "react";
+import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Header } from '../../components/Header.js';
 import numberToThaiText from "../../components/numberToThaiText.js";
 import { useRouter,useParams } from 'next/navigation';
+import { Select, DatePicker, Space } from 'antd';
 
 export default function Form() {
   const [prakanData, setPrakanData] = useState({});
@@ -321,9 +322,9 @@ export default function Form() {
                     ประเภทสถานพยาบาล (Type of hospital) :
                   </label>
                   <div className="ml-2">
-                    <select
+                    <Select
                       onChange={handleChangeTypeHos}
-                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      style={{ width: 220 }}
                       defaultValue="เลือกประเภทสถานพยาบาล"
                       value={alreadyData.hospital_type}
                       
@@ -335,18 +336,15 @@ export default function Form() {
                       <option value="โรงพยาบาลรัฐ" className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>
                       <option value="โรงพยาบาลเอกชน">โรงพยาบาลเอกชน (private hospital)</option>
                       <option value="คลินิก">คลินิก (clinic)</option>
-                    </select>
+                    </Select>
                   </div>
                 </div>
                 <div className="flex">
                 <label className="block text-gray-700 mt-1" >
                     วันที่เกิดอุบัติเหตุ (Date of accident) :
-                    <input
-                      type="date"
-                      onChange={handleChangeDateAcc}
-                      value={date}
-                     className="ml-2 px-5 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    />
+                    <Space direction="vertical" className="ml-3">
+                      <DatePicker onChange={handleChangeDateAcc} />
+                    </Space>  
                   </label>
                 </div>
                 <div>
@@ -392,10 +390,9 @@ export default function Form() {
         
           <button
             onClick={handleSubmit}
-            
             className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
           >
-            Next
+            Check data
           </button>
     
         </div>

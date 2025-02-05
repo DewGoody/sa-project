@@ -72,6 +72,7 @@ function IllnessForm({ handleChange }) {
             onChange={(event) => handleChange(event, "hospitalDischargedDate")}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Date discharged"
+            min={alreadyData?.hospitalAmittedDate}
           />
         </div>
       </div>
