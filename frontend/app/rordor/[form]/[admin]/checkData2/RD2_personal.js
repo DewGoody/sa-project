@@ -196,7 +196,7 @@ export const Personal = () => {
                         value={formData.Major}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Major"
+                        placeholder="Faculty"
                     />
                 </div>
                 <div>

@@ -425,17 +425,7 @@ const CheckData = () => {
                                             placeholder="Birth Date"
                                         />
                                     </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">ศาสนา (Religion)</label>
-                                        <input
-                                            type="text"
-                                            name="religion"
-                                            value={formData.religion}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Religion"
-                                        />
-                                    </div>
+                                    
                                     <div>
                                         <label className="block text-gray-700 mb-2">เชื้อชาติ (Ethnicity)</label>
                                         <input
@@ -456,6 +446,17 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                             placeholder="Nationality"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 mb-2">ศาสนา (Religion)</label>
+                                        <input
+                                            type="text"
+                                            name="religion"
+                                            value={formData.religion}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            placeholder="Religion"
                                         />
                                     </div>
                                 </div>
@@ -514,7 +515,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อาชีพของพ่อ (Father's occupation)</label>
+                                        <label className="block text-gray-700 mb-2">อาชีพของบิดา (Father's occupation)</label>
                                         <input
                                             type="text"
                                             name="occupationfather"
@@ -525,7 +526,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อาชีพของแม่ (Mother's occupation)</label>
+                                        <label className="block text-gray-700 mb-2">อาชีพของมารดา (Mother's occupation)</label>
                                         <input
                                             type="text"
                                             name="occupationmother"
@@ -709,7 +710,7 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">จังหวัด (School province)</label>
+                                        <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
                                         <select
                                             name="schoolProvince"
                                             value={formData.schoolProvince}
