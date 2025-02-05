@@ -6,7 +6,7 @@ import { Header } from "../../components/Header.js";
 import numberToThaiText from "../../components/numberToThaiText.js";
 import AccidentForm from "./AccidentForm.js";
 import IllnessForm from "./IllnessForm.js";
-import { useRouter,useParams } from 'next/navigation';
+import { useRouter, useParams } from "next/navigation";
 
 function page() {
   const [prakanData, setPrakanData] = useState({});
@@ -16,12 +16,14 @@ function page() {
   const [profileData, setProfileData] = useState(null);
   const [alreadyData, setAlreadyData] = useState(null);
   const router = useRouter();
-  const {form} = useParams();
-  console.log("form : "+form);  
+  const { form } = useParams();
+  console.log("form : " + form);
 
   const fetchData = async () => {
     try {
-      const response = await axios.post("/api/prakanInter/getDataById", { id: parseInt(form) });
+      const response = await axios.post("/api/prakanInter/getDataById", {
+        id: parseInt(form),
+      });
       console.log("responseFetch", response.data.data);
       setAlreadyData(response.data.data);
       setClaimType(response.data.data.claimType);
@@ -33,13 +35,12 @@ function page() {
   };
 
   useEffect(() => {
-    if(form!=="0"){
+    if (form !== "0") {
       fetchData();
     }
   }, []);
 
   console.log("alreadyData : ", alreadyData);
-  
 
   const handleChange = (event, field) => {
     console.log(field + " : " + event.target.value);
@@ -114,29 +115,31 @@ function page() {
 
     console.log(prakanData);
     let allData = { ...prakanData };
-    let dataUpdate = { ...alreadyData, formId:form , ...profileData }; 
+    let dataUpdate = { ...alreadyData, formId: form, ...profileData };
     console.log("allData", allData);
     console.log("dataUpdate", dataUpdate);
-    if(form==="0"){
+    if (form === "0") {
       axios
-      .post("/api/prakanInter/create", allData)
-      .then((response) => {
-        console.log("Form submitted successfully:", response.data);
-        router.push(`/prakan-inter/checkPrakan/${response.data.data.id}/0`);
-      })
-      .catch((error) => {
-        console.error("Error submitting form:", error);
-      });
-    }else{
+        .post("/api/prakanInter/create", allData)
+        .then((response) => {
+          console.log("Form submitted successfully:", response.data);
+          router.push(`/prakan-inter/checkPrakan/${response.data.data.id}/0`);
+        })
+        .catch((error) => {
+          console.error("Error submitting form:", error);
+        });
+    } else {
       axios
-      .post("/api/prakanInter/update", dataUpdate)
-      .then((response) => {
-        console.log("Form submitted successfully:", response.data);
-        router.push(`/prakan-inter/checkPrakan/${response.data.data.id}/${response.data.data.req_id}`);
-      })
-      .catch((error) => {
-        console.error("Error submitting form:", error);
-      });
+        .post("/api/prakanInter/update", dataUpdate)
+        .then((response) => {
+          console.log("Form submitted successfully:", response.data);
+          router.push(
+            `/prakan-inter/checkPrakan/${response.data.data.id}/${response.data.data.req_id}`
+          );
+        })
+        .catch((error) => {
+          console.error("Error submitting form:", error);
+        });
       console.log("dataUpdate", dataUpdate);
     }
   };
@@ -178,7 +181,7 @@ function page() {
     <>
       <div className=" bg-white min-h-screen">
         <Header
-          req1="Health insurance"
+          req1="Health Insurance For Foreigner Student (Claim Injury/Illness)"
           req2=""
         />
         <div className=" mx-24 ">
@@ -249,7 +252,7 @@ function page() {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      Phone number
+                      Mobile phone number
                     </label>
                     <input
                       type="text"
@@ -263,7 +266,7 @@ function page() {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      Present Address
+                      Present address
                     </label>
                     <input
                       type="text"
@@ -278,7 +281,7 @@ function page() {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      Birthdate
+                      Date of birth
                     </label>
                     <input
                       type="date"
@@ -301,12 +304,12 @@ function page() {
                   <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
                     2
                   </span>
-                  Select an Claim Type
+                  Select an claim type
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      Select an Claim Type
+                      Select an claim type
                     </label>
                     <select
                       id="claimType"
@@ -314,9 +317,7 @@ function page() {
                       onChange={handleCiaimTypeChange}
                       value={alreadyData?.claimType}
                     >
-                      <option value="null">
-                        Select an Claim Type
-                      </option>
+                      <option value="null">Select an claim type</option>
                       <option value="accident">Accident</option>
                       <option value="illness">Illness</option>
                     </select>
@@ -324,10 +325,16 @@ function page() {
                   <div></div>
                 </div>
                 {claimType === "accident" ? (
-                  <AccidentForm handleChange={handleChange} />
+                  <AccidentForm
+                    handleChange={handleChange}
+                    prakanData={prakanData}
+                  />
                 ) : null}
                 {claimType === "illness" ? (
-                  <IllnessForm handleChange={handleChange} />
+                  <IllnessForm
+                    handleChange={handleChange}
+                    prakanData={prakanData}
+                  />
                 ) : null}
               </section>
 

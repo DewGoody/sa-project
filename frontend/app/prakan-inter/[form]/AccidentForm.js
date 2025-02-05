@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
 
-function AccidentForm({ handleChange }) {
+function AccidentForm({ handleChange, prakanData }) {
   const [alreadyData, setAlreadyData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,7 +43,7 @@ function AccidentForm({ handleChange }) {
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 ">
         <div>
-          <label className="block text-gray-700 mb-2">Date of Accident</label>
+          <label className="block text-gray-700 mb-2">Date of accident</label>
           <input
             type="date"
             name="accidentDate"
@@ -61,7 +61,7 @@ function AccidentForm({ handleChange }) {
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-2">Time of Accident</label>
+          <label className="block text-gray-700 mb-2">Time of accident</label>
           <input
             type="time"
             name="accidentTime"
@@ -77,7 +77,7 @@ function AccidentForm({ handleChange }) {
           />
         </div>
         <div className="w-full md:col-span-2">
-          <label className="block text-gray-700 mb-2">Cause of Accident</label>
+          <label className="block text-gray-700 mb-2">Cause of accident</label>
           <textarea
             name="accidentCause"
             rows="4"
@@ -151,7 +151,7 @@ function AccidentForm({ handleChange }) {
         </div>
         <div>
           <label className="block text-gray-700 mb-2">
-            Date Amitted (into Hospital / Clinic)
+            Date admitted (into Hospital / Clinic)
           </label>
           <input
             type="date"
@@ -185,7 +185,7 @@ function AccidentForm({ handleChange }) {
               });
             }}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            min={alreadyData?.hospitalAmittedDate}
+            min={prakanData?.hospitalAmittedDate}
             placeholder="Date discharged"
           />
         </div>

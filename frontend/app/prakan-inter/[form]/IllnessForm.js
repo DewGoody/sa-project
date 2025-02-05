@@ -1,6 +1,7 @@
 import React from "react";
+import { useState } from "react";
 
-function IllnessForm({ handleChange }) {
+function IllnessForm({ handleChange, prakanData }) {
   return (
     <div>
       <h3 className="text-lg font-semibold my-4 flex gap-4">
@@ -49,7 +50,7 @@ function IllnessForm({ handleChange }) {
         </div>
         <div>
           <label className="block text-gray-700 mb-2">
-            Date Amitted (into Hospital / Clinic)
+            Date admitted (into Hospital / Clinic)
           </label>
           <input
             type="date"
@@ -72,7 +73,7 @@ function IllnessForm({ handleChange }) {
             onChange={(event) => handleChange(event, "hospitalDischargedDate")}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             placeholder="Date discharged"
-            min={alreadyData?.hospitalAmittedDate}
+            min={prakanData?.hospitalAmittedDate}
           />
         </div>
       </div>
