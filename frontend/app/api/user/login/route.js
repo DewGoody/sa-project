@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server"
 import { convertBigIntToString} from '../../../../utills/convertBigInt'
-import {getAllUser} from '../../../service/userService'
+import {login} from '../../../service/userService'
 
 export async function POST(req,res){
     try{
-        // let data = await req.json()
-        const users = await getAllUser()
-        console.log(users);
+        let data = await req.json()
+        const user = await login(data)
+        console.log(user);
         
-        return NextResponse.json({ data: convertBigIntToString(users) });
+        return NextResponse.json({ data: user });
         }
         catch(error){      
             console.log(error);
