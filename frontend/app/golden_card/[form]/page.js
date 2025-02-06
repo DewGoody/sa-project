@@ -159,7 +159,7 @@ const page = () => {
                 UHC_reg_info: {
                     id: id,
                     smart_card_issured: Data.Idcardissuedate,
-                    smart_card_expired: Data.Idcardissuedate,
+                    smart_card_expired: Data.Idcardexpiraiton,
                     status_before_reg: Data.benefitStatus,
                     status_info: status_before(),
                     frequence_uses: Data.hospitalService,
@@ -283,7 +283,7 @@ const page = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">วันที่ออกบัตรประชาชน (ID card issue date)</label>
+                                        <label className="block text-gray-700 mb-2">วันที่ออกบัตรประชาชน (Issue date of Id card )</label>
                                         <input
                                             type="date"
                                             name="Idcardissuedate"
@@ -293,7 +293,7 @@ const page = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">วันที่บัตรบัตรประชาชนหมดอายุ (ID card expiration date)</label>
+                                        <label className="block text-gray-700 mb-2">วันที่บัตรบัตรประชาชนหมดอายุ (Exp date of Id card )</label>
                                         <input
                                             type="date"
                                             name="Idcardexpiraiton"
@@ -305,14 +305,14 @@ const page = () => {
                                     <div className="flex item-center space-x-4 w-full">
                                         <div className="w-1/2">
 
-                                            <label className="block text-gray-700 mb-2">วันเกิด (Birth date)</label>
+                                            <label className="block text-gray-700 mb-2">วันเกิด (Date of birth)</label>
                                             <input
                                                 type="date"
                                                 name="birthDate"
                                                 value={Data.birthDate}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Birth Date"
+                                                placeholder="Date of birth"
                                             />
                                             {/* <DatePicker
                                                 type="date"
@@ -357,7 +357,7 @@ const page = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">E-mail</label>
+                                        <label className="block text-gray-700 mb-2">อีเมล (Email)</label>
                                         <input
                                             type="text"
                                             name="email"

@@ -106,7 +106,7 @@ export const Personal = () => {
             </div>
 
             <div>
-                <label className="block text-gray-700 mb-2">เลขบัตรประชาชน (Identification number)</label>
+                <label className="block text-gray-700 mb-2">เลขประจำตัวประชาชน (Identification number)</label>
                 <input
                     type="text"
                     name="citizenId"
@@ -117,7 +117,7 @@ export const Personal = () => {
                 />
             </div>
             <div>
-                <label className="block text-gray-700 mb-2">Email</label>
+                <label className="block text-gray-700 mb-2">อีเมล (Email)</label>
                 <input
                     type="text"
                     name="email"
@@ -163,7 +163,7 @@ export const Personal = () => {
                     <input
                         type="text"
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="จุฬาลงกรณ์"
+                        placeholder="จุฬาลงกรณ์มหาวิทยาลัย"
                         disabled="true"
                     />
                 </div>
@@ -242,14 +242,14 @@ export const Personal = () => {
                             value={formData.Whereform}
                             onChange={handleChange}
                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="Academic year"
+                            placeholder="From the military education institution"
                         />
 
                     </div>
                 </div>
                 <div className="flex space-x-4 w-full  ">
                     <div className="w-1/2">
-                        <label className="block text-gray-700 mb-2">ชั้นปี (Year level)</label>
+                        <label className="block text-gray-700 mb-2">ชั้นปี (level)</label>
                         <select
                             name="BeforeMilitartYear"
                             value={formData.BeforeMilitartYear}
@@ -343,7 +343,7 @@ export const Personal = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-gray-700 mb-2">เลขที่ (Address number)</label>
+                    <label className="block text-gray-700 mb-2">เลขที่บ้าน (Address number)</label>
                     <input
                         type="text"
                         name="domicileNumber"

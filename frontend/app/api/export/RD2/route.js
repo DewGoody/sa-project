@@ -26,7 +26,7 @@ export async function GET(req) {
       id = idbefore.student_id
     }
     const data = await getMilitaryInfo(id);
-    console.log('test data export ',data);
+    // console.log('test data export ',data);
     
     if (!data) {
       return NextResponse.json({ error: "Student data not found" }, { status: 404 });

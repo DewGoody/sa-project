@@ -256,7 +256,6 @@ const CheckData = () => {
                 lnameEN: formData.lnameEN || "",
                 fac_id: '',
                 title: formData.Nametitle,
-                facultyNameTH: '',
                 dept: '',
                 tel_num: '',
                 year: formData.Collage_Year || '',
@@ -415,17 +414,17 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">วันเกิด (Birth date)</label>
+                                        <label className="block text-gray-700 mb-2">วันเกิด (Date of birth)</label>
                                         <input
                                             type="date"
                                             name="birthDate"
                                             value={formData.birthDate}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Birth Date"
+                                            placeholder="Date of birth"
                                         />
                                     </div>
-                                    
+
                                     <div>
                                         <label className="block text-gray-700 mb-2">เชื้อชาติ (Ethnicity)</label>
                                         <input
@@ -493,6 +492,18 @@ const CheckData = () => {
                                         />
                                     </div>
                                     <div>
+                                        <label className="block text-gray-700 mb-2">อาชีพของบิดา (Father's occupation)</label>
+                                        <input
+                                            type="text"
+                                            name="occupationfather"
+                                            value={formData.occupationfather}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                            placeholder="Father's occupation"
+                                        />
+                                    </div>
+                                    <div></div>
+                                    <div>
                                         <label className="block text-gray-700 mb-2">ชื่อมารดา (Mother's name)</label>
                                         <input
                                             type="text"
@@ -512,17 +523,6 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                             placeholder="Mother Surname"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2">อาชีพของบิดา (Father's occupation)</label>
-                                        <input
-                                            type="text"
-                                            name="occupationfather"
-                                            value={formData.occupationfather}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Father's occupation"
                                         />
                                     </div>
                                     <div>
@@ -548,14 +548,14 @@ const CheckData = () => {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เลขที่ (Address number)</label>
+                                        <label className="block text-gray-700 mb-2">บ้านเลขที่ (Address number)</label>
                                         <input
                                             type="text"
                                             name="domicileNumber"
                                             value={formData.domicileNumber}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Domicile Number"
+                                            placeholder="Address Number"
                                         />
                                     </div>
                                     <div>
@@ -577,7 +577,7 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         >
-                                            <option value="">{formData.province !== undefined ? formData.province : 'เลือกจังหวัด (Select province)'}</option>
+                                            <option value="">{formData.province !== undefined ? formData.province : 'เลือกจังหวัด (select province)'}</option>
                                             {provinces.map((item, index) => (
                                                 <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
                                             ))}
@@ -591,7 +591,7 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         >
-                                            <option value="">{formData.amphure !== undefined ? formData.amphure : 'เลือกอำเภอ (Select District)'}</option>
+                                            <option value="">{formData.amphure !== undefined ? formData.amphure : 'เลือกอำเภอ (select district)'}</option>
                                             {amphures.map((amphure, index) => (
                                                 <option key={index} data-id={amphure.id} value={amphure.name_th}>{amphure.name_th}</option>
                                             ))}
@@ -631,14 +631,14 @@ const CheckData = () => {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-gray-700 mb-2">เลขที่ (Address number)</label>
+                                        <label className="block text-gray-700 mb-2">บ้านเลขที่ (Address number)</label>
                                         <input
                                             type="text"
                                             name="militaryDomicileNumber"
                                             value={formData.militaryDomicileNumber}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Military Domicile Number"
+                                            placeholder="Address Number"
                                         />
                                     </div>
                                     <div>
@@ -649,21 +649,21 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         >
-                                            <option value="">{formData.militaryProvince !== undefined ? formData.militaryProvince : 'เลือกจังหวัด (Select province)'}</option>
+                                            <option value="">{formData.militaryProvince !== undefined ? formData.militaryProvince : 'เลือกจังหวัด (select province)'}</option>
                                             {provincesmilitary.map((item, index) => (
                                                 <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
                                             ))}
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2">อำเภอ (District)</label>
+                                        <label className="block text-gray-700 mb-2">เขต/อำเภอ (District)</label>
                                         <select
                                             name="militaryDistrict"
                                             value={formData.militaryDistrict}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         >
-                                            <option value={formData.militaryDistrict}>{formData.militaryDistrict}</option>
+                                            <option value={formData.militaryDistrict}>{formData.militaryDistrict !== undefined ? formData.militaryDistrict : "เลือกอำเภอ (select district)"}</option>
                                             {amphuresmilitary.map((amphure, index) => (
                                                 <option key={index} data-id={amphure.id} value={amphure.name_th}>{amphure.name_th}</option>
                                             ))}

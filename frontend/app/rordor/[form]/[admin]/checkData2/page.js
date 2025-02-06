@@ -390,8 +390,8 @@ const CheckData = () => {
             title: formData.Nametitle,
             fnameTH: formData.Name,
             lnameTH: formData.Surname,
-            fnameEN: formData.fnameEN || "", // Ensure fnameEN is provided
-            lnameEN: formData.lnameEN || "",
+            // fnameEN: formData.fnameEN || "", // Ensure fnameEN is provided
+            // lnameEN: formData.lnameEN || "",
             facultyNameTH: formData.Major,
             year: formData.Collage_Year,
             thai_id: formData.citizenId,

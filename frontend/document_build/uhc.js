@@ -203,6 +203,8 @@ async function uhc(data) {
 
   // date expired smart card
   const smart_card_expired_date = new Date(smart_card_expired).toLocaleDateString('th-TH', { dateStyle: 'long' }) || '';
+  console.log(smart_card_expired_date);
+  
   firstPage.drawText(`${smart_card_expired_date || ''}`, {
     x: 336,
     y: height - 280,

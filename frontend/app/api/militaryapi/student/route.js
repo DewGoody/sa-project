@@ -120,16 +120,18 @@ export async function PUT(req) {
         if (id ==0 && !body.id) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
         }
+
+        const { lnameEN,fnameEN, ...rest } = body;
         //const body = await req.json();
         const profile = await prisma.Student.upsert({
             where: {
                 id: id || body.id // No need to await here
             },
             update: {
-                ...body
+                ...rest
             },
             create: {
-                ...body,
+                ...rest,
                 id: id || body.id // No need to await here
             }
 
@@ -138,6 +140,8 @@ export async function PUT(req) {
         return NextResponse.json({ message: "Profile edited successfully" });
     } catch (error) {
         console.error('Error:', error);
+        console.log("military api student here");
+        
         return NextResponse.json({ error: "An error occurred while updating the profile" }, { status: 500 });
     }
 }

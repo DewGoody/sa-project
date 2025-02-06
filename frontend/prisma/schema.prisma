@@ -227,10 +227,10 @@ model Student {
   id                   Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
   lnameTH              String
   fnameTH              String
-  lnameEN              String
-  fnameEN              String
+  lnameEN              String?
+  fnameEN              String?
   fac_id               String
-  facultyNameTH        String
+  facultyNameTH        String?
   dept                 String
   year                 String
   bd                   DateTime             @db.Date

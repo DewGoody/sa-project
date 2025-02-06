@@ -302,14 +302,15 @@ const gold = () => {
 
 
                         <h2 className="pt-5 text-lg font-bold text-center mb-4 text-gray-800">
-                            อัพโหลดเอกสารที่นี่ (Upload documents here)
+                            อัปโหลดเอกสารต่อไปนี้ (Upload the followering)
                         </h2>
                         <section>
 
                             <div className="grid grid-cols-1 gap-6">
                                 <fieldset>
+                                    <h1 className=" text-red-500">* แต่ละไฟล์ไม่เกิน 5 MB *</h1>
                                     <div >
-                                        <div className =" py-4"> 
+                                        <div className=" py-4">
                                             <Dragger {...props}>
                                                 {/* <p className="ant-upload-drag-icon">
                                                     <InboxOutlined />
@@ -317,7 +318,7 @@ const gold = () => {
                                                 <p className="ant-upload-text">เอกสารที่เซ็นรับรอง</p>
                                             </Dragger>
                                         </div>
-                                        <div className =" py-4" > 
+                                        <div className=" py-4" >
                                             <Dragger {...citizen}>
                                                 {/* <p className="ant-upload-drag-icon">
                                                     <InboxOutlined />
@@ -325,15 +326,15 @@ const gold = () => {
                                                 <p className="ant-upload-text">สำเนาบัตรประชาชนที่เซ็นรับรองสำเนา</p>
                                             </Dragger>
                                         </div>
-                                        <div className =" py-4">
+                                        <div className=" py-4">
                                             <Dragger {...house}>
                                                 {/* <p className="ant-upload-drag-icon">
                                                     <InboxOutlined />
                                                 </p> */}
-                                                <p className="ant-upload-text">สำเนาทะเบียนที่ผู้ขอมีชื่ออยู่</p>
+                                                <p className="ant-upload-text">สำเนาทะเบียนบ้านที่ผู้ขอมีชื่ออยู่</p>
                                             </Dragger>
                                         </div>
-                                        <div className =" py-4">
+                                        <div className=" py-4">
                                             <Dragger {...student}>
                                                 {/* <p className="ant-upload-drag-icon">
                                                     <InboxOutlined />

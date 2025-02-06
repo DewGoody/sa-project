@@ -73,6 +73,8 @@ export async function GET(req) {
         address_id: null
       },
     }
+    console.log(data);
+    
     const pdfBytes = await uhc(data)
 
     const response = new NextResponse(pdfBytes, {
