@@ -30,16 +30,16 @@ export async function GET(req) {
 
         // Add files to the zip if they exist
         if (file.binary_file_data) {
-            zip.file('binary_file_data.pdf', file.binary_file_data);
+            zip.file('บัตรทอง.pdf', file.binary_file_data);
         }
         if (file.file_citizen) {
-            zip.file('file_citizen.pdf', file.file_citizen);
+            zip.file('สำเนาบัตรปะรชาชน.pdf', file.file_citizen);
         }
         if (file.file_house) {
-            zip.file('file_house.pdf', file.file_house);
+            zip.file('สำเนาทะเบียนบ้าน.pdf', file.file_house);
         }
         if (file.file_student) {
-            zip.file('file_student.pdf', file.file_student);
+            zip.file('สำเนาบัตรนิสิต.pdf', file.file_student);
         }
 
         // Generate the zip file

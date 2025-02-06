@@ -137,7 +137,7 @@ const App = () => {
                 birthdate: formatDateToDMYWithTime(item.entry?.json.student?.bd) || 'N/A',
                 status: item.entry?.status,
                 reqId: item.entry?.id,
-                rd_ID: item.entry?.json.Military_info.military_id || 'ปี1 ไม่มีเลขประจำตัว',
+                rd_ID: item.entry?.json.Military_info.military_id || '-',
                 yearRD: item.entry?.yearRD
             })))
             console.log(Data.fullname)
