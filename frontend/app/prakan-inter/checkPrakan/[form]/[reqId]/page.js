@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { Header } from "../../../../components/Header";
-import { useRouter,useParams } from 'next/navigation';
-import axios from 'axios';
+import { useRouter, useParams } from "next/navigation";
+import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 const RD = () => {
@@ -26,9 +26,9 @@ const RD = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/profile'); // Example API
+        const response = await axios.get("/api/profile"); // Example API
         console.log(response.data);
-        
+
         setProfileData(response.data);
         setLoading(false);
         console.log(response.data);
@@ -78,28 +78,32 @@ const RD = () => {
   // Function to handle navigation attempt
   const handleNavigation = async (event) => {
     console.log(profileData.id, form);
-    
-    if(reqId !== '0'){
-      router.push(`/appointment/${reqId}/0`);
-    }else{
-      const response = await axios.post(`/api/request/create`, {type: "Health insurance", status: "รอจองคิว", stuId: profileData.id, formId:form});
-    console.log("responseCreate:",response.data);
-    setCreateRequest(response.data);
-    const param = response.data.data.id;
-    if (!allChecked()) {
-      event.preventDefault();
-      alert(
-        "กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)"
-      );
-    } else {
-      router.push(`/appointment/${param}/0`);
-    }
-  }
-  };
-  const handleBack = () => {  
-    router.push(`/prakan-inter/${form}`);
-};
 
+    if (reqId !== "0") {
+      router.push(`/appointment/${reqId}/0`);
+    } else {
+      const response = await axios.post(`/api/request/create`, {
+        type: "Health insurance",
+        status: "รอจองคิว",
+        stuId: profileData.id,
+        formId: form,
+      });
+      console.log("responseCreate:", response.data);
+      setCreateRequest(response.data);
+      const param = response.data.data.id;
+      if (!allChecked()) {
+        event.preventDefault();
+        alert(
+          "กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)"
+        );
+      } else {
+        router.push(`/appointment/${param}/0`);
+      }
+    }
+  };
+  const handleBack = () => {
+    router.push(`/prakan-inter/${form}`);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -112,11 +116,10 @@ const RD = () => {
           {/* Personal & Contact Information Section */}
           <section>
             <h3 className="text-lg font-semibold mb-4 text-center">
-              Please prepare the following documents to submit to the
-              staff
+              Please prepare the following documents to submit to the staff
             </h3>
             <h3 className="text-lg font-normal mb-4 text-center">
-              นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
+              โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
             </h3>
             <div className="grid grid-cols-1 gap-6">
               <fieldset>
@@ -173,14 +176,13 @@ const RD = () => {
                       </strong>
                     </div>
                   </label>
-                  
                 </div>
                 <button
-              onClick={handleDownload}
-              className="mt-3 px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300"
-            >
-              Download
-            </button>
+                  onClick={handleDownload}
+                  className="mt-3 px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300"
+                >
+                  Download
+                </button>
               </fieldset>
               <div className="flex space-x-4">
                 <label
@@ -196,13 +198,11 @@ const RD = () => {
                       checked={checkboxes.Option1}
                       onChange={handleCheckboxChange}
                     />
-                    
                   </div>
-                  
 
                   <div>
                     <strong className="font-medium text-gray-900">
-                      รับทราบรายการเอกสาร
+                      Prepare the above documents
                     </strong>
                   </div>
                 </label>
@@ -222,7 +222,7 @@ const RD = () => {
 
                   <div>
                     <strong className="font-medium text-gray-900">
-                      ดาวน์โหลดไฟล์และตรวจสอบข้อมูลแล้ว
+                      Download the file and verify the information
                     </strong>
                   </div>
                 </label>
@@ -232,31 +232,25 @@ const RD = () => {
 
           {/* Navigation Buttons */}
           {Object.values(checkboxes).filter(Boolean).length >= 2 && (
-                <div className="flex justify-end mt-8">
-                            
-                <button 
-                    className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
-                    onClick={handleBack}
-                    >
+            <div className="flex justify-end mt-8">
+              <button
+                className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+                onClick={handleBack}
+              >
                 Back
-                </button>
-            
+              </button>
 
-            
-
-            <a
-                onClick={(event) => handleNavigation(event)}
-            >
+              <a onClick={(event) => handleNavigation(event)}>
                 <button
-                    type="submit"
-                    className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                  type="submit"
+                  className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                 >
-                    Book queue
-                    <ToastContainer />
+                  Book queue
+                  <ToastContainer />
                 </button>
-            </a>
-        </div>
-            )}
+              </a>
+            </div>
+          )}
         </div>
       </main>
     </div>
