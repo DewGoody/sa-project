@@ -76,7 +76,7 @@ const App = () => {
             console.error('Error fetching file:', error);
         }
     }
-    async function fetchZipFile(form) {
+    async function fetchZipFile(form ,stu_id) {
         try {
             const response = await fetch(`/api/POSTPDF/getpdfadmin?id=${form}`);
             if (!response.ok) {
@@ -86,7 +86,7 @@ const App = () => {
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `${form}_บัตรทอง.zip`;
+            link.download = `${stu_id}_บัตรทอง.zip`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -312,7 +312,7 @@ const App = () => {
                             fontSize: '21px', // Increase the size (e.g., 24px)
                             cursor: 'pointer', // Optional: changes the cursor to a pointer
                         }}
-                        onClick={() => fetchZipFile(record.reqId)}
+                        onClick={() => fetchZipFile(record.reqId ,record.student_ID)}
                     />
                 </div>
             ),
