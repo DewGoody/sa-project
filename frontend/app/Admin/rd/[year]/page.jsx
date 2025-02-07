@@ -377,7 +377,7 @@ const App = () => {
                     </div>
                     <div className='ml-3 mt-3'>
                         <p className='font-mono font-medium text-white'>
-                            Departmet of Scholarship & Students Service, Office of the Student Affairs, Chulalongkorn University
+                            Department of Scholarship & Student Services, Office of the Student Affairs, Chulalongkorn University
                         </p>
                     </div>
                     <div className="flex justify-center mt-5">

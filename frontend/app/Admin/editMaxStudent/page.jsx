@@ -106,10 +106,10 @@ const AppointmentManagement = () => {
                     </div>
                     <div className='text-center mt-4 ml-3 mr-3'>
                         <p className='font-mono font-semibold text-white'>
-                            Department of Scholarships & Students
+                            Department of Scholarships & Student
                         </p>
                         <p className='font-mono font-semibold text-white'>
-                            Service, Office of the Student Affairs,
+                            Services, Office of the Student Affairs,
                         </p>
                         <p className='font-mono font-semibold text-white'>
                             Chulalongkorn University
