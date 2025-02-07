@@ -116,6 +116,7 @@ export const Form = () => {
       setFormId(response.data.data[0].id);
       setNotQueue(response.data.data);
       setLoading(false);
+      fetchNotQueueGoldencard();
 
     } catch (error) {
       setError(error.message);
@@ -129,8 +130,8 @@ export const Form = () => {
       console.log("formIdgetNotQueueGoldencard", response.data.data[0].id);
       setFormId(response.data.data[0].id);
       setNotQueue((prevNotQueue) => [...prevNotQueue, ...response.data.data]);
-      console.log("notqueue",notQueue);
-      
+
+      console.log("notqueueformgoldencard", notQueue);
       setLoading(false);
 
     } catch (error) {
@@ -138,11 +139,23 @@ export const Form = () => {
       setLoading(false);
     }
   }
+  const fetchAllData = async () => {
+    await fetchNotQueueGoldencard();
+    await fetchNotQueue();
+    await fetchQueue();
+  };
+  
   useEffect(() => {
-    fetchNotQueue();
-    fetchQueue();
-    fetchNotQueueGoldencard();
+    fetchAllData();
   }, [profileData, deleteQueueId, deleteNotQueueId]);
+  
+  // useEffect(() => {
+  //   fetchNotQueueGoldencard();
+  //   fetchNotQueue();
+  //   fetchQueue();
+    
+  // }, [profileData, deleteQueueId, deleteNotQueueId]);
+
 
   console.log("prakanData", prakanData);
   console.log("prakanData length", prakanData.length);
@@ -153,8 +166,8 @@ export const Form = () => {
   };
 
   const handleBookQueue = async (item) => {
-    console.log("item",item);
-    const response = await axios.post('/api/queue/delete',{id: item.id}); // Example API
+    console.log("item", item);
+    const response = await axios.post('/api/queue/delete', { id: item.id }); // Example API
     const queueId = item.id
     const id = item.req_id;
     router.push(`/appointment/${id}/${queueId}`);
@@ -266,7 +279,7 @@ export const Form = () => {
                 {prakanData.length > 0 ? (
                   prakanData.map((item, index) => (
                     <div key={index} className="flex justify-between items-center mt-5">
-                      {((item.Request.status !== "คำขอถูกยกเลิก")&&(item.status === "จองคิวสำเร็จ" || item.status === "เข้ารับบริการแล้ว")) && (
+                      {((item.Request.status !== "คำขอถูกยกเลิก") && (item.status === "จองคิวสำเร็จ" || item.status === "เข้ารับบริการแล้ว")) && (
                         <div className="flex justify-between border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full">
                           <div className="">
                             {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " ( " + timeSlots[item.period] + " น.)" + " "}
@@ -320,7 +333,7 @@ export const Form = () => {
 
                     <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
                       <div>
-                        {count++ + ". " + item.type }
+                        {count++ + ". " + item.type}
                         <div className="flex">
                           <div className="ml-4 mt-1 font-semibold text-base text-blue-500">{item.status}</div>
                           <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div>
