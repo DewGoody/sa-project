@@ -7,9 +7,11 @@ import RedirectOnBack from './RedirectOnBack';
 import axios from "axios";
 import { Tabs } from "antd";
 
+
 export default function ScholarshipPage() {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState('');
+  const [selectedId, setSelectedId] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -161,6 +163,7 @@ export default function ScholarshipPage() {
   const handleDateClick = async (item,id) => {
     console.log("itemDateClick :",item);
     setSelectedDate(item.date);
+    setSelectedId(id);
     setSelectedPeriod('morning');
     setMorningAvailable(item.is_full.slice(0, item.is_full.length / 2));
     console.log("morningAvailable",morningAvailable)
@@ -234,16 +237,17 @@ export default function ScholarshipPage() {
               const formattedDate = `${day}/${month}/${year}`;
                 const isFull = item.is_full.includes(false);
               const isOpen = item.is_open.includes(true);
-              // console.log("isFullJa :",isFull + " " + item.date)
-              // console.log("isOpenJa :",isOpen + " " + item.date)
+
               
               if(!isFull ){
                 if(isOpen){
                   return (
                     <button
                       key={item.id}
-                      onClick={() => handleDateClick(item,item.id)}
-                      className="py-2 px-4 rounded-lg bg-pink-500 text-white hover:bg-pink-400"
+                      onClick={() => handleDateClick(item, item.id)}
+                      className={`py-2 px-4 rounded-lg text-white ${
+                        selectedId === item.id ? "bg-pink-400 border border-gray-600 shadow-md" : "bg-pink-500"
+                      } hover:bg-pink-300`}
                     >
                       {formattedDate}
                     </button>
@@ -265,12 +269,14 @@ export default function ScholarshipPage() {
                 if(isOpen){
                   return (
                     <button
-                      key={item.id}
-                      onClick={() => handleDateClick(item,item.id)}
-                      className="py-2 px-4 rounded-lg bg-pink-500 text-white hover:bg-pink-400"
-                    >
-                      {formattedDate} 
-                    </button>
+                    key={item.id}
+                    onClick={() => handleDateClick(item, item.id)}
+                    className={`py-2 px-4 rounded-lg text-white ${
+                      selectedId === item.id ? "bg-pink-400 border border-gray-600 shadow-md" : "bg-pink-500"
+                    } hover:bg-pink-400`}
+                  >
+                    {formattedDate}
+                  </button>
                   )
                 }
                 else{
@@ -292,26 +298,26 @@ export default function ScholarshipPage() {
           {selectedDate !== '' && (
             <Tabs
               key={selectedDate} // Add key to re-render Tabs when selectedDate changes
-              defaultActiveKey="morning"
-              type='card'
-              onChange={(key) => handlePeriodClick(key)}
-              className="custom-tabs"
-            >
+                defaultActiveKey="morning"
+                type='card'
+                onChange={(key) => handlePeriodClick(key)}
+                className="custom-tabs"
+              >
                 <TabPane
                   tab={
-                    morningAvailable.includes(false) || isMorningOpen.includes(true) ? (
-                      <span className="text-black" >ช่วงเช้า (Morning)</span>
-                    ) : (
-                      <span className="text-red-500">ช่วงเช้า (Morning) Full</span>
-                    )
+                  morningAvailable.includes(false) || isMorningOpen.includes(true) ? (
+                    <span className={selectedPeriod === 'morning' ? 'text-white' : 'text-black'}>ช่วงเช้า (Morning)</span>
+                  ) : (
+                    <span className="text-red-500">ช่วงเช้า (Morning) Full</span>
+                  )
                   }
                   key="morning"
                   disabled={!morningAvailable.includes(false) && !isMorningOpen.includes(true)}
                 >
                   
-                    <div className="mb-6">
-                      <div className="grid grid-cols-2 gap-4 mt-3">
-                        {timeSlotsMorning.map((timeSlot, index) => {
+                  <div className="mb-6">
+                    <div className="grid grid-cols-2 gap-4 mt-3">
+                    {timeSlotsMorning.map((timeSlot, index) => {
                           const isFull = morningAvailable[index];
                           const isOpen = isMorningOpen[index];
                           if(isFull){
@@ -375,7 +381,7 @@ export default function ScholarshipPage() {
                 <TabPane
                   tab={
                     afternoonAvailable.includes(false) || isAfternoonOpen.includes(true) ? (
-                      <span className="text-black">ช่วงบ่าย (Afternoon)</span>
+                      <span className={selectedPeriod === 'afternoon' ? 'text-white' : 'text-black'} >ช่วงบ่าย (Afternoon)</span>
                     ) : (
                       <span className="text-red-500">ช่วงบ่าย (Afternoon) Full</span>
                     )

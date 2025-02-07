@@ -32,9 +32,10 @@
 }
 
 .custom-tabs .ant-tabs-tab-active {
-    background-color: #f9a8d4 !important;
-    color: white !important;
+    background-color: #ec4899 !important;
+    text-align: center !important;
     border-radius: 8px;
+     
   }
   
   /* .custom-tabs .ant-tabs-tab {
@@ -49,3 +50,4 @@
   .custom-tabs .ant-tabs-ink-bar {
     background-color: #f472b6 !important;
   }
+  

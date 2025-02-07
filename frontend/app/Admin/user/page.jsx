@@ -28,7 +28,7 @@ const App = () => {
     const [shouldReload, setShouldReload] = useState(false);
     const [filteredInfo, setFilteredInfo] = useState({});
     const [form] = Form.useForm();
-
+    const [formEdit] = Form.useForm();
 
      useEffect(() => {
             if (shouldReload) {
@@ -172,16 +172,22 @@ const App = () => {
 
 
     const columns = [
+        
         {
-            title: 'ชื่อผู้ใช้งาน',
-            dataIndex: 'username',
-            ...getColumnSearchProps('username'),
+            title: 'ชื่อจริงเจ้าหน้าที่',
+            dataIndex: 'first_name',
+            ...getColumnSearchProps('first_name'),
         },
         {
-            title: 'อีเมล',
-            dataIndex: 'email',
-            ...getColumnSearchProps('email'),
-        },
+          title: 'นามสกุลเจ้าหน้าที่',
+          dataIndex: 'last_name',
+          ...getColumnSearchProps('last_name'),
+      },
+        {
+          title: 'ชื่อผู้ใช้งาน',
+          dataIndex: 'username',
+          ...getColumnSearchProps('username'),
+      },
         {
             title: 'แก้ไข/ลบ',
             dataIndex: 'edit',
@@ -321,40 +327,37 @@ const App = () => {
             />
             <Form form={form} onFinish={onFinish} layout="vertical">
         {/* Username Field */}
+        <Form.Item name="first_name" label="ชื่อจริงเจ้าหน้าที่" rules={[{ required: true, message: "Please enter your username" }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item name="last_name" label="นามสกุลเจ้าหน้าที่" rules={[{ required: true, message: "Please enter your username" }]}>
+          <Input />
+        </Form.Item>
         <Form.Item name="username" label="ชื่อผู้ใช้งาน" rules={[{ required: true, message: "Please enter your username" }]}>
           <Input />
         </Form.Item>
-
-        {/* Email Field */}
-        <Form.Item name="email" label="อีเมล" rules={[{ required: true, type: "email", message: "Enter a valid email" }]}>
-          <Input />
-        </Form.Item>
-
-        {/* Password Field */}
         <Form.Item
           name="password"
-          label="Password"
+          label="รหัสผ่าน"
           rules={[
-          { required: true, message: "Please enter your password" },
-          { min: 6, message: "Password must be at least 6 characters" }
+          { required: true, message: "โปรดใส่รหัสผ่าน" },
+          { min: 6, message: "รหัสผ่านต้องมากกว่า 6 ตัว" }
           ]}
         >
           <Input.Password />
         </Form.Item>
-
-        {/* Confirm Password Field */}
         <Form.Item
           name="confirmPassword"
-          label="Confirm Password"
+          label="ยืนยันรหัสผ่าน"
           dependencies={["password"]}
           rules={[
-          { required: true, message: "Please confirm your password" },
+          { required: true, message: "โปรดใส่รหัสผ่าน" },
           ({ getFieldValue }) => ({
             validator(_, value) {
             if (!value || getFieldValue("password") === value) {
               return Promise.resolve();
             }
-            return Promise.reject(new Error("Passwords do not match!"));
+            return Promise.reject(new Error("รหัสผ่านไม่ตรงกัน"));
             },
           }),
           ]}
@@ -363,11 +366,11 @@ const App = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit">Submit</Button>
+          <Button type="primary" htmlType="submit">สร้างผู้ใช้งาน</Button>
         </Form.Item>
     </Form>
     <Modal
-      title="Edit User"
+      title="แก้ไขผู้ใช้งาน"
       visible={isModalVisible}
       onCancel={handleCancel}
       footer={[
@@ -379,32 +382,67 @@ const App = () => {
       </Button>,
       ]}
     >
-      <Form layout="vertical">
-      <Form.Item label="ชื่อผู้ใช้งาน">
-        <Input
+      <Form form={formEdit} layout="vertical">
+      <Form.Item label="ชื่อจริงเจ้าหน้าที่">
+      <Input
+        name="first_name"
+        value={editingUser?.first_name}
+        onChange={handleInputChange}
+      />
+    </Form.Item>
+    <Form.Item label="นามสกุลเจ้าหน้าที่">
+      <Input
+        name="last_name"
+        value={editingUser?.last_name}
+        onChange={handleInputChange}
+      />
+    </Form.Item>
+    <Form.Item label="ชื่อผู้ใช้งาน">
+      <Input
         name="username"
         value={editingUser?.username}
         onChange={handleInputChange}
-        />
-      </Form.Item>
-      <Form.Item label="อีเมล">
-        <Input
-        name="email"
-        value={editingUser?.email}
-        onChange={handleInputChange}
-        />
-      </Form.Item>
-      <Form.Item
-          label="Password"
-          name="password"
-          initialValue={editingUser?.password}
+      />
+    </Form.Item>
+    <Form.Item>
+      <Button type="primary" onClick={() => setEditingUser({ ...editingUser, editPassword: true })}>
+        แก้ไขรหัสผ่าน
+      </Button>
+    </Form.Item>
+
+    {editingUser?.editPassword && (
+      <>
+        <Form.Item
+          label="รหัสผ่านใหม่"
+          name="password" // Fix this
           rules={[
-          { required: true, message: "Please enter your password" },
-          { min: 6, message: "Password must be at least 6 characters" }
+            { required: true, message: "โปรดใส่รหัสผ่าน" },
+            { min: 6, message: "รหัสผ่านต้องมากกว่า 6 ตัว" },
           ]}
         >
           <Input.Password onChange={handleInputChange} />
         </Form.Item>
+
+        <Form.Item
+          label="ยืนยันรหัสผ่านใหม่"
+          name="confirmPassword"
+          dependencies={["password"]}
+          rules={[
+            { required: true, message: "โปรดยืนยันรหัสผ่าน" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error("รหัสผ่านไม่ตรงกัน"));
+              },
+            }),
+          ]}
+        >
+          <Input.Password onChange={handleInputChange} />
+        </Form.Item>
+        </>
+      )}
       </Form>
     </Modal>
 

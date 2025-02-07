@@ -568,7 +568,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex">
-                  <label>หมู่ (Moo) :</label>
+                  <label>หมู่ที่ (Moo) :</label>
                   <div>
                     <input
                       type="text"
@@ -652,7 +652,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex">
-                  <label>หมู่ (Moo) :</label>
+                  <label>หมู่ที่ (Moo) :</label>
                   <div>
                     <input
                       type="text"
