@@ -12,6 +12,8 @@ export async function getAllUser(){
 export async function createUser(data) {    
     const createdUser = await prisma.user.create({
         data: {
+            last_name: data.last_name,
+            first_name: data.first_name,
             username: data.username,
             password: data.password,
             email: data.email
@@ -24,6 +26,8 @@ export async function updateUser(data) {
     const updatedUser = await prisma.user.update({
         where: {id: data.id},
         data: {
+            first_name: data.first_name,
+            last_name: data.last_name,
             username: data.username,
             password: data.password,
             email: data.email

@@ -375,7 +375,7 @@ const AppointmentManagement = () => {
             ...getColumnSearchProps('mother_name'),
         },
         {
-            title: 'ใบสำคัญ สด. 9',
+            title: 'ใบสำคัญ สด. 9 ที่',
             dataIndex: 'sdnine_id',
             align: 'center',
             ...getColumnSearchProps('sdnine_id'),
@@ -390,7 +390,7 @@ const AppointmentManagement = () => {
                     align: 'center',
                 },
                 {
-                    title: 'หมู่',
+                    title: 'หมู่ที่',
                     dataIndex: 'house_moo',
                     align: 'center',
                 },
@@ -421,7 +421,7 @@ const AppointmentManagement = () => {
                     align: 'center',
                 },
                 {
-                    title: 'หมู่',
+                    title: 'หมู่ที่',
                     dataIndex: 'house_moo_sd',
                     align: 'center',
                 },

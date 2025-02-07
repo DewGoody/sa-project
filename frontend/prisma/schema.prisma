@@ -450,4 +450,6 @@ model User {
   password   String?
   email      String?
   deleted_at DateTime? @db.Timestamptz(6)
+  first_name String?
+  last_name  String?
 }
