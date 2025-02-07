@@ -17,6 +17,7 @@ const login = () => {
         try {
             const response = await axios.post("/api/user/login", values);
             console.log("Login response:", response);
+    
             if (response.data.data) {
                 message.success("Login successful!");
                 router.push("/Admin/home/0");
