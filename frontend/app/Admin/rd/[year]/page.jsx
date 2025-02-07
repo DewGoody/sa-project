@@ -213,7 +213,7 @@ const App = () => {
     const columns = [
         {
             align: 'center',
-            title: 'แก้ไขข้อมูล',
+            title: '',
             dataIndex: 'status',
             render: (status, record) => {
                 if (status !== "ประวัติการแก้ไข") {

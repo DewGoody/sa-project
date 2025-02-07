@@ -1347,7 +1347,7 @@ const CheckData = () => {
                                                 <div className="w-1/2">
                                                     <div className="flex space-x-4 w-full">
                                                         <div className="w-11/12">
-                                                            <label className="block text-gray-700 mb-2">สถานศึกษา (Educational institution)</label>
+                                                            <label className="block text-gray-700 mb-2">สถานศึกษา (Educational institute)</label>
                                                             <input
                                                                 type="text"
                                                                 name="RD2_Academy1"
@@ -1406,7 +1406,7 @@ const CheckData = () => {
                                                     />
                                                 </div>
                                                 <div className="w-1/2">
-                                                    <label className="block text-gray-700 mb-2">/</label>
+                                                    <label className="block text-gray-700 mb-2">ปีการศึกษา (Fiscal year)</label>
                                                     <input
                                                         type="text"
                                                         name="RD2_LevelRD12"
@@ -1415,18 +1415,19 @@ const CheckData = () => {
                                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                                         placeholder="Level"
                                                     />
-                                                </div>
+                                                    </div>
+
                                             </div>
                                             <div className="flex space-x-4 w-full">
                                                 <div className="w-1/2">
-                                                    <label className="block text-gray-700 mb-2">สถานศึกษา (Educational institution)</label>
+                                                    <label className="block text-gray-700 mb-2">สถานศึกษา (Educational institute)</label>
                                                     <input
                                                         type="text"
                                                         name="RD2_AcademyRD1"
                                                         value={formData[`RD2_AcademyRD${i + 1}`] || ''}
                                                         onChange={(e) => handleinputchange_training(e, i)}
                                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                        placeholder="Educational institution"
+                                                        placeholder="Educational institute"
                                                     />
                                                 </div>
                                                 <div className="flex space-x-4 w-1/2">
@@ -1780,14 +1781,14 @@ const CheckData = () => {
                                         </div>
                                     </div>
                                     <div >
-                                        <label className="block text-gray-700 mb-2">สถานศึกษา (School)</label>
+                                        <label className="block text-gray-700 mb-2">สถานศึกษา (Educational institute)</label>
                                         <input
                                             type="text"
                                             name="follower1_school"
                                             value={formData.follower1_school}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="School"
+                                            placeholder="Educational institute"
                                         />
                                     </div>
                                     <div >
@@ -1909,26 +1910,26 @@ const CheckData = () => {
                                     <div className="flex space-x-4 w-full">
                                         <div className="text-lg font-semibold mb-4 pt-10 " >2.</div>
                                         <div className="w-full">
-                                            <label className="block text-gray-700 mb-2">ชื่อ นามสกุล(Name surname)</label>
+                                            <label className="block text-gray-700 mb-2">ชื่อ นามสกุล(Fullname)</label>
                                             <input
                                                 type="text"
                                                 name="follower2_name"
                                                 value={formData.follower2_name}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Name surname"
+                                                placeholder="Fullname"
                                             />
                                         </div>
                                     </div>
                                     <div >
-                                        <label className="block text-gray-700 mb-2">สถานศึกษา (School)</label>
+                                        <label className="block text-gray-700 mb-2">สถานศึกษา (Educational institute)</label>
                                         <input
                                             type="text"
                                             name="follower2_school"
                                             value={formData.follower2_school}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="School"
+                                            placeholder="Educational institute"
                                         />
                                     </div>
                                     <div >

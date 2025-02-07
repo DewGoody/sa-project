@@ -133,6 +133,13 @@ const gold = () => {
     const props = {
         name: 'file',
         multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        beforeUpload(file) {
+            const isPDF = file.type === 'application/pdf';
+            if (!isPDF) {
+                message.error('สามารถอัปโหลดได้เฉพาะไฟล์ PDF เท่านั้น!');
+            }
+            return isPDF || Upload.LIST_IGNORE; // ป้องกันการอัปโหลดไฟล์ที่ไม่ใช่ PDF
+        },
         onChange(info) {
             handleFileChange(info); // ใช้ฟังก์ชันใหม่ที่แก้ไขแล้ว
             const { status } = info.file;
@@ -154,6 +161,13 @@ const gold = () => {
     const citizen = {
         name: 'file',
         multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        beforeUpload(file) {
+            const isPDF = file.type === 'application/pdf';
+            if (!isPDF) {
+                message.error('สามารถอัปโหลดได้เฉพาะไฟล์ PDF เท่านั้น!');
+            }
+            return isPDF || Upload.LIST_IGNORE; // ป้องกันการอัปโหลดไฟล์ที่ไม่ใช่ PDF
+        },
         onChange(info) {
             handleFilecitizen(info); // ใช้ฟังก์ชันใหม่ที่แก้ไขแล้ว
             const { status } = info.file;
@@ -174,6 +188,13 @@ const gold = () => {
     const house = {
         name: 'file',
         multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        beforeUpload(file) {
+            const isPDF = file.type === 'application/pdf';
+            if (!isPDF) {
+                message.error('สามารถอัปโหลดได้เฉพาะไฟล์ PDF เท่านั้น!');
+            }
+            return isPDF || Upload.LIST_IGNORE; // ป้องกันการอัปโหลดไฟล์ที่ไม่ใช่ PDF
+        },
         onChange(info) {
             handleFilehouse(info); // ใช้ฟังก์ชันใหม่ที่แก้ไขแล้ว
             const { status } = info.file;
@@ -194,6 +215,13 @@ const gold = () => {
     const student = {
         name: 'file',
         multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        beforeUpload(file) {
+            const isPDF = file.type === 'application/pdf';
+            if (!isPDF) {
+                message.error('สามารถอัปโหลดได้เฉพาะไฟล์ PDF เท่านั้น!');
+            }
+            return isPDF || Upload.LIST_IGNORE; // ป้องกันการอัปโหลดไฟล์ที่ไม่ใช่ PDF
+        },
         onChange(info) {
             handleFilestudent(info); // ใช้ฟังก์ชันใหม่ที่แก้ไขแล้ว
             const { status } = info.file;
@@ -308,7 +336,7 @@ const gold = () => {
 
                             <div className="grid grid-cols-1 gap-6">
                                 <fieldset>
-                                    <h1 className=" text-red-500">* แต่ละไฟล์ไม่เกิน 5 MB *</h1>
+                                    <h1 className=" text-red-500">* อัปโหลดได้เฉพาะไฟล์ PDF ขนาดไฟล์ละไม่เกิน 5 MB *</h1>
                                     <div >
                                         <div className=" py-4">
                                             <Dragger {...props}>

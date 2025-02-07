@@ -130,7 +130,7 @@ const App = () => {
 
         const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits for day
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-        const year = String(date.getFullYear()).slice(-2); // Get the last 2 digits of the year
+        const year = String(date.getFullYear()).slice(); // Get the last 2 digits of the year
 
         const hours = String(date.getHours()).padStart(2, '0'); // Ensure 2 digits for hours
         const minutes = String(date.getMinutes()).padStart(2, '0'); // Ensure 2 digits for minutes
@@ -284,7 +284,7 @@ const App = () => {
     const columns = [
         {
             align: 'center',
-            title: 'แก้ไขข้อมูล',
+            title: '',
             dataIndex: 'status',
             render: (status, record) => {
                 if (status !== "ประวัติการแก้ไข") {

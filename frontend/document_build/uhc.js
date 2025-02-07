@@ -161,7 +161,7 @@ async function uhc(data) {
 
 
   // student year cut in 1 aug every year
-  let stu_year = currentDate.getFullYear() + 543 - (2500 + parseInt(year));
+  let stu_year =  parseInt(year);
   if (currentDate.getMonth() < 8) {
     stu_year += 1;
   }
