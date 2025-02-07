@@ -1141,7 +1141,7 @@ const CheckData = () => {
                                             />
                                         </div>
                                         <div className="w-1/2">
-                                            <label className="block text-gray-700 mb-2">นามสกุลบิดา (Mother's surname)</label>
+                                            <label className="block text-gray-700 mb-2">นามสกุลมารดา (Mother's surname)</label>
                                             <input
                                                 type="text"
                                                 name="motherSurname"
@@ -1168,7 +1168,7 @@ const CheckData = () => {
                                             <label className="block text-gray-700 mb-2">อาชีพ (Occupation)</label>
                                             <input
                                                 type="text"
-                                                name="motherjob"
+                                                name="occupationmother"
                                                 value={formData.occupationmother}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -1354,8 +1354,7 @@ const CheckData = () => {
                                                                 value={formData[`RD2_Academy${i + 1}`] || ''}
                                                                 onChange={(e) => handleinputchange(e, i)}
                                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                                placeholder="จุฬาลงกรณ์"
-                                                                disable="true"
+                                                                placeholder="Educational institute"
 
                                                             />
                                                         </div>

@@ -23,7 +23,7 @@ export default async function middleware(req: NextRequest) {
   const token = cookieStore.get('token')?.value;
 
   if (!token && protectedRoutes.includes(path)) {
-    return NextResponse.redirect(`https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv`);
+    return NextResponse.redirect(`http://localhost:3000/login`);
   }
 
   try {
@@ -35,7 +35,7 @@ export default async function middleware(req: NextRequest) {
     console.log('Time left:', expTime - currentTime);
     if (expTime <= currentTime) {
       console.log('Token has expired, redirecting to login');
-      return NextResponse.redirect(`https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv`);
+      return NextResponse.redirect(`http://localhost:3000/login`);
     }
 
     // Check if the token needs to be refreshed
@@ -65,10 +65,10 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   } catch (error) {
     console.error('JWT Verification Error:', error);
-    return NextResponse.redirect(`https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv`);
+    return NextResponse.redirect(`http://localhost:3000/login`);
   }
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ['/((?!api|login|_next/static|_next/image|.*\\.png$).*)'],
 };
