@@ -239,7 +239,7 @@ export const Form = () => {
             ฝ่ายทุนการศึกษาและบริการนิสิต สำนักบริหารกิจการนิสิต จุฬาลงกรณ์มหาวิทยาลัย
           </div>
           <div className="text-xs font-medium ml-9">
-            Department of Scholarships & Students Service, Office of the Student Affairs, Chulalongkorn University
+            Department of Scholarships & Student Services, Office of the Student Affairs, Chulalongkorn University
           </div>
         </div>
       </div>
@@ -271,25 +271,29 @@ export const Form = () => {
                           <div className="">
                             {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " ( " + timeSlots[item.period] + " น.)" + " "}
 
-                            <div className="ml-4 mt-1 font-semibold text-xl text-blue-500">{item.Request.status}</div>
+                            <div className="ml-4 mt-1 font-semibold text-base text-blue-500">{item.Request.status}</div>
+                            <div className="ml-4 text-md">
+                              <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2 ฝั่งโรงอาหาร</p>
+                              <p className="">(Chulachakrabonse Building, 2nd Floor, Cafeteria Side )</p>
+                            </div>
                           </div>
 
                           {item.Request.status === "รอเข้ารับบริการ" ? (
-                            <div className="ml-3 mt- mb-3 flex">
+                            <div className="mb-3 flex mr-1">
                               <button
-                                className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
+                                className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
                                 onClick={() => { showModalEditForm(item) }}
                               >
                                 Edit form
                               </button>
                               <button
-                                className="bg-pink-400 hover:bg-pink-300 text-white text-xs py-2 px-4 rounded ml-2"
+                                className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2"
                                 onClick={() => { handleBookQueue(item) }}
                               >
                                 Reschedule
                               </button>
                               <button
-                                className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-2"
+                                className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2"
                                 onClick={() => { showModal(item) }}
                               >
                                 Cancel
@@ -318,26 +322,26 @@ export const Form = () => {
                       <div>
                         {count++ + ". " + item.type + "  " + item.status}
                         <div className="flex">
-                          <div className="ml-4 mt-1 font-semibold text-xl text-blue-500">{item.status}</div>
-                          <div className=" ml-1 mt-1 font-semibold text-xl text-pink-400"> {item.more_info}</div>
+                          <div className="ml-4 mt-1 font-semibold text-base text-blue-500">{item.status}</div>
+                          <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div>
                         </div>
                       </div>
-                      <div className="flex">
+                      <div className="flex ml-50">
                         <button
-                          className="bg-blue-500  hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
+                          className="bg-blue-500  hover:bg-blue-400 text-white text-xs py-2 px-4 rounded "
                           onClick={() => { handleEditForm(item.id) }}
                         >
                           Edit form
                         </button>
                         {item.type !== "โครงการหลักประกันสุขภาพถ้วนหน้า" && (
-                          <button className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded ml-2"
+                          <button className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded ml-3"
                             onClick={() => { handleBookNotQueue(item.id) }}
                           >
                             Reschedule
                           </button>
                         )}
                         <button
-                          className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-2"
+                          className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-3"
                           onClick={() => { showModalNotQueue(item.id) }}
                         >
                           cancel

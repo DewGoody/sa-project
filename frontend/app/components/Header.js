@@ -12,7 +12,7 @@ export const Header = ({req1,req2}) => {
           </div>
           <div className='ml-12'>
             <h1 className="font-bold text-2xl text-gray-800">ฝ่ายทุนการศึกษาและบริการนิสิต สำนักบริหารกิจการนิสิต จุฬาลงกรณ์มหาวิทยาลัย</h1>
-            <h1 className="texl-ms text-gray-800">Department of Scholarships & Students Service, Office of the Student Affairs, Chulalongkorn University</h1>
+            <h1 className="texl-ms text-gray-800">Department of Scholarships & Student Services, Office of the Student Affairs, Chulalongkorn University</h1>
             <h1 className="font-bold text-2xl text-gray-800"> {req1}</h1>
             <h1 className="text-ms text-gray-800">{req2}</h1>
           </div>

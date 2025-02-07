@@ -1,10 +1,12 @@
 'use client'
-import { useState,useEffect, use } from 'react';
+import { useState,useEffect } from 'react';
 import { Header } from '../../../components/Header';
 import { UserOutlined } from '@ant-design/icons';
 import { useRouter, useParams } from 'next/navigation';
 import RedirectOnBack from './RedirectOnBack';
 import axios from "axios";
+import { Tabs } from "antd";
+
 export default function ScholarshipPage() {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState('');
@@ -24,7 +26,7 @@ export default function ScholarshipPage() {
   const [showTimeSlotsAfterNoon, setShowTimeSlotsAfterNoon] = useState(false);
   const [isMorningOpen, setIsMorningOpen] = useState([]);
   const [isAfternoonOpen, setIsAfternoonOpen] = useState([]);
-
+  const { TabPane } = Tabs;
   const router = useRouter();
   const { id } = useParams(); //id is reqId
   const {queueId} = useParams();
@@ -144,9 +146,8 @@ export default function ScholarshipPage() {
           router.push(`/waiting-appointment/${id}/${queueId}/${uid}`);
         }
       }
-      console.log("respobnse",response.data);
     }catch (err) {
-      console.log("Error fetching amphures: " + err);
+      console.log("Error create queue: " + err);
     }
   }
   
@@ -158,9 +159,11 @@ export default function ScholarshipPage() {
   if (error) return <div>Error: {error}</div>;
 
   const handleDateClick = async (item,id) => {
-    console.log("item::",item);
+    console.log("itemDateClick :",item);
     setSelectedDate(item.date);
+    setSelectedPeriod('morning');
     setMorningAvailable(item.is_full.slice(0, item.is_full.length / 2));
+    console.log("morningAvailable",morningAvailable)
     setAfternoonAvailable(item.is_full.slice(item.is_full.length / 2));
     setIsMorningOpen(item.is_open.slice(0, item.is_open.length / 2));
     setIsAfternoonOpen(item.is_open.slice(item.is_open.length / 2));
@@ -169,6 +172,7 @@ export default function ScholarshipPage() {
   };
 
   const handlePeriodClick = (period) => {
+    console.log("periodClick",period)
     setSelectedPeriod(period);
     if(period === 'morning'){
       setShowTimeSlotsMorning(true);
@@ -185,19 +189,24 @@ export default function ScholarshipPage() {
   };
 
   const handleTimeSlotClick = (timeSlot) => {
+    console.log("timeSlotClick",timeSlot)
     setSelectedTimeSlot(timeSlot);
     if(selectedPeriod === 'morning'){
       setMorningIdx(timeSlotsMorning.indexOf(timeSlot));
+      console.log("morningIdxClick",morningIdx)
     }
     else if(selectedPeriod === 'afternoon'){
       setAfternoonIdx(timeSlotsAfternoon.indexOf(timeSlot)+8);
+      console.log("afternoonIdxClick",afternoonIdx)
     }
   };
   console.log("selectedFetch",selectFetchDate)
+  console.log("timeSlotMorning",timeSlotsMorning)
 
-  console.log("timeSlot",timeSlotsAfternoon)
+  console.log("timeSlotAfternoon",timeSlotsAfternoon)
   
   console.log("morningIdx",morningIdx)
+  console.log("afternoonIdx",afternoonIdx)
 
 
   return (
@@ -208,7 +217,7 @@ export default function ScholarshipPage() {
         req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accident insurance claim" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "Military Service Postponement Request Form" : ""} 
       />
       <div className="flex flex-col items-center text-center p-6 font-sans min-h-screen bg-gray-50">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">จองคิวเข้ารับบริการ (Booking reservation)</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">จองคิวเข้ารับบริการ (Reservation)</h1>
         <div className="flex items-center bg-gray-100 p-4 rounded-lg mb-6 w-full max-w-xs shadow">
           <UserOutlined />
           <div className="text-left ml-8">
@@ -218,138 +227,239 @@ export default function ScholarshipPage() {
         </div>
         <div className="mb-6">
           <h3 className="text-gray-800 font-semibold">เลือกวันเข้ารับบริการ</h3>
-          <h3 className="text-gray-800 font-semibold">(Select an appointment date)</h3>
+          <h3 className="text-gray-800 font-semibold">(Select a date)</h3>
           <div className="flex gap-4 mt-3">
             {selectFetchDate.map((item) => {
               const [year, month, day] = item.date.split('T')[0].split('-');
               const formattedDate = `${day}/${month}/${year}`;
-                return item.is_full.every((isFull) => isFull === true) || item.is_open.every((isOpen) => isOpen === false) ? (
-                <button
-                  key={item.id}
-                  className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
-                  disabled
-                >
-                  {formattedDate} Full
-                </button>
-                ) : (
-                <button
-                  key={item.id}
-                  onClick={() => handleDateClick(item, item.id)}
-                  className={`py-2 px-4 rounded-lg ${selectedDate === item.date ? 'bg-pink-300 text-white border border-pink-800 shadow-md' : 'bg-pink-500 text-white hover:bg-pink-400'}`}
-                >
-                  {formattedDate}
-                </button>
-                );
+                const isFull = item.is_full.includes(false);
+              const isOpen = item.is_open.includes(true);
+              // console.log("isFullJa :",isFull + " " + item.date)
+              // console.log("isOpenJa :",isOpen + " " + item.date)
+              
+              if(!isFull ){
+                if(isOpen){
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => handleDateClick(item,item.id)}
+                      className="py-2 px-4 rounded-lg bg-pink-500 text-white hover:bg-pink-400"
+                    >
+                      {formattedDate}
+                    </button>
+                  )
+                }
+                else{
+                  return (
+                    <button
+                      key={item.id}
+                      className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                      disabled
+                    >
+                      {formattedDate} Closed
+                    </button>
+                  )
+                }
+              }
+              else {
+                if(isOpen){
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => handleDateClick(item,item.id)}
+                      className="py-2 px-4 rounded-lg bg-pink-500 text-white hover:bg-pink-400"
+                    >
+                      {formattedDate} 
+                    </button>
+                  )
+                }
+                else{
+                  return (
+                    <button
+                      key={item.id}
+                      className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                      disabled
+                    >
+                      {formattedDate} Closed
+                    </button>
+                  )
+              }
+            }
             })}
             </div>
-            </div>
-            {dateSelected && (
-            <div className="mb-6">
-            <h3 className="text-gray-800 font-semibold">เลือกช่วงเวลา</h3>
-            <h3 className="text-gray-800 font-semibold">(Select a time slot)</h3>
-            <div className="flex gap-4 mt-3">
-              {morningAvailable.includes(false) || isMorningOpen.includes(true) ? (
-              <button
-              onClick={() => handlePeriodClick('morning')}
-              className={`py-2 px-4 rounded-lg ${selectedPeriod === 'morning' ? 'bg-pink-300 text-white border border-pink-800 shadow-md' : 'bg-pink-500 text-white hover:bg-pink-400'}`}
-              >
-              ช่วงเช้า (Morning)
-              </button>
-              ) : (
-              <button
-              className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
-              disabled
-              >
-              ช่วงเช้า (Morning) Full
-              </button>
-              )}
-              {afternoonAvailable.includes(false) || isAfternoonOpen.includes(true) ? (
-              <button
-              onClick={() => handlePeriodClick('afternoon')}
-              className={`py-2 px-4 rounded-lg ${selectedPeriod === 'afternoon' ? 'bg-pink-300 text-white border border-pink-800 shadow-md' : 'bg-pink-500 text-white hover:bg-pink-400'}`}
-              >
-              ช่วงบ่าย (Afternoon)
-              </button>
-              ) : (
-              <button
-              className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
-              disabled
-              >
-              ช่วงบ่าย (Afternoon) Full
-              </button>
-              )}
-            </div>
-            </div>
-            )}
-            {showTimeSlotsMorning && (
-            <div className="mb-6">
-            <h3 className="text-gray-800 font-semibold">เลือกช่วงเวลา</h3>
-            <h3 className="text-gray-800 font-semibold">(Select a time slot)</h3>
-            <div className="grid grid-cols-2 gap-4 mt-3">
-              {timeSlotsMorning.map((timeSlot) => {
-                const isFull = morningAvailable[timeSlotsMorning.indexOf(timeSlot)];
-                const isOpen = isMorningOpen[timeSlotsMorning.indexOf(timeSlot)];
-                return isFull || (!isOpen) ? (
-                  <button
-                  key={timeSlot}
-                  className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
-                  disabled
-                  >
-                  {timeSlot} Full
-                  </button>
-                ) : (
-                  <button
-                  key={timeSlot}
-                  onClick={() => handleTimeSlotClick(timeSlot)}
-                  className={`py-2 px-4 rounded-lg ${selectedTimeSlot === timeSlot ? 'bg-pink-300 text-white border border-pink-800 shadow-md' : 'bg-pink-500 text-white hover:bg-pink-400'}`}
-                  >
-                  {timeSlot}
-                  </button>
-                );
-              })}
-            </div>
           </div>
-        )}
 
-        {showTimeSlotsAfterNoon && (
-          <div className="mb-6">
-            <h3 className="text-gray-800 font-semibold">เลือกช่วงเวลา</h3>
-            <h3 className="text-gray-800 font-semibold">(Select a time slot)</h3>
-            <div className="grid grid-cols-2 gap-4 mt-3">
-              {timeSlotsAfternoon.map((timeSlot) => {
-                const isFull = afternoonAvailable[timeSlotsAfternoon.indexOf(timeSlot)];
-                const isOpen = isAfternoonOpen[timeSlotsAfternoon.indexOf(timeSlot)];
-                return isFull || (!isOpen) ? (
-                  <button
-                    key={timeSlot}
-                    className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
-                    disabled
-                  >
-                    {timeSlot} Full
-                  </button>
-                ) : (
-                  <button
-                    key={timeSlot}
-                    onClick={() => handleTimeSlotClick(timeSlot)}
-                    className={`py-2 px-4 rounded-lg ${selectedTimeSlot === timeSlot ? 'bg-pink-300 text-white border border-pink-800 shadow-md' : 'bg-pink-500 text-white hover:bg-pink-400'}`}
-                  >
-                    {timeSlot}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
+          {selectedDate !== '' && (
+            <Tabs
+              key={selectedDate} // Add key to re-render Tabs when selectedDate changes
+              defaultActiveKey="morning"
+              type='card'
+              onChange={(key) => handlePeriodClick(key)}
+              className="custom-tabs"
+            >
+                <TabPane
+                  tab={
+                    morningAvailable.includes(false) || isMorningOpen.includes(true) ? (
+                      <span className="text-black" >ช่วงเช้า (Morning)</span>
+                    ) : (
+                      <span className="text-red-500">ช่วงเช้า (Morning) Full</span>
+                    )
+                  }
+                  key="morning"
+                  disabled={!morningAvailable.includes(false) && !isMorningOpen.includes(true)}
+                >
+                  
+                    <div className="mb-6">
+                      <div className="grid grid-cols-2 gap-4 mt-3">
+                        {timeSlotsMorning.map((timeSlot, index) => {
+                          const isFull = morningAvailable[index];
+                          const isOpen = isMorningOpen[index];
+                          if(isFull){
+                            if(!isOpen){
+                              return(
+                                <button
+                                  key={timeSlot}
+                                  className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                                  disabled
+                                >
+                                  {timeSlot} Closed
+                                </button>
+                              )
+                            }
+                            else{
+                              return(
+                                <button
+                                  key={timeSlot}
+                                  className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                                  disabled
+                                >
+                                  {timeSlot} Full
+                                </button>
+                              )
+                            }
+                          }
+                          else{
+                            if(isOpen){
+                              return(
+                                <button
+                                  key={timeSlot}
+                                  onClick={() => handleTimeSlotClick(timeSlot)}
+                                  className={`py-2 px-4 rounded-lg ${
+                                    selectedTimeSlot === timeSlot
+                                      ? "bg-pink-300 text-white border border-pink-800 shadow-md"
+                                      : "bg-pink-500 text-white hover:bg-pink-400"
+                                  }`}
+                                >
+                                  {timeSlot}
+                                </button>
+                              )
+                            }
+                            else{
+                              return(
+                                <button
+                                  key={timeSlot}
+                                  className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                                  disabled
+                                >
+                                  {timeSlot} Closed
+                                </button>
+                              )
+                            }
+                          }
+                        })}
+                      </div>
+                    </div>
+                  
+                </TabPane>
+
+                <TabPane
+                  tab={
+                    afternoonAvailable.includes(false) || isAfternoonOpen.includes(true) ? (
+                      <span className="text-black">ช่วงบ่าย (Afternoon)</span>
+                    ) : (
+                      <span className="text-red-500">ช่วงบ่าย (Afternoon) Full</span>
+                    )
+                  }
+                  key="afternoon"
+                  disabled={!afternoonAvailable.includes(false) && !isAfternoonOpen.includes(true)}
+                >
+                  {showTimeSlotsAfterNoon && (
+                    <div className="mb-6">
+                      <div className="grid grid-cols-2 gap-4 mt-3">
+                        {timeSlotsAfternoon.map((timeSlot, index) => {
+                          const isFull = afternoonAvailable[index];
+                          const isOpen = isAfternoonOpen[index];
+                          if(isFull){
+                            if(!isOpen){
+                              return(
+                                <button
+                                  key={timeSlot}
+                                  className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                                  disabled
+                                >
+                                  {timeSlot} Closed
+                                </button>
+                              )
+                            }
+                            else{
+                              return(
+                                <button
+                                  key={timeSlot}
+                                  className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                                  disabled
+                                >
+                                  {timeSlot} Full
+                                </button>
+                              )
+                            }
+                          }
+                          else{
+                            if(isOpen){
+                              return(
+                                <button
+                                  key={timeSlot}
+                                  onClick={() => handleTimeSlotClick(timeSlot)}
+                                  className={`py-2 px-4 rounded-lg ${
+                                    selectedTimeSlot === timeSlot
+                                      ? "bg-pink-300 text-white border border-pink-800 shadow-md"
+                                      : "bg-pink-500 text-white hover:bg-pink-400"
+                                  }`}
+                                >
+                                  {timeSlot}
+                                </button>
+                              )
+                            }
+                            else{
+                              return(
+                                <button
+                                  key={timeSlot}
+                                  className="py-2 px-4 rounded-lg bg-gray-300 text-red-500 cursor-not-allowed"
+                                  disabled
+                                >
+                                  {timeSlot} Closed
+                                </button>
+                              )
+                            }
+                          }
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </TabPane>
+            </Tabs>
+          )}
         
         {selectedTimeSlot ? (
           <div className="mt-8 w-full max-w-xs">
             <div className="bg-pink-100 p-5 rounded-lg mb-4 text-gray-700">
               <p className="font-semibold">วันที่เข้ารับบริการ</p>
-              <p className="font-semibold">(Service Appointment Date)</p>
+              <p className="font-semibold">(Service appointment date)</p>
               <p className='text-lg'>{selectedDate.split('T')[0].split('-').reverse().join('/')}</p>
               <p className="mt-2 font-semibold">ช่วงเวลา</p>
-              <p className="font-semibold">(Time Slot)</p>
+              <p className="font-semibold">(Time)</p>
               <p className='text-lg'>{selectedTimeSlot}</p>
+              <p className="mt-2 font-semibold">อาคารจุลจักรพงษ์ ชั้น 2 ฝั่งโรงอาหาร</p>
+              <p className="font-semibold">(Chulachakrabonse Building, 2nd Floor, Cafeteria Side )</p>
             </div>
             <div className='flex justify-around'>
               <a href='/home'>

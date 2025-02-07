@@ -178,7 +178,7 @@ const RD = () => {
                                         </div>
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">จัดเตรียมเอกสารตามข้อมูลข้างต้น (Prepare the documents as per the information above)</strong>
+                                            <strong className="font-medium text-gray-900">จัดเตรียมเอกสารตามข้อมูลข้างต้น (Prepare the  above documents)</strong>
                                         </div>
                                     </label>
 

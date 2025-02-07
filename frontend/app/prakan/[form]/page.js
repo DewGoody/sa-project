@@ -6,6 +6,7 @@ import { Header } from '../../components/Header.js';
 import numberToThaiText from "../../components/numberToThaiText.js";
 import { useRouter,useParams } from 'next/navigation';
 import { Select, DatePicker, Space } from 'antd';
+import dayjs from 'dayjs';
 
 export default function Form() {
   const [prakanData, setPrakanData] = useState({});
@@ -29,7 +30,7 @@ export default function Form() {
   const fetchDataForm = async () => {
     try {
       const response = await axios.post(`/api/prakan/getDataById`, { id: parseInt(form) });
-      console.log("kuy",response.data.data);
+      console.log("fetchData",response.data.data);
       const isoDate = response.data.data.acc_date;
       const formattedDate = isoDate.split("T")[0];
       setDate(formattedDate); 
@@ -122,8 +123,8 @@ export default function Form() {
   };
   const handleChangeDateAcc = (event) => {
    console.log("dateeeee", prakanData.acc_date);
-   setDate(event.target.value)
-    const timestamp = new Date(event.target.value)
+   setDate(event)
+    const timestamp = new Date(event)
     console.log("timestamp",timestamp);
     setPrakanData({ ...prakanData, acc_date: timestamp });
     setAlreadyData({ ...alreadyData, acc_date: timestamp });
@@ -140,9 +141,9 @@ export default function Form() {
     setAlreadyData({ ...alreadyData, treatment_place: event.target.value });
   };
   const handleChangeTypeHos = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, hospital_type: event.target.value });
-    setAlreadyData({ ...alreadyData, hospital_type: event.target.value });
+    console.log("event",event);
+    setPrakanData({ ...prakanData, hospital_type: event });
+    setAlreadyData({ ...alreadyData, hospital_type: event });
   };
   const handleChangeMedicalFeeNum = (event) => {
     console.log(event.target.value);
@@ -331,7 +332,7 @@ export default function Form() {
                       
                     >
                       <option value="เลือกประเภทสถานพยาบาล" disabled>
-                        เลือกประเภท (Select type)
+                        เลือกประเภท (select type)
                        </option>
                       <option value="โรงพยาบาลรัฐ" className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>
                       <option value="โรงพยาบาลเอกชน">โรงพยาบาลเอกชน (private hospital)</option>
@@ -343,7 +344,13 @@ export default function Form() {
                 <label className="block text-gray-700 mt-1" >
                     วันที่เกิดอุบัติเหตุ (Date of accident) :
                     <Space direction="vertical" className="ml-3">
-                      <DatePicker onChange={handleChangeDateAcc} />
+                      <DatePicker 
+                        onChange={handleChangeDateAcc}  
+                        format="DD/MM/YYYY"  
+                        placeholder="เลือกวัน (select date)"
+                        style={{ width: 220 }}
+                        value={dayjs(alreadyData?.acc_date)}
+                      />
                     </Space>  
                   </label>
                 </div>

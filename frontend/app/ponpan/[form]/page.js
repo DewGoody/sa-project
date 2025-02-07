@@ -399,7 +399,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex">
-                  <label className="block text-gray-700 mt-1" >รหัสประจำตัวประชาชน (Identification number) :</label>
+                  <label className="block text-gray-700 mt-1" >เลขบัตรประชาชน (Identification number) :</label>
                   <div className="">
                     <input
                       type="text"
@@ -410,7 +410,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex">
-                  <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Year) :</label>
+                  <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Academic year) :</label>
                   <div>
                     <input
                       type="text"
@@ -430,7 +430,7 @@ const handleDistrictSD9Change = (e) => {
                       value={alreadyData?.degree}
                       onChange={handleChangeDegree}
                     >
-                    <option value="">เลือกระดับการศึกษา (Select Degree)</option>
+                    <option value="">เลือกระดับการศึกษา (select degree)</option>
                     <option value="ปริญญาตรี">ปริญญาตรี (Bachelor)</option>
                     <option value="ปริญาโท">ปริญาโท (Master)</option>
                     <option value="ปริญญาเอก">ปริญญาเอก (Doctorate)</option>
@@ -590,7 +590,7 @@ const handleDistrictSD9Change = (e) => {
                   
                 </div>
                 <div className="flex">
-                  <label>ใบสำคัญ สด.9 ที่ (Address in Sor dor 9) :</label>
+                  <label>ใบสำคัญ สด.9 ที่ (Sor Dor 9 certificate) :</label>
                   <div>
                     <input
                       type="text"
@@ -680,9 +680,9 @@ const handleDistrictSD9Change = (e) => {
             onClick={handleSubmit}
             htmlType="submit"
             
-            className="bg-pink-300 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+            className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
           >
-            Next
+            Check data
           </button>
 
         </div>

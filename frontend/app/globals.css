@@ -30,3 +30,22 @@
 .ant-table-tbody > tr:nth-child(even):hover > td {
     background-color: #f3edf7 !important; /* สีแถวคู่เมื่อ hover */
 }
+
+.custom-tabs .ant-tabs-tab-active {
+    background-color: #f9a8d4 !important;
+    color: white !important;
+    border-radius: 8px;
+  }
+  
+  /* .custom-tabs .ant-tabs-tab {
+    transition: all 0.3s ease-in-out;
+  } */
+  
+  .custom-tabs .ant-tabs-tab:hover {
+    background-color: #f472b6 !important;
+    color: white !important;
+  }
+  
+  .custom-tabs .ant-tabs-ink-bar {
+    background-color: #f472b6 !important;
+  }
