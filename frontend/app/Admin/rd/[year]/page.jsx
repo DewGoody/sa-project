@@ -188,9 +188,13 @@ const App = () => {
     const filepdf = async (reqId, year) => {
         try {
             if (year == 1) {
+                console.log(reqId);
+                
                 const response = await axios.get(`/api/export/AdminRD1?id=${reqId}`, { responseType: 'blob' });
                 return response.data;
             } else {
+                console.log(reqId);
+                
                 const response = await axios.get(`/api/export/AdminRD2?id=${reqId}`, { responseType: 'blob' });
                 return response.data;
             }

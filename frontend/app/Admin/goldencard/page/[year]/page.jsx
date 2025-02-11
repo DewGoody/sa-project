@@ -1,5 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
+import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
+import { saveAs } from 'file-saver'; // เพิ่ม FileSaver สำหรับบันทึกไฟล์
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import {
@@ -76,7 +78,7 @@ const App = () => {
             console.error('Error fetching file:', error);
         }
     }
-    async function fetchZipFile(form ,stu_id) {
+    async function fetchZipFile(form, stu_id) {
         try {
             const response = await fetch(`/api/POSTPDF/getpdfadmin?id=${form}`);
             if (!response.ok) {
@@ -121,7 +123,7 @@ const App = () => {
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = date.getFullYear(); // Get the full year
 
-        return `${day}/${month}/${year}`; // Return in dd/mm/yyyy format
+        return `${day}/${month}/${year +543}`; // Return in dd/mm/yyyy format
     };
     const formatDateToDMYWithTime = (dateString) => {
         if (!dateString) return 'N/A'; // Handle null or undefined dates
@@ -139,21 +141,34 @@ const App = () => {
     };
 
     const [Data, setData] = useState([])
+    let currentDate = new Date();
+    const getyear = (id) => {
+        const studentYear = parseInt(String(id).substring(0, 2));
+        const studentClass = (currentDate.getFullYear() + 543) - (studentYear + 2500);
+        return studentClass
+    }
     const fetchData = async () => {
 
         try {
-            const response = await axios.post(`/api/Admin/getgoldenbyreq_id` , { year: parseInt(year) })
+            const response = await axios.post(`/api/Admin/getgoldenbyreq_id`, { year: parseInt(year) })
             setData(...Data, response.data.map((item, index) => ({
                 key: index, // Unique key for each row
-                fullname: `${item.Student?.fnameTH || ''} ${item.Student?.lnameTH || ''}`,
-                student_ID: item.stu_id?.toString(),
-                citizen_ID: item.Student?.thai_id || 'N/A',
-                birthdate: formatDateToDMY(item.Student?.bd) || 'N/A',
+                fullname: `${item.Student?.fnameTH || ''} ${item.Student?.lnameTH || ''}`, //check
+                student_ID: item.stu_id?.toString(), //check
+                citizen_ID: item.Student?.thai_id || 'N/A', //check
+                birthdate: formatDateToDMY(item.Student?.bd) || 'N/A', //check
                 reqId: item.id,
                 status: item.status,
                 updateat: formatDateToDMYWithTime(item.created_at),
+                province: item.UHC_request?.[0]?.province,
+                district: item.UHC_request?.[0]?.district,
+                hospital: item.UHC_request?.[0]?.hospital || "N/A",
+                facultyNameTH: item.Student?.facultyNameTH || "N/A",
+                phone: item.Student?.phone_num || "N/A",
+                email: item.Student?.personal_email || "N/A",
+                year: getyear(item.stu_id?.toString()),
             })))
-            // console.log(Data.status)
+            console.log(Data)
 
         } catch (error) {
             console.log(error)
@@ -312,7 +327,7 @@ const App = () => {
                             fontSize: '21px', // Increase the size (e.g., 24px)
                             cursor: 'pointer', // Optional: changes the cursor to a pointer
                         }}
-                        onClick={() => fetchZipFile(record.reqId ,record.student_ID)}
+                        onClick={() => fetchZipFile(record.reqId, record.student_ID)}
                     />
                 </div>
             ),
@@ -422,16 +437,27 @@ const App = () => {
             ),
         },
         {
-            title: 'ชื่อ-นามสกุล',
-            dataIndex: 'fullname',
-            ...getColumnSearchProps('fullname'),
+            title: 'ปี',
+            dataIndex: 'year',
+            ...getColumnSearchProps('year'),
         },
-
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
             ...getColumnSearchProps('student_ID'),
         },
+        {
+            title: 'ชื่อ-นามสกุล',
+            dataIndex: 'fullname',
+            ...getColumnSearchProps('fullname'),
+        },
+        {
+            title: 'คณะ',
+            dataIndex: 'facultyNameTH',
+            ...getColumnSearchProps('facultyNameTH'),
+        },
+
+
         {
             title: 'เลขบัตรประชาชน',
             dataIndex: 'citizen_ID',
@@ -441,7 +467,68 @@ const App = () => {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
         },
+        {
+            title: 'อำเภอ/เขต',
+            dataIndex: 'district',
+            ...getColumnSearchProps('district'),
+        },
+        {
+            title: 'จังหวัด',
+            dataIndex: 'province',
+            ...getColumnSearchProps('province'),
+        },
+        {
+            title: 'เบอร์มือถือ',
+            dataIndex: 'phone',
+            ...getColumnSearchProps('phone'),
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            ...getColumnSearchProps('email'),
+        },
+        {
+            title: 'ชื่อสถานพยาบาลก่อนลงทะเบียน',
+            dataIndex: 'hospital',
+            ...getColumnSearchProps('hospital'),
+        },
     ];
+    
+    const exportToExcel = () => {
+        // กำหนดชื่อ Columns ที่ต้องการ
+        const columnHeaders = [
+            { header: "ปี", key: "year" },
+            { header: "ลำดับ", key: "" },
+            { header: "รหัสนิสิต", key: "student_ID" },
+            { header: "ชื่อ-นามสกุล", key: "fullname" },
+            { header: "คณะ", key: "facultyNameTH" },
+            { header: "เลขบัตรประชาชน", key: "citizen_ID" },
+            { header: "วันเกิด", key: "birthdate" },
+            { header: "อำเภอ/เขต", key: "district" },
+            { header: "จังหวัด", key: "province" },
+            { header: "เบอร์มือถือ", key: "phone" },
+            { header: "Email", key: "email" },
+            { header: "ชื่อสถานพยาบาลก่อนลงทะเบียน", key: "hospital" }
+        ];
+
+        // เพิ่มชื่อ Columns เข้าไปเป็น Row แรก
+        const dataWithHeaders = [
+            columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+            ...Data.map((item) => columnHeaders.map(col => item[col.key] || '')) // ข้อมูลตามลำดับ
+        ];
+
+        // สร้าง Worksheet ด้วยข้อมูลที่มี Header
+        const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+
+        // สร้าง Workbook และเพิ่ม Worksheet
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+        // เขียนไฟล์ Excel และดาวน์โหลด
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(data, "exported_data.xlsx");
+    };
 
 
     return (
@@ -521,7 +608,7 @@ const App = () => {
                             key: '8',
                             label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
                             onClick: () => window.location.href = '/Admin/user'
-                          }
+                        }
                     ]}
                 />
             </Sider>
@@ -557,6 +644,9 @@ const App = () => {
                                 ))}
                             </Select>
                         </div>
+                        <Button className="mt-1 mb-6 px-4" type="primary" onClick={exportToExcel} style={{ marginBottom: '16px' }}>
+                            Export to Excel
+                        </Button>
 
                     </div>
                     <Table

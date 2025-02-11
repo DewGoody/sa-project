@@ -318,6 +318,9 @@ model UHC_request {
   file_citizen     Bytes?
   file_house       Bytes?
   file_student     Bytes?
+  province         String?
+  district         String?
+  hospital         String?
   Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student   @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

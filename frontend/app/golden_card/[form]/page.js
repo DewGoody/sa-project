@@ -135,6 +135,12 @@ const page = () => {
                 return Data.otherStatus
             }
         }
+        const status_only = () => {
+            if (Data.benefitStatus === "existing") {
+                // console.log("exxxxxxxxxx")
+                return Data.hospitalName
+            }
+        }
         const id = Data.id
         e.preventDefault();
         try {
@@ -180,11 +186,19 @@ const page = () => {
             })
 
             if (int_req_id !== 0) {
-                const response = await axios.post(`/api/POSTPDF/updatestatus?id=${int_req_id}`)
+                const response = await axios.post(`/api/POSTPDF/updatestatus?id=${int_req_id}`, {
+                    province: Data.provice,
+                    districts: Data.district,
+                    hospital: status_before(),
+                })
                 console.log("ID return", response.data.id);
                 router.push(`/golden_card/Doc/${response.data.id}`)
             } else {
-                const response = await axios.post(`/api/POSTPDF/create`)
+                const response = await axios.post(`/api/POSTPDF/create`, {
+                    province: Data.provice,
+                    districts: Data.district,
+                    hospital: status_before(),
+                })
                 console.log("ID return", response.data.id);
                 router.push(`/golden_card/Doc/${response.data.id}`)
             }

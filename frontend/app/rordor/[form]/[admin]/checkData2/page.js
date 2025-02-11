@@ -89,6 +89,18 @@ const CheckData = () => {
     const handledeleteclick = (e, index) => {
         e.preventDefault(); // Prevents form submission
         const list = [...inputlist_education];
+        const gradeKey = `RD2_Grade${index + 1}`;
+        const levelKey = `RD2_Level${index + 1}`;
+        const majorKey = `RD2_Major${index + 1}`;
+        const academyKey = `RD2_Academy${index + 1}`;
+
+        // Update formData with the correct keys
+        updateFormData({
+            [gradeKey]: "",
+            [levelKey]: "",
+            [majorKey]: "",
+            [academyKey]: "",
+        });
         list.splice(index, 1);
         setinputlist_education(list);
     };
@@ -127,6 +139,18 @@ const CheckData = () => {
     const handledeleteclick_training = (e, index) => {
         e.preventDefault(); // Prevents form submission
         const list = [...inputlist_training];
+        const gradeKey = `RD2_LevelRD${index + 1}`;
+        const levelKey = `RD2_LevelRD${index + 1}2`;
+        const majorKey = `RD2_AcademyRD${index + 1}`;
+        const academyKey = `RD2_ProvinceRD${index + 1}`;
+
+        // Update formData with the correct keys
+        updateFormData({
+            [gradeKey]: "",
+            [levelKey]: "",
+            [majorKey]: "",
+            [academyKey]: "",
+        });
         list.splice(index, 1);
         setinputlist_training(list);
     };
@@ -164,8 +188,20 @@ const CheckData = () => {
     const handledeleteclick_role = (e, index) => {
         e.preventDefault(); // Prevents form submission
         const list = [...inputlist_role];
+        const rank = `military_rank${index + 1}`;
+        const crops = `corps_rank${index + 1}`;
+        const command = `command_rank${index + 1}`;
+        const date = `date_rank${index + 1}`;
+        updateFormData({
+            [rank]: "",
+            [crops]: "",
+            [command]: "",
+            [date]: "",
+        })
         list.splice(index, 1);
         setinputlist_role(list);
+        console.log(index);
+
     };
 
 
@@ -381,7 +417,7 @@ const CheckData = () => {
         return { year, month, day };
     }
     const id = formData.id
-    console.log("dadshkfjshfkjashfkashfjkadshfjkashkd", id);
+    console.log("dadshkfjshfkjashfkashfjkadshfjkashkd", formData.RD2_Grade1);
 
     const dataforsentlog = {
         registeryear: formData.YearGradeRD,
@@ -414,22 +450,26 @@ const CheckData = () => {
             prev_military_class: formData.BeforeMilitartYear,
             prev_school: formData.Whereform,
             prev_year: formData.YearBefore,
-            academic_grade1: formData.RD2_Academy1,
+            academic_grade1: formData.RD2_Grade1,
             academic_class1: formData.RD2_Level1,
             academic_major1: formData.RD2_Major1,
             academic_school1: formData.RD2_Academy1,
-            academic_grade2: formData.RD2_Academy2,
+
+            academic_grade2: formData.RD2_Grade2,
             academic_class2: formData.RD2_Level2,
             academic_major2: formData.RD2_Major2,
             academic_school2: formData.RD2_Academy2,
-            academic_grade3: formData.RD2_Academy3,
+
+            academic_grade3: formData.RD2_Grade3,
             academic_class3: formData.RD2_Level3,
             academic_major3: formData.RD2_Major3,
             academic_school3: formData.RD2_Academy3,
-            academic_grade4: formData.RD2_Academy4,
+
+            academic_grade4: formData.RD2_Grade4,
             academic_class4: formData.RD2_Level4,
             academic_major4: formData.RD2_Major4,
             academic_school4: formData.RD2_Academy4,
+
             military_grade1: formData.RD2_LevelRD1,
             military_year1: formData.RD2_LevelRD12,
             military_school1: formData.RD2_AcademyRD1,
@@ -632,22 +672,26 @@ const CheckData = () => {
                     prev_military_class: formData.BeforeMilitartYear,
                     prev_school: formData.Whereform,
                     prev_year: formData.YearBefore,
-                    academic_grade1: formData.RD2_Academy1,
+                    academic_grade1: formData.RD2_Grade1,
                     academic_class1: formData.RD2_Level1,
                     academic_major1: formData.RD2_Major1,
                     academic_school1: formData.RD2_Academy1,
-                    academic_grade2: formData.RD2_Academy2,
+
+                    academic_grade2: formData.RD2_Grade2,
                     academic_class2: formData.RD2_Level2,
                     academic_major2: formData.RD2_Major2,
                     academic_school2: formData.RD2_Academy2,
-                    academic_grade3: formData.RD2_Academy3,
+
+                    academic_grade3: formData.RD2_Grade3,
                     academic_class3: formData.RD2_Level3,
                     academic_major3: formData.RD2_Major3,
                     academic_school3: formData.RD2_Academy3,
-                    academic_grade4: formData.RD2_Academy4,
+
+                    academic_grade4: formData.RD2_Grade4,
                     academic_class4: formData.RD2_Level4,
                     academic_major4: formData.RD2_Major4,
                     academic_school4: formData.RD2_Academy4,
+
                     military_grade1: formData.RD2_LevelRD1,
                     military_year1: formData.RD2_LevelRD12,
                     military_school1: formData.RD2_AcademyRD1,
@@ -1414,7 +1458,7 @@ const CheckData = () => {
                                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                                         placeholder="Level"
                                                     />
-                                                    </div>
+                                                </div>
 
                                             </div>
                                             <div className="flex space-x-4 w-full">
