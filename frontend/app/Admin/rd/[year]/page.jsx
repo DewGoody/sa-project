@@ -14,7 +14,7 @@ import {
     FilterOutlined,
     OrderedListOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Input, Table, Space, Select } from 'antd';
+import { Button, Layout, Menu, theme, Modal,DatePicker ,Input, Table, Space, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
 import { useParams, useRouter } from 'next/navigation';
 const App = () => {
@@ -27,6 +27,37 @@ const App = () => {
     const [filteredInfo, setFilteredInfo] = useState({});
     const [fetchYear, setfetchYear] = useState([]);
     const { year } = useParams();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [formData, setFormData] = useState({
+        date: null,
+        firstPayment: '',
+        secondPayment: ''
+    });
+
+    const showModal = () => setIsModalOpen(true);
+    const handleCancel = () => setIsModalOpen(false);
+    const handleOk = async () => {
+        try {
+            const response = await axios.post('/api/militaryapi/datemoney', {
+                date: formData.date,
+                firstPayment: formData.firstPayment,
+                secondPayment: formData.secondPayment
+            }, {
+                headers: { "Content-Type": "application/json" } // กำหนด header
+            });
+            
+            console.log("Server Response:", response.data);
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error("Error submitting data:", error);
+        }
+    };
+    
+
+    const handleChange = (key, value) => {
+        setFormData(prev => ({ ...prev, [key]: value }));
+    };
+
     const formatDateToDMYWithTime = (dateString) => {
         // console.log(dateString);
 
@@ -49,10 +80,7 @@ const App = () => {
         setSearchedColumn(dataIndex);
     };
     const handleEditForm = async (id, year) => {
-        console.log("editFormReqId : ", id);
         const response = await axios.post('/api/request/getById', { id: id }); // Example API
-        console.log("editFormResponse :", response.data.data.path);
-        console.log("sjdlfhjkdsfjkldsahfjkdsahflsadjfhdisakljf", year);
 
         if (year == 1) {
             router.push(`/rordor/${response.data.data.form}/1/checkData`);
@@ -172,7 +200,7 @@ const App = () => {
                 console.error('Error fetching status:', error);
             }
         }
-        else if (record.status === "ส่งเอกสารแล้ว") {
+        else if (record.status === "เสร็จสิ้น") {
             try {
                 setLoading(true);
                 setShouldReload(true);
@@ -189,12 +217,12 @@ const App = () => {
         try {
             if (year == 1) {
                 console.log(reqId);
-                
+
                 const response = await axios.get(`/api/export/AdminRD1?id=${reqId}`, { responseType: 'blob' });
                 return response.data;
             } else {
                 console.log(reqId);
-                
+
                 const response = await axios.get(`/api/export/AdminRD2?id=${reqId}`, { responseType: 'blob' });
                 return response.data;
             }
@@ -202,7 +230,7 @@ const App = () => {
             console.log(error);
         }
     };
-    const handleDownload = async (student_ID,reqId, year) => {
+    const handleDownload = async (student_ID, reqId, year) => {
         const pdfBlob = await filepdf(reqId, year);
         if (pdfBlob) {
             const link = document.createElement('a');
@@ -245,7 +273,7 @@ const App = () => {
                             fontSize: '21px', // Increase the size (e.g., 24px)
                             cursor: 'pointer', // Optional: changes the cursor to a pointer
                         }}
-                        onClick={() => handleDownload(record.student_ID,record.reqId, record.yearRD)}
+                        onClick={() => handleDownload(record.student_ID, record.reqId, record.yearRD)}
                     />
                 </div>
             ),
@@ -260,17 +288,17 @@ const App = () => {
                 if (status == "รอเข้ารับบริการ") {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
+                        { value: 'เสร็จสิ้น', label: 'เสร็จสิ้น', },
                     ]
                 } else if (status == "รอเจ้าหน้าที่ดำเนินการ") {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
+                        { value: 'เสร็จสิ้น', label: 'เสร็จสิ้น', },
                     ]
-                } else if (status == "ส่งเอกสารแล้ว") {
+                } else if (status == "เสร็จสิ้น") {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', disabled: true },
+                        { value: 'เสร็จสิ้น', label: 'เสร็จสิ้น', disabled: true },
                     ]
                 }
                 return (
@@ -285,7 +313,7 @@ const App = () => {
             filters: [
                 { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
                 { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
-                { text: "ส่งเอกสารแล้ว", value: "ส่งเอกสารแล้ว" },
+                { text: "เสร็จสิ้น", value: "เสร็จสิ้น" },
             ],
             filteredValue: filteredInfo?.status,
             onFilter: (value, record) => record?.status.includes(value),
@@ -437,7 +465,7 @@ const App = () => {
                             key: '8',
                             label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
                             onClick: () => window.location.href = '/Admin/user'
-                          }
+                        }
                     ]}
                 />
             </Sider>
@@ -477,9 +505,33 @@ const App = () => {
                         </div>
 
                     </div>
-                    <Button type="primary" onClick={exportToExcel} style={{ marginBottom: '16px' }}>
-                        Export to Excel
+                    <Button type="primary" onClick={showModal} style={{ marginBottom: '16px' }}>
+                        เพิ่ม วันเวลารายงานตัว
                     </Button>
+                    <Modal
+                        title="เพิ่มวันเวลารายงานตัว"
+                        open={isModalOpen}
+                        onOk={handleOk}
+                        onCancel={handleCancel}
+                    >
+                        <h1>วันที่</h1>
+                        <DatePicker
+                            style={{ width: '100%', marginBottom: 10 }}
+                            onChange={(date, dateString) => handleChange('date', dateString)}
+                            placeholder="เลือกวันที่"
+                        />
+                        <h1>ค่าสมัคร นศท</h1>
+                        <Input
+                            placeholder="ค่าสมัคร นศท"
+                            style={{ marginBottom: 10 }}
+                            onChange={e => handleChange('firstPayment', e.target.value)}
+                        />
+                        <h1>ค่ารายงานตัว นศท</h1>
+                        <Input
+                            placeholder="ค่ารายงานตัว นศท"
+                            onChange={e => handleChange('secondPayment', e.target.value)}
+                        />
+                    </Modal>
                     <Table
                         dataSource={Data}
                         columns={columns}

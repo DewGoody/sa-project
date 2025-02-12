@@ -23,6 +23,7 @@ const App = () => {
     const [shouldReload, setShouldReload] = useState(false);
     const [filteredInfo, setFilteredInfo] = useState({});
     const [fetchYear, setfetchYear] = useState([]);
+    
     const { year } = useParams();
     console.log("year", year);
     console.log("fetchYear :", fetchYear);

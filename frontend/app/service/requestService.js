@@ -257,6 +257,22 @@ export async function changeStatusToSended(id) {
         throw { code: 400, error: new Error("Bad Request") }
     }
 }
+export async function changeStatusToSucc(id) {
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        if (request.status !== "รอเจ้าหน้าที่ดำเนินการ" && request.status !== "ขอข้อมูลเพิ่มเติม") {
+            throw { code: 400, error: new Error("Bad Request") }
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: { id: request.id },
+            data: { status: "เสร็จสิ้น" }
+        })
+        return changeStatusRequest
+    }
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
+    }
+}
 
 export async function changeStatusToWantInfo(id) {
     if (id) {
