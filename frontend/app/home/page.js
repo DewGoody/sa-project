@@ -26,6 +26,7 @@ export const Form = () => {
   const [prakanDone, setPrakanDone] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalEditFormOpen, setIsModalEditFormOpen] = useState(false);
+  const [isModalCheckInfoOpen, setIsModalCheckInfoOpen] = useState(false);
   const [deleteQueueId, setDeleteQueueId] = useState('');
   const [deleteNotQueueId, setDeleteNotQueueId] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -33,6 +34,7 @@ export const Form = () => {
   const [formId, setFormId] = useState(0);
   const [notQueueLength, setNotQueueLength] = useState(0);
   const [notQueue, setNotQueue] = useState([]);
+  const [moreInfo, setMoreInfo] = useState('');
   const [reqIdEdit, setReqIdEdit] = useState(0);
   const router = useRouter();
   const showModal = (item) => {
@@ -66,6 +68,13 @@ export const Form = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
     setIsModalEditFormOpen(false);
+  };
+
+
+  const showModalCheckInfo =(item) => {
+    console.log("info :", item);
+    setMoreInfo(item);
+    setIsModalCheckInfoOpen(true);
   };
   const timeSlots =
     [
@@ -282,12 +291,12 @@ export const Form = () => {
                       {((item.Request.status !== "คำขอถูกยกเลิก") && (item.status === "จองคิวสำเร็จ" || item.status === "เข้ารับบริการแล้ว")) && (
                         <div className="flex justify-between border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full">
                           <div className="">
-                            {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " ( " + timeSlots[item.period] + " น.)" + " "}
+                            {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " (" + timeSlots[item.period] + " น.)"}
 
                             <div className="ml-4 mt-1 font-semibold text-base text-blue-500">{item.Request.status}</div>
                             <div className="ml-4 text-md">
-                              <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2 ฝั่งโรงอาหาร</p>
-                              <p className="">(Chulachakrabonse Building, 2nd Floor, Cafeteria Side )</p>
+                              <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2</p>
+                              <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                             </div>
                           </div>
 
@@ -312,9 +321,11 @@ export const Form = () => {
                                 Cancel
                               </button>
                             </div>
-                          ) : (item.Request.status === "ขอข้อมูลเพิ่มเติม") && (
+                          ) : (item.Request.status === "ขอข้อมูลเพิ่มเติม" || item.Request.status === "โอนเงินเรียบร้อย") && (
                             <div className="ml-3 mt- mb-3 flex">
-                              {item.Request.more_info}
+                              <button onClick={() => { showModalCheckInfo(item.Request.more_info) } } className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
+                                view detail
+                              </button>
 
                             </div>
 
@@ -451,6 +462,26 @@ export const Form = () => {
         }}
       >
       </Modal>
+
+        <Modal
+          title=""
+          open={isModalCheckInfoOpen}
+          onCancel={() => setIsModalCheckInfoOpen(false)}
+          footer={[
+            <button
+              key="close"
+              onClick={() => setIsModalCheckInfoOpen(false)}
+              className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
+            >
+              Close
+            </button>,
+          ]}
+        >
+          <div>
+            <p>{moreInfo}</p>
+            {/* Add any additional information you want to display here */}
+          </div>
+        </Modal>
     </div>
   );
 }

@@ -334,7 +334,7 @@ const App = () => {
                         options={options}
                         onChange={(value) => handleChangeStatus({ ...record, status: value })}
                     />
-                     {record.status === "ขอข้อมูลเพิ่มเติม" ? 
+                     {record.status === "ขอข้อมูลเพิ่มเติม" || record.status === "โอนเงินเรียบร้อย"? 
                         <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button> 
                         : null}
                     </>
