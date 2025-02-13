@@ -105,10 +105,10 @@ const RD = () => {
                 <div className="bg-white p-8 w-full max-w-4xl">
                     <section>
                         <h3 className="text-lg font-semibold mb-4 text-center">
-                            นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
+                            Download เอกสาร และโปรดเตรียมเอกสารดังนี้
                         </h3>
                         <h3 className="text-lg font-normal mb-4 text-center">
-                            Please prepare the following documents to submit to the staff
+                            Please download and prepare the following documents to submit to the staff
                         </h3>
                         <div className="grid grid-cols-1 gap-6">
                             <fieldset>
