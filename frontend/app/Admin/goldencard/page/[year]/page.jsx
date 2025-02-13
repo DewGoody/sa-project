@@ -10,7 +10,10 @@ import {
     FilterOutlined,
     OrderedListOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Input, Table, Space, Modal, Select } from 'antd';
+import { Button, Layout, Menu, theme, Input, Table, Divider, Radio, Space, Modal, Select } from 'antd';
+
+
+
 const { Header, Sider, Content } = Layout;
 const App = () => {
     const router = useRouter()
@@ -23,7 +26,7 @@ const App = () => {
     const [shouldReload, setShouldReload] = useState(false);
     const [filteredInfo, setFilteredInfo] = useState({});
     const [fetchYear, setfetchYear] = useState([]);
-    
+
     const { year } = useParams();
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
@@ -31,7 +34,7 @@ const App = () => {
 
     useEffect(() => {
         if (shouldReload) {
-            window.location.reload();
+            setTimeout(() => window.location.reload(), 1000);
         }
     }, [shouldReload]);
 
@@ -124,7 +127,7 @@ const App = () => {
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = date.getFullYear(); // Get the full year
 
-        return `${day}/${month}/${year +543}`; // Return in dd/mm/yyyy format
+        return `${day}/${month}/${year + 543}`; // Return in dd/mm/yyyy format
     };
     const formatDateToDMYWithTime = (dateString) => {
         if (!dateString) return 'N/A'; // Handle null or undefined dates
@@ -198,7 +201,7 @@ const App = () => {
         router.push(`/Admin/goldencard/${response.data.data.form}`);
     }
     const handleChangeStatus = async (record) => {
-        console.log("status11", record.status)
+        console.log("status11", parseInt(record.status))
         if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
             try {
                 setLoading(true);
@@ -222,11 +225,11 @@ const App = () => {
                 console.error('Error fetching status:', error);
             }
         }
-        else if (record.status === "ส่งเอกสารแล้ว") {
+        else if (record.status === "ส่งข้อมูลให้ รพ. แล้ว") {
             try {
                 setLoading(true);
                 setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+                const res = await axios.post('/api/request/changeStatusToHospital', { id: parseInt(record.reqId) });
                 setLoading(false);
                 setShouldReload(false);
                 console.log("res", res);
@@ -298,6 +301,7 @@ const App = () => {
     });
 
     const columns = [
+
         {
             align: 'center',
             title: '',
@@ -344,7 +348,7 @@ const App = () => {
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', },
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', disabled: true },
+                        { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', disabled: true },
                         { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', disabled: true },
                         { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true },
                     ]
@@ -354,7 +358,7 @@ const App = () => {
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม' },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว' },
+                        { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว' },
                         { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', disabled: true },
                         { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true },
                     ]
@@ -364,16 +368,16 @@ const App = () => {
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
+                        { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', },
                         { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', disabled: true },
                         { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true },
                     ]
-                } else if (status == "ส่งเอกสารแล้ว") {
+                } else if (status == "ส่งข้อมูลให้ รพ. แล้ว") {
                     options = [
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', },
+                        { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', },
                         { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', },
                         { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', },
                     ]
@@ -383,7 +387,7 @@ const App = () => {
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', disabled: true },
+                        { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', disabled: true },
                         { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', },
                         { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true },
                     ]
@@ -392,7 +396,7 @@ const App = () => {
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', disabled: true },
+                        { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', disabled: true },
                         { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', },
                         { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', },
                     ]
@@ -415,7 +419,7 @@ const App = () => {
                 { text: "ยังไม่ได้ Upload เอกสาร", value: "ยังไม่ได้ Upload เอกสาร" },
                 { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
                 { text: "ขอข้อมูลเพิ่มเติม", value: "ขอข้อมูลเพิ่มเติม" },
-                { text: "ส่งเอกสารแล้ว", value: "ส่งเอกสารแล้ว" },
+                { text: "ส่งข้อมูลให้ รพ. แล้ว", value: "ส่งข้อมูลให้ รพ. แล้ว" },
                 { text: "ย้ายสิทธิสำเร็จ", value: "ย้ายสิทธิสำเร็จ" },
                 { text: "ย้ายสิทธิไม่สำเร็จ", value: "ย้ายสิทธิไม่สำเร็จ" },
             ],
@@ -494,12 +498,12 @@ const App = () => {
             ...getColumnSearchProps('hospital'),
         },
     ];
-    
-    const exportToExcel = () => {
+
+    const exportToExcel = (number) => {
         // กำหนดชื่อ Columns ที่ต้องการ
         const columnHeaders = [
             { header: "ปี", key: "year" },
-            { header: "ลำดับ", key: "" },
+            { header: "ลำดับ", key: "index" }, // ใช้ index เป็น Running Number
             { header: "รหัสนิสิต", key: "student_ID" },
             { header: "ชื่อ-นามสกุล", key: "fullname" },
             { header: "คณะ", key: "facultyNameTH" },
@@ -513,10 +517,23 @@ const App = () => {
         ];
 
         // เพิ่มชื่อ Columns เข้าไปเป็น Row แรก
-        const dataWithHeaders = [
-            columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
-            ...Data.map((item) => columnHeaders.map(col => item[col.key] || '')) // ข้อมูลตามลำดับ
-        ];
+        let dataWithHeaders = []
+        if (number == 0) {
+            dataWithHeaders = [
+                columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+                ...Data.map((item, index) =>
+                    columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                )
+            ];
+        }
+        else {
+            dataWithHeaders = [
+                columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+                ...selectedRowReqid.map((item, index) =>
+                    columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                )
+            ];
+        }
 
         // สร้าง Worksheet ด้วยข้อมูลที่มี Header
         const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
@@ -530,7 +547,80 @@ const App = () => {
         const data = new Blob([excelBuffer], { type: "application/octet-stream" });
         saveAs(data, "exported_data.xlsx");
     };
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [selectedRowReqid, setSelectedRowReqid] = useState([]);
+    const [selectedRowReqidapi, setSelectedRowReqidapi] = useState([]);
 
+    const onSelectChange = (newSelectedRowKeys, selectedRows) => {
+        console.log('selectedRowKeys changed:', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+        setSelectedRowReqid(selectedRows.map(row => row)); // อัปเดตรายการที่เลือก
+        setSelectedRowReqidapi(selectedRows.map(row => row.reqId)); // อัปเดตรายการที่เลือก
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+
+        selections: [
+            Table.SELECTION_ALL,
+            Table.SELECTION_INVERT,
+            Table.SELECTION_NONE,
+        ],
+    };
+
+    // ตรวจสอบค่าที่อัปเดตล่าสุด
+    useEffect(() => {
+        console.log("Updated selected reqids:", selectedRowReqid);
+    }, [selectedRowReqid]);
+    const handleChangeStatusAll = async (record) => {
+        try {
+            setLoading(true);
+            setShouldReload(true);
+            const res = await axios.post('/api/request/changeStatusAll', { data: record, status: record.status });
+            setLoading(false);
+            setShouldReload(false);
+            console.log("res", res);
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+    const dropdown = () => {
+        const handleSelect = async (value) => {
+            console.log("เลือกสถานะ:", value);
+            try {
+                selectedRowReqid.forEach(
+                    record => {
+                        console.log("ทดสอบ", record.status)
+                        handleChangeStatus({ ...record, status: value })
+                    }
+                )
+                // handleChangeStatusAll({ ...selectedRowReqidapi, status: value })
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
+
+        return (
+            <Select
+                className="w-1/5 mt-1 mb-6 px-4"
+                showSearch
+                placeholder="เลือกสถานะ"
+                filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                options={[
+                    { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว' },
+                    { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ' },
+                    { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ' },
+                ]}
+                onSelect={handleSelect} // ใช้ฟังก์ชัน handleSelect
+            />
+        );
+    };
 
     return (
         <Layout style={{ height: "100vh" }}>
@@ -632,7 +722,7 @@ const App = () => {
                         <div className='mt-2 ml-3 font-normal text-base'>
                             เลือกปี
                         </div>
-                        <div className='mt-1 mb-6'>
+                        <div className='mt-1 mb-6 px-4'>
                             <Select
                                 defaultValue={year}
                                 value={year === '0' ? 'ทั้งหมด' : year}
@@ -645,17 +735,31 @@ const App = () => {
                                 ))}
                             </Select>
                         </div>
-                        <Button className="mt-1 mb-6 px-4" type="primary" onClick={exportToExcel} style={{ marginBottom: '16px' }}>
-                            Export to Excel
-                        </Button>
+
+                        {selectedRowReqid.length > 0 ? (
+                            <>
+                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
+                                    Excel ที่เลือกไว้
+                                </Button>
+                                {dropdown()}
+                            </>
+                        ) : (
+                            <>
+                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
+                                    Excel ทั้งหมด
+                                </Button>
+                            </>
+                        )}
+
 
                     </div>
                     <Table
-                        dataSource={Data}
-                        columns={columns}
-                        rowClassName={(record, index) =>
-                            index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
-                        }
+                        // dataSource={Data}
+                        // columns={columns}
+                        // rowClassName={(record, index) =>
+                        //     index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
+                        // }
+                        rowSelection={rowSelection} columns={columns} dataSource={Data}
                     />
                     <Modal
                         title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม"
@@ -670,12 +774,10 @@ const App = () => {
                             <Button key="submit" type="primary" onClick={handleOk}>
                                 ยืนยัน
                             </Button>,
-
                         ]}
                     >
                         <textarea
                             style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
-
                             onChange={(e) => setMoreInfoValue(e.target.value)}
                         >
                         </textarea>

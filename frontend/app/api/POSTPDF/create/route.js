@@ -78,7 +78,7 @@ export async function POST(req) {
         const createRequest = await prisma.request.create({
             data: {
                 type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
-                status: "รออัปโหลดเอกสาร",
+                status: "ยังไม่ได้ Upload เอกสาร",
                 stu_id: id,
             }
         }) 

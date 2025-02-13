@@ -257,6 +257,22 @@ export async function changeStatusToSended(id) {
         throw { code: 400, error: new Error("Bad Request") }
     }
 }
+export async function changeStatusToHospital(id) {
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        if (request.status !== "รอเจ้าหน้าที่ดำเนินการ" && request.status !== "ขอข้อมูลเพิ่มเติม") {
+            throw { code: 400, error: new Error("Bad Request") }
+        }
+        const changeStatusRequest = await prisma.request.update({
+            where: { id: request.id },
+            data: { status: "ส่งข้อมูลให้ รพ. แล้ว" }
+        })
+        return changeStatusRequest
+    }
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
+    }
+}
 export async function changeStatusToSucc(id) {
     if (id) {
         const request = await getRequestByIdFast({ id: id })
@@ -361,7 +377,7 @@ export async function changeStatusToFinish(id) {
 export async function changeToTranApprove(id) {
     if (id) {
         const request = await getRequestByIdFast({ id: id })
-        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม") {
+        if (request.status !== "ส่งข้อมูลให้ รพ. แล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม") {
             throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
@@ -377,7 +393,7 @@ export async function changeToTranApprove(id) {
 export async function changeToTranNotApprove(id) {
     if (id) {
         const request = await getRequestByIdFast({ id: id })
-        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม") {
+        if (request.status !== "ส่งข้อมูลให้ รพ. แล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม") {
             throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({

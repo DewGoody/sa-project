@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
-import { saveAs } from 'file-saver'; // เพิ่ม FileSaver สำหรับบันทึกไฟล์
+import { saveAs } from 'file-saver'; 
+import dayjs from 'dayjs';// เพิ่ม FileSaver สำหรับบันทึกไฟล์
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -14,7 +15,7 @@ import {
     FilterOutlined,
     OrderedListOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Modal,DatePicker ,Input, Table, Space, Select } from 'antd';
+import { Button, Layout, Menu, theme, Modal, DatePicker, Input, Table, Space, Select } from 'antd';
 const { Header, Sider, Content } = Layout;
 import { useParams, useRouter } from 'next/navigation';
 const App = () => {
@@ -34,6 +35,22 @@ const App = () => {
         secondPayment: ''
     });
 
+    const getdatemoney = async () => {
+        try {
+            const response = await axios.get(`/api/militaryapi/datemoney`);
+            const data = response.data.data; // ดึงข้อมูลจาก API response
+
+            handleChange("date", data.date);
+            handleChange("firstPayment", data.firstPayment);
+            handleChange("secondPayment", data.secondPayment);
+        } catch (error) {
+            console.error("Error fetching date and money:", error);
+        }
+    };
+
+    useEffect(() => {
+        getdatemoney();
+    }, []);
     const showModal = () => setIsModalOpen(true);
     const handleCancel = () => setIsModalOpen(false);
     const handleOk = async () => {
@@ -45,14 +62,14 @@ const App = () => {
             }, {
                 headers: { "Content-Type": "application/json" } // กำหนด header
             });
-            
+
             console.log("Server Response:", response.data);
             setIsModalOpen(false);
         } catch (error) {
             console.error("Error submitting data:", error);
         }
     };
-    
+
 
     const handleChange = (key, value) => {
         setFormData(prev => ({ ...prev, [key]: value }));
@@ -204,7 +221,7 @@ const App = () => {
             try {
                 setLoading(true);
                 setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+                const res = await axios.post('/api/request/changeStatusToSucc', { id: parseInt(record.reqId) });
                 setLoading(false);
                 setShouldReload(false);
                 console.log("res", res);
@@ -506,7 +523,7 @@ const App = () => {
 
                     </div>
                     <Button type="primary" onClick={showModal} style={{ marginBottom: '16px' }}>
-                        เพิ่ม วันเวลารายงานตัว
+                        เพิ่มวันเวลารายงานตัว
                     </Button>
                     <Modal
                         title="เพิ่มวันเวลารายงานตัว"
@@ -517,17 +534,21 @@ const App = () => {
                         <h1>วันที่</h1>
                         <DatePicker
                             style={{ width: '100%', marginBottom: 10 }}
+                            value={formData.date ? dayjs(formData.date) : null}
                             onChange={(date, dateString) => handleChange('date', dateString)}
                             placeholder="เลือกวันที่"
                         />
                         <h1>ค่าสมัคร นศท</h1>
                         <Input
+                            value={formData.firstPayment}
                             placeholder="ค่าสมัคร นศท"
                             style={{ marginBottom: 10 }}
                             onChange={e => handleChange('firstPayment', e.target.value)}
                         />
                         <h1>ค่ารายงานตัว นศท</h1>
                         <Input
+                            value={formData.secondPayment}
+
                             placeholder="ค่ารายงานตัว นศท"
                             onChange={e => handleChange('secondPayment', e.target.value)}
                         />

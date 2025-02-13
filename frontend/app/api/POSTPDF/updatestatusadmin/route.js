@@ -26,7 +26,7 @@ export async function POST(req) {
             where:{id:idbefore.req_id},
             data: {
                 type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
-                status: "รออัปโหลดเอกสาร",
+                status: "ยังไม่ได้ Upload เอกสาร",
                 stu_id: id,
             }
         }) 

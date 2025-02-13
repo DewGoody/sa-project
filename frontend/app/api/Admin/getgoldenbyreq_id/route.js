@@ -66,9 +66,9 @@ export async function POST(req,res) {
             } : null,
             UHC_request: row.UHC_request.map((request) => ({
                 ...request,
-                province:request.province.toString(),
-                district:request.district.toString(),
-                hospital: request.hospital.toString(),
+                province:request.province ? request.province.toString() : null,
+                district:request.district ? request.district.toString() : null,
+                hospital: request.hospital? request.hospital.toString() : null,
                 id: request.id.toString(), // Convert BigInt to string
                 req_id: convertBigIntToString(request.req_id), // Handle nullable BigInt
                 student_id: convertBigIntToString(request.student_id.toString()), // Convert Decimal to string
