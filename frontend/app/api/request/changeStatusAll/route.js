@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { changeStatusToHospital } from '../../../service/requestService'
+import { changeStatusToAll } from '../../../service/requestService'
 import { NextResponse } from "next/server"
 import { convertBigIntToString } from '../../../../utills/convertBigInt'
 
@@ -8,12 +8,12 @@ const prisma = new PrismaClient();
 export async function POST(req, res) {
     try {
         // console.log("in api hospital",req);
-        let data = await req.json()
-        console.log("in api hospital", data.id);
-        console.log("in api hospital", data.status);
+        let { ids, status } = await req.json()
+        console.log("in api hospital", ids);
+        console.log("in api hospital", status);
 
-        // const showRequest = await changeStatusToHospital(data.id)
-        return NextResponse.json({ });
+        const showRequest = await changeStatusToAll(ids, status)
+        return NextResponse.json({});
     }
     catch (error) {
         console.log(error);

@@ -28,6 +28,7 @@ const gold = () => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [selectedFilescitizen, setSelectedFilescitizen] = useState([]);
     const [selectedFilesstudent, setSelectedFilesstudent] = useState([]);
+    const [selectedFilesfast, setSelectedFilesfast] = useState([]);
     const [selectedFileshouse, setSelectedFileshouse] = useState([]);
 
 
@@ -68,6 +69,15 @@ const gold = () => {
             setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
+    const handleFilefast = (info) => {
+        const { status } = info.file;
+        if (status === 'done') {
+            const fileList = info.fileList.map(file => file.originFileObj); // ดึงไฟล์ออกมาเป็น Array
+            setSelectedFilesfast(fileList); // เก็บไฟล์ลง state
+        } else if (status === 'error') {
+            setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+        }
+    };
 
 
     const handleConfirm = async (event) => {
@@ -95,6 +105,10 @@ const gold = () => {
         selectedFilesstudent.forEach(file => {
             formData.append("file_student", file)
         })
+        selectedFilesfast.forEach(file => {
+            formData.append("file_fast", file)
+        })
+
 
         try {
             console.log(int_req_id)
@@ -239,6 +253,34 @@ const gold = () => {
             console.log('Dropped files', e.dataTransfer.files);
         },
     };
+    const fast = {
+        name: 'file',
+        multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        beforeUpload(file) {
+            const isPDF = file.type === 'application/pdf';
+            if (!isPDF) {
+                message.error('สามารถอัปโหลดได้เฉพาะไฟล์ PDF เท่านั้น!');
+            }
+            return isPDF || Upload.LIST_IGNORE; // ป้องกันการอัปโหลดไฟล์ที่ไม่ใช่ PDF
+        },
+        onChange(info) {
+            handleFilefast(info); // ใช้ฟังก์ชันใหม่ที่แก้ไขแล้ว
+            const { status } = info.file;
+            if (status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (status === 'done') {
+                message.success(`${info.file.name} file uploaded successfully.`);
+            } else if (status === 'error') {
+                message.error(`${info.file.name} file upload failed.`);
+                console.log(info);
+            }
+        },
+        onDrop(e) {
+            console.log('Dropped files', e.dataTransfer.files);
+        },
+    };
+
 
 
 
@@ -340,34 +382,29 @@ const gold = () => {
                                     <div >
                                         <div className=" py-4">
                                             <Dragger {...props}>
-                                                {/* <p className="ant-upload-drag-icon">
-                                                    <InboxOutlined />
-                                                </p> */}
                                                 <p className="ant-upload-text">เอกสารที่เซ็นรับรอง</p>
                                             </Dragger>
                                         </div>
                                         <div className=" py-4" >
                                             <Dragger {...citizen}>
-                                                {/* <p className="ant-upload-drag-icon">
-                                                    <InboxOutlined />
-                                                </p> */}
-                                                <p className="ant-upload-text">สำเนาบัตรประชาชนที่เซ็นรับรองสำเนา</p>
+                                                <p className="ant-upload-text">สำเนาบัตรประชาชน (เซ็นรับรองสำเนาถูกต้องพร้อมลงชื่อกำกับ)</p>
                                             </Dragger>
                                         </div>
                                         <div className=" py-4">
                                             <Dragger {...house}>
-                                                {/* <p className="ant-upload-drag-icon">
-                                                    <InboxOutlined />
-                                                </p> */}
-                                                <p className="ant-upload-text">สำเนาทะเบียนบ้านที่ผู้ขอมีชื่ออยู่</p>
+                                                <p className="ant-upload-text">สำเนาทะเบียนบ้านที่ผู้ขอมีชื่ออยู่ (เซ็นรับรองสำเนาถูกต้องพร้อมลงชื่อกำกับ)</p>
                                             </Dragger>
                                         </div>
                                         <div className=" py-4">
                                             <Dragger {...student}>
-                                                {/* <p className="ant-upload-drag-icon">
-                                                    <InboxOutlined />
-                                                </p> */}
-                                                <p className="ant-upload-text">สำเนาบัตรประจำตัวนิสิต</p>
+                                               
+                                                <p className="ant-upload-text">สำเนาบัตรประจำตัวนิสิต (เซ็นรับรองสำเนาถูกต้องพร้อมลงชื่อกำกับ)</p>
+                                            </Dragger>
+                                        </div>
+                                        <div className=" py-4">
+                                            <h1 className =" text-red-500">* ถ้ามีย้ายด่วน *</h1>
+                                            <Dragger {...fast}>
+                                                <p className="ant-upload-text">ใบนัดโรงพยาบาลจุฬาเท่านั้น</p>
                                             </Dragger>
                                         </div>
                                     </div>

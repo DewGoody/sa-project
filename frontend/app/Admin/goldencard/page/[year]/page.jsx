@@ -573,11 +573,11 @@ const App = () => {
     useEffect(() => {
         console.log("Updated selected reqids:", selectedRowReqid);
     }, [selectedRowReqid]);
-    const handleChangeStatusAll = async (record) => {
+    const handleChangeStatusAll = async (ids,status) => {
         try {
             setLoading(true);
             setShouldReload(true);
-            const res = await axios.post('/api/request/changeStatusAll', { data: record, status: record.status });
+            const res = await axios.post('/api/request/changeStatusAll', { ids, status });
             setLoading(false);
             setShouldReload(false);
             console.log("res", res);
@@ -590,15 +590,18 @@ const App = () => {
 
     const dropdown = () => {
         const handleSelect = async (value) => {
-            console.log("เลือกสถานะ:", value);
+
             try {
-                selectedRowReqid.forEach(
-                    record => {
-                        console.log("ทดสอบ", record.status)
-                        handleChangeStatus({ ...record, status: value })
-                    }
-                )
-                // handleChangeStatusAll({ ...selectedRowReqidapi, status: value })
+                // selectedRowReqid.forEach(
+                //     record => {
+                //         console.log("ทดสอบ", record.status)
+                //         handleChangeStatus({ ...record, status: value })
+                //     }
+                // )
+
+                handleChangeStatusAll( selectedRowReqidapi, value )
+
+
             } catch (error) {
                 console.error("Error:", error);
             }

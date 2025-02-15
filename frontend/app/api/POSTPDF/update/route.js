@@ -61,6 +61,7 @@ export async function POST(req) {
         const file_citizen = formData.get('file_citizen'); // ดึงไฟล์ที่อัปโหลด
         const file_house = formData.get('file_house'); // ดึงไฟล์ที่อัปโหลด
         const file_student = formData.get('file_student'); // ดึงไฟล์ที่อัปโหลด
+        const file_fast = formData.get('file_fast'); // ดึงไฟล์ที่อัปโหลด
 
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
@@ -83,18 +84,35 @@ export async function POST(req) {
         if (fileSize > MAX_FILE_SIZE) {
             return NextResponse.json({ error: 'File size exceeds 5MB limit.' }, { status: 400 });
         }
+        let pdf = ""
+        if (file_fast) {
+            const fileBufferfast = await file_fast.arrayBuffer();
+            pdf = await prisma.uHC_request.update({
+                where: { id: parseInt(formId) },
+                data: {
+                    student_id: id,
+                    binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
+                    file_citizen: Buffer.from(fileBuffercitizen),
+                    file_house: Buffer.from(fileBufferhouse),
+                    file_student: Buffer.from(fileBufferstudent),
+                    file_fast: Buffer.from(fileBufferfast)
+                },
+            });
+        } else {
+            pdf = await prisma.uHC_request.update({
+                where: { id: parseInt(formId) },
+                data: {
+                    student_id: id,
+                    binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
+                    file_citizen: Buffer.from(fileBuffercitizen),
+                    file_house: Buffer.from(fileBufferhouse),
+                    file_student: Buffer.from(fileBufferstudent),
+                },
+            });
+        }
 
         // บันทึกไฟล์ลงฐานข้อมูล
-        const pdf = await prisma.uHC_request.update({
-            where: { id: parseInt(formId) },
-            data: {
-                student_id: id,
-                binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
-                file_citizen: Buffer.from(fileBuffercitizen),
-                file_house: Buffer.from(fileBufferhouse),
-                file_student: Buffer.from(fileBufferstudent)
-            },
-        });
+
 
         await prisma.request.updateMany({
             where: {

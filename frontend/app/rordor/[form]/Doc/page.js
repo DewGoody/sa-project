@@ -153,14 +153,6 @@ const RD = () => {
                             Download เอกสาร และโปรดเตรียมเอกสารดังนี้ (Please prepare the following documents to submit to the staff)
                         </h2>
 
-                        {/* <h2 className="text-lg pt-4 font-bold text-center mb-4 text-gray-800">
-                            โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
-                        </h2>
-                        <h1 className="text-mb text-gray-700 mb-6 text-center">
-                            Please prepare the following documents to submit to the staff
-                        </h1> Old version  */}
-
-                        {/* Personal & Contact Information Section */}
                         <section>
 
                             <div className="grid grid-cols-1 gap-6">
@@ -168,12 +160,21 @@ const RD = () => {
                                     <legend className="sr-only">Checkboxes</legend>
 
                                     <div className="divide-y divide-gray-200">
+                                        <div className="flex items-center py-4">
+                                            <strong className="font-medium text-gray-900 pr-4">1. Download เอกสารได้ที่นี่ </strong>
+                                            <button
+                                                onClick={handleDownload}
+                                                className="px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
+                                                Download
+                                            </button>
+                                        </div>
+
                                         <label
                                             htmlFor="Option1"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
-                                                <strong className="font-medium text-gray-900 ">1. ติดรูป ชุดนิสิต ขนาด 1.5 นิ้ว</strong>
+                                                <strong className="font-medium text-gray-900 ">2. ติดรูป ชุดนิสิต ขนาด 1.5 นิ้ว</strong>
                                             </div>
                                         </label>
 
@@ -184,7 +185,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">2. สำเนาหลักฐานผลการศึกษาชั้น ม.6</strong>
+                                                <strong className="font-medium text-gray-900">3. สำเนาหลักฐานผลการศึกษาชั้น ม.6</strong>
                                             </div>
                                         </label>
 
@@ -193,16 +194,28 @@ const RD = () => {
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
-                                                <strong className="font-medium text-gray-900">3. ใบรับรองแพทย์ โดยแพทย์ปริญญา (ใบรับรองแพทย์มีอายุ 1 เดือนนับจากวันที่ตรวจร่างกาย) รอเติม link</strong>
+                                                <strong className="font-medium text-gray-900">
+                                                    4. ใบรับรองแพทย์ โดยแพทย์ปริญญา (ใบรับรองแพทย์มีอายุ 1 เดือนนับจากวันที่ตรวจร่างกาย)
+                                                </strong>
+                                                <br />
+                                                <a
+                                                    href="/ใบรับรองแพทย์.pdf"  // 📝 ใส่ path ของไฟล์
+                                                    target="_blank"  // 🔗 เปิดในแท็บใหม่
+                                                    rel="noopener noreferrer"
+                                                    className="text-red-500 hover:underline"
+                                                >
+                                                    ดูตัวอย่างใบรับรองแพทย์
+                                                </a>
                                             </div>
                                         </label>
+
 
                                         <label
                                             htmlFor="Option4"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
-                                                <strong className="font-medium text-gray-900">4. สำเนาใบสำคัญทหารกองเกิน (สด.9) กรณีเป็นผู้สมัครชายอายุ 17 ปีขึ้นไป (ถ้ามี)</strong>
+                                                <strong className="font-medium text-gray-900">5. สำเนาใบสำคัญทหารกองเกิน (สด.9) กรณีเป็นผู้สมัครชายอายุ 17 ปีขึ้นไป (ถ้ามี)</strong>
                                             </div>
                                         </label>
 
@@ -213,7 +226,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">5. สำเนาหมายเรียกเข้ารับราชการทหาร (สด.35) กรณีเป็นผู้สมัครชายอายุ 20 ปีขึ้นไป (ถ้ามี)</strong>
+                                                <strong className="font-medium text-gray-900">6. สำเนาหมายเรียกเข้ารับราชการทหาร (สด.35) กรณีเป็นผู้สมัครชายอายุ 20 ปีขึ้นไป (ถ้ามี)</strong>
                                             </div>
                                         </label>
 
@@ -224,7 +237,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">6. สำเนาใบรับรองผลการตรวจเลือกเข้ารับราชการทหาร (สด.43) กรณีผู้สมัครชายอายุ 21 ปีขึ้นไป (ถ้ามี)</strong>
+                                                <strong className="font-medium text-gray-900">7. สำเนาใบรับรองผลการตรวจเลือกเข้ารับราชการทหาร (สด.43) กรณีผู้สมัครชายอายุ 21 ปีขึ้นไป (ถ้ามี)</strong>
                                             </div>
                                         </label>
 
@@ -235,7 +248,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">7. สำเนาบัตรประจำตัวประชาชน (copy of citizen ID)</strong>
+                                                <strong className="font-medium text-gray-900">8. สำเนาบัตรประจำตัวประชาชน (copy of citizen ID)</strong>
                                             </div>
                                         </label>
 
@@ -246,16 +259,16 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">8. สำเนาใบเปลี่ยนชื่อ-สกุล (ถ้ามี)</strong>
+                                                <strong className="font-medium text-gray-900">9. สำเนาใบเปลี่ยนชื่อ-สกุล (ถ้ามี)</strong>
                                             </div>
                                         </label>
                                     </div>
                                 </fieldset>
-                                <button
+                                {/* <button
                                     onClick={handleDownload}
                                     className="px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
                                     Download
-                                </button>
+                                </button> */}
                                 <div className="">
                                     <label
                                         htmlFor="Option9"

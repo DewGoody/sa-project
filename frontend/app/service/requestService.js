@@ -16,7 +16,7 @@ export async function getRequestById(id) {
                 RD_info: true,
                 prakan_inter_info: true
             }
-        })        
+        })
         if (request) {
             let result
             if (request.type == "การเบิกจ่ายประกันอุบัติเหตุ") {
@@ -56,7 +56,7 @@ export async function getRequestById(id) {
                     ...request,
                     form: request.prakan_inter_info[0].id,
                     path: "prakan-inter"
-                }                
+                }
                 return result
             }
             // return request
@@ -70,12 +70,12 @@ export async function getRequestById(id) {
 export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
         where: {
-            type :{
-                not:"โครงการหลักประกันสุขภาพถ้วนหน้า"
+            type: {
+                not: "โครงการหลักประกันสุขภาพถ้วนหน้า"
             },
             status: {
                 in: ["รอจองคิว"],
-                
+
             },
             stu_id: data,
             deleted_at: null
@@ -290,22 +290,19 @@ export async function changeStatusToSucc(id) {
     }
 }
 
-export async function changeStatusToWantInfo(id) {
-    if (id) {
-        const request = await getRequestByIdFast({ id: id })
-        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "รอเจ้าหน้าที่ดำเนินการ") {
-            throw { code: 400, error: new Error("Bad Request") }
-        }
-        const changeStatusRequest = await prisma.request.update({
-            where: { id: request.id },
-            data: { status: "ขอข้อมูลเพิ่มเติม" }
-        })
-        return changeStatusRequest
-    }
-    else {
-        throw { code: 400, error: new Error("Bad Request") }
+
+export async function changeStatusToAll(ids, status) {
+    if (Array.isArray(ids) && ids.length > 0) {
+        const changeStatusRequest = await prisma.request.updateMany({
+            where: { id: { in: ids } },  // ✅ ใช้ in เพื่ออัปเดตหลาย id
+            data: { status: status }
+        });
+        return changeStatusRequest;
+    } else {
+        throw { code: 400, error: new Error("Bad Request: No valid IDs provided") };
     }
 }
+
 
 export async function changeStatusToNotApprove(id) {
     if (id) {
@@ -573,11 +570,11 @@ export async function getUniqueYearRD() {
     return uniqueYears;
 }
 
-export async function getRequestPrakanInterInAdmin(year){
+export async function getRequestPrakanInterInAdmin(year) {
     const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
     const endOfYear = new Date(year + 1, 0, 1);
     let requests = null
-    if(year !== 0){
+    if (year !== 0) {
         requests = await prisma.request.findMany({
             where: {
                 status: {
@@ -605,7 +602,7 @@ export async function getRequestPrakanInterInAdmin(year){
             }
         })
     }
-    else{
+    else {
         requests = await prisma.request.findMany({
             where: {
                 status: {
@@ -629,40 +626,40 @@ export async function getRequestPrakanInterInAdmin(year){
             }
         })
     }
-    if(requests){
+    if (requests) {
         return requests
     }
-    else{
+    else {
         return "Not found"
     }
 }
 
 export async function downloadPrakanInterAdmin(id) {
-    if(id){
+    if (id) {
         const thisPrakan = await prisma.prakan_inter_info.findUnique({
-            where: {id: id},
+            where: { id: id },
             include: {
-                Student:true,
+                Student: true,
             }
-        })        
+        })
         const mergedData = {
             ...thisPrakan,
             ...thisPrakan.Student,
-       };
+        };
         const filePath = await prakanFormBuilder(mergedData)
-        console.log('fileeee',filePath);
-        
+        console.log('fileeee', filePath);
+
         return filePath
     }
-    else{
-        throw {code: 400,error: new Error("Bad Request")}
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
     }
 }
 
 export async function createMoreInfo(data) {
     const existingRequest = await prisma.request.findFirst({
         where: {
-          id: data.id, // Find the first record where more_info is null
+            id: data.id, // Find the first record where more_info is null
         },
     });
     let request;
@@ -677,7 +674,7 @@ export async function createMoreInfo(data) {
         });
         return request
     }
-    else{
-        throw {code: 404,error: new Error("Request not found")}
+    else {
+        throw { code: 404, error: new Error("Request not found") }
     }
 }

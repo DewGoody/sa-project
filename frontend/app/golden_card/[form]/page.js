@@ -180,23 +180,23 @@ const page = () => {
                     street: Data.road,
                     subdistrict: Data.amphure,
                     district: Data.district,
-                    province: Data.provice,
+                    province: Data.province,
                     postal_code: Data.zipCode,
                 }
             })
 
             if (int_req_id !== 0) {
                 const response = await axios.post(`/api/POSTPDF/updatestatus?id=${int_req_id}`, {
-                    province: Data.provice,
-                    districts: Data.district,
+                    province: Data.province,
+                    district: Data.amphure,
                     hospital: status_before(),
                 })
                 console.log("ID return", response.data.id);
                 router.push(`/golden_card/Doc/${response.data.id}`)
             } else {
                 const response = await axios.post(`/api/POSTPDF/create`, {
-                    province: Data.provice,
-                    districts: Data.district,
+                    province: Data.province,
+                    district: Data.amphure,
                     hospital: status_before(),
                 })
                 console.log("ID return", response.data.id);

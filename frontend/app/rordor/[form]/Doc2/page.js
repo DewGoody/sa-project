@@ -153,12 +153,20 @@ const RD = () => {
                                     <legend className="sr-only">Checkboxes</legend>
 
                                     <div className="divide-y divide-gray-200">
+                                        <div className="flex items-center py-4">
+                                            <strong className="font-medium text-gray-900 pr-4">1. Download เอกสารได้ที่นี่ </strong>
+                                            <button
+                                                onClick={handleDownload}
+                                                className="px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
+                                                Download
+                                            </button>
+                                        </div>
                                         <label
                                             htmlFor="Option1"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
-                                                <strong className="font-medium text-gray-900 ">1. ติดรูป ชุดนักศึกษาวิชาทหาร ขนาด 1.5 นิ้ว</strong>
+                                                <strong className="font-medium text-gray-900 ">2. ติดรูป ชุดนักศึกษาวิชาทหาร ขนาด 1.5 นิ้ว</strong>
                                             </div>
                                         </label>
 
@@ -169,7 +177,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">2. สำเนาบัตรนักศึกษาวิชาทหาร</strong>
+                                                <strong className="font-medium text-gray-900">3. สำเนาบัตรนักศึกษาวิชาทหาร</strong>
                                             </div>
                                         </label>
 
@@ -180,7 +188,7 @@ const RD = () => {
 
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">3. ใบสำเร็จนักศึกษาวิชาทหารล่าสุด (กรณีโอนย้าย)</strong>
+                                                <strong className="font-medium text-gray-900">4. ใบสำเร็จนักศึกษาวิชาทหารล่าสุด (กรณีโอนย้าย)</strong>
                                             </div>
                                         </label>
                                     </div>
@@ -188,11 +196,11 @@ const RD = () => {
 
 
                                 </fieldset>
-                                <button
+                                {/* <button
                                     onClick={handleDownload}
                                     className="px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
                                     Download
-                                </button>
+                                </button> */}
                                 <div className="">
                                     <label
                                         htmlFor="Option9"

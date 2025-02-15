@@ -323,6 +323,7 @@ model UHC_request {
   province         String?
   district         String?
   hospital         String?
+  file_fast        Bytes?
   Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student   @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
