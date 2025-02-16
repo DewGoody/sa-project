@@ -71,47 +71,25 @@ async function prakanFormBuilder(data) {
   drawTextOnPage(firstPage, data.hospitalName, 196, height - 303);
   drawTextOnPage(firstPage, data.hospitalProvince, 350, height - 303);
   drawTextOnPage(firstPage, data.hospitalPhoneNumber, 462, height - 303);
-  if (data.claimType === "accident") {
-    drawTextOnPage(
-      firstPage,
-      convertDateFormat(data.accidentDate),
-      155,
-      height - 342
-    );
-    drawTextOnPage(firstPage, data.accidentTime, 253, height - 342);
-    drawTextOnPage(firstPage, data.accidentCause, 165, height - 363);
-    drawTextOnPage(
-      firstPage,
-      convertDateFormat(data.hospitalAmittedDate),
-      270,
-      height - 386
-    );
-    drawTextOnPage(
-      firstPage,
-      convertDateFormat(data.hospitalDischargedDate),
-      435,
-      height - 386
-    );
-  } else if (data.claimType === "illness") {
-    drawTextOnPage(
-      firstPage,
-      convertDateFormat(data.hospitalAmittedDate),
-      270,
-      height - 420
-    );
-    drawTextOnPage(
-      firstPage,
-      convertDateFormat(data.hospitalDischargedDate),
-      435,
-      height - 420
-    );
-  }
+
+  drawTextOnPage(
+    firstPage,
+    convertDateFormat(data.hospitalAmittedDate),
+    270,
+    height - 420
+  );
+  drawTextOnPage(
+    firstPage,
+    convertDateFormat(data.hospitalDischargedDate),
+    435,
+    height - 420
+  );
+
   const pdfBytes = await pdfDoc.save();
   fs.writeFileSync(
     "public/documents/prakan-inter/Health-claim-form-filled.pdf",
     pdfBytes
   );
-  return 'public/documents/prakan-inter/Health-claim-form-filled.pdf';
-
+  return "public/documents/prakan-inter/Health-claim-form-filled.pdf";
 }
 module.exports = { prakanFormBuilder };
