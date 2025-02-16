@@ -334,7 +334,7 @@ const App = () => {
             ],
             filteredValue: filteredInfo?.status,
             onFilter: (value, record) => record?.status.includes(value),
-            ellipsis: true,
+            // ellipsis: true,
             filterIcon: (filtered) => (
                 <div>
                     <FilterOutlined style={{ color: "white", fontSize: "18px" }} />

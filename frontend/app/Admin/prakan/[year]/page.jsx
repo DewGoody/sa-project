@@ -278,7 +278,7 @@ const App = () => {
                 if (status === 'รอเข้ารับบริการ') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'black' } , },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารไปบริษัทประกันแล้ว', style: { color: 'gray' } , disabled: true},
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' } , disabled: true},
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' } , disabled: true},
                         { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' } , disabled: true},
@@ -286,7 +286,7 @@ const App = () => {
                 } else if (status === 'รอเจ้าหน้าที่ดำเนินการ') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'black' } },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารไปบริษัทประกันแล้ว', style: { color: 'black' } },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' } , disabled: true},
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' } , disabled: true},
                         { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' }, disabled: true },
@@ -294,7 +294,7 @@ const App = () => {
                 } else if (status === 'ส่งเอกสารแล้ว') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารไปบริษัทประกันแล้ว', style: { color: 'gray' } , disabled: true},
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'black' } },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
                         { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'black' } },
@@ -303,7 +303,7 @@ const App = () => {
                 else if (status === 'ขอข้อมูลเพิ่มเติม') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารไปบริษัทประกันแล้ว', style: { color: 'gray' } , disabled: true},
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'black' }, disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
                         { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'black' } },
@@ -311,7 +311,7 @@ const App = () => {
                 }else if (status === 'ไม่อนุมัติ') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารไปบริษัทประกันแล้ว', style: { color: 'gray' } , disabled: true},
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' },disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' },disabled: true },
                         { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' },disabled: true },
@@ -320,7 +320,7 @@ const App = () => {
                 else if (status === 'โอนเงินเรียบร้อย') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารไปบริษัทประกันแล้ว', style: { color: 'gray' } , disabled: true},
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' },disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' },disabled: true },
                         { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' },disabled: true },
@@ -334,7 +334,7 @@ const App = () => {
                         options={options}
                         onChange={(value) => handleChangeStatus({ ...record, status: value })}
                     />
-                     {record.status === "ขอข้อมูลเพิ่มเติม" || record.status === "โอนเงินเรียบร้อย"? 
+                     {record.status === "ขอข้อมูลเพิ่มเติม" || record.status === "โอนเงินเรียบร้อย" || record.status === "ไม่อนุมัติ"? 
                         <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button> 
                         : null}
                     </>
@@ -344,7 +344,7 @@ const App = () => {
             filters: [
                 { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
                 { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
-                { text: "ส่งเอกสารแล้ว", value: "ส่งเอกสารแล้ว" },
+                { text: "ส่งเอกสารไปบริษัทประกันแล้ว", value: "ส่งเอกสารแล้ว" },
                 { text: "ขอข้อมูลเพิ่มเติม", value: "ขอข้อมูลเพิ่มเติม" },
                 { text: "ไม่อนุมัติ", value: "ไม่อนุมัติ" },
                 { text: "โอนเงินเรียบร้อย", value: "โอนเงินเรียบร้อย" },

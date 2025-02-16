@@ -304,7 +304,8 @@ const App = () => {
 
         {
             align: 'center',
-            title: '',
+            width: 100,
+            title: 'แก้ไข',
             dataIndex: 'status',
             render: (status, record) => {
                 if (status !== "ประวัติการแก้ไข") {
@@ -317,6 +318,7 @@ const App = () => {
         },
         {
             align: 'center', // เพิ่ม align ขวา
+            width: 150,
             title: 'ดาวน์โหลด',
             render: (_, record) => (
                 <div
@@ -339,6 +341,7 @@ const App = () => {
         },
         {
             title: 'สถานะ',
+            align: 'center',
             dataIndex: 'status',
             width: 200,
             render: (status, record) => {
@@ -403,6 +406,7 @@ const App = () => {
                 }
                 return (
                     <>
+                        <div className='flex'>
                         <Select
                             defaultValue={status}
                             style={{ width: "180px" }}
@@ -412,6 +416,7 @@ const App = () => {
                         {record.status === "ขอข้อมูลเพิ่มเติม" ?
                             <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
                             : null}
+                        </div>
                     </>
                 )
             },
@@ -425,7 +430,7 @@ const App = () => {
             ],
             filteredValue: filteredInfo?.status,
             onFilter: (value, record) => record?.status.includes(value),
-            ellipsis: true,
+            // ellipsis: true,
             filterIcon: (filtered) => (
                 <div>
                     <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
@@ -434,6 +439,8 @@ const App = () => {
         }, {
             title: 'วันที่อัปโหลดเอกสาร',
             dataIndex: 'updateat',
+            width: 200,
+            align: 'center',
             sorter: (a, b) => new Date(a.updateat) - new Date(b.updateat),
             sortIcon: (sorted) => (
                 <div>
@@ -442,23 +449,31 @@ const App = () => {
             ),
         },
         {
-            title: 'ปี',
+            title: 'ชั้นปี',
             dataIndex: 'year',
+            width: 140,
+            align: 'center',
             ...getColumnSearchProps('year'),
         },
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
+            width: 180,
+            align: 'center',
             ...getColumnSearchProps('student_ID'),
         },
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'fullname',
+            width: 180,
+            align: 'center',
             ...getColumnSearchProps('fullname'),
         },
         {
             title: 'คณะ',
             dataIndex: 'facultyNameTH',
+            width: 180,
+            align: 'center',
             ...getColumnSearchProps('facultyNameTH'),
         },
 
@@ -466,35 +481,49 @@ const App = () => {
         {
             title: 'เลขบัตรประชาชน',
             dataIndex: 'citizen_ID',
+            width: 180,
+            align: 'center',
             ...getColumnSearchProps('citizen_ID'),
         },
         {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
+            width: 180,
+            align: 'center',
         },
         {
             title: 'อำเภอ/เขต',
             dataIndex: 'district',
+            width: 150,
+            align: 'center',
             ...getColumnSearchProps('district'),
         },
         {
             title: 'จังหวัด',
             dataIndex: 'province',
+            width: 150,
+            align: 'center',
             ...getColumnSearchProps('province'),
         },
         {
             title: 'เบอร์มือถือ',
             dataIndex: 'phone',
+            width: 150,
+            align: 'center',
             ...getColumnSearchProps('phone'),
         },
         {
             title: 'Email',
             dataIndex: 'email',
+            width: 180,
+            align: 'center',
             ...getColumnSearchProps('email'),
         },
         {
             title: 'ชื่อสถานพยาบาลก่อนลงทะเบียน',
             dataIndex: 'hospital',
+            width: 180,
+            align: 'center',
             ...getColumnSearchProps('hospital'),
         },
     ];
@@ -723,7 +752,7 @@ const App = () => {
                     </div>
                     <div className='flex mt-12'>
                         <div className='mt-2 ml-3 font-normal text-base'>
-                            เลือกปี
+                            เลือกปีการศึกษา
                         </div>
                         <div className='mt-1 mb-6 px-4'>
                             <Select
@@ -742,14 +771,14 @@ const App = () => {
                         {selectedRowReqid.length > 0 ? (
                             <>
                                 <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
-                                    Excel ที่เลือกไว้
+                                    Export Excel ที่เลือกไว้
                                 </Button>
                                 {dropdown()}
                             </>
                         ) : (
                             <>
                                 <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
-                                    Excel ทั้งหมด
+                                Export Excel ทั้งหมด
                                 </Button>
                             </>
                         )}

@@ -8,7 +8,8 @@ import {
 import { Button, Layout, Menu, theme, Input, Table, Space, Select } from 'antd';
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
+import { saveAs } from 'file-saver'; // เพิ่ม FileSaver สำหรับบันทึกไฟล์
 
 
 const { Header, Sider, Content } = Layout;
@@ -27,6 +28,9 @@ const AppointmentManagement = () => {
     const [loading, setLoading] = useState(false);
     const [shouldReload, setShouldReload] = useState(false);
     const [filteredInfo, setFilteredInfo] = useState({});
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [selectedRowReqid, setSelectedRowReqid] = useState([]);
+    const [selectedRowReqidapi, setSelectedRowReqidapi] = useState([]);
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
@@ -93,6 +97,39 @@ const AppointmentManagement = () => {
         }
     }
 
+    const onSelectChange = (newSelectedRowKeys, selectedRows) => {
+            console.log('selectedRowKeys changed:', newSelectedRowKeys);
+            setSelectedRowKeys(newSelectedRowKeys);
+            setSelectedRowReqid(selectedRows.map(row => row)); // อัปเดตรายการที่เลือก
+            setSelectedRowReqidapi(selectedRows.map(row => row.reqId)); // อัปเดตรายการที่เลือก
+        };
+
+        const handleChangeStatusAll = async (ids,status) => {
+            try {
+                setLoading(true);
+                setShouldReload(true);
+                const res = await axios.post('/api/request/changeStatusAll', { ids, status });
+                setLoading(false);
+                setShouldReload(false);
+                console.log("res", res);
+    
+            } catch (error) {
+                console.log(error);
+    
+            }
+        }
+    
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+
+        selections: [
+            Table.SELECTION_ALL,
+            Table.SELECTION_INVERT,
+            Table.SELECTION_NONE,
+        ],
+    };
+
     useEffect(() => {
         fetchStuData()
     }, [])
@@ -126,15 +163,93 @@ const AppointmentManagement = () => {
         'ที่อยู่ตาม สด.9 จังหวัด': row.province_sd,
     }));
 
-    const handleExport = async () => {
-        const worksheet = XLSX.utils.json_to_sheet(formattedData);
-        // Create a new workbook
-        const workbook = XLSX.utils.book_new();
-        // Append the worksheet to the workbook
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Table Data');
-        // Write the workbook to a file
-        XLSX.writeFile(workbook, 'table_data.xlsx');
-    };
+    const exportToExcel = (number) => {
+            // กำหนดชื่อ Columns ที่ต้องการ
+            const columnHeaders = [
+                { header: "ปี", key: "year" },
+                { header: "รหัสนิสิต", key: "stu_id" },
+                { header: "เลขประจำตัวประชาชน", key: "thai_id" },
+                { header: "ศึกษาในระดับปริญญา", key: "degree" },
+                { header: "ชั้นปีที่", key: "year" },
+                { header: "ชื่อ", key: "fnameTH" },
+                { header: "นามสกุล", key: "lnameTH" },
+                { header: "เบอร์โทรศัพท์", key: "phone_num" },
+                { header: "อีเมล", key: "email" },
+                { header: "ชื่อบิดา", key: "father_name" },
+                { header: "ชื่อมารดา", key: "mother_name" },
+                { header: "ที่อยู่ตามทะเบียนบ้าน บ้านเลขที่", key: "house_num" },
+                { header: "ที่อยู่ตามทะเบียนบ้าน หมู่", key: "house_moo" },
+                { header: "ที่อยู่ตามทะเบียนบ้าน แขวง/ตำบล", key: "sub_district" },
+                { header: "ที่อยู่ตามทะเบียนบ้าน อำเภอ", key: "district" },
+                { header: "ที่อยู่ตามทะเบียนบ้าน จังหวัด", key: "province" },
+                { header: "ใบสำคัญ สด. 9", key: "sdnine_id" },
+                { header: "ที่อยู่ตาม สด.9 บ้านเลขที่", key: "house_num_sd" },
+                { header: "ที่อยู่ตาม สด.9 หมู่", key: "house_moo_sd" },
+                { header: "ที่อยู่ตาม สด.9 แขวง/ตำบล", key: "subdistrict_sd" },
+                { header: "ที่อยู่ตาม สด.9 อำเภอ", key: "district_sd" },
+                { header: "ที่อยู่ตาม สด.9 จังหวัด", key: "province_sd" },
+               
+            ];
+    
+            // เพิ่มชื่อ Columns เข้าไปเป็น Row แรก
+            let dataWithHeaders = []
+            if (number == 0) {
+                dataWithHeaders = [
+                    columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+                    ...Data.map((item, index) =>
+                        columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                    )
+                ];
+            }
+            else {
+                dataWithHeaders = [
+                    columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+                    ...selectedRowReqid.map((item, index) =>
+                        columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                    )
+                ];
+            }
+    
+            // สร้าง Worksheet ด้วยข้อมูลที่มี Header
+            const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+    
+            // สร้าง Workbook และเพิ่ม Worksheet
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+    
+            // เขียนไฟล์ Excel และดาวน์โหลด
+            const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+            const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+            saveAs(data, "exported_data.xlsx");
+        };
+
+        const dropdown = () => {
+                const handleSelect = async (value) => {
+                    try {
+                        handleChangeStatusAll( selectedRowReqidapi, value )
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                };
+        
+                return (
+                    <Select
+                        className="w-1/5 mt-1 mb-6 px-4"
+                        showSearch
+                        placeholder="เลือกสถานะ"
+                        filterOption={(input, option) =>
+                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                        }
+                        options={[
+                            { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ' },
+                            { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด' },
+                            { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล' },
+                            { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย' },
+                        ]}
+                        onSelect={handleSelect} // ใช้ฟังก์ชัน handleSelect
+                    />
+                );
+            };
 
 
     console.log("statusRequest", statusRequest);
@@ -251,37 +366,37 @@ const AppointmentManagement = () => {
                 if (status === 'รอเข้ารับบริการ') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'black' }, },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ติดต่อรับเอกสาร', label: 'ติดต่อรับเอกสาร', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'gray' }, disabled: true },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 } else if (status === 'รอเจ้าหน้าที่ดำเนินการ') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'black' } },
-                        { value: 'ติดต่อรับเอกสาร', label: 'ติดต่อรับเอกสาร', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'black' } },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 } else if (status === 'ส่งเอกสารแล้ว') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ติดต่อรับเอกสาร', label: 'ติดต่อรับเอกสาร', style: { color: 'black' } },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'gray' }, disabled: true },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'black' } },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 }
                 else if (status === 'ติดต่อรับเอกสาร') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ติดต่อรับเอกสาร', label: 'ติดต่อรับเอกสาร', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'gray' }, disabled: true },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'black' } },
                     ];
                 } else if (status === 'รับเอกสารเรียบร้อย') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ติดต่อรับเอกสาร', label: 'ติดต่อรับเอกสาร', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'gray' }, disabled: true },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 }
@@ -298,8 +413,8 @@ const AppointmentManagement = () => {
             filters: [
                 { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
                 { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
-                { text: "ส่งเอกสารแล้ว", value: "ส่งเอกสารแล้ว" },
-                { text: "ติดต่อรับเอกสาร", value: "ติดต่อรับเอกสาร" },
+                { text: "ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด", value: "ส่งเอกสารแล้ว" },
+                { text: "มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล", value: "ติดต่อรับเอกสาร" },
                 { text: "รับเอกสารเรียบร้อย", value: "รับเอกสารเรียบร้อย" },
             ],
             filteredValue: filteredInfo?.status,
@@ -547,7 +662,7 @@ const AppointmentManagement = () => {
                     </div>
                     <div className='flex mt-12'>
                         <div className='mt-2 ml-3 font-normal text-base'>
-                            เลือกปี
+                            เลือกปีการศึกษา
                         </div>
                         <div className='mt-1 mb-6'>
                             <Select
@@ -565,12 +680,20 @@ const AppointmentManagement = () => {
 
                     </div>
                     <div>
-                        <button
-                            className="bg-blue-500 p-2 rounded-md text-white mb-3"
-                            onClick={handleExport}
-                        >
-                            Export Excel
-                        </button>
+                        {selectedRowReqid.length > 0 ? (
+                            <>
+                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
+                                    Export Excel ที่เลือกไว้
+                                </Button>
+                                {dropdown()}
+                            </>
+                        ) : (
+                            <>
+                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
+                                Export Excel ทั้งหมด
+                                </Button>
+                            </>
+                        )}
                     </div>
 
                     <Table
@@ -579,6 +702,7 @@ const AppointmentManagement = () => {
                         loading={loading}
                         style={{ borderRadius: borderRadiusLG }}
                         scroll={{ x: 'max-content' }}
+                        rowSelection={rowSelection}
 
                     />
 
