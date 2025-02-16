@@ -126,13 +126,21 @@ const RD = () => {
                 <legend className="sr-only">Checkboxes</legend>
 
                 <div className="divide-y divide-gray-200">
+                  <div className="items-center py-4">
+                    <div className="font-medium text-gray-900 pr-4">1. Download เอกสารได้ที่นี่ </div>
+                    <button
+                      onClick={handleDownload}
+                      className="mt-3 ml-3 px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
+                      Download
+                    </button>
+                  </div>
                   <label
                     htmlFor="Option1"
                     className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                   >
                     <div>
                       <strong className="font-medium text-gray-900 ">
-                        1. Claim Form for Injury / Illness
+                        2. Claim Form for Injury / Illness
                       </strong>
                     </div>
                   </label>
@@ -142,7 +150,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        2. Original receipt
+                        3. Original receipt
                       </strong>
                     </div>
                   </label>
@@ -152,7 +160,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        3. Medical certificate
+                        4. Medical certificate
                       </strong>
                     </div>
                   </label>
@@ -162,7 +170,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        4. Copy of student card
+                        5. Copy of student card
                       </strong>
                     </div>
                   </label>
@@ -172,17 +180,11 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        5. Copy of bank account passbook
+                        6. Copy of bank account passbook
                       </strong>
                     </div>
                   </label>
                 </div>
-                <button
-                  onClick={handleDownload}
-                  className="mt-3 px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300"
-                >
-                  Download
-                </button>
               </fieldset>
               <div className="flex space-x-4">
                 <label

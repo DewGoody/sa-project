@@ -113,14 +113,21 @@ const RD = () => {
                         <div className="grid grid-cols-1 gap-6">
                             <fieldset>
                                 <legend className="sr-only">Checkboxes</legend>
-
+                                <div className="items-center py-4">
+                                    <div className="font-medium text-gray-900 pr-4">1. Download เอกสารได้ที่นี่ </div>
+                                    <button
+                                        onClick={handleDownload}
+                                        className="mt-3 ml-3 px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
+                                        Download
+                                    </button>
+                                </div>
                                 <div className="divide-y divide-gray-200">
                                     <label
                                         htmlFor="Option1"
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
                                         <div>
-                                            <strong className="font-medium text-gray-900 ">1. ใบรับรองแพทย์ฉบับจริง (Original medical certificate)</strong>
+                                            <strong className="font-medium text-gray-900 ">2. ใบรับรองแพทย์ฉบับจริง (Original medical certificate)</strong>
                                         </div>
                                     </label>
 
@@ -131,7 +138,7 @@ const RD = () => {
 
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">2. ใบเสร็จฉบับจริง (Original receipt)</strong>
+                                            <strong className="font-medium text-gray-900">3. ใบเสร็จฉบับจริง (Original receipt)</strong>
                                         </div>
                                     </label>
                                     <label
@@ -141,16 +148,11 @@ const RD = () => {
 
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">3. สำเนาบัญชีธนาคาร (Bank account copy)</strong>
+                                            <strong className="font-medium text-gray-900">4. สำเนาบัญชีธนาคาร (Bank account copy)</strong>
                                         </div>
                                     </label>
                                 </div>
                             </fieldset>
-                            <button
-                                onClick={handleDownload}
-                                className="px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
-                                Download
-                            </button>
                             <div className="">
                                 <label
                                     htmlFor="Option9"
