@@ -148,10 +148,24 @@ export const Form = () => {
       setLoading(false);
     }
   }
+  const fetchRD = async () => {
+    try {
+      const response = await axios.post('/api/request/getRD', { id: profileData.id }); // Example API
+      console.log("getRD", response.data.data);
+      console.log("formidRD", response.data.data[0].id);
+      setFormId(response.data.data[0].id);
+      setNotQueue((prevNotQueue) => [...prevNotQueue, ...response.data.data]);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  }
   const fetchAllData = async () => {
     await fetchNotQueueGoldencard();
     await fetchNotQueue();
     await fetchQueue();
+    await fetchRD()
   };
   
   useEffect(() => {
@@ -363,6 +377,9 @@ export const Form = () => {
                           >
                             Reschedule
                           </button>
+                        )}
+                        {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && (
+                          <h1></h1>
                         )}
                         <button
                           className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-3"
