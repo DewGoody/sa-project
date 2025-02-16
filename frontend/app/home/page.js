@@ -71,7 +71,7 @@ export const Form = () => {
   };
 
 
-  const showModalCheckInfo =(item) => {
+  const showModalCheckInfo = (item) => {
     console.log("info :", item);
     setMoreInfo(item);
     setIsModalCheckInfoOpen(true);
@@ -162,21 +162,22 @@ export const Form = () => {
     }
   }
   const fetchAllData = async () => {
+    await fetchRD()
     await fetchNotQueueGoldencard();
     await fetchNotQueue();
     await fetchQueue();
-    await fetchRD()
+
   };
-  
+
   useEffect(() => {
     fetchAllData();
   }, [profileData, deleteQueueId, deleteNotQueueId]);
-  
+
   // useEffect(() => {
   //   fetchNotQueueGoldencard();
   //   fetchNotQueue();
   //   fetchQueue();
-    
+
   // }, [profileData, deleteQueueId, deleteNotQueueId]);
 
 
@@ -259,6 +260,19 @@ export const Form = () => {
 
 
   let count = 1;
+  function formatDateThai(isoDate) {
+    if (!isoDate) return "ไม่มีข้อมูล";
+
+    const date = new Date(isoDate);
+    if (isNaN(date.getTime())) return "รูปแบบวันที่ไม่ถูกต้อง";
+
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // เดือนเริ่มจาก 0
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
 
   return (
     <div className="min-h-screen" >
@@ -337,7 +351,7 @@ export const Form = () => {
                             </div>
                           ) : (item.Request.status === "ขอข้อมูลเพิ่มเติม" || item.Request.status === "โอนเงินเรียบร้อย") && (
                             <div className="ml-3 mt- mb-3 flex">
-                              <button onClick={() => { showModalCheckInfo(item.Request.more_info) } } className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
+                              <button onClick={() => { showModalCheckInfo(item.Request.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
                                 view detail
                               </button>
 
@@ -353,7 +367,7 @@ export const Form = () => {
                 ) : null}
                 {notQueue.length > 0 && (
                   notQueue.map((item, index) => (
-                    console.log("item not queue", item),
+                    // console.log("✅ item RD money:", item.RD_info[0]?.money),
 
 
                     <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
@@ -362,6 +376,12 @@ export const Form = () => {
                         <div className="flex">
                           <div className="ml-4 mt-1 font-semibold text-base text-blue-500">{item.status}</div>
                           <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div>
+                          {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && item.RD_info && Array.isArray(item.RD_info) && item.RD_info.length > 0 && (
+                            <div>
+                              {item.status == "เสร็จสิ้น" && (<div className=" ml-1 mt-1 font-semibold text-base text-pink-500">ไปศูนย์ฝึกวันที่ {formatDateThai(item.RD_info[0]?.date)} และ เตรียมเงินมาจำนวน {item.RD_info[0]?.money} บาท </div>)}
+                            </div>
+
+                          )}
                         </div>
                       </div>
                       <div className="flex ml-50">
@@ -377,9 +397,6 @@ export const Form = () => {
                           >
                             Reschedule
                           </button>
-                        )}
-                        {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && (
-                          <h1></h1>
                         )}
                         <button
                           className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-3"
@@ -480,25 +497,25 @@ export const Form = () => {
       >
       </Modal>
 
-        <Modal
-          title=""
-          open={isModalCheckInfoOpen}
-          onCancel={() => setIsModalCheckInfoOpen(false)}
-          footer={[
-            <button
-              key="close"
-              onClick={() => setIsModalCheckInfoOpen(false)}
-              className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
-            >
-              Close
-            </button>,
-          ]}
-        >
-          <div>
-            <p>{moreInfo}</p>
-            {/* Add any additional information you want to display here */}
-          </div>
-        </Modal>
+      <Modal
+        title=""
+        open={isModalCheckInfoOpen}
+        onCancel={() => setIsModalCheckInfoOpen(false)}
+        footer={[
+          <button
+            key="close"
+            onClick={() => setIsModalCheckInfoOpen(false)}
+            className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
+          >
+            Close
+          </button>,
+        ]}
+      >
+        <div>
+          <p>{moreInfo}</p>
+          {/* Add any additional information you want to display here */}
+        </div>
+      </Modal>
     </div>
   );
 }
