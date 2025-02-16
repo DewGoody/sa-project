@@ -515,7 +515,7 @@ const App = () => {
                     </div>
                    <div className='flex mt-12'>
                         <div className='mt-2 ml-3 font-normal text-base'>
-                            เลือกปี
+                            เลือกปีการศึกษา
                         </div>
                         <div className='mt-1 mb-6'>
                                 <Select
