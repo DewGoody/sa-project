@@ -41,6 +41,9 @@ export async function GET(req) {
         if (file.file_student) {
             zip.file('สำเนาบัตรนิสิต.pdf', file.file_student);
         }
+        if (file.file_fast) {
+            zip.file('สำเนาย้ายด่วน.pdf', file.file_fast);
+        }
 
         // Generate the zip file
         const zipContent = await zip.generateAsync({ type: 'nodebuffer' });
