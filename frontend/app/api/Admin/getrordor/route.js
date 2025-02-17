@@ -67,7 +67,7 @@ export async function POST(req, res) {
         // Flatten RD_info into the parent object
         const flattenedQueue = queue.map((entry) => {
             // Merge RD_info properties with the main entry
-            if (entry.RD_info) {
+            if (entry.RD_info[0]) {
                 entry.yearRD = entry.RD_info[0].RD_type
                 entry.json = entry.RD_info[0].json_history
                 return {
@@ -81,6 +81,8 @@ export async function POST(req, res) {
 
         // Serialize BigInt values
         const serializedQueue = serializeBigInt(flattenedQueue);
+        console.log( serializedQueue);
+        
 
         // Return the flattened and serialized data
         return NextResponse.json(serializedQueue, { status: 200 });

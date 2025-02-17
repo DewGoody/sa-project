@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import { useRouter,useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 import {
   FaUser,
@@ -348,19 +348,19 @@ export const Form = () => {
                                 Cancel
                               </button>
                             </div>
-                          ) : (item.Request.status === "ขอข้อมูลเพิ่มเติม" || item.Request.status === "โอนเงินเรียบร้อย"|| item.Request.status === "ไม่อนุมัติ") && (
+                          ) : (item.Request.status === "ขอข้อมูลเพิ่มเติม" || item.Request.status === "โอนเงินเรียบร้อย" || item.Request.status === "ไม่อนุมัติ") && (
                             <div className="ml-3 mt- mb-3 flex">
                               <button onClick={() => { showModalCheckInfo(item.Request.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
                                 view detail
                               </button>
 
                             </div>
-                            
+
                           )
-                          
+
                           }
 
-                          {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" &&item.Request.status === "ติดต่อรับเอกสาร" && (
+                          {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
                             <div className="ml-3 mt- mb-3 flex font-semibold text-base text-blue-500">
                               ตั้งแต่ 1 	มีนามารับเอกสารผ่อนผัน
                             </div>
@@ -387,8 +387,13 @@ export const Form = () => {
                             <div>
                               {item.status == "เสร็จสิ้น" && (<div className=" ml-1 mt-1 font-semibold text-base text-pink-500">ไปศูนย์ฝึกวันที่ {formatDateThai(item.RD_info[0]?.date)} และ เตรียมเงินมาจำนวน {item.RD_info[0]?.money} บาท </div>)}
                             </div>
-
                           )}
+                        </div>
+                        <div>
+                          <div className="ml-4 text-md">
+                            <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2</p>
+                            <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
+                          </div>
                         </div>
                       </div>
                       <div className="flex ml-50">
