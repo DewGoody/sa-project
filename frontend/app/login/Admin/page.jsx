@@ -19,7 +19,13 @@ const login = () => {
             console.log("Login response:", response);
     
             if (response.data.data) {
-                message.success("Login successful!");
+               const res = await axios.get("/callback-admin",{
+                params: {
+                    username: values.username,
+                }
+               });
+               console.log("Login res:", res);
+               message.success("Login successful");
                 router.push("/Admin/home/0");
             } else {
                 message.error("Login failed. Please check your username and password.");

@@ -6,6 +6,7 @@ import { SignJWT } from "jose";
 import { TextEncoder } from "util";
 import { cookies } from 'next/headers';
 const prisma = new PrismaClient();
+const role = "student";
 
 function convertToDate(dateString) {
     if (typeof dateString === 'string' && dateString.length === 8) {
@@ -93,7 +94,7 @@ export async function GET(req) {
         };
 
         const key = new TextEncoder().encode(process.env.JWT_SECRET);
-        const accessToken = await new SignJWT({ id: Student.id })
+        const accessToken = await new SignJWT({ id: Student.id, role: role })
             .setProtectedHeader({ alg: 'HS256' })
             .setIssuedAt()
             .setIssuer(`${process.env.WEB_URL}`)
@@ -103,7 +104,7 @@ export async function GET(req) {
         // await setTOKEN(accessToken).then(() => {console.log('token set')}).catch((err) => {console.log(err)});
         
         // Set the token as a cookie using NextResponse
-        const response = NextResponse.redirect(`${process.env.WEB_URL}/home`);
+        const response = NextResponse.redirect(`${process.env.WEB_URL}/student/${accessToken}/home`);
         response.cookies.set('token', accessToken, {
             httpOnly: true, // Prevent JavaScript access
             // secure: process.env.NODE_ENV === 'production', // Only send over HTTPS in production

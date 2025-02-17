@@ -438,7 +438,7 @@ const App = () => {
                 </>
 
                 <Menu
-                    style={{ background: "rgb(255,157,210)", marginTop: "20px" }}
+                    style={{ background: "rgb(255,157,210)", height: '100%', marginTop: "20px" }}
                     defaultSelectedKeys={[selectedKey]}
                     mode="inline"
                     onClick={(e) => setSelectedKey(e.key)}
@@ -492,9 +492,9 @@ const App = () => {
                         padding: 24,
                         minHeight: 280,
                         background: "white",
-                        borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
-                        borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
-                        borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
+                        // borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
+                        // borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
+                        // borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
 
                     }}
                 >
@@ -505,7 +505,7 @@ const App = () => {
                     </div>
                     <div className='flex mt-12'>
                         <div className='mt-2 ml-3 font-normal text-base'>
-                            เลือกปี
+                            เลือกปีการศึกษา
                         </div>
                         <div className='mt-1 mb-6'>
                             <Select
@@ -560,6 +560,7 @@ const App = () => {
                         rowClassName={(record, index) =>
                             index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
                         }
+                        bordered
                     />
                 </Content>
             </Layout>

@@ -1,5 +1,19 @@
 "use client"
+
+import { useEffect } from 'react';
+import axios from 'axios';
+
 const login = () => {
+    useEffect(() => {
+        // เรียก API logout เพื่อเคลียร์คุกกี้เมื่อเข้าหน้า login
+        axios.get('/api/user/logout')
+          .then(response => {
+            console.log('Logged out and cookies cleared');
+          })
+          .catch(error => {
+            console.error('Error logging out:', error);
+          });
+      }, []);
     return (
         <div className="h-screen">
             <div className="flex justify-center items-end h-1/6 ">

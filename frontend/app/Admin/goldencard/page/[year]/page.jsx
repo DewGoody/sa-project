@@ -687,7 +687,7 @@ const App = () => {
                 </>
 
                 <Menu
-                    style={{ background: "rgb(255,157,210)", marginTop: "20px" }}
+                    style={{ background: "rgb(255,157,210)", marginTop: "20px",  height: '100%', borderRight: 0 }}
                     defaultSelectedKeys={[selectedKey]}
                     mode="inline"
                     onClick={(e) => setSelectedKey(e.key)}
@@ -741,8 +741,8 @@ const App = () => {
                         padding: 24,
                         minHeight: 280,
                         background: "white",
-                        borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
-                        borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
+                        // borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
+                        // borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
                     }}
                 >
                     <div className='flex mb-5 justify-between'>
@@ -786,12 +786,8 @@ const App = () => {
 
                     </div>
                     <Table
-                        // dataSource={Data}
-                        // columns={columns}
-                        // rowClassName={(record, index) =>
-                        //     index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
-                        // }
                         rowSelection={rowSelection} columns={columns} dataSource={Data}
+                        bordered
                     />
                     <Modal
                         title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม"

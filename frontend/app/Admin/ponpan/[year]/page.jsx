@@ -124,9 +124,25 @@ const AppointmentManagement = () => {
         onChange: onSelectChange,
 
         selections: [
-            Table.SELECTION_ALL,
-            Table.SELECTION_INVERT,
-            Table.SELECTION_NONE,
+            {
+                key: 'all-data',
+                text: 'เลือกทั้งหมด',
+                onSelect: () => {
+                    setSelectedRowKeys(dataSource.map((item) => item.key));
+                    setSelectedRowReqid(dataSource.map((item) => item));
+                    setSelectedRowReqidapi(dataSource.map((item) => item.reqId));
+                },
+            },
+            // Table.SELECTION_INVERT,
+            {
+                key: 'none',
+                text: 'ไม่เลือกทั้งหมด',
+                onSelect: () => {
+                    setSelectedRowKeys([]);
+                    setSelectedRowReqid([]);
+                    setSelectedRowReqidapi([]);
+                },
+            },
         ],
     };
 
@@ -703,6 +719,7 @@ const AppointmentManagement = () => {
                         style={{ borderRadius: borderRadiusLG }}
                         scroll={{ x: 'max-content' }}
                         rowSelection={rowSelection}
+                        bordered
 
                     />
 

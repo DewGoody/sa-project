@@ -252,7 +252,7 @@ const App = () => {
           </div>
 
           <Menu
-            style={{ background: "rgb(255,157,210)", marginTop: "20px" }}
+            style={{ background: "rgb(255,157,210)",  height: '100%',marginTop: "20px" }}
             defaultSelectedKeys={[selectedKey]}
             mode="inline"
             onClick={(e) => setSelectedKey(e.key)}
@@ -306,8 +306,8 @@ const App = () => {
               padding: 24,
               minHeight: 280,
               background: "white",
-              borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
-              borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
+              // borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
+              // borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
 
             }}
           >
