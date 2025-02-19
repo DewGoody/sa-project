@@ -5,6 +5,8 @@ import { Header } from '../../../../../components/Header.js';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useRouter,useParams } from 'next/navigation';
+import {QuestionOutlined} from '@ant-design/icons';
+import { Color } from 'antd/es/color-picker/index.js';
 
 
 const RD = () => {
@@ -103,8 +105,13 @@ const RD = () => {
                                             htmlFor="Option1"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
-                                            <div>
+                                            <div className='flex justify-around'>
                                                 <strong className="font-medium text-gray-900 ">1. สำเนา สด.9 (Copy of certificate of Sor dor 9)</strong>
+                                                <div>
+                                                    <a href='https://anan-hosp.go.th/%E0%B9%80%E0%B8%81%E0%B8%93%E0%B8%91%E0%B9%8C%E0%B8%97%E0%B8%AB%E0%B8%B2%E0%B8%A3/img/%E0%B8%AA%E0%B8%949.PNG'>
+                                                    <QuestionOutlined style={{color:"red", fontSize:"larger", marginLeft:"10px"}} />
+                                                    </a>
+                                                </div>
                                             </div>
                                         </label>
 

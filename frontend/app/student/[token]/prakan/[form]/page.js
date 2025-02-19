@@ -213,7 +213,7 @@ export default function Form() {
                     <input
                       type="text"
                       name="name"
-                      // defaultValue={profileData.fnameTH + " " + profileData.lnameTH}
+                      disabled
                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={
                         profileData?.fnameTH + " " + profileData?.lnameTH
@@ -227,6 +227,7 @@ export default function Form() {
                     <input
                       type="text"
                       name="id"
+                      disabled
                       defaultValue={profileData?.id}
                       className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       
@@ -240,7 +241,7 @@ export default function Form() {
                     <input
                       type="text"
                       name="faculty"
-                    //  defaultValue={profileData.facultyNameTH}
+                      disabled
                       className="ml-2 w-96 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.facultyNameTH}
                     />
@@ -412,12 +413,24 @@ export default function Form() {
         </main>
         <div className="flex justify-end">
         
-          <button
+        {token !== '0' ? 
+         (   <button
             onClick={handleSubmit}
-            className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+            htmlType="submit"
+            
+            className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
           >
             Check data
-          </button>
+          </button>):
+           <button
+           onClick={handleSubmit}
+           htmlType="submit"
+           
+           className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+         >
+           เสร็จสิ้น
+         </button>
+        }
     
         </div>
       </div>

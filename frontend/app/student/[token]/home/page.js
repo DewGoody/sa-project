@@ -320,16 +320,22 @@ export const Form = () => {
                           <div className="">
                             {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " (" + timeSlots[item.period] + " น.)"}
 
-                            <div className="ml-4 mt-1 font-semibold text-base text-blue-500">{item.Request.status}</div>
+                           
                             <div className="ml-4 text-md">
                             {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
-                            <div className=" mb-3 flex font-semibold text-base text-blue-500">
-                              ตั้งแต่ 1 	มีนาคมเป็นต้นไป
+                            <div className=" flex text-base text-black">
+                              ตั้งแต่ 1 	มีนาคมเป็นต้นไปรับเอกสารได้ที่
                             </div>
                           )}
-                              <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2</p>
+                              <p className="">อาคารจุลจักรพงษ์ ชั้น 2</p>
                               <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                             </div>
+                            {!(item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร") ? (
+                               <div className="ml-4 mt-1 font-semibold text-base text-blue-500">{item.Request.status}</div>
+                            ):(
+                              null
+                            )
+                              }
                           </div>
 
                           {item.Request.status === "รอเข้ารับบริการ" ? (
@@ -364,12 +370,14 @@ export const Form = () => {
                           )
 
                           }
+                          
 
                           
 
 
                         </div>
                       )}
+                      
                     </div>
                   ))
                 ) : null}
@@ -381,8 +389,21 @@ export const Form = () => {
                     <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
                       <div>
                         {count++ + ". " + item.type}
-                        <div className="flex">
-                          <div className="ml-4 mt-1 font-semibold text-base text-blue-500">{item.status}</div>
+                        {/* <div className="flex">
+                        <div className="mt-1 font-semibold text-base text-blue-500">{item.status}</div>
+                          <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div>
+                          {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && item.RD_info && Array.isArray(item.RD_info) && item.RD_info.length > 0 && (
+                            <div>
+                              {item.status == "เสร็จสิ้น" && (<div className=" ml-1 mt-1 font-semibold text-base text-pink-500">ไปศูนย์ฝึกวันที่ {formatDateThai(item.RD_info[0]?.date)} และ เตรียมเงินมาจำนวน {item.RD_info[0]?.money} บาท </div>)}
+                            </div>
+                          )}
+                        </div> */}
+                        <div>
+                          <div className="ml-4 text-md">
+                            <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2</p>
+                            <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
+                            <div className="flex">
+                        <div className="mt-1 font-semibold text-base text-blue-500">{item.status}</div>
                           <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div>
                           {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && item.RD_info && Array.isArray(item.RD_info) && item.RD_info.length > 0 && (
                             <div>
@@ -390,10 +411,7 @@ export const Form = () => {
                             </div>
                           )}
                         </div>
-                        <div>
-                          <div className="ml-4 text-md">
-                            <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2</p>
-                            <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
+                            
                           </div>
                         </div>
                       </div>

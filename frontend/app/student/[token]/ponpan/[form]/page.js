@@ -69,6 +69,7 @@ export default function Form() {
       console.log("resFormData",response.data);
       setPrepareData(response.data.data);
       setAlreadyData(response.data.data);
+      setProfileData(response.data.data.Student);
       setLoading(false);
       console.log(response.data);
     }
@@ -360,9 +361,6 @@ const handleAmphureChange = (e) => {
 }
 
 const handleDistrictChange = (e) => {
-  // const selectedDistrict = e.target.value;
-  // console.log("selectedDistrict", selectedDistrict);
-  // setDistrictSelected(selectedDistrict);
   setDistrict(e.target.value);
   setAlreadyData({ ...alreadyData, sub_district: e.target.value });
 }
@@ -410,8 +408,9 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="text"
                       name="name"
+                      disabled
                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={ profileData !== null ? `${profileData.fnameTH} ${profileData.lastName}` : alreadyData?.Student?.fnameTH + " " + alreadyData?.Student?.lnameTH}
+                      value={profileData?.fnameTH +" "+ profileData?.lnameTH}
                    
                     />
                   </div>
@@ -421,9 +420,10 @@ const handleDistrictSD9Change = (e) => {
                   <div>
                     <input
                       type="text"
+                      disabled
                       name="id"
                        className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                       value={ profileData !== null ? `${profileData.id}` : alreadyData?.Student?.id}
+                       value={profileData?.id}
                     />
                   </div>
                 </div>
@@ -433,9 +433,10 @@ const handleDistrictSD9Change = (e) => {
                   <div className="">
                     <input
                       type="text"
+                      disabled
                       name="faculty"
                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={ profileData !== null ? `${profileData.facultyNameTH}` : alreadyData?.Student?.facultyNameTH}
+                      value={profileData?.facultyNameTH}
                     />
                   </div>
                 </div>
@@ -484,6 +485,7 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="text"
                       name="phone"
+                      disabled
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                        value={ profileData !== null ? buddhistYear : alreadyBuddhistYear}
                       onChange={handleChangeBdDate}
@@ -560,6 +562,30 @@ const handleDistrictSD9Change = (e) => {
                 <div>
                   
                 </div>
+                <div className="flex text-gray-700">
+                  <label>บ้านเลขที่ (Address number) :</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="name"
+                      value={alreadyData.house_num}
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      onChange={handleChangeHouseNum}
+                    />
+                  </div>
+                </div>
+                <div className="flex text-gray-700">
+                  <label>หมู่ที่ (Moo) :</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="name"
+                      value={alreadyData.house_moo}
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      onChange={handleChangeHouseMoo}
+                    />
+                  </div>
+                </div>
                 <div>
                   <label className=" text-gray-700 mb-2">จังหวัด (Province) : </label>
                   <select
@@ -596,30 +622,7 @@ const handleDistrictSD9Change = (e) => {
           <div>
 
           </div>
-          <div className="flex">
-                  <label>บ้านเลขที่ (Address number) :</label>
-                  <div>
-                    <input
-                      type="text"
-                      name="name"
-                      value={alreadyData.house_num}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      onChange={handleChangeHouseNum}
-                    />
-                  </div>
-                </div>
-                <div className="flex">
-                  <label>หมู่ที่ (Moo) :</label>
-                  <div>
-                    <input
-                      type="text"
-                      name="name"
-                      value={alreadyData.house_moo}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      onChange={handleChangeHouseMoo}
-                    />
-                  </div>
-                </div>
+                
 
 
           <div className="-ml-6">
@@ -642,8 +645,33 @@ const handleDistrictSD9Change = (e) => {
                     />
                   </div>
                 </div>
+                
                 <div>
 
+                </div>
+                <div className="flex text-gray-700">
+                  <label>บ้านเลขที่ (Address number) :</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="name"
+                      value={alreadyData.house_num_sd}
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      onChange={handleChangeHouseNumSD9}
+                    />
+                  </div>
+                </div>
+                <div className="flex text-gray-700">
+                  <label>หมู่ที่ (Moo) :</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="name"
+                      value={alreadyData.house_moo_sd}
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      onChange={handleChangeHouseMooSD9}
+                    />
+                  </div>
                 </div>
                 <div>
                   <label className=" text-gray-700 mb-2">จังหวัด (Province)</label>
@@ -680,30 +708,7 @@ const handleDistrictSD9Change = (e) => {
           <div>
 
           </div>
-          <div className="flex">
-                  <label>บ้านเลขที่ (Address number) :</label>
-                  <div>
-                    <input
-                      type="text"
-                      name="name"
-                      value={alreadyData.house_num_sd}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      onChange={handleChangeHouseNumSD9}
-                    />
-                  </div>
-                </div>
-                <div className="flex">
-                  <label>หมู่ที่ (Moo) :</label>
-                  <div>
-                    <input
-                      type="text"
-                      name="name"
-                      value={alreadyData.house_moo_sd}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      onChange={handleChangeHouseMooSD9}
-                    />
-                  </div>
-                </div>
+          
               </form>
             </div>
             
@@ -717,14 +722,24 @@ const handleDistrictSD9Change = (e) => {
         
         <div className="flex justify-end">
           
-          <button
+         {token !== '0' ? 
+         (   <button
             onClick={handleSubmit}
             htmlType="submit"
             
             className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
           >
             Check data
-          </button>
+          </button>):
+           <button
+           onClick={handleSubmit}
+           htmlType="submit"
+           
+           className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+         >
+           เสร็จสิ้น
+         </button>
+        }
 
         </div>
       </div>
