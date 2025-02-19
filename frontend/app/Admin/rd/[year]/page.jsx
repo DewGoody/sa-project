@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
-import { saveAs } from 'file-saver'; 
+import { saveAs } from 'file-saver';
 import dayjs from 'dayjs';// เพิ่ม FileSaver สำหรับบันทึกไฟล์
 import {
     MenuFoldOutlined,
@@ -148,7 +148,7 @@ const App = () => {
 
     useEffect(() => {
         if (shouldReload) {
-            window.location.reload();
+            setTimeout(() => window.location.reload(), 1000);
         }
     }, [shouldReload]);
 
@@ -413,6 +413,75 @@ const App = () => {
         const data = new Blob([excelBuffer], { type: "application/octet-stream" });
         saveAs(data, "exported_data.xlsx");
     };
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [selectedRowReqid, setSelectedRowReqid] = useState([]);
+    const [selectedRowReqidapi, setSelectedRowReqidapi] = useState([]);
+
+    const onSelectChange = (newSelectedRowKeys, selectedRows) => {
+        console.log('selectedRowKeys changed:', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+        setSelectedRowReqid(selectedRows.map(row => row)); // อัปเดตรายการที่เลือก
+        setSelectedRowReqidapi(selectedRows.map(row => row.reqId)); // อัปเดตรายการที่เลือก
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+
+        selections: [
+            Table.SELECTION_ALL,
+            Table.SELECTION_INVERT,
+            Table.SELECTION_NONE,
+        ],
+    };
+
+    // ตรวจสอบค่าที่อัปเดตล่าสุด
+    useEffect(() => {
+        console.log("Updated selected reqids:", selectedRowReqidapi);
+    }, [selectedRowReqid]);
+    const handleChangeStatusAll = async (ids, status) => {
+        try {
+            setLoading(true);
+            setShouldReload(true);
+            const res = await axios.post('/api/request/changeStatusAll', { ids, status });
+            setLoading(false);
+            setShouldReload(false);
+            console.log("res", res);
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+    const dropdown = () => {
+        const handleSelect = async (value) => {
+            try {
+                console.log("selectRow", selectedRowReqidapi);
+                console.log("value", value);
+                
+                handleChangeStatusAll(selectedRowReqidapi, value)
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
+
+        return (
+            <Select
+                className="w-full mt-1 mb-6 "
+                // showSearch
+                placeholder="เลือกสถานะ"
+                filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                options={[
+                    { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ' },
+                    { value: 'เสร็จสิ้น', label: 'เสร็จสิ้น' },
+                ]}
+                onSelect={handleSelect} // ใช้ฟังก์ชัน handleSelect
+            />
+        );
+    };
 
     return (
         <Layout style={{ height: "100vh" }}>
@@ -538,45 +607,45 @@ const App = () => {
                             </Select>
                         </div>
 
-                    </div>
-                    <Button type="primary" onClick={showModal} style={{ marginBottom: '16px' }}>
-                        เพิ่มวันเวลารายงานตัว
-                    </Button>
-                    <Modal
-                        title="เพิ่มวันเวลารายงานตัว"
-                        open={isModalOpen}
-                        onOk={handleOk}
-                        onCancel={handleCancel}
-                    >
-                        <h1>วันที่</h1>
-                        <DatePicker
-                            style={{ width: '100%', marginBottom: 10 }}
-                            value={formData.date ? dayjs(formData.date) : null}
-                            onChange={(date, dateString) => handleChange('date', dateString)}
-                            placeholder="เลือกวันที่"
-                        />
-                        <h1>ค่าสมัคร นศท</h1>
-                        <Input
-                            value={formData.firstPayment}
-                            placeholder="ค่าสมัคร นศท"
-                            style={{ marginBottom: 10 }}
-                            onChange={e => handleChange('firstPayment', e.target.value)}
-                        />
-                        <h1>ค่ารายงานตัว นศท</h1>
-                        <Input
-                            value={formData.secondPayment}
+                        <div className='mt-1 mb-6 px-4'>
+                            <Button type="primary" onClick={showModal} style={{ marginBottom: '16px' }}>
+                                เพิ่มวันเวลารายงานตัว
+                            </Button>
+                        </div>
+                        <Modal
+                            title="เพิ่มวันเวลารายงานตัว"
+                            open={isModalOpen}
+                            onOk={handleOk}
+                            onCancel={handleCancel}
+                        >
+                            <h1>วันที่</h1>
+                            <DatePicker
+                                style={{ width: '100%', marginBottom: 10 }}
+                                value={formData.date ? dayjs(formData.date) : null}
+                                onChange={(date, dateString) => handleChange('date', dateString)}
+                                placeholder="เลือกวันที่"
+                            />
+                            <h1>ค่าสมัคร นศท</h1>
+                            <Input
+                                value={formData.firstPayment}
+                                placeholder="ค่าสมัคร นศท"
+                                style={{ marginBottom: 10 }}
+                                onChange={e => handleChange('firstPayment', e.target.value)}
+                            />
+                            <h1>ค่ารายงานตัว นศท</h1>
+                            <Input
+                                value={formData.secondPayment}
 
-                            placeholder="ค่ารายงานตัว นศท"
-                            onChange={e => handleChange('secondPayment', e.target.value)}
-                        />
-                    </Modal>
+                                placeholder="ค่ารายงานตัว นศท"
+                                onChange={e => handleChange('secondPayment', e.target.value)}
+                            />
+                        </Modal>
+                        <div >
+                            {selectedRowReqidapi.length > 0 && dropdown()}
+                        </div>
+                    </div>
                     <Table
-                        dataSource={Data}
-                        columns={columns}
-                        loading={loading}
-                        rowClassName={(record, index) =>
-                            index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
-                        }
+                        rowSelection={rowSelection} columns={columns} dataSource={Data}
                         bordered
                     />
                 </Content>
