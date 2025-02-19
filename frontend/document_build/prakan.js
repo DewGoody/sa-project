@@ -40,15 +40,9 @@ async function prakan(data){
       };
     const formattedDate = formatDate(date)
     console.log(formattedDate);
-    
-    // const convertDateFormat = (dateString) => {
-    //     // Split the input date string by the hyphen (-) to get year, month, and day
-    //     const [year, month, day] = dateString.split('-');
-        
-    //     // Return the date in the desired format
-    //     return `${day}/${month}/${year}`;
-    //   };
-    // const dataDateAcc = convertDateFormat(data.acc_date)
+
+    const newMedicalFee = data.medical_fee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      
 
     firstPage.drawText(data.fnameTH + ' ' + data.lnameTH, {
         x: 204,
@@ -71,7 +65,7 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.tel_num+'', {
+    firstPage.drawText(data.phone_num+'', {
         x: 231,
         y: height-275,
         size: 14,   
@@ -128,7 +122,7 @@ async function prakan(data){
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.medical_fee + ' บาท', {
+    firstPage.drawText(newMedicalFee + ' บาท', {
         x: 143,
         y: height-552.5,
         size: 14,   

@@ -74,6 +74,9 @@ export async function updatePonpan(data){
 export async function getPonpanDataById(id) {
     const ponpan = await prisma.ponpan.findUnique({
         where: {id: id},
+        include: {
+            Student: true
+        }
     })
     if(ponpan){           
         return ponpan

@@ -322,6 +322,11 @@ export const Form = () => {
 
                             <div className="ml-4 mt-1 font-semibold text-base text-blue-500">{item.Request.status}</div>
                             <div className="ml-4 text-md">
+                            {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
+                            <div className=" mb-3 flex font-semibold text-base text-blue-500">
+                              ตั้งแต่ 1 	มีนาคมเป็นต้นไป
+                            </div>
+                          )}
                               <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2</p>
                               <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                             </div>
@@ -360,11 +365,7 @@ export const Form = () => {
 
                           }
 
-                          {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
-                            <div className="ml-3 mt- mb-3 flex font-semibold text-base text-blue-500">
-                              ตั้งแต่ 1 	มีนามารับเอกสารผ่อนผัน
-                            </div>
-                          )}
+                          
 
 
                         </div>

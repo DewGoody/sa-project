@@ -89,7 +89,7 @@ const RD = () => {
                     {/* Personal & Contact Information Section */}
                     <section>
                         <h3 className="text-lg font-semibold mb-4 text-center">
-                            นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่ 
+                            โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่ 
                         </h3>
                         <h3 className="text-lg font-normal mb-4 text-center">
                         Please prepare the following documents to submit to the staff 

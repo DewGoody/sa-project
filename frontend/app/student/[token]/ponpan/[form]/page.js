@@ -57,7 +57,7 @@ export default function Form() {
 
 
     const fetchStudentData = async () => {
-      const response = await axios.get('/api/profile'); // Example API
+      const response = await axios.get('/api/profile');
           console.log(response.data);
           setProfileData(response.data);
           setLoading(false);
@@ -75,10 +75,14 @@ export default function Form() {
           
 
     useEffect(() => {
-      fetchStudentData();
-      if(form !== '0'){
+      if(token !== '0'){
+        fetchStudentData();
+        if(form !== '0'){
+          fetchDataForm();
+          console.log("formKKK : ", form);
+        }
+      }else{
         fetchDataForm();
-        console.log("formKKK : ", form);
       }
 
     }, []);
@@ -88,6 +92,9 @@ export default function Form() {
 
     const date = new Date(profileData?.bd);
     const buddhistYear = date.getFullYear() + 543;
+
+    const alreadyDate = new Date(alreadyData?.Student?.bd);
+    const alreadyBuddhistYear = alreadyDate.getFullYear() + 543;
 
     console.log("buddhistYear : ", buddhistYear);
 
@@ -239,38 +246,70 @@ const handleChangeSd9Num = (e) => {
 }
 
 const handleSubmit = async () => {
-  if (form === '0') {
-    const data = {
-      stu_id: profileData.id,
-      thai_id: citizenId,
-      year: yearLevel,
-      degree: degree,
-      phone_num: phoneNum,
-      email: email,
-      father_name: fatherName,
-      mother_name: motherName,
-      house_num: houseNum,
-      house_moo: houseMoo,
-      house_num_sd: houseNumSD9,
-      house_moo_sd: houseMooSD9,
-      sdnine_id: sd9Num,
-      province: province,
-      district: amphure,
-      sub_district: district,
-      province_sd: provinceSD9,
-      district_sd: amphureSD9,
-      subdistrict_sd: districtSD9,
-    };
-
-    const response = await axios.post("/api/ponpan/create", data);
-    const reqId = response.data.data.req_id;
-    console.log(response.data);
-    router.push(`/student/${token}/ponpan/checkPonpanData/${reqId}`);
-    console.log(data);
-  } else {
+  if(token !== '0'){
+    if (form === '0') {
+      const data = {
+        stu_id: profileData.id,
+        thai_id: citizenId,
+        year: yearLevel,
+        degree: degree,
+        phone_num: phoneNum,
+        email: email,
+        father_name: fatherName,
+        mother_name: motherName,
+        house_num: houseNum,
+        house_moo: houseMoo,
+        house_num_sd: houseNumSD9,
+        house_moo_sd: houseMooSD9,
+        sdnine_id: sd9Num,
+        province: province,
+        district: amphure,
+        sub_district: district,
+        province_sd: provinceSD9,
+        district_sd: amphureSD9,
+        subdistrict_sd: districtSD9,
+      };
+  
+      const response = await axios.post("/api/ponpan/create", data);
+      const reqId = response.data.data.req_id;
+      console.log(response.data);
+      router.push(`/student/${token}/ponpan/checkPonpanData/${reqId}`);
+      console.log(data);
+    } else {
+      const data = {
+        id: alreadyData.id,
+        stu_id: profileData.id,
+        thai_id: citizenId,
+        year: alreadyData.year,
+        degree: alreadyData.degree,
+        phone_num: alreadyData.phone_num,
+        email: alreadyData.email,
+        father_name: alreadyData.father_name,
+        mother_name: alreadyData.mother_name,
+        house_num: alreadyData.house_num,
+        house_moo: alreadyData.house_moo,
+        house_num_sd: alreadyData.house_num_sd,
+        house_moo_sd: alreadyData.house_moo_sd,
+        sdnine_id: alreadyData.sdnine_id,
+        province: alreadyData.province,
+        district: alreadyData.district,
+        sub_district: alreadyData.sub_district,
+        province_sd: alreadyData.province_sd,
+        district_sd: alreadyData.district_sd,
+        subdistrict_sd: alreadyData.subdistrict_sd,
+      };
+  
+      const response = await axios.post("/api/ponpan/update", data);
+      const reqId = response.data.data.req_id;
+      console.log(response.data);
+      router.push(`/student/${token}/ponpan/checkPonpanData/${reqId}`);
+      console.log
+    }
+  }
+  else{
     const data = {
       id: alreadyData.id,
-      stu_id: profileData.id,
+      stu_id: alreadyData?.Student?.id,
       thai_id: citizenId,
       year: alreadyData.year,
       degree: alreadyData.degree,
@@ -292,9 +331,9 @@ const handleSubmit = async () => {
     };
 
     const response = await axios.post("/api/ponpan/update", data);
-    const reqId = response.data.data.req_id;
-    console.log(response.data);
-    router.push(`/student/${token}/ponpan/checkPonpanData/${reqId}`);
+    // const reqId = response.data.data.req_id;
+    console.log("resAdminSubmit",response.data);
+    router.push(`/Admin/ponpan/0`);
     console.log
   }
 }
@@ -372,7 +411,8 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       name="name"
                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={profileData?.fnameTH+" "+profileData?.lnameTH}
+                      value={ profileData !== null ? `${profileData.fnameTH} ${profileData.lastName}` : alreadyData?.Student?.fnameTH + " " + alreadyData?.Student?.lnameTH}
+                   
                     />
                   </div>
                 </div>
@@ -383,7 +423,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       name="id"
                        className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={profileData?.id}
+                       value={ profileData !== null ? `${profileData.id}` : alreadyData?.Student?.id}
                     />
                   </div>
                 </div>
@@ -395,7 +435,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       name="faculty"
                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={profileData?.facultyNameTH}
+                      value={ profileData !== null ? `${profileData.facultyNameTH}` : alreadyData?.Student?.facultyNameTH}
                     />
                   </div>
                 </div>
@@ -445,7 +485,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       name="phone"
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={buddhistYear}
+                       value={ profileData !== null ? buddhistYear : alreadyBuddhistYear}
                       onChange={handleChangeBdDate}
                     />
                   </div>

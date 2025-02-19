@@ -465,8 +465,8 @@ export default function ScholarshipPage() {
               <p className="mt-2 font-semibold">ช่วงเวลา</p>
               <p className="font-semibold">(Time)</p>
               <p className='text-lg'>{selectedTimeSlot}</p>
-              <p className="mt-2 font-semibold">อาคารจุลจักรพงษ์ ชั้น 2 ฝั่งโรงอาหาร</p>
-              <p className="font-semibold">(Chulachakrabonse Building, 2nd Floor, Cafeteria Side )</p>
+              <p className="mt-2 font-semibold">อาคารจุลจักรพงษ์ ชั้น 2 </p>
+              <p className="font-semibold">(CHULACHAKRAPONG BUILDING, 2nd Floor )</p>
             </div>
             <div className='flex justify-around'>
               <a onClick={() => router.push(`/student/${token}/home`)}>

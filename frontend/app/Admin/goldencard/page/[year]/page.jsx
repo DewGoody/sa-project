@@ -619,18 +619,8 @@ const App = () => {
 
     const dropdown = () => {
         const handleSelect = async (value) => {
-
             try {
-                // selectedRowReqid.forEach(
-                //     record => {
-                //         console.log("ทดสอบ", record.status)
-                //         handleChangeStatus({ ...record, status: value })
-                //     }
-                // )
-
                 handleChangeStatusAll( selectedRowReqidapi, value )
-
-
             } catch (error) {
                 console.error("Error:", error);
             }
@@ -638,8 +628,8 @@ const App = () => {
 
         return (
             <Select
-                className="w-1/5 mt-1 mb-6 px-4"
-                showSearch
+                className="w-1/5 mt-1 mb-6 ml-3"
+                // showSearch
                 placeholder="เลือกสถานะ"
                 filterOption={(input, option) =>
                     (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -666,10 +656,10 @@ const App = () => {
                     </div>
                     <div className='ml-3 mt-3'>
                         <p className='font-mono font-semibold text-white'>
-                            Department of Scholarships & Students
+                            Department of Scholarships & Student
                         </p>
                         <p className='font-mono font-semibold text-white'>
-                            Service, Office of the Student Affairs,
+                            Services, Office of the Student Affairs,
                         </p>
                         <p className='font-mono font-semibold text-white'>
                             Chulalongkorn University
@@ -731,6 +721,11 @@ const App = () => {
                             key: '8',
                             label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
                             onClick: () => window.location.href = '/Admin/user'
+                        },
+                        {
+                            key: '9',
+                            label: <span style={{ color: selectedKey === '9' ? 'black' : 'white' }}>เปิด-ปิดวันให้บริการ</span>,
+                            onClick: () => window.location.href = '/Admin/editServiceDate'
                         }
                     ]}
                 />

@@ -6,6 +6,9 @@ const prisma = new PrismaClient();
 export async function getPrakanDataById(id) {
     const prakan = await prisma.accident_info.findUnique({
         where: {id: id},
+        include: {
+            Student: true
+        }
     })
     if(prakan){           
         return prakan
@@ -42,7 +45,11 @@ export async function createPrakan(data) {
 }
 
 export async function updatePrakanForm(data) {
-    await prakan(data)
+    if(data.token !== "0"){
+        await prakan(data)
+    }
+    console.log("yayyay", data);
+    
     const prakanUpdated = await prisma.accident_info.update({
         where: {id: data.formId},
         data:{
@@ -55,14 +62,14 @@ export async function updatePrakanForm(data) {
             medical_fee: Number(data.medical_fee),
             medical_fee_text: data.medical_fee_text,
         }
-    })
+    })    
     await prisma.student.update({
-        where: {id: data.id},
+        where: {id: data.stu_id},
         data: {
-            tel_num: data.tel_num,
+            phone_num: data.phone_num,
             personal_email: data.personal_email
         }
-    })
+    })    
     if(prakanUpdated){           
         return prakanUpdated
     }

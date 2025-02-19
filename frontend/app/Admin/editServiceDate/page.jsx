@@ -9,32 +9,38 @@ import {
     DeleteOutlined,
     DownloadOutlined
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Input, Table, Space, Select, Modal, Form, Radio, message } from 'antd';
+import { Button, Layout, Menu, theme, Input, Table, Space, Form, Modal,Radio, message } from 'antd';
 import axios from 'axios';
+import Column from 'antd/es/table/Column';
+
+
+const { Header, Sider, Content } = Layout;
+
 const style = {
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
   };
 
-
-const { Header, Sider, Content } = Layout;
-
 const AppointmentManagement = () => {
     const [dataSource, setDataSource] = useState([]);
     const [stuData, setStuData] = useState([]);
-    const [loading, setLoading] = useState(false);
+     const [loading, setLoading] = useState(false);
+    const [value, setValue] = useState(null);
+    const [form] = Form.useForm();
+    const [formEdit] = Form.useForm();
+    const onChange = (e) => {
+        setValue(e.target.value);
+      };
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-    const [selectedKey, setSelectedKey] = useState('7');
+    const [selectedKey, setSelectedKey] = useState('9');
     const [statusRequest, setStatusRequest] = useState([]);
     const [shouldReload, setShouldReload] = useState(false);
     const [dateMaxStu, setDateMaxStu] = useState([])
     const [selectDate, setSelectDate] = useState();
-    const [maxStu, setMaxStu] = useState();
-    const [form] = Form.useForm();
-    const [formEdit] = Form.useForm();
+    const [nameDate, setNameDate] = useState();
 
     const timeSlots =
         [
@@ -49,27 +55,10 @@ const AppointmentManagement = () => {
         }
     }, [shouldReload]);
 
-    const fetchGetAllTimeSlots = async () => {
+    const fetchGetDayoff = async () => {
         try {
-            const res = await axios.post('/api/timeslot/getAll');
-            console.log("resGetAll", res.data.data);
-            const sortedData = res.data.data.sort((a, b) => new Date(b.date) - new Date(a.date));
-            setDateMaxStu(...dateMaxStu, sortedData.map((item) => {
-                const date = new Date(item.date);
-                date.setDate(date.getDate() + 1);
-                return {
-                    date: date.toISOString().split('T')[0],
-                };
-            }));
-        } catch (error) {
-            console.error('Error fetching timeslots:', error);
-        }
-    };
-
-    const fetchTableData = async () => {
-        try {
-            const res = await axios.post('/api/maxStu/getAll');
-            console.log("resMaxStu", res.data.data);
+            const res = await axios.post('/api/dayoff/getDayoff');
+            console.log("res", res.data.data);
             setDataSource(res.data.data);
         } catch (error) {
             console.error('Error fetching timeslots:', error);
@@ -77,19 +66,23 @@ const AppointmentManagement = () => {
     };
 
     useEffect(() => {
-        fetchGetAllTimeSlots();
-        fetchTableData();
+        fetchGetDayoff();
     }, []);
 
-    console.log("dataSource", dataSource);
-
-    console.log("dateMaxStu", dateMaxStu);
+    console.log("datasource :", dataSource);
+    console.log("selectDate", selectDate);
+    console.log("nameDate", nameDate);
+    console.log("value", value);
 
     const handleOk = async () => {
         setShouldReload(true);
         try {
-            const res = await axios.post('/api/timeslot/editMaxStudent', { date: selectDate, maxStu: maxStu });
-            console.log("resEditMx", res);
+            const res = await axios.post('/api/dayoff/create', {
+                date: selectDate,
+                period: value,
+                name: nameDate
+            });
+            console.log("res", res);
         } catch (error) {
             console.error('Error editing max student:', error);
         } finally {
@@ -98,31 +91,30 @@ const AppointmentManagement = () => {
     };
 
 
-    const handleSelectDate = async (date) => {
-        const formattedDate = new Date(date)
-        setSelectDate(formattedDate);
-        console.log("date", formattedDate);
-    }
 
-    const handleMaxStuChange = async (input) => {
-        setMaxStu(input);
+    const handleSelectDate = async (date) => {
+        const isoDate = new Date(date).toString() !== 'Invalid Date' ? new Date(date).toISOString() : '';
+        setSelectDate(isoDate);
     }
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if(name === 'newDate'){
+        if(name === 'date'){
             setEditingUser({ ...editingUser, [name]: new Date(value).toISOString() });
-        }else{
+        }
+        else if(name === 'period'){
+            setEditingUser({ ...editingUser, [name]: parseInt(value) });
+        }
+        else{
             setEditingUser({ ...editingUser, [name]: value });
         }
       };
 
-      console.log("editingUser", editingUser);
     const handleEdit = (record) => {
     console.log("recordEdit", record);
-      setEditingUser({ ...record, oldDate: new Date(record.date).toISOString(), max_stu: record.max_stu, newDate: new Date(record.date).toISOString() });
+      setEditingUser(record);
       setIsModalVisible(true);
     };
 
@@ -135,7 +127,6 @@ const AppointmentManagement = () => {
     const [deletingUser, setDeletingUser] = useState(null);
 
     const handleDelete = (record) => {
-        console.log("recordDelete", record);
       setDeletingUser(record);
       setIsDeleteModalVisible(true);
     };
@@ -148,7 +139,7 @@ const AppointmentManagement = () => {
     const handleDeleteConfirm = async () => {
       try {
         setLoading(true);
-        await axios.post("/api/maxStu/delete", { date: deletingUser.date });
+        await axios.post("/api/dayoff/delete", { id: deletingUser.id });
         setLoading(false);
         setIsDeleteModalVisible(false);
         setShouldReload(true);
@@ -164,7 +155,7 @@ const AppointmentManagement = () => {
       try {
         console.log("editingUser", editingUser);
         setLoading(true);
-        const response = await axios.post("/api/maxStu/edit", editingUser);
+        const response = await axios.post("/api/dayoff/update", editingUser);
         setLoading(false);
         setIsModalVisible(false);
         setShouldReload(true);
@@ -177,8 +168,70 @@ const AppointmentManagement = () => {
       }
     };
 
+    const columns = [
+        {
+            title: 'วันที่',
+            dataIndex: 'date',
+            key: 'date',
+            render: (text) => {
+                const date = new Date(text);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+                return <p>{formattedDate}</p>;
+            }
+        },
+        {
+            title: 'ช่วงเวลา',
+            dataIndex: 'period',
+            key: 'period',
+            width: 200,
+            render: (text,record) => {
+                if(record.period === 0){
+                    return <p>ปิดบริการทั้งวัน</p>
+                }
+                else if(record.period === 1){
+                    return <p>ปิดบริการเฉพาะช่วงเช้า</p>
+                }
+                else{
+                    return <p>ปิดบริการเฉพาะช่วงบ่าย</p>
+                }
+                
+            }
+        },
+        {
+            title: 'ชื่อ',
+            dataIndex: 'name',
+            key: 'name',
+            render: (text) => <p>{text}</p>
+        },
+        {
+            title: 'แก้ไข / เปิดวันให้บริการ',
+            dataIndex: 'edit',
+            render: (text, record) => (
+                <Space size="middle">
+                    <Button
+                        // type="primary"
+                        onClick={() => {
+                            handleEdit(record);
+                        }}
+                    >
+                        แก้ไข
+                    </Button>
+                    <Button
+                        type="primary"
+                        // danger
+                        onClick={() => {
+                            handleDelete(record);
+                        }}
+                    >
+                        เปิดวันให้บริการ
+                    </Button>
+                </Space>
+            ),
+        },
+    ];
+
     return (
-        <Layout style={{ height: "100vh" }}>
+        <Layout style={{ height: "100%" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
                 <div>
                     <div className="demo-logo-vertical" />
@@ -273,85 +326,60 @@ const AppointmentManagement = () => {
                         padding: 24,
                         minHeight: 280,
                         background: "white",
-                        borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
-                        borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
-
                     }}
                 >
+                    <div>
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
-                            จัดการจำนวนผู้เข้ารับบริการ
+                            เปิด-ปิดวันให้บริการ
                         </div>
                     </div>
                     <div>
-                        
-                        <Table
+                         <Table
                             dataSource={dataSource}
-                            columns={[
-                                {
-                                    title: 'วันที่',
-                                    dataIndex: 'date',
-                                    key: 'date',
-                                    render: (text) => {
-                                        const date = new Date(text);
-                                        return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
-                                    }
-                                },
-                                {
-                                    title: 'จำนวนนิสิตที่รองรับได้ต่อรอบการให้บริการ',
-                                    dataIndex: 'max_stu',
-                                    key: 'max_stu',
-                                },
-                               {
-                                           title: 'แก้ไข / ลบ',
-                                           dataIndex: 'edit',
-                                           render: (text, record) => (
-                                               <Space size="middle">
-                                                   <Button
-                                                       // type="primary"
-                                                       onClick={() => {
-                                                           handleEdit(record);
-                                                       }}
-                                                   >
-                                                       แก้ไข
-                                                   </Button>
-                                                   <Button
-                                                       type="primary"
-                                                       // danger
-                                                       onClick={() => {
-                                                           handleDelete(record);
-                                                       }}
-                                                   >
-                                                       ลบ
-                                                   </Button>
-                                               </Space>
-                                           ),
-                                       },
-                            ]}
+                            columns={columns}
+                            // loading = {loading}
+                            style={{ borderRadius: borderRadiusLG  }}
+                            scroll={{ x: 'max-content' }}
+                            bordered
+                                                
                         />
                     </div>
                     <div className='w-3/12'>
-                        <p>เลือกวัน</p>
+                        <p className='font-bold text-xl mb-2'>เลือกวันที่จะปิดให้บริการ</p>
                         <Input
                             type="date"
-                            min={dateMaxStu[0]?.date}
                             onChange={(e) => handleSelectDate(e.target.value)}
 
                         />
                     </div>
-                    <div className="mt-4 w-3/12">
-                        <p>เลือกจำนวนนิสิตสูงสุดที่รองรับได้</p>
+                    <div className='mt-4 w-3/12'>
+                        <p className='font-bold text-xl mb-2'>ชื่อวันที่</p>
                         <Input
-                            placeholder="จำนวนนิสิต"
-                            type="number"
-                            onChange={(e) => handleMaxStuChange(e.target.value)}
-
+                            placeholder="ชื่อวันที่"
+                            onChange={(e) => setNameDate(e.target.value)}
                         />
                     </div>
-
-                    <div className='absolute mt-6 '>
-                        <Button type="primary" onClick={handleOk}>ยืนยัน</Button>
+                    <div className="mt-4 w-3/12">
+                        <p className='font-bold text-xl mb-2'>เลือกช่วงที่จะปิดการให้บริการ</p>
+                        <Radio.Group style={style} onChange={onChange} value={value}>
+                            <Radio value={0}>ปิดบริการทั้งวัน</Radio>
+                            <Radio value={1}>ปิดบริการเฉพาะช่วงเช้า</Radio>
+                            <Radio value={2}>ปิดบริการเฉพาะช่วงบ่าย</Radio>
+                        </Radio.Group>
+                        <div className='mt-5'>
+                            <Button type='primary' onClick={handleOk}>
+                                ปิดวันให้บริการ
+                            </Button>
+                        </div>
                     </div>
+                    <div className='mt-20'>
+
+                    </div>
+
+                    
+                    </div>
+
                     <Modal
                         title="แก้ไขวันปิดให้บริการ"
                         visible={isModalVisible}
@@ -370,21 +398,27 @@ const AppointmentManagement = () => {
                         <Form.Item label="วันที่">
                         <Input
                             type='date'
-                            name="newDate"
-                            value={editingUser?.newDate.split('T')[0]}
+                            name="date"
+                            value={editingUser?.date.split('T')[0]}
                             onChange={handleInputChange}
                         />
                         </Form.Item>
-                        <Form.Item label="เลือกจำนวนนิสิตสูงสุดที่รองรับได้">
-                        <Input
-                            type='number'
-                            name="max_stu"
-                            value={editingUser?.max_stu}
-                            onChange={handleInputChange}
-                        />
+                        <Form.Item label="ช่วงเวลา">
+                        <Radio.Group style={style} onChange={handleInputChange} name='period' value={editingUser?.period}>
+                            <Radio value={0}>ปิดบริการทั้งวัน</Radio>
+                            <Radio value={1}>ปิดบริการเฉพาะช่วงเช้า</Radio>
+                            <Radio value={2}>ปิดบริการเฉพาะช่วงบ่าย</Radio>
+                        </Radio.Group>
                         
+                           
                         </Form.Item>
-                       
+                        <Form.Item label="ชื่อ">
+                        <Input
+                            name="name"
+                            value={editingUser?.name}
+                            onChange={handleInputChange}
+                        />
+                        </Form.Item>
                         </Form>
                         </Modal>
 

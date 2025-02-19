@@ -41,6 +41,9 @@ export default function Form() {
       response.data.data.acc_date = formattedDate
       setAlreadyData(response.data.data);
       setPrakanData(response.data.data);
+      if(token === '0'){
+        setProfileData(response.data.data.Student);
+      }
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -59,16 +62,22 @@ export default function Form() {
 
 
   useEffect(() => {
-    fetchStudentData();
-  }, []);
+        if(token !== '0'){
+          fetchStudentData();
+          if(form !== '0'){
+            fetchDataForm();
+            console.log("formKKK : ", form);
+          }
+        }else{
+          fetchDataForm();
+        }
+  
+      }, []);
 
-  useEffect(() => {
-    if (form !== "0") {
-      setTimeout(() => {
-        fetchDataForm();
-      }, 1000);
-    }
-  }, []);
+      console.log("alreadyData",alreadyData);
+      console.log("prakanData",prakanData);
+      console.log("profileData",profileData);
+      console.log("studentInfo",studentInfo);
 
   const handleChangeThai = (e) => {
     const value = e.target.value;
@@ -102,7 +111,7 @@ export default function Form() {
 
   const handleChangePhone = (event) => {
     console.log(event.target.value);
-    setProfileData({ ...profileData, tel_num: event.target.value });
+    setProfileData({ ...profileData, phone_num: event.target.value });
   };
   const handleChangeFaculty = (event) => {
     console.log(event.target.value);
@@ -155,18 +164,25 @@ export default function Form() {
 
   const handleSubmit = async (event) => {
     try {
-      if(form !== '0'){
+      if(token !== '0'){
+        if(form !== '0'){
+          let allData = { ...alreadyData, ...studentInfo, ...thaiText, ...profileData };
+          const response = await axios.post('/api/prakan/update', allData);
+          console.log("responseId :",response.data.data.id);
+          router.push(`/student/${token}/prakan/checkPrakan/${form}`);
+        }else{
+          let allData = { ...prakanData, ...studentInfo, ...thaiText, ...profileData };
+          console.log("prakanData === 0 :",allData);
+          console.log("prakanAllData === 0 :",allData);
+          const response = await axios.post('/api/prakan/create', allData);
+          const formId = response.data.data.id
+          router.push(`/student/${token}/prakan/checkPrakan/${formId}`);
+        }
+      }else{
         let allData = { ...alreadyData, ...studentInfo, ...thaiText, ...profileData };
         const response = await axios.post('/api/prakan/update', allData);
         console.log("responseId :",response.data.data.id);
-        router.push(`/student/${token}/prakan/checkPrakan/${form}`);
-      }else{
-        let allData = { ...prakanData, ...studentInfo, ...thaiText, ...profileData };
-        console.log("prakanData === 0 :",allData);
-        console.log("prakanAllData === 0 :",allData);
-        const response = await axios.post('/api/prakan/create', allData);
-        const formId = response.data.data.id
-        router.push(`/student/${token}/prakan/checkPrakan/${formId}`);
+        router.push(`/Admin/prakan/0`);
       }
     } catch (error) {
       console.error("There was an error submitting the form!", error);
@@ -197,10 +213,10 @@ export default function Form() {
                     <input
                       type="text"
                       name="name"
-                      defaultValue={profileData.fnameTH + " " + profileData.lnameTH}
+                      // defaultValue={profileData.fnameTH + " " + profileData.lnameTH}
                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={
-                        profileData.fnameTH + " " + profileData.lnameTH
+                        profileData?.fnameTH + " " + profileData?.lnameTH
                       }
                     />
                   </div>
@@ -211,7 +227,7 @@ export default function Form() {
                     <input
                       type="text"
                       name="id"
-                      defaultValue={profileData.id}
+                      defaultValue={profileData?.id}
                       className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       
                     />
@@ -224,9 +240,9 @@ export default function Form() {
                     <input
                       type="text"
                       name="faculty"
-                     defaultValue={profileData.facultyNameTH}
+                    //  defaultValue={profileData.facultyNameTH}
                       className="ml-2 w-96 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={studentInfo.facultyNameTH}
+                      value={profileData?.facultyNameTH}
                     />
                   </div>
                 </div>
@@ -241,7 +257,7 @@ export default function Form() {
                       name="phone"
                       onChange={handleChangePhone}
                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={profileData.tel_num}
+                      value={profileData?.phone_num}
                     />
                   </div>
                 </div>
@@ -253,7 +269,7 @@ export default function Form() {
                       name="email"
                       onChange={handleChangeEmail}
                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={profileData.personal_email}
+                      value={profileData?.personal_email}
                     />
                   </label>
                 </div>

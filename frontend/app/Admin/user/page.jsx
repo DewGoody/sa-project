@@ -189,12 +189,12 @@ const App = () => {
           ...getColumnSearchProps('username'),
       },
         {
-            title: 'แก้ไข/ลบ',
+            title: 'แก้ไข / ลบ',
             dataIndex: 'edit',
             render: (text, record) => (
                 <Space size="middle">
                     <Button
-                        type="primary"
+                        // type="primary"
                         onClick={() => {
                             handleEdit(record);
                         }}
@@ -234,7 +234,7 @@ const App = () => {
             </div>
             <div className='text-center mt-4 ml-3 mr-3'>
               <p className='font-mono font-semibold text-white'>
-                Department of Scholarship & Student
+                Department of Scholarships & Student
               </p>
               <p className='font-mono font-semibold text-white'>
                 Services, Office of the Student Affairs,
@@ -296,6 +296,11 @@ const App = () => {
                 key: '8',
                 label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
                 onClick: () => window.location.href = '/Admin/user'
+              },
+              {
+                key: '9',
+                label: <span style={{ color: selectedKey === '9' ? 'black' : 'white' }}>เปิด-ปิดวันให้บริการ</span>,
+                onClick: () => window.location.href = '/Admin/editServiceDate'
               }
             ]}
           />

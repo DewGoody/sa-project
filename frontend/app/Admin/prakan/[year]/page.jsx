@@ -6,7 +6,7 @@ import {
     FilterOutlined,
     OrderedListOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Input, Table, Modal ,Select } from 'antd';
+import { Button, Layout, Menu, theme, Input, Table, Modal ,Select, Space } from 'antd';
 import axios from 'axios';
 import { useRouter,useParams } from 'next/navigation';
 
@@ -43,6 +43,7 @@ const App = () => {
         }
     }, [shouldReload]);
 
+    
     const showModal = (record) => {
         setReqMoreInfo(record);
         console.log("recordModalJa :", typeof record);
@@ -180,6 +181,13 @@ const App = () => {
         }
     }
 
+    const handleEditForm = async (id) => {
+        console.log("editFormReqId : ", id);
+        const response = await axios.post('/api/request/getById', { id: id }); // Example API
+        console.log("editFormResponse :", response.data.data.path);
+        router.push(`/student/0/prakan/${response.data.data.form}`);
+    }
+
     const handleChangeStatus = async (record) => {
         setStatusRequest(record.status);
         console.log("record", record);
@@ -248,6 +256,20 @@ const App = () => {
 
 
     const columns = [
+        {
+            align: 'center',
+            width: 100,
+            title: 'แก้ไข',
+            dataIndex: 'status',
+            render: (status, record) => {
+                if (status !== "ประวัติการแก้ไข") {
+                    return (
+                        <Space size="middle">
+                            <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
+                        </Space>)
+                }
+            },
+        },
         {
             align: 'right', // เพิ่ม align ขวา
             title: 'ดาวน์โหลด',
@@ -431,7 +453,7 @@ const App = () => {
                     </div>
                     <div className='text-center mt-4 ml-3 mr-3'>
                         <p className='font-mono font-semibold text-white'>
-                            Department of Scholarship & Student
+                            Department of Scholarships & Student
                         </p>
                         <p className='font-mono font-semibold text-white'>
                             Services, Office of the Student Affairs,
@@ -493,7 +515,12 @@ const App = () => {
                             key: '8',
                             label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
                             onClick: () => window.location.href = '/Admin/user'
-                          }
+                        },
+                        {
+                            key: '9',
+                            label: <span style={{ color: selectedKey === '9' ? 'black' : 'white' }}>เปิด-ปิดวันให้บริการ</span>,
+                            onClick: () => window.location.href = '/Admin/editServiceDate'
+                        }
                     ]}
                 />
             </Sider>

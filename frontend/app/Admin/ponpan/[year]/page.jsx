@@ -104,6 +104,13 @@ const AppointmentManagement = () => {
             setSelectedRowReqidapi(selectedRows.map(row => row.reqId)); // อัปเดตรายการที่เลือก
         };
 
+        const handleEditForm = async (id) => {
+            console.log("editFormReqId : ", id);
+            const response = await axios.post('/api/request/getById', { id: id }); // Example API
+            console.log("editFormResponse :", response.data.data.path);
+            router.push(`/student/0/ponpan/${response.data.data.form}`);
+        }
+
         const handleChangeStatusAll = async (ids,status) => {
             try {
                 setLoading(true);
@@ -250,8 +257,8 @@ const AppointmentManagement = () => {
         
                 return (
                     <Select
-                        className="w-1/5 mt-1 mb-6 px-4"
-                        showSearch
+                        className="w-60 mt-1 mb-6 ml-3 "
+                        // showSearch
                         placeholder="เลือกสถานะ"
                         filterOption={(input, option) =>
                             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -259,7 +266,7 @@ const AppointmentManagement = () => {
                         options={[
                             { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ' },
                             { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด' },
-                            { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล' },
+                            { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันที่ตึกจุล' },
                             { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย' },
                         ]}
                         onSelect={handleSelect} // ใช้ฟังก์ชัน handleSelect
@@ -373,6 +380,20 @@ const AppointmentManagement = () => {
 
 
     const columns = [
+        {
+                    align: 'center',
+                    width: 100,
+                    title: 'แก้ไข',
+                    dataIndex: 'status',
+                    render: (status, record) => {
+                        if (status !== "ประวัติการแก้ไข") {
+                            return (
+                                <Space size="middle">
+                                    <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
+                                </Space>)
+                        }
+                    },
+                },
         {
             title: 'สถานะ',
             dataIndex: 'status',
@@ -594,7 +615,7 @@ const AppointmentManagement = () => {
                     </div>
                     <div className='text-center mt-4 ml-3 mr-3'>
                         <p className='font-mono font-semibold text-white'>
-                            Department of Scholarship & Student
+                            Department of Scholarships & Student
                         </p>
                         <p className='font-mono font-semibold text-white'>
                             Services, Office of the Student Affairs,
@@ -656,7 +677,12 @@ const AppointmentManagement = () => {
                             key: '8',
                             label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
                             onClick: () => window.location.href = '/Admin/user'
-                          }
+                        },
+                        {
+                            key: '9',
+                            label: <span style={{ color: selectedKey === '9' ? 'black' : 'white' }}>เปิด-ปิดวันให้บริการ</span>,
+                            onClick: () => window.location.href = '/Admin/editServiceDate'
+                        }
                     ]}
                 />
             </Sider>
@@ -693,15 +719,15 @@ const AppointmentManagement = () => {
                                 ))}
                             </Select>
                         </div>
-
-                    </div>
-                    <div>
+                        <div className='ml-3'>
                         {selectedRowReqid.length > 0 ? (
                             <>
+                                <div className='flex'>
                                 <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
                                     Export Excel ที่เลือกไว้
                                 </Button>
                                 {dropdown()}
+                                </div>
                             </>
                         ) : (
                             <>
@@ -711,6 +737,9 @@ const AppointmentManagement = () => {
                             </>
                         )}
                     </div>
+
+                    </div>
+                    
 
                     <Table
                         dataSource={dataSource}

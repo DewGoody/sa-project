@@ -100,12 +100,12 @@ const App = () => {
         const response = await axios.post('/api/request/getById', { id: id }); // Example API
 
         if (year == 1) {
-            router.push(`/rordor/${response.data.data.form}/1/checkData`);
+            router.push(`/student/0/rordor/${response.data.data.form}/1/checkData`);
 
         }
         else {
 
-            router.push(`/rordor/${response.data.data.form}/1/checkData2`);
+            router.push(`/student/0/rordor/${response.data.data.form}/1/checkData2`);
 
         }
 
@@ -262,7 +262,7 @@ const App = () => {
     const columns = [
         {
             align: 'center',
-            title: '',
+            title: 'แก้ไข',
             dataIndex: 'status',
             render: (status, record) => {
                 if (status !== "ประวัติการแก้ไข") {
@@ -419,14 +419,26 @@ const App = () => {
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
                 <>
                     <div className="demo-logo-vertical" />
-                    <div className='mt-5 ml-3'>
+                    <div className='text-center mt-10 ml-3 mr-3'>
                         <p className='font-mono font-bold text-xl text-white'>
-                            ฝ่ายทุนการศึกษาและบริการนิสิตสำนักบริหารกิจการนิสิตจุฬาลงกรณ์มหาวิทยาลัย
+                            ฝ่ายทุนการศึกษาและบริการนิสิต
+                        </p>
+                        <p className='font-mono font-bold text-xl text-white'>
+                            สำนักบริหารกิจการนิสิต
+                        </p>
+                        <p className='font-mono font-bold text-xl text-white'>
+                            จุฬาลงกรณ์มหาวิทยาลัย
                         </p>
                     </div>
-                    <div className='ml-3 mt-3'>
-                        <p className='font-mono font-medium text-white'>
-                            Department of Scholarship & Student Services, Office of the Student Affairs, Chulalongkorn University
+                    <div className='text-center mt-4 ml-3 mr-3'>
+                        <p className='font-mono font-semibold text-white'>
+                            Department of Scholarships & Student
+                        </p>
+                        <p className='font-mono font-semibold text-white'>
+                            Services, Office of the Student Affairs,
+                        </p>
+                        <p className='font-mono font-semibold text-white'>
+                            Chulalongkorn University
                         </p>
                     </div>
                     <div className="flex justify-center mt-5">
@@ -482,6 +494,11 @@ const App = () => {
                             key: '8',
                             label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
                             onClick: () => window.location.href = '/Admin/user'
+                        },
+                        {
+                            key: '9',
+                            label: <span style={{ color: selectedKey === '9' ? 'black' : 'white' }}>เปิด-ปิดวันให้บริการ</span>,
+                            onClick: () => window.location.href = '/Admin/editServiceDate'
                         }
                     ]}
                 />
