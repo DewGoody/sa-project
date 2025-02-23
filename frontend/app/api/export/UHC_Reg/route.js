@@ -81,9 +81,11 @@ export async function GET(req) {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename=UHC_reg.pdf',
+        'X-Student-ID': id,
       },
     })
-    return response
+ 
+    return response 
   } catch (error) {
     console.error(error)
     return NextResponse.json({ error: 'An error occurred while fetching the profile' }, { status: 500 })

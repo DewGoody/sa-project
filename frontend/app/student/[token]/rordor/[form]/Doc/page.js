@@ -53,7 +53,7 @@ const RD = () => {
         if (pdfBlob) {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(pdfBlob);
-            link.download = 'RD1.pdf';
+            link.download = `${profileData.id}_รด1.pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

@@ -160,12 +160,12 @@ export const Form = () => {
       setLoading(false);
     }
   }
+
   const fetchAllData = async () => {
     await fetchRD()
     await fetchNotQueueGoldencard();
     await fetchNotQueue();
     await fetchQueue();
-
   };
 
   useEffect(() => {
