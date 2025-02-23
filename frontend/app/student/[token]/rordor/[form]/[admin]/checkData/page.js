@@ -689,7 +689,7 @@ const CheckData = () => {
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-gray-700 mb-2">สำเร็จชั้น ม.๓ คะแนนเฉลี่ย (Grade 9 GPAX)</label>
+                                        <label className="block text-gray-700 mb-2">สำเร็จชั้น ม.3 คะแนนเฉลี่ย (Grade 9 GPAX)</label>
                                         <input
                                             type="text"
                                             name="grade9GPAX"

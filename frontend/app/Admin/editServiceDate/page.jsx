@@ -173,6 +173,7 @@ const AppointmentManagement = () => {
             title: 'วันที่',
             dataIndex: 'date',
             key: 'date',
+            width:120,
             render: (text) => {
                 const date = new Date(text);
                 const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
@@ -204,7 +205,7 @@ const AppointmentManagement = () => {
             render: (text) => <p>{text}</p>
         },
         {
-            title: 'แก้ไข / เปิดวันให้บริการ',
+            title: 'แก้ไข / ลบ',
             dataIndex: 'edit',
             render: (text, record) => (
                 <Space size="middle">
@@ -218,12 +219,12 @@ const AppointmentManagement = () => {
                     </Button>
                     <Button
                         type="primary"
-                        // danger
+                        danger
                         onClick={() => {
                             handleDelete(record);
                         }}
                     >
-                        เปิดวันให้บริการ
+                        ลบ
                     </Button>
                 </Space>
             ),
@@ -331,10 +332,46 @@ const AppointmentManagement = () => {
                     <div>
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
-                            เปิด-ปิดวันให้บริการ
+                        เพิ่มช่วงเวลาปิดให้บริการ
                         </div>
                     </div>
-                    <div>
+
+
+                    
+
+                    <div className=' w-3/12'>
+                        <p className='font-semibold text-xl mb-2'>รายละเอียด</p>
+                        <Input
+                            placeholder="รายละเอียด"
+                            onChange={(e) => setNameDate(e.target.value)}
+                        />
+                    </div>
+                    
+                    <div className='mt-5 w-3/12'>
+                        <p className='font-semibold text-xl mb-2'>วันที่</p>
+                        <Input
+                            type="date"
+                            onChange={(e) => handleSelectDate(e.target.value)}
+
+                        />
+                    </div>
+
+                    <div className="mt-4 w-3/12">
+                        <p className='font-bold text-xl mb-2'>ช่วงเวลา</p>
+                        <Radio.Group style={style} onChange={onChange} value={value}>
+                            <Radio value={0}>ทั้งวัน</Radio>
+                            <Radio value={1}>ช่วงเช้า</Radio>
+                            <Radio value={2}>ช่วงบ่าย</Radio>
+                        </Radio.Group>
+                        <div className='mt-5'>
+                            <Button type='primary' onClick={handleOk}>
+                                บันทึก
+                            </Button>
+                        </div>
+                    </div>
+                    
+                    
+                    <div className='mt-10'>
                          <Table
                             dataSource={dataSource}
                             columns={columns}
@@ -344,34 +381,6 @@ const AppointmentManagement = () => {
                             bordered
                                                 
                         />
-                    </div>
-                    <div className='w-3/12'>
-                        <p className='font-bold text-xl mb-2'>เลือกวันที่จะปิดให้บริการ</p>
-                        <Input
-                            type="date"
-                            onChange={(e) => handleSelectDate(e.target.value)}
-
-                        />
-                    </div>
-                    <div className='mt-4 w-3/12'>
-                        <p className='font-bold text-xl mb-2'>ชื่อวันที่</p>
-                        <Input
-                            placeholder="ชื่อวันที่"
-                            onChange={(e) => setNameDate(e.target.value)}
-                        />
-                    </div>
-                    <div className="mt-4 w-3/12">
-                        <p className='font-bold text-xl mb-2'>เลือกช่วงที่จะปิดการให้บริการ</p>
-                        <Radio.Group style={style} onChange={onChange} value={value}>
-                            <Radio value={0}>ปิดบริการทั้งวัน</Radio>
-                            <Radio value={1}>ปิดบริการเฉพาะช่วงเช้า</Radio>
-                            <Radio value={2}>ปิดบริการเฉพาะช่วงบ่าย</Radio>
-                        </Radio.Group>
-                        <div className='mt-5'>
-                            <Button type='primary' onClick={handleOk}>
-                                ปิดวันให้บริการ
-                            </Button>
-                        </div>
                     </div>
                     <div className='mt-20'>
 
@@ -399,6 +408,7 @@ const AppointmentManagement = () => {
                         <Input
                             type='date'
                             name="date"
+                            disabled
                             value={editingUser?.date.split('T')[0]}
                             onChange={handleInputChange}
                         />
@@ -423,7 +433,7 @@ const AppointmentManagement = () => {
                         </Modal>
 
     <Modal
-      title="ต้องการเปิดวันให้บริการใช่ไหม"
+      title="ต้องการจะลบวันที่ปิดให้บริการใช่ไหม"
       visible={isDeleteModalVisible}
       onCancel={handleDeleteCancel}
       footer={[
@@ -431,11 +441,11 @@ const AppointmentManagement = () => {
           ปิดหน้าต่าง
         </Button>,
         <Button key="delete" type="primary" loading={loading} onClick={handleDeleteConfirm}>
-          เปิดกลับมาให้บริการอีกครั้ง
+          ลบ
         </Button>,
       ]}
     >
-      <p>คุณต้องการจะเปิดวันนี้ให้กลับมาให้บริการได้อีกครั้งใช่ไหม</p>
+      <p>คุณต้องการจะลบวันที่ให้บริการนี้ใช่ไหม</p>
     </Modal>
 
                 </Content>
