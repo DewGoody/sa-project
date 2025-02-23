@@ -177,7 +177,7 @@ const App = () => {
             setData(...Data, response.data.map((item, index) => ({
                 key: index, // Unique key for each row
                 fullname: `${item.entry?.json.student?.fnameTH || ''} ${item.entry?.json.student?.lnameTH || ''}`,
-                student_ID: item.entry?.stu_id,
+                student_ID: item.entry?.json.student?.id,
                 citizen_ID: item.entry?.json.student.thai_id || 'N/A',
                 birthdate: formatDateToDMYWithTime(item.entry?.json.student?.bd) || 'N/A',
                 status: item.entry?.status,
@@ -185,7 +185,7 @@ const App = () => {
                 rd_ID: item.entry?.json.Military_info.military_id || '-',
                 yearRD: item.entry?.yearRD
             })))
-            console.log(Data.fullname)
+            console.log(Data.student_ID)
         } catch (error) {
             console.log(error)
         }
@@ -370,16 +370,6 @@ const App = () => {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
         },
-
-        // {
-        //     title: '',
-        //     align: 'right', // เพิ่ม align ขวา
-        //     render: (_, record) => (
-        //         <Space size="middle">
-        //             {/* <a>Delete</a> */}
-        //         </Space>
-        //     ),
-        // },
     ];
 
 
@@ -625,6 +615,7 @@ const App = () => {
                                 value={formData.date ? dayjs(formData.date) : null}
                                 onChange={(date, dateString) => handleChange('date', dateString)}
                                 placeholder="เลือกวันที่"
+                                format="DD/MM/YYYY"
                             />
                             <h1>ค่าสมัคร นศท</h1>
                             <Input

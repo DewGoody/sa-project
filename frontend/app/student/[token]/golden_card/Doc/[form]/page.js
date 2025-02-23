@@ -18,14 +18,18 @@ const gold = () => {
     const router = useRouter();
     const int_req_id = parseInt(form)
     const filepdf = async () => {
-        try {
-            // console.log("golden id form",int_req_id);
-            const response = await axios.get(`/api/export/UHC_Reg?id=${int_req_id}`, { responseType: 'blob' });
-            return response.data;
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    try {
+        const response = await axios.get(`/api/export/UHC_Reg?id=${int_req_id}`, { responseType: 'blob' });
+
+        // ดึง student_id จาก headers โดยตรง
+        const studentId = response.headers['x-student-id'];
+
+        return { pdfBlob: response.data, studentId }; // ส่งทั้ง PDF และ Student ID กลับไป
+    } catch (error) {
+        console.log(error);
+    }
+};
+
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [selectedFilescitizen, setSelectedFilescitizen] = useState([]);
     const [selectedFilesstudent, setSelectedFilesstudent] = useState([]);
@@ -287,17 +291,22 @@ const gold = () => {
 
 
     const handleDownload = async () => {
-        const pdfBlob = await filepdf();
-        if (pdfBlob) {
+        const { pdfBlob, studentId } = await filepdf();
+        if (pdfBlob && studentId){
+
+            
             const link = document.createElement('a');
             link.href = URL.createObjectURL(pdfBlob);
-            link.download = 'file.pdf';
+            link.download = `${studentId}_บัตรทอง.pdf`;
             document.body.appendChild(link);
             // console.log(link)
             link.click();
             document.body.removeChild(link);
             setIsDownload(true);
-
+        }
+        else{
+            console.log("download แตกไอเหี้ย");
+            
         }
     };
 
@@ -403,9 +412,8 @@ const gold = () => {
                                             </Dragger>
                                         </div>
                                         <div className=" py-4">
-                                            <h1 className =" text-red-500">* ถ้ามีย้ายด่วน *</h1>
                                             <Dragger {...fast}>
-                                                <p className="ant-upload-text">ใบนัดโรงพยาบาลจุฬาเท่านั้น</p>
+                                                <p className="ant-upload-text">ใบนัดโรงพยาบาลจุฬาเท่านั้น (ถ้ามี)</p>
                                             </Dragger>
                                         </div>
                                     </div>
