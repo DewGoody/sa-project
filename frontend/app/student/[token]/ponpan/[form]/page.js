@@ -5,6 +5,7 @@ import axios from "axios";
 import { Header } from '../../../../components/Header.js';
 import {Input} from 'antd';
 import { useRouter,useParams } from 'next/navigation';
+import {QuestionCircleOutlined} from '@ant-design/icons';
 
 
 export default function Form() {
@@ -635,7 +636,7 @@ const handleDistrictSD9Change = (e) => {
                 </div>
                 <div className="flex">
                   <label>ใบสำคัญ สด.9 ที่ (Sor Dor 9 certificate) :</label>
-                  <div>
+                  <div className="flex">
                     <input
                       type="text"
                       name="name"
@@ -643,6 +644,12 @@ const handleDistrictSD9Change = (e) => {
                        className="ml-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeSd9Num}
                     />
+                    <div className="mt-1">
+                        <a href='https://anan-hosp.go.th/%E0%B9%80%E0%B8%81%E0%B8%93%E0%B8%91%E0%B9%8C%E0%B8%97%E0%B8%AB%E0%B8%B2%E0%B8%A3/img/%E0%B8%AA%E0%B8%949.PNG'>
+                        
+                        <QuestionCircleOutlined style={{color:"red", fontSize:"larger", marginLeft:"10px"}} />
+                        </a>
+                    </div>
                   </div>
                 </div>
                 

@@ -353,6 +353,7 @@ const App = () => {
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
+            width: 1000,
             ...getColumnSearchProps('student_ID'),
         },
         {

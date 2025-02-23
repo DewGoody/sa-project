@@ -324,7 +324,7 @@ export const Form = () => {
                             <div className="ml-4 text-md">
                             {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
                             <div className=" flex text-base text-black">
-                              ตั้งแต่ 1 	มีนาคมเป็นต้นไปรับเอกสารได้ที่
+                              ตั้งแต่ 1 	มีนาคมเป็นต้นไป รับเอกสารได้ที่
                             </div>
                           )}
                               <p className="">อาคารจุลจักรพงษ์ ชั้น 2</p>
@@ -426,14 +426,14 @@ export const Form = () => {
                           <button className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded ml-3"
                             onClick={() => { handleBookNotQueue(item.id) }}
                           >
-                            Reschedule
+                            Schedule
                           </button>
                         )}
                         <button
                           className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-3"
                           onClick={() => { showModalNotQueue(item.id) }}
                         >
-                          cancel
+                          Cancel
                         </button>
                       </div>
                     </div>

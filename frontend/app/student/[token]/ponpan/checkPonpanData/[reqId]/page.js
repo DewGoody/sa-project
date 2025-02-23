@@ -107,11 +107,7 @@ const RD = () => {
                                         >
                                             <div className='flex justify-around'>
                                                 <strong className="font-medium text-gray-900 ">1. สำเนา สด.9 (Copy of certificate of Sor dor 9)</strong>
-                                                <div>
-                                                    <a href='https://anan-hosp.go.th/%E0%B9%80%E0%B8%81%E0%B8%93%E0%B8%91%E0%B9%8C%E0%B8%97%E0%B8%AB%E0%B8%B2%E0%B8%A3/img/%E0%B8%AA%E0%B8%949.PNG'>
-                                                    <QuestionOutlined style={{color:"red", fontSize:"larger", marginLeft:"10px"}} />
-                                                    </a>
-                                                </div>
+                                                
                                             </div>
                                         </label>
 
