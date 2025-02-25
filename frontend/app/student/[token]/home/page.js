@@ -323,17 +323,20 @@ export const Form = () => {
                            
                             <div className="ml-4 text-md">
                             {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
-                            <div className=" flex text-base text-black">
+                            <div className=" flex font-semibold text-base text-blue-500">
                               ตั้งแต่ 1 	มีนาคมเป็นต้นไป รับเอกสารได้ที่
                             </div>
                           )}
-                              <p className="">อาคารจุลจักรพงษ์ ชั้น 2</p>
-                              <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
+                              <p className="text-blue-500 font-semibold text-base">อาคารจุลจักรพงษ์ ชั้น 2</p>
+                              <p className="text-blue-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                             </div>
-                            {!(item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร") ? (
-                               <div className="ml-4 mt-1 font-semibold text-base text-blue-500">{item.Request.status}</div>
+                            {(item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ส่งเอกสารแล้ว") ? (
+                               <div className="ml-4 mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด</div>
                             ):(
-                              null
+                              <div className="ml-4 mt-1 font-semibold text-base text-blue-500">
+                                {item.Request.status}
+                              
+                              </div>
                             )
                               }
                           </div>

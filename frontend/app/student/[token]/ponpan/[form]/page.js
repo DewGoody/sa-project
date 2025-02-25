@@ -404,13 +404,13 @@ const handleDistrictSD9Change = (e) => {
             <div>
               <form className="grid grid-cols-2 gap-7 m-6 bg-white">
                 <div className="flex">
-                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname-Surname) :</label>
+                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname) :</label>
                   <div>
                     <input
                       type="text"
                       name="name"
                       disabled
-                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                       value={profileData?.fnameTH +" "+ profileData?.lnameTH}
                    
                     />
@@ -423,7 +423,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       disabled
                       name="id"
-                       className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                        value={profileData?.id}
                     />
                   </div>
@@ -436,7 +436,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       disabled
                       name="faculty"
-                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                       value={profileData?.facultyNameTH}
                     />
                   </div>
@@ -487,7 +487,7 @@ const handleDistrictSD9Change = (e) => {
                       type="text"
                       name="phone"
                       disabled
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                        value={ profileData !== null ? buddhistYear : alreadyBuddhistYear}
                       onChange={handleChangeBdDate}
                     />

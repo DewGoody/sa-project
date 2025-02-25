@@ -402,7 +402,7 @@ const AppointmentManagement = () => {
                 let options = [];
                 if (status === 'รอเข้ารับบริการ') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'black' }, },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'gray' }, disabled: true },
                         { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
