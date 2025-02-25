@@ -414,7 +414,7 @@ export async function changeToTranApprove(id) {
         }
         const changeStatusRequest = await prisma.request.update({
             where: { id: request.id },
-            data: { status: "ย้ายสิทธิสำเร็จ" }
+            data: { status: "ย้ายสิทธิ์สำเร็จ" }
         })
         return changeStatusRequest
     }
@@ -430,7 +430,7 @@ export async function changeToTranNotApprove(id) {
         }
         const changeStatusRequest = await prisma.request.update({
             where: { id: request.id },
-            data: { status: "ย้ายสิทธิไม่สำเร็จ" }
+            data: { status: "ย้ายสิทธิ์ไม่สำเร็จ" }
         })
         return changeStatusRequest
     }

@@ -236,7 +236,7 @@ const App = () => {
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
-        } else if (record.status === "ย้ายสิทธิสำเร็จ") {
+        } else if (record.status === "ย้ายสิทธิ์สำเร็จ") {
             try {
                 setLoading(true);
                 setShouldReload(true);
@@ -247,11 +247,11 @@ const App = () => {
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
-        } else if (record.status === "ย้ายสิทธิไม่สำเร็จ") {
+        } else if (record.status === "ย้ายสิทธิ์ไม่สำเร็จ") {
             try {
                 setLoading(true);
                 setShouldReload(true);
-                const res = await axios.post('/api/request/changeToTranNotApprove', { id: parseInt(record.reqId) });
+                const res = await axios.post('/api/request/ç', { id: parseInt(record.reqId) });
                 setLoading(false);
                 setShouldReload(false);
                 console.log("res", res);
@@ -352,8 +352,8 @@ const App = () => {
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', disabled: true },
                         { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', disabled: true },
-                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', disabled: true },
-                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true },
+                        { value: 'ย้ายสิทธิ์สำเร็จ', label: 'ย้ายสิทธิ์สำเร็จ', disabled: true },
+                        { value: 'ย้ายสิทธิ์ไม่สำเร็จ', label: 'ย้ายสิทธิ์ไม่สำเร็จ', disabled: true },
                     ]
                 }
                 else if (status == "รอเจ้าหน้าที่ดำเนินการ") {
@@ -362,8 +362,8 @@ const App = () => {
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม' },
                         { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว' },
-                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', disabled: true },
-                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true },
+                        { value: 'ย้ายสิทธิ์สำเร็จ', label: 'ย้ายสิทธิ์สำเร็จ', disabled: true },
+                        { value: 'ย้ายสิทธิ์ไม่สำเร็จ', label: 'ย้ายสิทธิ์ไม่สำเร็จ', disabled: true },
                     ]
                 }
                 else if (status == "ขอข้อมูลเพิ่มเติม") {
@@ -372,8 +372,8 @@ const App = () => {
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', },
                         { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', },
-                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', disabled: true },
-                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true },
+                        { value: 'ย้ายสิทธิ์สำเร็จ', label: 'ย้ายสิทธิ์สำเร็จ', disabled: true },
+                        { value: 'ย้ายสิทธิ์ไม่สำเร็จ', label: 'ย้ายสิทธิ์ไม่สำเร็จ', disabled: true },
                     ]
                 } else if (status == "ส่งข้อมูลให้ รพ. แล้ว") {
                     options = [
@@ -381,27 +381,27 @@ const App = () => {
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', disabled: true },
                         { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', },
-                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', },
-                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', },
+                        { value: 'ย้ายสิทธิ์สำเร็จ', label: 'ย้ายสิทธิ์สำเร็จ', },
+                        { value: 'ย้ายสิทธิ์ไม่สำเร็จ', label: 'ย้ายสิทธิ์ไม่สำเร็จ', },
                     ]
                 }
-                else if (status == "ย้ายสิทธิสำเร็จ") {
+                else if (status == "ย้ายสิทธิ์สำเร็จ") {
                     options = [
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', disabled: true },
                         { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', disabled: true },
-                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', },
-                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', disabled: true },
+                        { value: 'ย้ายสิทธิ์สำเร็จ', label: 'ย้ายสิทธิ์สำเร็จ', },
+                        { value: 'ย้ายสิทธิ์ไม่สำเร็จ', label: 'ย้ายสิทธิ์ไม่สำเร็จ', disabled: true },
                     ]
-                } else if (status == "ย้ายสิทธิไม่สำเร็จ") {
+                } else if (status == "ย้ายสิทธิ์ไม่สำเร็จ") {
                     options = [
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', },
                         { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', disabled: true },
-                        { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ', },
-                        { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ', },
+                        { value: 'ย้ายสิทธิ์สำเร็จ', label: 'ย้ายสิทธิ์สำเร็จ', },
+                        { value: 'ย้ายสิทธิ์ไม่สำเร็จ', label: 'ย้ายสิทธิ์ไม่สำเร็จ', },
                     ]
                 }
                 return (
@@ -425,8 +425,8 @@ const App = () => {
                 { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
                 { text: "ขอข้อมูลเพิ่มเติม", value: "ขอข้อมูลเพิ่มเติม" },
                 { text: "ส่งข้อมูลให้ รพ. แล้ว", value: "ส่งข้อมูลให้ รพ. แล้ว" },
-                { text: "ย้ายสิทธิสำเร็จ", value: "ย้ายสิทธิสำเร็จ" },
-                { text: "ย้ายสิทธิไม่สำเร็จ", value: "ย้ายสิทธิไม่สำเร็จ" },
+                { text: "ย้ายสิทธิ์สำเร็จ", value: "ย้ายสิทธิ์สำเร็จ" },
+                { text: "ย้ายสิทธิ์ไม่สำเร็จ", value: "ย้ายสิทธิ์ไม่สำเร็จ" },
             ],
             filteredValue: filteredInfo?.status,
             onFilter: (value, record) => record?.status.includes(value),
@@ -636,8 +636,8 @@ const App = () => {
                 }
                 options={[
                     { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว' },
-                    { value: 'ย้ายสิทธิสำเร็จ', label: 'ย้ายสิทธิสำเร็จ' },
-                    { value: 'ย้ายสิทธิไม่สำเร็จ', label: 'ย้ายสิทธิไม่สำเร็จ' },
+                    { value: 'ย้ายสิทธิ์สำเร็จ', label: 'ย้ายสิทธิ์สำเร็จ' },
+                    { value: 'ย้ายสิทธิ์ไม่สำเร็จ', label: 'ย้ายสิทธิ์ไม่สำเร็จ' },
                 ]}
                 onSelect={handleSelect} // ใช้ฟังก์ชัน handleSelect
             />

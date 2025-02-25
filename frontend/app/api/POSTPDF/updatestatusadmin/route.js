@@ -22,6 +22,18 @@ export async function POST(req) {
         if (!id) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
         }
+        let data;
+        try {
+            data = await req.json(); // ✅ ดักจับ JSON.parse() error
+            console.log("✅ Received Data:", data);
+        } catch (jsonError) {
+            console.error("❌ Error parsing JSON:", jsonError);
+            return NextResponse.json({ error: "Invalid JSON format" }, { status: 400 });
+        }
+
+        if (!data?.province || !data?.district || !data?.hospital) {
+            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        }
         const createRequest = await prisma.request.update({
             where:{id:idbefore.req_id},
             data: {
@@ -30,6 +42,14 @@ export async function POST(req) {
                 stu_id: id,
             }
         }) 
+        const pdf = await prisma.uHC_request.updateMany({
+            where: { student_id: id },
+            data: {
+                province: data.province,
+                district: data.district,
+                hospital: data.hospital
+            }
+        });
         // await prisma.uHC_request.update({
         //     where: {id: pdf.id},
         //     data: {req_id: createRequest.id}

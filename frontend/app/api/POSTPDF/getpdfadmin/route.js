@@ -25,7 +25,7 @@ export async function GET(req) {
             return NextResponse.json({ error: 'File not found' }, { status: 404 });
         }
 
-        // **สร้างเอกสาร PDF ใหม่**
+        // **สร้างเอกสาร PDF ใหม่** team
         const mergedPdf = await PDFDocument.create();
 
         // **ฟังก์ชันเพิ่มไฟล์ PDF ลงใน merged PDF**

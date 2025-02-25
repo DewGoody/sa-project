@@ -177,10 +177,13 @@ const page = () => {
             })
             if(int_req_id !== 0 ){
                 console.log("gfgjgfgjgjhfjghvgjhgjvvgjgjgjjgjjgjjghjgh",int_req_id);
-                
-                const response = await axios.post(`/api/POSTPDF/updatestatusadmin?id=${int_req_id}`)
+                const response = await axios.post(`/api/POSTPDF/updatestatusadmin?id=${int_req_id}` , {
+                    province: Data.province,
+                    district: Data.amphure,
+                    hospital: status_before(),
+                })
                 console.log("ID return",response.data.id);
-                router.push(`/Admin/goldencard`)
+                router.push(`/Admin/goldencard/page/0`)
             }
             notifysuccess()
         } catch (error) {
