@@ -572,7 +572,7 @@ const App = () => {
                         
                     />
                      <Modal 
-                        title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม" 
+                        title="กรุณาเขียนรายละเอียด" 
                         open={isModalOpen} 
                         onOk={handleOk} 
                         onCancel={handleCancel}
