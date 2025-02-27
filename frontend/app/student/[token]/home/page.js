@@ -334,11 +334,20 @@ export const Form = () => {
                                <div className="ml-4 mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด</div>
                             ):(
                               <div className="ml-4 mt-1 font-semibold text-base text-blue-500">
-                                {item.Request.status}
+                                {
+                              (item.Request.type === 'การเบิกจ่ายประกันอุบัติเหตุ' && item.Request.status === 'ส่งเอกสารแล้ว') ? (
+                                <div className=" mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้บริษัทประกันแล้ว</div>
+                              ):(
+                                <div className=" mt-1 font-semibold text-base text-blue-500">{item.Request.status}</div>
+                              )
+
+
+                            }
                               
                               </div>
                             )
                               }
+                           
                           </div>
 
                           {item.Request.status === "รอเข้ารับบริการ" ? (

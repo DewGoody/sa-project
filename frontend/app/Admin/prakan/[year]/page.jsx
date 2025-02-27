@@ -46,7 +46,7 @@ const App = () => {
     
     const showModal = (record) => {
         setReqMoreInfo(record);
-        console.log("recordModalJa :", typeof record);
+        console.log("recordModalJa :", record);
         setIsModalOpen(true);
       };
     
@@ -122,7 +122,9 @@ const App = () => {
                     medical_fee: item.accident_info[0].medical_fee + ' บาท',
                     status: item.status,
                     id: item.accident_info[0].id,
-                    reqId: item.id
+                    reqId: item.id,
+                    more_info:item.more_info
+
                 };
             }));
             console.log("dataSource :", dataSource);
@@ -589,6 +591,13 @@ const App = () => {
                             
                             onChange={(e) => setMoreInfoValue(e.target.value)}
                         >
+                            {dataSource.map((item) => {
+                                if(item.reqId === reqMoreInfo){
+                                    return item.more_info
+                                }
+                            
+                            })}
+                            
                          </textarea>
                     </Modal>
                
