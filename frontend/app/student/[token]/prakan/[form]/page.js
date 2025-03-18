@@ -134,10 +134,11 @@ export default function Form() {
   const handleChangeDateAcc = (event) => {
    console.log("dateeeee", prakanData.acc_date);
    setDate(event)
+   console.log("dateEvent", event.target.value);
     const timestamp = new Date(event)
     console.log("timestamp",timestamp);
-    setPrakanData({ ...prakanData, acc_date: timestamp });
-    setAlreadyData({ ...alreadyData, acc_date: timestamp });
+    setPrakanData({ ...prakanData, acc_date: event.target.value });
+    setAlreadyData({ ...alreadyData, acc_date: event.target.value });
 
   };
   const handleChangePlaceAcc = (event) => {
@@ -362,12 +363,11 @@ export default function Form() {
                 <label className="block text-gray-700 mt-1" >
                     วันที่เกิดอุบัติเหตุ (Date of accident) :
                     <Space direction="vertical" className="ml-3">
-                      <DatePicker 
-                        onChange={handleChangeDateAcc}  
-                        format="DD/MM/YYYY"  
-                        placeholder="เลือกวัน (select date)"
-                        style={{ width: 220 }}
-                        value={dayjs(alreadyData?.acc_date)}
+                      <input
+                        type="date"
+                        onChange={handleChangeDateAcc}
+                        // value={alreadyData?.acc_date}
+                        className="px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                       />
                     </Space>  
                   </label>
