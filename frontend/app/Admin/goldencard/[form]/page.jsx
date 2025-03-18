@@ -665,7 +665,7 @@ const page = () => {
 
 
                                 <div className="flex justify-between mt-8">
-                                    <a href="/Admin/goldencard">
+                                    <a href="/Admin/goldencard/page/0">
                                         <button
                                             type="button"
                                             className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"

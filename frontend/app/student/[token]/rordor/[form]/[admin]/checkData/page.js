@@ -386,6 +386,7 @@ const CheckData = () => {
                                                 type="text"
                                                 name="Name"
                                                 value={formData.Name}
+                                                disabled
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                                 placeholder="Name-Surname"
@@ -399,6 +400,7 @@ const CheckData = () => {
                                             name="Surname"
                                             value={formData.Surname}
                                             onChange={handleChange}
+                                            disabled
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                                             placeholder="Surname"
                                         />
@@ -410,6 +412,7 @@ const CheckData = () => {
                                             name="citizenId"
                                             value={formData.citizenId}
                                             onChange={handleChange}
+                                            disabled
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                             placeholder="Identification number"
                                         />
