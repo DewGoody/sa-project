@@ -35,6 +35,8 @@ export const Form = () => {
   const [notQueue, setNotQueue] = useState([]);
   const [moreInfo, setMoreInfo] = useState('');
   const [reqIdEdit, setReqIdEdit] = useState(0);
+  const [RD, SETRD] = useState(true)
+  const [GC, SETGC] = useState(true)
   const router = useRouter();
   const showModal = (item) => {
     console.log("item :", item);
@@ -141,12 +143,16 @@ export const Form = () => {
 
       console.log("notqueueformgoldencard", notQueue);
       setLoading(false);
+      if (response.data.data) {
+        SETGC(false)
+      }
 
     } catch (error) {
       setError(error.message);
       setLoading(false);
     }
   }
+
   const fetchRD = async () => {
     try {
       const response = await axios.post('/api/request/getRD', { id: profileData.id }); // Example API
@@ -155,6 +161,9 @@ export const Form = () => {
       setFormId(response.data.data[0].id);
       setNotQueue((prevNotQueue) => [...prevNotQueue, ...response.data.data]);
       setLoading(false);
+      if (response.data.data) {
+        SETRD(false)
+      }
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -162,10 +171,10 @@ export const Form = () => {
   }
 
   const fetchAllData = async () => {
-    await fetchRD()
     await fetchNotQueueGoldencard();
     await fetchNotQueue();
     await fetchQueue();
+    await fetchRD()
   };
 
   useEffect(() => {
@@ -319,35 +328,30 @@ export const Form = () => {
                         <div className="flex justify-between border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full">
                           <div className="">
                             {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " (" + timeSlots[item.period] + " น.)"}
-
-                           
                             <div className="ml-4 text-md">
-                            {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
-                            <div className=" flex font-semibold text-base text-blue-500">
-                              ตั้งแต่ 1 	มีนาคมเป็นต้นไป รับเอกสารได้ที่
-                            </div>
-                          )}
+                              {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
+                                <div className=" flex font-semibold text-base text-blue-500">
+                                  ตั้งแต่ 1 	มีนาคมเป็นต้นไป รับเอกสารได้ที่
+                                </div>
+                              )}
                               <p className="text-blue-500 font-semibold text-base">อาคารจุลจักรพงษ์ ชั้น 2</p>
                               <p className="text-blue-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                             </div>
                             {(item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ส่งเอกสารแล้ว") ? (
-                               <div className="ml-4 mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด</div>
-                            ):(
+                              <div className="ml-4 mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด</div>
+                            ) : (
                               <div className="ml-4 mt-1 font-semibold text-base text-blue-500">
                                 {
-                              (item.Request.type === 'การเบิกจ่ายประกันอุบัติเหตุ' && item.Request.status === 'ส่งเอกสารแล้ว') ? (
-                                <div className=" mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้บริษัทประกันแล้ว</div>
-                              ):(
-                                <div className=" mt-1 font-semibold text-base text-blue-500">{item.Request.status}</div>
-                              )
-
-
-                            }
-                              
+                                  (item.Request.type === 'การเบิกจ่ายประกันอุบัติเหตุ' && item.Request.status === 'ส่งเอกสารแล้ว') ? (
+                                    <div className=" mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้บริษัทประกันแล้ว</div>
+                                  ) : (
+                                    <div className=" mt-1 font-semibold text-base text-blue-500">{item.Request.status}</div>
+                                  )
+                                }
                               </div>
                             )
-                              }
-                           
+                            }
+
                           </div>
 
                           {item.Request.status === "รอเข้ารับบริการ" ? (
@@ -362,7 +366,7 @@ export const Form = () => {
                                 className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2"
                                 onClick={() => { handleBookQueue(item) }}
                               >
-                                Reschedule
+                                Schedule
                               </button>
                               <button
                                 className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2"
@@ -380,24 +384,16 @@ export const Form = () => {
                             </div>
 
                           )
-
                           }
-                          
-
-                          
-
-
                         </div>
                       )}
-                      
+
                     </div>
                   ))
                 ) : null}
                 {notQueue.length > 0 && (
                   notQueue.map((item, index) => (
-                    // console.log("✅ item RD money:", item.RD_info[0]?.money),
-
-
+                    console.log("✅ item:", item),
                     <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
                       <div>
                         {count++ + ". " + item.type}
@@ -415,25 +411,26 @@ export const Form = () => {
                             <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2</p>
                             <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                             <div className="flex">
-                        <div className="mt-1 font-semibold text-base text-blue-500">{item.status}</div>
-                          <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div>
-                          {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && item.RD_info && Array.isArray(item.RD_info) && item.RD_info.length > 0 && (
-                            <div>
-                              {item.status == "เสร็จสิ้น" && (<div className=" ml-1 mt-1 font-semibold text-base text-pink-500">ไปศูนย์ฝึกวันที่ {formatDateThai(item.RD_info[0]?.date)} และ เตรียมเงินมาจำนวน {item.RD_info[0]?.money} บาท </div>)}
+                              <div className="mt-1 font-semibold text-base text-blue-500">{item.status}</div>
+                              {/* <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div> */}
+                              {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && item.RD_info && Array.isArray(item.RD_info) && item.RD_info.length > 0 && (
+                                <div>
+                                  {item.status == "เสร็จสิ้น" && (<div className=" ml-1 mt-1 font-semibold text-base text-pink-500">ไปศูนย์ฝึกวันที่ {formatDateThai(item.RD_info[0]?.date)} และ เตรียมเงินมาจำนวน {item.RD_info[0]?.money} บาท </div>)}
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                            
+
                           </div>
                         </div>
                       </div>
                       <div className="flex ml-50">
-                        <button
-                          className="bg-blue-500  hover:bg-blue-400 text-white text-xs py-2 px-4 rounded "
-                          onClick={() => { handleEditForm(item.id) }}
-                        >
-                          Edit form
-                        </button>
+                        {item.status !== "ย้ายสิทธิ์สำเร็จ" || item.status !== "ส่งข้อมูลให้ รพ. แล้ว" || item.status !== "ย้ายสิทธิ์ไม่สำเร็จ"(
+                          <button
+                            className="bg-blue-500  hover:bg-blue-400 text-white text-xs py-2 px-4 rounded "
+                            onClick={() => { handleEditForm(item.id) }}
+                          >
+                            Edit form
+                          </button>)}
                         {item.type !== "โครงการหลักประกันสุขภาพถ้วนหน้า" && (
                           <button className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded ml-3"
                             onClick={() => { handleBookNotQueue(item.id) }}
@@ -441,12 +438,21 @@ export const Form = () => {
                             Schedule
                           </button>
                         )}
-                        <button
-                          className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-3"
-                          onClick={() => { showModalNotQueue(item.id) }}
-                        >
-                          Cancel
-                        </button>
+                        {item.status !== "ย้ายสิทธิ์สำเร็จ" || item.status !== "ส่งข้อมูลให้ รพ. แล้ว" || item.status !== "ย้ายสิทธิ์ไม่สำเร็จ"(
+                          <button
+                            className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-3"
+                            onClick={() => { showModalNotQueue(item.id) }}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                        {item.status == "ขอข้อมูลเพิ่มเติม" && (
+                          <div className="ml-3 mt- mb-3 flex">
+                            <button onClick={() => { showModalCheckInfo(item.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
+                              view detail
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -468,17 +474,25 @@ export const Form = () => {
                   title="1. การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)"
                 />
               </a>
-              <a onClick={() => router.push(`/student/${token}/rordor/0`)}>
+
+              <a
+                onClick={() => RD && router.push(`/student/${token}/rordor/0`)}
+                className={`block ${RD ? "cursor-pointer" : "pointer-events-none opacity-50"}`}
+              >
                 <ServiceCard
                   title="2. การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)"
                 />
               </a>
+
               <a onClick={() => router.push(`/student/${token}/ponpan/0`)}>
                 <ServiceCard
                   title="3. การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)"
                 />
               </a>
-              <a onClick={() => router.push(`/student/${token}/golden_card/0`)}>
+              <a 
+               onClick={() => GC && router.push(`/student/${token}/rordor/0`)}
+               className={`block ${RD ? "cursor-pointer" : "pointer-events-none opacity-50"}`}
+              >
                 <ServiceCard
                   title="4. โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)"
                 />
