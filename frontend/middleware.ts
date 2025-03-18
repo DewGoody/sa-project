@@ -29,7 +29,7 @@ export default async function middleware(req: NextRequest) {
 
   try {
     if (!token) {
-      return NextResponse.redirect(`http://localhost:3000/login`);
+      return NextResponse.redirect(`${BASE_URL}/login`);
     }
     const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET));
     const currentTime = Math.floor(Date.now()/ 1000);
@@ -41,21 +41,21 @@ export default async function middleware(req: NextRequest) {
       console.log('Time left:', expTime - currentTime);
       if (expTime <= currentTime) {
         console.log('Token has expired, redirecting to login');
-        return NextResponse.redirect(`http://localhost:3000/login`);
+        return NextResponse.redirect(`${BASE_URL}/login`);
       }
     } else {
       console.log('Token expiration time is undefined, redirecting to login');
-      return NextResponse.redirect(`http://localhost:3000/login`);
+      return NextResponse.redirect(`${BASE_URL}/login`);
     }
 
     if (path.startsWith('/student') && !path.includes(token)&& payload.role !== 'admin') {
       // If the token is not included in the path, redirect to login
-      return NextResponse.redirect('http://localhost:3000/login');
+      return NextResponse.redirect('${BASE_URL}/login');
     }
 
     if (token && path.startsWith('/Admin') && payload.role !== 'admin') {
       console.log('User is not admin, redirecting to home');
-      return NextResponse.redirect(`http://localhost:3000/student/${token}/home`);
+      return NextResponse.redirect(`${BASE_URL}/student/${token}/home`);
     }
     // Check if the token needs to be refreshed
     const timeRemaining = expTime - currentTime;
@@ -84,7 +84,7 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   } catch (error) {
     console.error('JWT Verification Error:', error);
-    return NextResponse.redirect(`http://localhost:3000/login`);
+    return NextResponse.redirect(`${BASE_URL}/login`);
   }
 }
 
