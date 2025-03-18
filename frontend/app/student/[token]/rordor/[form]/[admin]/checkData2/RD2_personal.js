@@ -62,6 +62,7 @@ export const Personal = () => {
                         type="text"
                         name="Name"
                         value={formData.Name}
+                        disabled
                         onChange={handleChange}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Name-Surname"
@@ -73,6 +74,7 @@ export const Personal = () => {
                         type="text"
                         name="Surname"
                         value={formData.Surname}
+                        disabled
                         onChange={handleChange}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                         placeholder="Surname"
@@ -176,29 +178,31 @@ export const Personal = () => {
                         disabled="true"
                     />
                 </div>
-                <div>
-                    <label className="block text-gray-700 mb-2">ชั้นปี (College year)</label>
-                    <input
-                        type="text"
-                        name="Collage_Year"
-                        value={formData.Collage_Year}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Collage Year"
-                    />
+                <div className="flex space-x-4 w-full">
+                    <div className="w-full">
+                        <label className="block text-gray-700 mb-2">ชั้นปี (College year)</label>
+                        <input
+                            type="text"
+                            name="Collage_Year"
+                            value={formData.Collage_Year}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            placeholder="Collage Year"
+                        />
+                    </div>
+                    <div className="w-full">
+                        <label className="block text-gray-700 mb-2">แผนก/คณะ (Faculty)</label>
+                        <input
+                            type="text"
+                            name="Major"
+                            value={formData.Major}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            placeholder="Faculty"
+                        />
+                    </div>
                 </div>
 
-                <div>
-                    <label className="block text-gray-700 mb-2">แผนก/คณะ (Faculty)</label>
-                    <input
-                        type="text"
-                        name="Major"
-                        value={formData.Major}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Faculty"
-                    />
-                </div>
                 <div>
                     <label className="block text-gray-700 mb-2">วันที่เข้าศึกษาในสถานศึกษาแห่งนี้ (Frist entry date)</label>
                     <input
@@ -211,42 +215,40 @@ export const Personal = () => {
                     />
                 </div>
             </div>
+            <div>
+                <h3 className="grid text-lg font-semibold mb-4  p-3 ">
+                    ได้สำเร็จการศีกษาวิชาทหารจาก (Military training record)
+                </h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3">
+                <div >
+                    <label className="block text-gray-700 mb-2">สถานศึกษา (From the military education institution)</label>
+                    <input
+                        type="text"
+                        name="Whereform"
+                        value={formData.Whereform}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="From the military education institution"
+                    />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <h3 className="grid text-lg font-semibold mb-4  content-center  h-full">
-                        ประวัติการฝึกวิชาทหาร (Military training record)
-                    </h3>
                 </div>
-                <div className="flex space-x-4 w-full ">
-
-                    <div className="w-1/2 grid content-center">
-                        <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
-                        <select
-                            name="militaryProvince2"
-                            value={formData.militaryProvince2}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        >
-                            <option value={formData.militaryProvince2}>{formData.militaryProvince2}</option>
-                            {provinces.map((item, index) => (
-                                <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="w-1/2 grid content-center">
-                        <label className="block text-gray-700 mb-2">จากสถานศึกษาวิชาทหาร (From the military education institution)</label>
-                        <input
-                            type="text"
-                            name="Whereform"
-                            value={formData.Whereform}
-                            onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="From the military education institution"
-                        />
-
-                    </div>
+                <div >
+                    <label className="block text-gray-700 mb-2">จังหวัด (Province)</label>
+                    <select
+                        name="militaryProvince2"
+                        value={formData.militaryProvince2}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                        <option value={formData.militaryProvince2}>{formData.militaryProvince2}</option>
+                        {provinces.map((item, index) => (
+                            <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
+                        ))}
+                    </select>
                 </div>
+
+
                 <div className="flex space-x-4 w-full  ">
                     <div className="w-1/2">
                         <label className="block text-gray-700 mb-2">ชั้นปี (level)</label>
@@ -281,15 +283,15 @@ export const Personal = () => {
 
             </div>
 
+            <div>
+                <h3 className="grid content-center text-lg font-semibold mb-4 p-4 ">
+                    ขอรายงานตัวเข้าฝึกวิชาทหาร (Requeue for military traning)
+                </h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-                <div>
-                    <h3 className="grid content-center text-lg font-semibold mb-4 h-full ">
-                        ขอรายงานตัวเข้าฝึกวิชาทหาร (Requeue for military traning)
-                    </h3>
-                </div>
                 <div className="flex space-x-4 w-full  ">
-                    <div className="w-1/2 grid content-center">
+                    <div className="w-1/2 ">
                         <label className="block text-gray-700 mb-2">ชั้นปี (Year level)</label>
                         <select
                             name="YearGradeRD"
@@ -306,7 +308,7 @@ export const Personal = () => {
                         </select>
                     </div>
 
-                    <div className="w-1/2 grid content-center" >
+                    <div className="w-1/2 " >
                         <label className="block text-gray-700 mb-2">ประจำปีการศึกษา (Academic year)</label>
                         <input
                             type="text"
