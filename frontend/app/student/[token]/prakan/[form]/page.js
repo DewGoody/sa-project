@@ -135,10 +135,10 @@ export default function Form() {
    console.log("dateeeee", prakanData.acc_date);
    setDate(event)
    console.log("dateEvent", event.target.value);
-    const timestamp = new Date(event)
+    const timestamp = new Date(event.target.value);
     console.log("timestamp",timestamp);
-    setPrakanData({ ...prakanData, acc_date: event.target.value });
-    setAlreadyData({ ...alreadyData, acc_date: event.target.value });
+    setPrakanData({ ...prakanData, acc_date: timestamp.toISOString() });
+    setAlreadyData({ ...alreadyData, acc_date:  timestamp.toISOString() });
 
   };
   const handleChangePlaceAcc = (event) => {

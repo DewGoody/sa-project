@@ -2,7 +2,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Header } from '../../../../components/Header.js';
+import { Header } from '../../../components/Header.js';
 import {Input} from 'antd';
 import { useRouter,useParams } from 'next/navigation';
 import {QuestionCircleOutlined} from '@ant-design/icons';
@@ -275,7 +275,7 @@ const handleSubmit = async () => {
       const response = await axios.post("/api/ponpan/create", data);
       const reqId = response.data.data.req_id;
       console.log(response.data);
-      router.push(`/student/${token}/ponpan/checkForm/${reqId}`);
+      router.push(`/student/${token}/ponpan/checkPonpanData/${reqId}`);
       console.log(data);
     } else {
       const data = {
@@ -304,7 +304,7 @@ const handleSubmit = async () => {
       const response = await axios.post("/api/ponpan/update", data);
       const reqId = response.data.data.req_id;
       console.log(response.data);
-      router.push(`/student/${token}/ponpan/checkForm/${reqId}`);
+      router.push(`/student/${token}/ponpan/checkPonpanData/${reqId}`);
       console.log
     }
   }
@@ -446,6 +446,7 @@ const handleDistrictSD9Change = (e) => {
                   <div className="">
                     <input
                       type="text"
+                      disabled
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={prepareData?.Student?.thai_id || null}
                       onChange={handleChangeCitizenId}
@@ -458,6 +459,7 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="text"
                       name="phone"
+                      disabled
                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.year}
                       onChange={handleChangeYearLevel}
@@ -469,6 +471,7 @@ const handleDistrictSD9Change = (e) => {
                   <div>
                     <select
                       name="degree"
+                      disabled
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.degree}
                       onChange={handleChangeDegree}
@@ -499,6 +502,7 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="text"
                       name="phone"
+                      disabled
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.phone_num}
                       onChange={handleChangePhoneNum}
@@ -511,6 +515,7 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="email"
                       name="email"
+                      disabled
                        className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.email}
                       onChange={handleChangeEmail}
@@ -527,6 +532,7 @@ const handleDistrictSD9Change = (e) => {
                       <input
                         type="text"
                         name="phone"
+                        disabled
                          className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         value={alreadyData?.father_name}
                         onChange={handleChangeFatherName}
@@ -544,6 +550,7 @@ const handleDistrictSD9Change = (e) => {
                       <input
                         type="text"
                         name="phone"
+                        disabled
                          className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         value={alreadyData?.mother_name}
                         onChange={handleChangeMotherName}
@@ -569,6 +576,7 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="text"
                       name="name"
+                      disabled
                       value={alreadyData.house_num}
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseNum}
@@ -581,6 +589,7 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="text"
                       name="name"
+                      disabled
                       value={alreadyData.house_moo}
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseMoo}
@@ -592,6 +601,7 @@ const handleDistrictSD9Change = (e) => {
                   <select
                       name="province"
                       value={provinceSelected}
+                      disabled
                       onChange={handleProvinceChange}
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
@@ -607,6 +617,7 @@ const handleDistrictSD9Change = (e) => {
               <select
                   name="amphure"
                   value={amphureSelected}
+                  disabled
                   onChange={handleAmphureChange}
                    className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
@@ -640,6 +651,7 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="text"
                       name="name"
+                      disabled
                       value={alreadyData.sdnine_id}
                        className="ml-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeSd9Num}
@@ -662,6 +674,7 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="text"
                       name="name"
+                      disabled
                       value={alreadyData.house_num_sd}
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseNumSD9}
@@ -674,6 +687,7 @@ const handleDistrictSD9Change = (e) => {
                     <input
                       type="text"
                       name="name"
+                      disabled
                       value={alreadyData.house_moo_sd}
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseMooSD9}
@@ -685,6 +699,7 @@ const handleDistrictSD9Change = (e) => {
                   <select
                       name="province"
                       value={provinceSD9Selected}
+                      disabled
                       onChange={handleProvinceSD9Change}
                        className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
@@ -699,6 +714,7 @@ const handleDistrictSD9Change = (e) => {
               <select
                   name="amphure"
                   value={amphureSD9Selected}
+                  disabled
                   onChange={handleAmphureSD9Change}
                    className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
@@ -710,7 +726,7 @@ const handleDistrictSD9Change = (e) => {
           </div>
           <div className="flex">
               <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict) : </label>
-              <Input onChange={handleDistrictSD9Change} style={{width:170, marginLeft:20}} value={alreadyData.subdistrict_sd} />
+              <Input onChange={handleDistrictSD9Change} disabled style={{width:170, marginLeft:20}} value={alreadyData.subdistrict_sd} />
           </div>
           <div>
 
