@@ -8,10 +8,10 @@ services:
       - "80:3000"
     environment:
       NODE_ENV: production
-      DATABASE_URL: "postgresql://postgres:PAKAWAN0367@postgres:5432/sadatabase"
-    restart: always
+      DATABASE_URL: "postgresql://postgres:PAKAWAN0367@postgres:5432/sadatabase"  # Update here
+    restart: always  # This will restart the app if it fails
     networks:
-      - sa-network  # Connect to the existing sa-network
+      default:
 
 
 networks:
