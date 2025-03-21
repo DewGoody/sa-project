@@ -10,8 +10,6 @@ services:
       NODE_ENV: production
       DATABASE_URL: "postgresql://postgres:PAKAWAN0367@postgres:5432/sadatabase"
     restart: always
-    depends_on:
-      - postgres
     networks:
       - sa-network  # Connect to the existing sa-network
 
