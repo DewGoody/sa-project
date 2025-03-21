@@ -59,6 +59,7 @@ export async function POST(req,res) {
             ...row,
             id: row.id ? row.id.toString() : null, // Convert BigInt to string
             req_id: row.req_id ? row.req_id.toString() : null, // Convert BigInt to string
+            more_info: row.more_info ? row.more_info.toString() : null, // Convert BigInt to string
             student_id: row.student_id ? row.student_id.toString() : null, // Convert Decimal to string
             Student: row.Student ? {
                 ...row.Student,

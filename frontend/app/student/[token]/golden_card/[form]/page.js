@@ -239,6 +239,7 @@ const page = () => {
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                                 placeholder="Nametitle"
+                                                
                                             />
                                         </div>
                                         <div className="w-1/2">
@@ -250,6 +251,7 @@ const page = () => {
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                                 placeholder="Name-Surname"
+                                                disabled
                                             />
                                         </div>
                                     </div>
@@ -262,6 +264,7 @@ const page = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                                             placeholder="Surname"
+                                            disabled
                                         />
                                     </div>
                                     <div>
@@ -273,6 +276,7 @@ const page = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                                             placeholder="Faculty"
+                                            disabled
                                         />
                                     </div>
                                     <div>
@@ -284,6 +288,7 @@ const page = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                                             placeholder="Year"
+                                            disabled
                                         />
                                     </div>
                                     <div>
@@ -295,6 +300,7 @@ const page = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                             placeholder="Identification number"
+                                            disabled
                                         />
                                     </div>
                                     <div>
@@ -328,6 +334,7 @@ const page = () => {
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                                 placeholder="Date of birth"
+                                                disabled
                                             />
                                             {/* <DatePicker
                                                 type="date"

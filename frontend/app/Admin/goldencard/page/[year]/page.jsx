@@ -104,7 +104,9 @@ const App = () => {
 
     const showModal = (record) => {
         setReqMoreInfo(record);
-        console.log("recordModalJa :", typeof record);
+
+        console.log("recordModalJa :", record);
+
         setIsModalOpen(true);
     };
 
@@ -114,6 +116,7 @@ const App = () => {
         setIsModalOpen(false);
     };
 
+   
     const handleCancel = () => {
         setIsModalOpen(false);
     };
@@ -162,6 +165,7 @@ const App = () => {
                 citizen_ID: item.Student?.thai_id || 'N/A', //check
                 birthdate: formatDateToDMY(item.Student?.bd) || 'N/A', //check
                 reqId: item.id,
+                more_info: item.more_info,
                 status: item.status,
                 updateat: formatDateToDMYWithTime(item.created_at),
                 province: item.UHC_request?.[0]?.province,
@@ -180,6 +184,7 @@ const App = () => {
     }
 
 
+    console.log("reqMoreInfo", reqMoreInfo);
     useEffect(() => {
         console.log("Data", Data)
         // console.log("Status",Data.Objectkeys(0).status)
@@ -187,6 +192,9 @@ const App = () => {
     useEffect(() => {
         fetchUniqueYear(),
             fetchData();
+            console.log("Data111", Data)
+            console.log("reqMoreInfo", reqMoreInfo);
+
     }, [])
     const [collapsed, setCollapsed] = useState(false);
     const {
@@ -407,15 +415,15 @@ const App = () => {
                 return (
                     <>
                         <div className='flex'>
-                        <Select
-                            defaultValue={status}
-                            style={{ width: "180px" }}
-                            options={options}
-                            onChange={(value) => handleChangeStatus({ ...record, status: value })}
-                        />
-                        {record.status === "ขอข้อมูลเพิ่มเติม" ?
-                            <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
-                            : null}
+                            <Select
+                                defaultValue={status}
+                                style={{ width: "180px" }}
+                                options={options}
+                                onChange={(value) => handleChangeStatus({ ...record, status: value })}
+                            />
+                            {record.status === "ขอข้อมูลเพิ่มเติม" ?
+                                <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
+                                : null}
                         </div>
                     </>
                 )
@@ -602,7 +610,7 @@ const App = () => {
     useEffect(() => {
         console.log("Updated selected reqids:", selectedRowReqid);
     }, [selectedRowReqid]);
-    const handleChangeStatusAll = async (ids,status) => {
+    const handleChangeStatusAll = async (ids, status) => {
         try {
             setLoading(true);
             setShouldReload(true);
@@ -620,7 +628,7 @@ const App = () => {
     const dropdown = () => {
         const handleSelect = async (value) => {
             try {
-                handleChangeStatusAll( selectedRowReqidapi, value )
+                handleChangeStatusAll(selectedRowReqidapi, value)
             } catch (error) {
                 console.error("Error:", error);
             }
@@ -677,7 +685,7 @@ const App = () => {
                 </>
 
                 <Menu
-                    style={{ background: "rgb(255,157,210)", marginTop: "20px",  height: '100%', borderRight: 0 }}
+                    style={{ background: "rgb(255,157,210)", marginTop: "20px", height: '100%', borderRight: 0 }}
                     defaultSelectedKeys={[selectedKey]}
                     mode="inline"
                     onClick={(e) => setSelectedKey(e.key)}
@@ -773,7 +781,7 @@ const App = () => {
                         ) : (
                             <>
                                 <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
-                                Export Excel ทั้งหมด
+                                    Export Excel ทั้งหมด
                                 </Button>
                             </>
                         )}
@@ -785,10 +793,9 @@ const App = () => {
                         bordered
                     />
                     <Modal
-                        title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม"
+                        title="กรุณาเขียนรายละเอียด"
                         open={isModalOpen}
                         onOk={handleOk}
-                        loading={loading}
                         onCancel={handleCancel}
                         footer={[
                             <Button key="back" onClick={handleCancel}>
@@ -797,14 +804,16 @@ const App = () => {
                             <Button key="submit" type="primary" onClick={handleOk}>
                                 ยืนยัน
                             </Button>,
+
                         ]}
                     >
                         <textarea
                             style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
+                            value={Data.find((item) => item.reqId === reqMoreInfo)?.more_info || null}
                             onChange={(e) => setMoreInfoValue(e.target.value)}
-                        >
-                        </textarea>
+                        />
                     </Modal>
+
                 </Content>
             </Layout>
         </Layout>

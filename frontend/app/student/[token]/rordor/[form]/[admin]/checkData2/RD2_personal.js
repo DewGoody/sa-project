@@ -113,6 +113,8 @@ export const Personal = () => {
                     type="text"
                     name="citizenId"
                     value={formData.citizenId}
+                    disabled
+
                     onChange={handleChange}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Identification number"
@@ -141,7 +143,7 @@ export const Personal = () => {
                 />
             </div>
             <div>
-                <label className="block text-gray-700 mb-2">โทรศัพท์ ทศท (Phone number)</label>
+                <label className="block text-gray-700 mb-2">โทรศัพท์ (Phone number)</label>
                 <input
                     type="text"
                     name="tel_num"
@@ -204,7 +206,7 @@ export const Personal = () => {
                 </div>
 
                 <div>
-                    <label className="block text-gray-700 mb-2">วันที่เข้าศึกษาในสถานศึกษาแห่งนี้ (Frist entry date)</label>
+                    <label className="block text-gray-700 mb-2">วันที่เข้าศึกษา (Entry date)</label>
                     <input
                         type="date"
                         name="Fristdata_in_U"
@@ -216,13 +218,13 @@ export const Personal = () => {
                 </div>
             </div>
             <div>
-                <h3 className="grid text-lg font-semibold mb-4  p-3 ">
+                <h3 className="grid text-lg font-semibold mb-4  pt-8 pl-3">
                     ได้สำเร็จการศีกษาวิชาทหารจาก (Military training record)
                 </h3>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-3">
                 <div >
-                    <label className="block text-gray-700 mb-2">สถานศึกษา (From the military education institution)</label>
+                    <label className="block text-gray-700 mb-2">สถานศึกษา (Institution)</label>
                     <input
                         type="text"
                         name="Whereform"
@@ -284,11 +286,11 @@ export const Personal = () => {
             </div>
 
             <div>
-                <h3 className="grid content-center text-lg font-semibold mb-4 p-4 ">
+                <h3 className="grid content-center text-lg font-semibold mb-4 pt-8 pl-3 ">
                     ขอรายงานตัวเข้าฝึกวิชาทหาร (Requeue for military traning)
                 </h3>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-3">
 
                 <div className="flex space-x-4 w-full  ">
                     <div className="w-1/2 ">

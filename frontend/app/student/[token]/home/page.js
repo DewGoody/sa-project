@@ -174,7 +174,7 @@ export const Form = () => {
     await fetchNotQueueGoldencard();
     await fetchNotQueue();
     await fetchQueue();
-    await fetchRD()
+    // await fetchRD()
   };
 
   useEffect(() => {
@@ -334,8 +334,8 @@ export const Form = () => {
                                   ตั้งแต่ 1 	มีนาคมเป็นต้นไป รับเอกสารได้ที่
                                 </div>
                               )}
-                              <p className="text-blue-500 font-semibold text-base">อาคารจุลจักรพงษ์ ชั้น 2</p>
-                              <p className="text-blue-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
+                              <p className="text-gray-500 font-semibold text-base">อาคารจุลจักรพงษ์ ชั้น 2</p>
+                              <p className="text-gray-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                             </div>
                             {(item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ส่งเอกสารแล้ว") ? (
                               <div className="ml-4 mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด</div>
@@ -397,19 +397,14 @@ export const Form = () => {
                     <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
                       <div>
                         {count++ + ". " + item.type}
-                        {/* <div className="flex">
-                        <div className="mt-1 font-semibold text-base text-blue-500">{item.status}</div>
-                          <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div>
-                          {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && item.RD_info && Array.isArray(item.RD_info) && item.RD_info.length > 0 && (
-                            <div>
-                              {item.status == "เสร็จสิ้น" && (<div className=" ml-1 mt-1 font-semibold text-base text-pink-500">ไปศูนย์ฝึกวันที่ {formatDateThai(item.RD_info[0]?.date)} และ เตรียมเงินมาจำนวน {item.RD_info[0]?.money} บาท </div>)}
-                            </div>
-                          )}
-                        </div> */}
                         <div>
                           <div className="ml-4 text-md">
-                            <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2</p>
-                            <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
+                            {item.type !== "โครงการหลักประกันสุขภาพถ้วนหน้า" && (
+                              <div>
+                                <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2</p>
+                                <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
+                              </div>
+                            )}
                             <div className="flex">
                               <div className="mt-1 font-semibold text-base text-blue-500">{item.status}</div>
                               {/* <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div> */}
@@ -489,9 +484,9 @@ export const Form = () => {
                   title="3. การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)"
                 />
               </a>
-              <a 
-               onClick={() => GC && router.push(`/student/${token}/rordor/0`)}
-               className={`block ${RD ? "cursor-pointer" : "pointer-events-none opacity-50"}`}
+              <a
+                onClick={() => GC && router.push(`/student/${token}/golden_card/0`)}
+                className={`block ${GC ? "cursor-pointer" : "pointer-events-none opacity-50"}`}
               >
                 <ServiceCard
                   title="4. โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)"
