@@ -13,8 +13,7 @@ services:
     depends_on:
       - postgres
     networks:
-      default:
-        name: sa-network
+      - sa-network  # Connect to the existing sa-network
 
 
 networks:
