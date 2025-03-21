@@ -1,14 +1,22 @@
 services:
-  hee:
+  nextjs-app:
     build:
       context: .
-    container_name: webhee
+      dockerfile: Dockerfile
+    container_name: nextjs-app
     ports:
-      - "3000:3000"
+      - "80:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://postgres:PAKAWAN0367@postgres:5432/sadatabase"  # Update here
+    restart: always  # This will restart the app if it fails
+    depends_on:
+      - postgres
     networks:
-      - default
+      default:
+
 
 networks:
   default:
     external: true
-    name: hee
+    name: sa-network
