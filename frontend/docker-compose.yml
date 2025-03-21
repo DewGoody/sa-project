@@ -11,10 +11,10 @@ services:
       DATABASE_URL: "postgresql://postgres:PAKAWAN0367@postgres:5432/sadatabase"
     restart: always
     networks:
-      - sa-network  # Connect to the existing sa-network
+      - sa-stucu01  # Connect to the existing sa-network
 
 
 networks:
   default:
     external: true
-    name: sa-network
+    name: sa-stucu01
