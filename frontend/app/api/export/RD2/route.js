@@ -10,7 +10,7 @@ import { getID } from '../../../../lib/session'
 
 const prisma = new PrismaClient()
 
-export async function GET(req) {
+export default async function GET(req) {
   try {
 
     const cookie = req.headers.get('cookie') || '';

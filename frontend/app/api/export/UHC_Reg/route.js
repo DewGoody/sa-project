@@ -10,7 +10,7 @@ import { uhc } from '../../../../document_build/uhc'
 
 const prisma = new PrismaClient()
 
-export async function GET(req) {
+export default async function GET(req) {
   try {
     let id = 0
     const formId = req.nextUrl.searchParams.get('id')

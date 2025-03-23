@@ -6,7 +6,7 @@ import { getMilitaryInfo } from "../../../lib/prisma/prisma"
 
 const prisma = new PrismaClient()
 
-export async function GET(req, res) {
+export default async function GET(req, res) {
     try {
         let id = 0
         const formId = req.nextUrl.searchParams.get('id')

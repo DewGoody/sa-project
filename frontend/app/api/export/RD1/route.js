@@ -6,7 +6,7 @@ import { militaryRD1 } from '../../../../document_build/militaryRD1'
 import { getMilitaryInfo } from '../../../../lib/prisma/prisma'
 import { getID } from '../../../../lib/session'
 
-export async function GET(req) {
+export default async function GET(req) {
   const prisma = new PrismaClient()
   // const cookie = req.headers.get('cookie') || '';
   try {

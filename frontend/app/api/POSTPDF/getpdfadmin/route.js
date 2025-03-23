@@ -6,7 +6,7 @@ import { PDFDocument } from 'pdf-lib';
 
 const prisma = new PrismaClient();
 
-export async function GET(req) {
+export default async function GET(req) {
     try {
         // ดึงค่า `id` จาก query parameters
         const { searchParams } = new URL(req.url);

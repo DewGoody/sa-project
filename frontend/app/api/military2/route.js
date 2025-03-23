@@ -5,7 +5,7 @@ import { getID, getIDbyToken } from "../../../lib/session"
 
 const prisma = new PrismaClient()
 
-export async function GET(req, res) {
+export default async function GET(req, res) {
     try {
         // read cookie header
         const cookie = req.headers.get('cookie') || '';
