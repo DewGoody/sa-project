@@ -8,7 +8,7 @@ const JWT_REFRESH = Number(process.env.JWT_REFRESH) || 15 * 60; // 15 minutes re
 const JWT_TIMEOUT = process.env.JWT_TIMEOUT || '1h'; // 2 hours token validity
 
 export default async function middleware(req: NextRequest) {
-  const BASE_URL = process.env.BASE_URL || 'http://161.200.199.69:3000';
+  const BASE_URL = process.env.BASE_URL || 'http://161.200.199.69';
   const url = new URL(req.url);
   const path = url.pathname;
   const cookieStore = cookies()
