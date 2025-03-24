@@ -27,7 +27,8 @@ const login = () => {
                         {/* Login page admin */}
                     </div>
                     <div className="w-3/4 h-14">
-                        <a href="https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv" className="w-full h-full bg-pink-400 flex items-center justify-center rounded-2xl">เข้าสู่ระบบสำหรับนิสิต</a>
+                        {/* <a href="https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv" className="w-full h-full bg-pink-400 flex items-center justify-center rounded-2xl">เข้าสู่ระบบสำหรับนิสิต</a> */}
+                        <a href="https://cunex-auth.azurewebsites.net/?partnerid=cuserv" className="w-full h-full bg-pink-400 flex items-center justify-center rounded-2xl">เข้าสู่ระบบสำหรับนิสิต</a>
                         {/* SSO */}
                     </div>
                 </div>
