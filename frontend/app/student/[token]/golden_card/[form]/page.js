@@ -300,7 +300,6 @@ const page = () => {
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                             placeholder="Identification number"
-                                            disabled
                                         />
                                     </div>
                                     <div>
