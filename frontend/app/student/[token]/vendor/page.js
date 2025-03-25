@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from "react";
+import { useRouter,useParams } from 'next/navigation';
 import axios from "axios";
 import { Header } from "../../../components/Header.js";
 import numberToThaiText from "../../../components/numberToThaiText.js";
@@ -10,13 +11,103 @@ function Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [profileData, setProfileData] = useState(null);
+  const {token} = useParams();
+  const router = useRouter();
 
-  function handleSubmit(event, key) {}
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
 
+    const requiredFields = [
+      "nameTH",
+      "faculty",
+      "houseID",
+      "moo",
+      "buildingVillage",
+      "soi",
+      "road",
+      "subDistrict",
+      "district",
+      "province",
+      "postalCode",
+      "tel",
+      "citizenId",
+      "citizenIssueDate",
+      "citizenExpireDate",
+      "claimType",
+      "amount",
+      "bankCompany",
+      "bankBranch",
+      "bankAccountType",
+      "bankAccountName",
+      "bankAccountNumber",
+    ];
+
+    // Check if all required fields are present and not empty or Null
+    for (let field of requiredFields) {
+      if (!vendorData[field] || vendorData[field].trim() === "") {
+        alert(`Please fill in the "${field}" field.`);
+        return;
+      }
+    }
+    //TODO Handle Other Claim Type Case
+
+    //Handle Submit
+    console.log(vendorData);
+    let allData = { ...vendorData };
+    axios
+      .post("/api/vendorService", allData)
+      .then((response) => {
+        console.log("Form submitted successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error submitting form:", error);
+      });
+    router.push(`/student/${token}/vendor/checkVendor`);
+   
+    
+  };
   const handleChange = (event, field) => {
     console.log(field + " : " + event.target.value);
     setVendorData({ ...vendorData, [field]: event.target.value });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/profile"); // Example API
+        console.log(response.data);
+        response.data.phone_num = response.data.tel_num;
+        setProfileData(response.data);
+        setLoading(false);
+
+        //console.log(response.data);
+        // Create a new object to hold the updated state
+        const updatedData = {};
+        Object.keys(response.data).forEach((key) => {
+          updatedData[key] = response.data[key];
+        });
+
+        // Update the state once with the new object
+        setVendorData(updatedData);
+        setVendorData((vendorData) => ({
+          ...vendorData,
+          nameTH: response.data.fnameTH + " " + response.data.lnameTH,
+          faculty: response.data.facultyNameTH,
+        }));
+
+        //document.getElementById("faculty").value = vendorData.facultyNameTH;
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <>
       <div className=" bg-white min-h-screen">
@@ -46,7 +137,9 @@ function Page() {
                       onChange={(event) => handleChange(event, "nameTH")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="ชื่อและนามสกุล (Name-Surname)"
-                      defaultValue={"test"}
+                       defaultValue={
+                        profileData?.fnameTH + " " + profileData?.lnameTH
+                      }
                     />
                   </div>
                   <div className="pt-4 md:pt-0">
@@ -57,6 +150,7 @@ function Page() {
                       id="faculty"
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={(event) => handleChange(event, "faculty")}
+                      value={vendorData.facultyNameTH}
                     >
                       <option defaultValue value="null">
                         เลือกคณะ (Choose faculty)
@@ -334,14 +428,14 @@ function Page() {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      บัญชีธนาคาร (Bank account)
+                    บัญชีของธนาคาร (Bank)
                     </label>
                     <input
                       type="text"
                       name="bankCompany"
                       onChange={(event) => handleChange(event, "bankCompany")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="บัญชีธนาคาร (Bank account)"
+                     placeholder="บัญชีของธนาคาร (Bank)"
                     />
                   </div>
                   <div>

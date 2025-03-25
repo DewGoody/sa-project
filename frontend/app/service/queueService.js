@@ -146,7 +146,7 @@ export async function getShowQueueInAdmin(year) {
         queue = await prisma.queue.findMany({
             where: {
                 status: {
-                    in: ["จองคิวสำเร็จ", "ไม่มาเข้ารับบริการ","เข้ารับบริการแล้ว"]
+                    in: ["จองคิวสำเร็จ"]
                 }, 
                 deleted_at: null,
                 created_at: {
@@ -160,7 +160,7 @@ export async function getShowQueueInAdmin(year) {
                 Student: true
             },
             orderBy: [
-                {timeslot_id: 'desc'},
+                {timeslot_id: 'asc'},
                 {period: 'asc'}
             ]
         })
@@ -169,7 +169,7 @@ export async function getShowQueueInAdmin(year) {
         queue = await prisma.queue.findMany({
             where: {
                 status: {
-                    in: ["จองคิวสำเร็จ", "ไม่มาเข้ารับบริการ","เข้ารับบริการแล้ว"]
+                    in: ["จองคิวสำเร็จ"]
                 }, 
                 deleted_at: null},
             include: {
@@ -178,7 +178,7 @@ export async function getShowQueueInAdmin(year) {
                 Student: true
             },
             orderBy: [
-                {timeslot_id: 'desc'},
+                {timeslot_id: 'asc'},
                 {period: 'asc'}
             ]
         })

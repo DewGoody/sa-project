@@ -30,6 +30,7 @@ export const Form = () => {
   const [deleteNotQueueId, setDeleteNotQueueId] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [prakanDataLength, setPrakanDataLength] = useState(0);
+  const [hasPonpan, setHasPonpan] = useState(false);
   const [formId, setFormId] = useState(0);
   const [notQueueLength, setNotQueueLength] = useState(0);
   const [notQueue, setNotQueue] = useState([]);
@@ -106,7 +107,13 @@ export const Form = () => {
   const fetchQueue = async () => {
     try {
       const response = await axios.post('/api/queue/getByStuId', { studentId: profileData.id }); // Example API
-      console.log("fetchQueue :", response.data);
+      console.log("fetchQueue :", response.data.data);
+      response.data.data.map((item) => {
+        if(item.Request.type === "การผ่อนผันเข้ารับราชการทหาร") {
+          setHasPonpan(true);
+        }
+      })
+      console.log("hasPonpan", hasPonpan);
       setPrakanData(response.data.data);
       setPrakanDone(true);
       setPeriod(response.data.data[0].Timeslot.period);
@@ -181,12 +188,6 @@ export const Form = () => {
     fetchAllData();
   }, [profileData, deleteQueueId, deleteNotQueueId]);
 
-  // useEffect(() => {
-  //   fetchNotQueueGoldencard();
-  //   fetchNotQueue();
-  //   fetchQueue();
-
-  // }, [profileData, deleteQueueId, deleteNotQueueId]);
 
 
   console.log("prakanData", prakanData);
@@ -464,7 +465,9 @@ export const Form = () => {
 
             <p className="text-xl font-bold py-4">บริการ (Service)</p>
             <div className="-mt-8">
-              <a onClick={() => router.push(`/student/${token}/prakan/0`)} >
+              <a onClick={() => router.push(`/student/${token}/prakan/0`)}
+                 className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+>
                 <ServiceCard
                   title="1. การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)"
                 />
@@ -472,34 +475,50 @@ export const Form = () => {
 
               <a
                 onClick={() => RD && router.push(`/student/${token}/rordor/0`)}
-                className={`block ${RD ? "cursor-pointer" : "pointer-events-none opacity-50"}`}
+                className={`block ${RD ? "cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg" : "pointer-events-none opacity-50"}`}
               >
                 <ServiceCard
                   title="2. การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)"
                 />
               </a>
 
-              <a onClick={() => router.push(`/student/${token}/ponpan/0`)}>
+              <a
+                onClick={() => !hasPonpan && router.push(`/student/${token}/ponpan/0`)}
+                className={`block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg 
+                  ${hasPonpan ? "pointer-events-none opacity-50" : ""}`}
+              >
                 <ServiceCard
                   title="3. การขอผ่อนผันการเข้ารับราชการทหาร (Request for deferral of military service)"
                 />
               </a>
+
               <a
                 onClick={() => GC && router.push(`/student/${token}/golden_card/0`)}
-                className={`block ${GC ? "cursor-pointer" : "pointer-events-none opacity-50"}`}
+                className={`block ${GC ? "cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg" : "pointer-events-none opacity-50"}`}
               >
                 <ServiceCard
                   title="4. โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)"
                 />
               </a>
-              <a onClick={() => router.push(`/student/${token}/prakan-inter/0`)}>
+              <a onClick={() => router.push(`/student/${token}/prakan-inter/0`)}
+                className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+                >
                 <ServiceCard
                   title="5. Health Insurance For Foreigner Student"
                 />
               </a>
-              <a href="/">
+              <a onClick={() => router.push(`/student/${token}/vendor`)}
+                className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+                >
                 <ServiceCard
                   title="6. กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) "
+                />
+              </a>
+              <a onClick={() => router.push(`/student/${token}/vendor`)}
+                className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+                >
+                <ServiceCard
+                  title="7. แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย (Vendor)"
                 />
               </a>
             </div>

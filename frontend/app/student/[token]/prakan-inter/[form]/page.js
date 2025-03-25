@@ -152,7 +152,7 @@ function page() {
         response.data.phone_num = response.data.tel_num;
         setProfileData(response.data);
         setLoading(false);
-
+        setClaimType("illness");
         //console.log(response.data);
         // Create a new object to hold the updated state
         const updatedData = {};
@@ -181,15 +181,44 @@ function page() {
     <>
       <div className=" bg-white min-h-screen">
         <Header
-          req1="Health Insurance For Foreigner Student (Claim Injury/Illness)"
-          req2=""
+          req1="Health Insurance For Foreigner Student (Claim Illness)"
         />
         <div className=" mx-24 ">
           <main className="flex justify-center bg-white w-full">
             <div className="bg-white  w-full min-w-screen-6xl">
               <section className="ml-5 py-4">
+              <div
+                  class="flex items-center p-4 mb-4 text-sm text-pink-500 border border-pink-400 rounded-lg bg-pink-50 "
+                  role="alert"
+                >
+                  <svg
+                    class="shrink-0 inline w-4 h-4 me-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
+                  <span class="sr-only">Info</span>
+                  <div>
+                    This service covers illnesses only. For accidents, please
+                    use the accident insurance claim service.{"   "}
+                    
+                      <span 
+                        onClick={() => {
+                          router.push(`/student/${token}/prakan/0`);
+                        }
+                      }
+                        className="font-medium underline cursor-pointer"
+                      >
+                          Click Here!
+                      </span>
+                    
+                  </div>
+                </div>
                 <h3 className="text-lg font-semibold my-4 flex gap-4">
-                  <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
+                <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 ">
                     1
                   </span>
                   Personal information
@@ -300,42 +329,10 @@ function page() {
                   </div>
                 </div>
 
-                <h3 className="text-lg font-semibold my-4 flex gap-4">
-                  <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
-                    2
-                  </span>
-                  Select an claim type
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Select an claim type
-                    </label>
-                    <select
-                      id="claimType"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      onChange={handleCiaimTypeChange}
-                      value={alreadyData?.claimType}
-                    >
-                      <option value="null">Select an claim type</option>
-                      <option value="accident">Accident</option>
-                      <option value="illness">Illness</option>
-                    </select>
-                  </div>
-                  <div></div>
-                </div>
-                {claimType === "accident" ? (
-                  <AccidentForm
-                    handleChange={handleChange}
-                    prakanData={prakanData}
-                  />
-                ) : null}
-                {claimType === "illness" ? (
-                  <IllnessForm
-                    handleChange={handleChange}
-                    prakanData={prakanData}
-                  />
-                ) : null}
+                <IllnessForm
+                  handleChange={handleChange}
+                  prakanData={prakanData}
+                />
               </section>
 
               <div className="flex justify-between mt-8">
