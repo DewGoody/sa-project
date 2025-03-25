@@ -18,7 +18,7 @@ function convertToDate(dateString) {
     return null;
 }
 
-export default async function GET(req) {
+export async function GET(req) {
     try {
         const url = new URL(req.url);
         const username = url.searchParams.get("username");

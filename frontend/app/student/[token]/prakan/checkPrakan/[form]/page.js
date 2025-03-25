@@ -47,10 +47,12 @@ const RD = () => {
         fetchData();
     }, []);
 
-    const handleDownload = () => {
+    const handleDownload = async () => {        
+        const response = await axios.post('/api/prakan/createPdf', {form: form})
+        setPrakanData(response.data.data)
         const link = document.createElement('a');
-        link.href = '../../../../documents/accident/prakanformfilled.pdf';
-        link.download = 'prakan.pdf';
+        link.href = '../../../../documents/accident/'+response.data.data.Student.id+'_accident_insurance.pdf';
+        link.download = response.data.data.Student.id+'_accident_insurance.pdf';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -94,6 +96,7 @@ const RD = () => {
             event.preventDefault();
             alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
         } else {
+            const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
             router.push(`/student/${token}/appointment/${param}/0`);
         }
     };

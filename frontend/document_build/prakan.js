@@ -44,35 +44,35 @@ async function prakan(data){
     const newMedicalFee = data.medical_fee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       
 
-    firstPage.drawText(data.fnameTH + ' ' + data.lnameTH, {
+    firstPage.drawText(data.Student.fnameTH + ' ' + data.Student.lnameTH, {
         x: 204,
         y: height-223.3,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.id+'', {
+    firstPage.drawText(data.Student.id+'', {
         x: 460,
         y: height-223.3,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.facultyNameTH + ' / '+ data.facultyNameEN, {
+    firstPage.drawText(data.Student.facultyNameTH + ' / '+ data.Student.facultyNameEN, {
         x: 124,
         y: height-249,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.phone_num+'', {
+    firstPage.drawText(data.Student.phone_num+'', {
         x: 231,
         y: height-275,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.personal_email, {
+    firstPage.drawText(data.Student.personal_email, {
         x: 360,
         y: height-274.6,
         size: 14,   
@@ -138,7 +138,7 @@ async function prakan(data){
         color: rgb(0, 0, 0),
     })
 
-    firstPage.drawText("( "+data.fnameTH + ' ' + data.lnameTH+" )", {
+    firstPage.drawText("( "+data.Student.fnameTH + ' ' + data.Student.lnameTH+" )", {
         x: 397,
         y: height-710,
         size: 14,   
@@ -147,7 +147,7 @@ async function prakan(data){
     })
 
     const pdfBytes = await pdfDoc.save()
-    fs.writeFileSync('public/documents/accident/prakanformfilled.pdf', pdfBytes);
+    fs.writeFileSync('public/documents/accident/'+data.Student.id+'_accident_insurance.pdf', pdfBytes);
     return 'public/documents/accident/prakanformfilled.pdf'
 }
 

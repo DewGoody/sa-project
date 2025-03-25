@@ -4,7 +4,6 @@ import { prakanFormBuilder } from '../../document_build/prakanFormBuilder'
 const prisma = new PrismaClient();
 
 export async function createPrakanInter(data) {    
-    await prakanFormBuilder(data);
     console.log("data", data);
 
     const createPrakan = await prisma.prakan_inter_info.create({
@@ -28,15 +27,28 @@ export async function createPrakanInter(data) {
     await prisma.student.update({
         where: {id: Number(data.id)},
         data: {
-            tel_num: data.phone_num,
+            phone_num: data.phone_num
         }
     })
     return createPrakan
 }
 
+export async function createPdfPrakan(formId) {
+    console.log("formmmm", formId);
+    
+    const response = await getPrakanDataById(formId)
+    console.log(response,"------------------------");
+    
+    await prakanFormBuilder(response);
+    return response
+}
+
 export async function getPrakanDataById(id) {
-  const prakan = await prisma.prakan_inter_info.findUnique({
+  const prakan = await prisma.prakan_inter_info.findFirst({
       where: {id: id},
+      include: {
+        Student: true
+    }
   })
   if(prakan){           
       return prakan

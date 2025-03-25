@@ -14,6 +14,7 @@ const RD = () => {
     Option3: false,
   });
   const [profileData, setProfileData] = useState(null);
+  const [prakanData, setPrakanData] = useState({});
   const [createRequest, setCreateRequest] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,10 +45,12 @@ const RD = () => {
 
   console.log(profileData);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
+    const response = await axios.post('/api/prakanInter/createPdf', {form: form})
+    setPrakanData(response.data.data)
     const link = document.createElement("a");
-    link.href = "../../../../../documents/prakan-inter/Health-claim-form-filled.pdf";
-    link.download = "Health-claim-form.pdf";
+    link.href = "../../../../../documents/prakan-inter/"+response.data.data.Student.id+"_Health_claim.pdf";
+    link.download = response.data.data.Student.id+"_Health_claim.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -98,6 +101,9 @@ const RD = () => {
           "กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)"
         );
       } else {
+        console.log("dataaa", prakanData,"-------------------------------");
+        
+        const response2 = await axios.post('/api/prakanInter/deletePdf', prakanData)
         router.push(`/student/${token}/appointment/${param}/0`);
       }
     }
