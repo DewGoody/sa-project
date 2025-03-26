@@ -6,12 +6,12 @@ import { militaryRD1 } from '../../../../document_build/militaryRD1'
 import { getMilitaryInfo } from '../../../../lib/prisma/prisma'
 import { getID } from '../../../../lib/session'
 
-export default async function GET(req) {
+export async function GET(req) {
   const prisma = new PrismaClient()
-  // const cookie = req.headers.get('cookie') || '';
+  const formId = req.nextUrl.searchParams.get('id')
   try {
     let id = 0
-    const formId = req.nextUrl.searchParams.get('id')
+
     if (formId == 0) {
       id = await getID(req)
       console.log("in frist");

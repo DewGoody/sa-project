@@ -19,9 +19,9 @@ function convertToDate(dateString) {
 }
 
 export async function GET(req) {
+    const url = new URL(req.url);
+    const username = url.searchParams.get("username");
     try {
-        const url = new URL(req.url);
-        const username = url.searchParams.get("username");
         console.log("Username:", username);
         const key = new TextEncoder().encode(process.env.JWT_SECRET);
         const accessToken = await new SignJWT({ id: username, role: role })

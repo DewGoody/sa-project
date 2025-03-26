@@ -12,12 +12,13 @@ import { getID } from '../../../../lib/session'
 const prisma = new PrismaClient()
 
 
-export default async function GET(req) {
+export async function GET(req) {
+  const formId = req.nextUrl.searchParams.get('id')
   try {
 
     const cookie = req.headers.get('cookie') || '';
     let id = 0
-    const formId = req.nextUrl.searchParams.get('id')
+    
     if (formId == 0) {
       id = await getID(req) || getIDbyToken(cookie);
     } else {

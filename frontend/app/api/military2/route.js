@@ -5,10 +5,11 @@ import { getID, getIDbyToken } from "../../../lib/session"
 
 const prisma = new PrismaClient()
 
-export default async function GET(req, res) {
+export async function GET(req, res) {
+    const cookie = req.headers.get('cookie') || '';
     try {
         // read cookie header
-        const cookie = req.headers.get('cookie') || '';
+        
         const id =  await getID(req) || getIDbyToken(cookie)
         if (!id) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });

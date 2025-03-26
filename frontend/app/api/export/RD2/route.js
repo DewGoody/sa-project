@@ -10,12 +10,13 @@ import { getID } from '../../../../lib/session'
 
 const prisma = new PrismaClient()
 
-export default async function GET(req) {
+export async function GET(req) {
+  const formId = req.nextUrl.searchParams.get('id')
   try {
 
     const cookie = req.headers.get('cookie') || '';
     let id = 0
-    const formId = req.nextUrl.searchParams.get('id')
+
     if (formId == 0) {
       id = await getID(req) || getIDbyToken(cookie);
     } else {
@@ -27,15 +28,15 @@ export default async function GET(req) {
     }
     const data = await getMilitaryInfo(id);
     // console.log('test data export ',data);
-    
+
     if (!data) {
       return NextResponse.json({ error: "Student data not found" }, { status: 404 });
     }
     // console.log("kdsnflksdmfksldmfkldsmfkdsmfkldsmfkldsmfkldslfksdkfjsdkflsdjf");
-    
+
     const pdfBytes = await militaryRD2(data)
     // console.log("test pdf export",pdfBytes);
-    
+
 
     const response = new NextResponse(pdfBytes, {
       headers: {

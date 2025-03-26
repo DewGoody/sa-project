@@ -6,12 +6,12 @@ import { PDFDocument } from 'pdf-lib';
 
 const prisma = new PrismaClient();
 
-export default async function GET(req) {
+export async function GET(req) { 
+    const { searchParams } = new URL(req.url);
+    const fileId = parseInt(searchParams.get('id'));
     try {
         // ดึงค่า `id` จาก query parameters
-        const { searchParams } = new URL(req.url);
-        const fileId = parseInt(searchParams.get('id'));
-
+    
         if (isNaN(fileId)) {
             return NextResponse.json({ error: 'Invalid file ID' }, { status: 400 });
         }

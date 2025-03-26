@@ -6,10 +6,11 @@ import { getMilitaryInfo } from "../../../lib/prisma/prisma"
 
 const prisma = new PrismaClient()
 
-export default async function GET(req, res) {
+export async function GET(req, res) {
+    const formId = req.nextUrl.searchParams.get('id')
     try {
         let id = 0
-        const formId = req.nextUrl.searchParams.get('id')
+        
         if (formId == 0) {
             id = await getID(req)
             console.log("in frist");
