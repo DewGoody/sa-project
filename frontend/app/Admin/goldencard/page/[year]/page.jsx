@@ -103,18 +103,33 @@ const App = () => {
     }
 
     const showModal = (record) => {
-        setReqMoreInfo(record);
+        setReqMoreInfo(record.reqId);
+        setMoreInfoValue(record.more_info || ""); // ✅ ตั้งค่าให้แก้ไขได้
 
         console.log("recordModalJa :", record);
 
         setIsModalOpen(true);
     };
 
-    const handleOk = () => {
-        const response = axios.post('/api/request/createMoreInfo', { id: parseInt(reqMoreInfo), more_info: moreInfoValue });
 
-        setIsModalOpen(false);
+    const handleOk = async () => {
+        if (!reqMoreInfo) {
+            console.error("reqMoreInfo is null or undefined");
+            return;
+        }
+
+        try {
+            await axios.post("/api/request/createMoreInfo", {
+                id: parseInt(reqMoreInfo),
+                more_info: moreInfoValue
+            });
+
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error("Error sending request:", error);
+        }
     };
+
 
 
     const handleCancel = () => {
@@ -810,14 +825,10 @@ const App = () => {
                         <textarea
                             style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
                             onChange={(e) => setMoreInfoValue(e.target.value)}
+                            value={moreInfoValue} // ✅ ให้แน่ใจว่าใช้ state
 
-                        >
-                        {Data.map((item) => {
-                            if (item.reqId === reqMoreInfo) {
-                                return item.more_info
-                            }
-                        })}
-                        </textarea>
+                        />
+
                     </Modal>
 
                 </Content>
