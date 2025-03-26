@@ -116,7 +116,7 @@ const App = () => {
         setIsModalOpen(false);
     };
 
-   
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
@@ -192,8 +192,8 @@ const App = () => {
     useEffect(() => {
         fetchUniqueYear(),
             fetchData();
-            console.log("Data111", Data)
-            console.log("reqMoreInfo", reqMoreInfo);
+        console.log("Data111", Data)
+        console.log("reqMoreInfo", reqMoreInfo);
 
     }, [])
     const [collapsed, setCollapsed] = useState(false);
@@ -809,9 +809,14 @@ const App = () => {
                     >
                         <textarea
                             style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
-                            value={Data.find((item) => item.reqId === reqMoreInfo)?.more_info || null}
+
                             onChange={(e) => setMoreInfoValue(e.target.value)}
                         />
+                        {Data.map((item) => {
+                            if (item.reqId === reqMoreInfo) {
+                                return item.more_info
+                            }
+                        })}
                     </Modal>
 
                 </Content>
