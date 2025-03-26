@@ -48,7 +48,7 @@ export default async function middleware(req: NextRequest) {
       return NextResponse.redirect(`${BASE_URL}/login`);
     }
 
-    if (path.startsWith('/student') && !path.includes(token)&& payload.role !== 'admin') {
+    if (path.startsWith('/student') && !path.includes(String(payload.id))&& payload.role !== 'admin') {
       // If the token is not included in the path, redirect to login
       return NextResponse.redirect('${BASE_URL}/login');
     }

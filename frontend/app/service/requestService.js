@@ -14,7 +14,8 @@ export async function getRequestById(id) {
                 Student: true,
                 UHC_request: true,
                 RD_info: true,
-                prakan_inter_info: true
+                prakan_inter_info: true,
+                vendor_info: true
             }
         })
         if (request) {
@@ -56,6 +57,14 @@ export async function getRequestById(id) {
                     ...request,
                     form: request.prakan_inter_info[0].id,
                     path: "prakan-inter"
+                }
+                return result
+            }
+            else if (request.type == "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย") {
+                result = {
+                    ...request,
+                    form: request.vendor_info[0].id,
+                    path: "vendor"
                 }
                 return result
             }

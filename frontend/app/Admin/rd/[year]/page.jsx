@@ -265,7 +265,7 @@ const App = () => {
             title: 'แก้ไข',
             dataIndex: 'status',
             render: (status, record) => {
-                if (status !== "ประวัติการแก้ไข") {
+                if (status !== "ประวัติการแก้ไข" && status !== "เสร็จสิ้น") {
                     return (
                         <Space size="middle">
                             <Button onClick={() => handleEditForm(record.reqId, record.yearRD)}>แก้ไข</Button>

@@ -40,6 +40,14 @@ export async function POST(req,res){
             }
         })
     }
+    else if(data.type === "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย"){
+        await prisma.vendor_info.update({
+            where: {id: data.formId},
+            data: {
+                req_id: createRequest.id
+            }
+        })
+    }
     console.log("createRequest",createRequest);
     return NextResponse.json({ data: convertBigIntToString(createRequest) });
 }

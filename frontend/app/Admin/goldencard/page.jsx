@@ -266,7 +266,7 @@ const App = () => {
             title: 'แก้ไขข้อมูล',
             dataIndex: 'status',
             render: (status, record) => {
-                if (status !== "ประวัติการแก้ไข") {
+                if (status !== "ประวัติการแก้ไข" && status !== "ย้ายสิทธิสำเร็จ" && status !== "ย้ายสิทธิไม่สำเร็จ") {
                     return (
                         <Space size="middle">
                             <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
