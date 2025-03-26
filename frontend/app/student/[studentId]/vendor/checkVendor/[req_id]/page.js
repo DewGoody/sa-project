@@ -7,13 +7,15 @@ import { useRouter,useParams } from 'next/navigation';
 import "react-toastify/dist/ReactToastify.css";
 
 const Page = () => {
-    const {studentId} = useParams();
-    const {form} = useParams();
+    
     const router = useRouter();
+    const {studentId} = useParams();
+    const {req_id} = useParams();
     const [profileData, setProfileData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [createRequest, setCreateRequest] = useState(null);
+    console.log("reqId",req_id);
 
   const [checkboxes, setCheckboxes] = useState({
     Option1: false,
@@ -70,23 +72,32 @@ const Page = () => {
     );
   };
 
-  // Function to handle navigation attempt
-  const handleNavigation = async (event) => {
-    const response = await axios.post(`/api/request/create`, { type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย", status: "รอจองคิว", stuId: profileData.id, formId: form });
-    setCreateRequest(response.data);
-    console.log("createRequest", createRequest);
-    const param = response.data.data.id;
-    console.log("responseRequest", response.data);
-    console.log("param", param);
-    router.push(`/student/${studentId}/appointment/${param}/0`);
 
-    // if (!allChecked()) {
-    //     event.preventDefault();
-    //     alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
-    // } else {
-    //     const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
-    //     router.push(`/student/${studentId}/appointment/${param}/0`);
-    // }
+//   const handleNavigation = async (event) => {
+//     const response = await axios.post(`/api/request/create`, { type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย", status: "รอจองคิว", stuId: profileData.id, formId: form });
+//     setCreateRequest(response.data);
+//     console.log("createRequest", createRequest);
+//     const param = response.data.data.id;
+//     console.log("responseRequest", response.data);
+//     console.log("param", param);
+//     router.push(`/student/${studentId}/appointment/${param}/0`);
+
+//     // if (!allChecked()) {
+//     //     event.preventDefault();
+//     //     alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
+//     // } else {
+//     //     const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
+//     //     router.push(`/student/${studentId}/appointment/${param}/0`);
+//     // }
+// };
+
+const handleNavigation = async (event) => {
+ const response =  await axios.post(`/api/request/changeStatusToWaitBook`, {req_id:req_id});
+ console.log("response",response);
+  
+ 
+      router.push(`/student/${studentId}/appointment/${req_id}/0`);
+  
 };
 
   return (

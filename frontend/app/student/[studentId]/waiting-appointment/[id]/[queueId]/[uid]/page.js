@@ -24,7 +24,7 @@ const WaitingQueue = () => {
           console.log("fetchUid",response.data);
           setStatusUid(response.data.data.status);
         } catch (error) {
-          setError(error.message);
+        //   setError(error.message);
         }
       }   
       const fetchReqType = async () => {

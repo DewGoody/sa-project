@@ -20,11 +20,20 @@ export async function getDataById(id) {
 
 export async function createVendor(data) {    
     // await vendor(data)
+    const createRequest = await prisma.request.create({
+        data: {
+            type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย",
+            status: "รอจองคิว",
+            stu_id: data.stu_id,
+        }
+    })    
+
     console.log("dataCreate :", data);
     const createVendor = await prisma.vendor_info.create({
         data: {
             stu_id: Number(data.id),
             houseID: data.houseID,
+            req_id: createRequest.id,
             moo: data.moo,
             citizenIssueDate: new Date(data.citizenIssueDate),
             citizenExpireDate: new Date(data.citizenExpireDate),

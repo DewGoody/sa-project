@@ -36,7 +36,8 @@ function Page() {
       try {
         const response = await axios.post("/api/vendor/update", vendorData);
         console.log("update", response.data);
-        router.push(`/student/${studentId}/vendor/checkVendor/${form}`);
+        const reqId = response.data.data.req_id
+        router.push(`/student/${studentId}/vendor/checkVendor/${reqId}`);
       } catch (error) {
         console.error(error);
       }
@@ -44,8 +45,8 @@ function Page() {
       try {
         const response = await axios.post("/api/vendor/create", vendorData);
         console.log(response.data);
-        const formId = response.data.data.id
-        router.push(`/student/${studentId}/vendor/checkVendor/${formId}`);
+        const reqId = response.data.data.req_id
+        router.push(`/student/${studentId}/vendor/checkVendor/${reqId}`);
       } catch (error) {
         console.error(error);
       }
