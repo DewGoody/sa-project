@@ -809,14 +809,15 @@ const App = () => {
                     >
                         <textarea
                             style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
-
                             onChange={(e) => setMoreInfoValue(e.target.value)}
-                        />
+
+                        >
                         {Data.map((item) => {
                             if (item.reqId === reqMoreInfo) {
                                 return item.more_info
                             }
                         })}
+                        </textarea>
                     </Modal>
 
                 </Content>
