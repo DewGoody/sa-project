@@ -105,7 +105,7 @@ const App = () => {
     const showModal = (record) => {
         setReqMoreInfo(record.reqId);
         setMoreInfoValue(record.more_info || ""); // ✅ ตั้งค่าให้แก้ไขได้
-
+        console.log("moreinfo :", record.more_info);
         console.log("recordModalJa :", record);
 
         setIsModalOpen(true);
@@ -139,7 +139,7 @@ const App = () => {
         if (!dateString) return 'N/A'; // Handle null or undefined dates
 
         const date = new Date(dateString); // Parse the input date string
-        console.log("fdsfdsfdsf", date);
+        // console.log("fdsfdsfdsf", date);
 
         const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits for day
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
@@ -199,9 +199,9 @@ const App = () => {
     }
 
 
-    console.log("reqMoreInfo", reqMoreInfo);
+    // console.log("reqMoreInfo", reqMoreInfo);
     useEffect(() => {
-        console.log("Data", Data)
+        // console.log("Data", Data)
         // console.log("Status",Data.Objectkeys(0).status)
     }, [Data])
     useEffect(() => {
@@ -825,8 +825,7 @@ const App = () => {
                         <textarea
                             style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
                             onChange={(e) => setMoreInfoValue(e.target.value)}
-                            value={moreInfoValue} // ✅ ให้แน่ใจว่าใช้ state
-
+                            value={moreInfoValue} 
                         />
 
                     </Modal>

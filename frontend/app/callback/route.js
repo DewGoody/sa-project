@@ -91,7 +91,7 @@ export async function GET(req) {
             dept: info.departmentNameTH || '',
             religion: '',
             bd: convertToDate(info.birthdate),
-            year: info.studentId.substring(info.studentId.length - 2) || '',
+            // year: info.studentId.substring(info.studentId.length - 2) || '',
             id: info.studentId || ''
         };
 
