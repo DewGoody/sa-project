@@ -13,10 +13,13 @@ function convertToDate(dateString) {
         const year = parseInt(dateString.substring(0, 4), 10);
         const month = parseInt(dateString.substring(4, 6), 10) - 1;
         const day = parseInt(dateString.substring(6, 8), 10);
+
+        const date = new Date(Date.UTC(year, month , day, 7)); 
         return new Date(year, month, day);
     }
     return null;
 }
+
 
 async function handler(token) {
     if (!token) {
