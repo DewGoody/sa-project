@@ -9,6 +9,7 @@ import {
 import { Button, Layout, Menu, theme, Input, Table, Space,Select, Form, message, Modal} from 'antd';
 import axios from 'axios';
 import { useRouter,useParams } from 'next/navigation';
+import Menubar from '../component/menu';
 
 
 const { Header, Sider, Content } = Layout;
@@ -219,91 +220,7 @@ const App = () => {
     return (
       <Layout style={{ height: "100vh" }}>
         <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
-          <div>
-            <div className="demo-logo-vertical" />
-            <div className='text-center mt-10 ml-3 mr-3'>
-              <p className='font-mono font-bold text-xl text-white'>
-                ฝ่ายทุนการศึกษาและบริการนิสิต
-              </p>
-              <p className='font-mono font-bold text-xl text-white'>
-                สำนักบริหารกิจการนิสิต
-              </p>
-              <p className='font-mono font-bold text-xl text-white'>
-                จุฬาลงกรณ์มหาวิทยาลัย
-              </p>
-            </div>
-            <div className='text-center mt-4 ml-3 mr-3'>
-              <p className='font-mono font-semibold text-white'>
-                Department of Scholarships & Student
-              </p>
-              <p className='font-mono font-semibold text-white'>
-                Services, Office of the Student Affairs,
-              </p>
-              <p className='font-mono font-semibold text-white'>
-                Chulalongkorn University
-              </p>
-            </div>
-            <div className="flex justify-center mt-5">
-              <hr
-                className="w-11/12"
-                style={{ borderTop: "5px solid white" }}
-              />
-            </div>
-          </div>
-
-          <Menu
-            style={{ background: "rgb(255,157,210)",  height: '100%',marginTop: "20px" }}
-            defaultSelectedKeys={[selectedKey]}
-            mode="inline"
-            onClick={(e) => setSelectedKey(e.key)}
-            items={[
-              {
-                key: '1',
-                label: <span style={{ color: selectedKey === '1' ? 'black' : 'white' }}>จัดการการนัดหมาย</span>,
-                onClick: () => window.location.href = '/Admin/home/0'
-              },
-              {
-                key: '2',
-                label: <span style={{ color: selectedKey === '2' ? 'black' : 'white' }}>ประกันอุบัติเหตุ</span>,
-                onClick: () => window.location.href = '/Admin/prakan/0'
-              },
-              {
-                key: '3',
-                label: <span style={{ color: selectedKey === '3' ? 'black' : 'white' }}>การขอผ่อนผันการเข้ารับราชการทหาร</span>,
-                onClick: () => window.location.href = '/Admin/ponpan/0'
-              },
-              {
-                key: '4',
-                label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                onClick: () => window.location.href = '/Admin/rd/0'
-              },
-              {
-                key: '5',
-                label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                onClick: () => window.location.href = '/Admin/goldencard/page/0'
-              },
-              {
-                key: '6',
-                label: <span style={{ color: selectedKey === '6' ? 'black' : 'white' }}>Health Insurance For Foreigner Student</span>,
-                onClick: () => window.location.href = '/Admin/prakan-inter/0'
-              },
-              {
-                key: '7',
-                label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
-                onClick: () => window.location.href = '/Admin/editMaxStudent'
-              },
-              {
-                key: '8',
-                label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
-                onClick: () => window.location.href = '/Admin/user'
-              },
-              {
-                key: '9',
-                label: <span style={{ color: selectedKey === '9' ? 'black' : 'white' }}>เปิด-ปิดวันให้บริการ</span>,
-                onClick: () => window.location.href = '/Admin/editServiceDate'
-              }
-            ]}
-          />
+          <Menubar/>
         </Sider>
         <Layout style={{ background: "rgb(255,157,210)" }}>
           <Content
