@@ -655,35 +655,6 @@ const App = () => {
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
-                <>
-                    <div className="demo-logo-vertical" />
-                    <div className='mt-5 ml-3'>
-                        <p className='font-mono font-bold text-xl text-white'>
-                            ฝ่ายทุนการศึกษาและบริการนิสิตสำนักบริหารกิจการนิสิตจุฬาลงกรณ์มหาวิทยาลัย
-                        </p>
-                    </div>
-                    <div className='ml-3 mt-3'>
-                        <p className='font-mono font-semibold text-white'>
-                            Department of Scholarships & Student
-                        </p>
-                        <p className='font-mono font-semibold text-white'>
-                            Services, Office of the Student Affairs,
-                        </p>
-                        <p className='font-mono font-semibold text-white'>
-                            Chulalongkorn University
-                        </p>
-                    </div>
-                    <div className="flex justify-center mt-5">
-                        <hr
-                            className="w-11/12"
-                            style={{ borderTop: "5px solid white" }}
-                        />
-                    </div>
-
-
-
-                </>
-
                 <Menubar/>
             </Sider>
 

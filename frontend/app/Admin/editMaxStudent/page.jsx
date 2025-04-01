@@ -181,38 +181,6 @@ const AppointmentManagement = () => {
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
-                <div>
-                    <div className="demo-logo-vertical" />
-                    <div className='text-center mt-10 ml-3 mr-3'>
-                        <p className='font-mono font-bold text-xl text-white'>
-                            ฝ่ายทุนการศึกษาและบริการนิสิต
-                        </p>
-                        <p className='font-mono font-bold text-xl text-white'>
-                            สำนักบริหารกิจการนิสิต
-                        </p>
-                        <p className='font-mono font-bold text-xl text-white'>
-                            จุฬาลงกรณ์มหาวิทยาลัย
-                        </p>
-                    </div>
-                    <div className='text-center mt-4 ml-3 mr-3'>
-                        <p className='font-mono font-semibold text-white'>
-                            Department of Scholarships & Student
-                        </p>
-                        <p className='font-mono font-semibold text-white'>
-                            Services, Office of the Student Affairs,
-                        </p>
-                        <p className='font-mono font-semibold text-white'>
-                            Chulalongkorn University
-                        </p>
-                    </div>
-                    <div className="flex justify-center mt-5">
-                        <hr
-                            className="w-11/12"
-                            style={{ borderTop: "5px solid white" }}
-                        />
-                    </div>
-                </div>
-
                 <Menubar />
             </Sider>
             <Layout style={{ background: "rgb(255,157,210)" }}>
