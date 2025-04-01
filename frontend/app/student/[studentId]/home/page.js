@@ -109,7 +109,7 @@ export const Form = () => {
       const response = await axios.post('/api/queue/getByStuId', { studentId: profileData.id }); // Example API
       console.log("fetchQueue :", response.data.data);
       response.data.data.map((item) => {
-        if(item.Request.type === "การผ่อนผันเข้ารับราชการทหาร") {
+        if (item.Request.type === "การผ่อนผันเข้ารับราชการทหาร") {
           setHasPonpan(true);
         }
       })
@@ -313,6 +313,7 @@ export const Form = () => {
               <ServiceCard
                 title={profileData ? profileData.fnameTH + " " + profileData.lnameTH + " " + profileData.id : ""}
                 icon={<FaUser />}
+                stu={true}
               />
             </div>
 
@@ -466,8 +467,8 @@ export const Form = () => {
             <p className="text-xl font-bold py-4">บริการ (Service)</p>
             <div className="-mt-8">
               <a onClick={() => router.push(`/student/${studentId}/prakan/0`)}
-                 className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
->
+                className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+              >
                 <ServiceCard
                   title="1. การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)"
                 />
@@ -502,21 +503,21 @@ export const Form = () => {
               </a>
               <a onClick={() => router.push(`/student/${studentId}/prakan-inter/0`)}
                 className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
-                >
+              >
                 <ServiceCard
                   title="5. Health Insurance For Foreigner Student"
                 />
               </a>
               <a onClick={() => router.push(`/student/${studentId}/student-loan`)}
                 className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
-                >
+              >
                 <ServiceCard
                   title="6. กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) "
                 />
               </a>
               <a onClick={() => router.push(`/student/${studentId}/vendor/0`)}
                 className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
-                >
+              >
                 <ServiceCard
                   title="7. แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย (Vendor)"
                 />
@@ -591,24 +592,32 @@ export const Form = () => {
   );
 }
 
-const ServiceCard = ({ title, icon }) => {
-  return (
-    <div className="flex justify-start items-center border border-gray-200 shadow-md mt-8 rounded-xl p-8 bg-white" >
-      <div className="text-xl">{icon}</div>
-      <div className=" ">
-        <div className=" ml-6 border-gray-300"></div>
-      </div>
-      {icon ? (
-        <div className="ml-5 text-gray-700">{title}</div>
-      ) : (
-        <div className="px-16">
-          <p className=" -ml-24 text-gray-700 font-normal">{title}</p>
+const ServiceCard = ({ title, icon, stu }) => {
+  const router = useRouter();
 
-        </div>
+  const logout = () => {
+    router.push("/login");
+  };
+
+  return (
+    <div className="flex items-center justify-between border border-gray-200 shadow-md mt-8 rounded-xl p-6 bg-white">
+      {/* Icon and Title */}
+      <div className="flex items-center">
+        {icon && <div className="text-xl">{icon}</div>}
+        <div className="ml-6 text-gray-700 ">{title}</div>
+      </div>
+
+      {stu && (
+        <button
+          onClick={logout}
+          className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition-all"
+        >
+          Logout
+        </button>
       )}
     </div>
   );
-}
+};
 
 
 export default Form;

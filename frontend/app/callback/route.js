@@ -24,9 +24,9 @@ async function handler(token) {
     }
 
     try {
-        
-        // const response = await fetch(`https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token=${token}`, {
-        const response = await fetch(`https://cunex.meesoft.co.th/service.svc/ext/type3/profile?token=${token}`, {
+
+        const response = await fetch(`https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token=${token}`, {
+            // const response = await fetch(`https://cunex.meesoft.co.th/service.svc/ext/type3/profile?token=${token}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ async function handler(token) {
 //         secure: process.env.NODE_ENV === 'production',
 //         sameSite: 'Strict',
 //         path: '/'
-        
+
 //     })
 //     // refresh the web and set the new token but not redirect 
 
@@ -75,7 +75,9 @@ export async function GET(req) {
         if (!info) {
             return NextResponse.json({ error: 'Failed to fetch user profile' }, { status: 400 });
         }
-        
+        const currentYear = new Date().getFullYear() + 543; 
+        const studentYearPrefix = parseInt(info.studentId.substring(0, 2), 10);
+        const Convert_Student_Year = currentYear - (studentYearPrefix + 2500);
 
         const Student = {
             title: info.prefix || '',
@@ -91,7 +93,7 @@ export async function GET(req) {
             dept: info.departmentNameTH || '',
             religion: '',
             bd: convertToDate(info.birthdate),
-            // year: info.studentId.substring(info.studentId.length - 2) || '',
+            year: String(Convert_Student_Year) || '',
             id: info.studentId || ''
         };
 
@@ -104,7 +106,7 @@ export async function GET(req) {
             .sign(key);
 
         // await setTOKEN(accessToken).then(() => {console.log('token set')}).catch((err) => {console.log(err)});
-        
+
         // Set the token as a cookie using NextResponse
         const response = NextResponse.redirect(`${process.env.WEB_URL}/student/${Student.id}/home`);
         response.cookies.set('token', accessToken, {

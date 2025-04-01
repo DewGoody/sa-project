@@ -11,11 +11,12 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Space, Select, Modal, Form, Radio, message } from 'antd';
 import axios from 'axios';
+import Menubar from '../component/menu';
 const style = {
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-  };
+};
 
 
 const { Header, Sider, Content } = Layout;
@@ -112,23 +113,23 @@ const AppointmentManagement = () => {
     const [editingUser, setEditingUser] = useState(null);
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if(name === 'newDate'){
+        if (name === 'newDate') {
             setEditingUser({ ...editingUser, [name]: new Date(value).toISOString() });
-        }else{
+        } else {
             setEditingUser({ ...editingUser, [name]: value });
         }
-      };
+    };
 
-      console.log("editingUser", editingUser);
+    console.log("editingUser", editingUser);
     const handleEdit = (record) => {
-    console.log("recordEdit", record);
-      setEditingUser({ ...record, oldDate: new Date(record.date).toISOString(), max_stu: record.max_stu, newDate: new Date(record.date).toISOString() });
-      setIsModalVisible(true);
+        console.log("recordEdit", record);
+        setEditingUser({ ...record, oldDate: new Date(record.date).toISOString(), max_stu: record.max_stu, newDate: new Date(record.date).toISOString() });
+        setIsModalVisible(true);
     };
 
     const handleCancel = () => {
-      setIsModalVisible(false);
-      setEditingUser(null);
+        setIsModalVisible(false);
+        setEditingUser(null);
     };
 
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -136,136 +137,51 @@ const AppointmentManagement = () => {
 
     const handleDelete = (record) => {
         console.log("recordDelete", record);
-      setDeletingUser(record);
-      setIsDeleteModalVisible(true);
+        setDeletingUser(record);
+        setIsDeleteModalVisible(true);
     };
 
     const handleDeleteCancel = () => {
-      setIsDeleteModalVisible(false);
-      setDeletingUser(null);
+        setIsDeleteModalVisible(false);
+        setDeletingUser(null);
     };
 
     const handleDeleteConfirm = async () => {
-      try {
-        setLoading(true);
-        await axios.post("/api/maxStu/delete", { date: deletingUser.date });
-        setLoading(false);
-        setIsDeleteModalVisible(false);
-        setShouldReload(true);
-        message.success("Reopened service successfully!");
-      } catch (error) {
-        setLoading(false);
-        message.error("Reopened service failed!");
-        console.error("Error:", error);
-      }
+        try {
+            setLoading(true);
+            await axios.post("/api/maxStu/delete", { date: deletingUser.date });
+            setLoading(false);
+            setIsDeleteModalVisible(false);
+            setShouldReload(true);
+            message.success("Reopened service successfully!");
+        } catch (error) {
+            setLoading(false);
+            message.error("Reopened service failed!");
+            console.error("Error:", error);
+        }
     };
 
     const handleSave = async () => {
-      try {
-        console.log("editingUser", editingUser);
-        setLoading(true);
-        const response = await axios.post("/api/maxStu/edit", editingUser);
-        setLoading(false);
-        setIsModalVisible(false);
-        setShouldReload(true);
-        message.success("User updated successfully!");
-        console.log("Response:", response.data);
-      } catch (error) {
-        setLoading(false);
-        message.error("Update failed!");
-        console.error("Error:", error);
-      }
+        try {
+            console.log("editingUser", editingUser);
+            setLoading(true);
+            const response = await axios.post("/api/maxStu/edit", editingUser);
+            setLoading(false);
+            setIsModalVisible(false);
+            setShouldReload(true);
+            message.success("User updated successfully!");
+            console.log("Response:", response.data);
+        } catch (error) {
+            setLoading(false);
+            message.error("Update failed!");
+            console.error("Error:", error);
+        }
     };
 
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
-                <div>
-                    <div className="demo-logo-vertical" />
-                    <div className='text-center mt-10 ml-3 mr-3'>
-                        <p className='font-mono font-bold text-xl text-white'>
-                            ฝ่ายทุนการศึกษาและบริการนิสิต
-                        </p>
-                        <p className='font-mono font-bold text-xl text-white'>
-                            สำนักบริหารกิจการนิสิต
-                        </p>
-                        <p className='font-mono font-bold text-xl text-white'>
-                            จุฬาลงกรณ์มหาวิทยาลัย
-                        </p>
-                    </div>
-                    <div className='text-center mt-4 ml-3 mr-3'>
-                        <p className='font-mono font-semibold text-white'>
-                            Department of Scholarships & Student
-                        </p>
-                        <p className='font-mono font-semibold text-white'>
-                            Services, Office of the Student Affairs,
-                        </p>
-                        <p className='font-mono font-semibold text-white'>
-                            Chulalongkorn University
-                        </p>
-                    </div>
-                    <div className="flex justify-center mt-5">
-                        <hr
-                            className="w-11/12"
-                            style={{ borderTop: "5px solid white" }}
-                        />
-                    </div>
-                </div>
-
-                <Menu
-                    style={{ background: "rgb(255,157,210)", marginTop: "20px" }}
-                    defaultSelectedKeys={[selectedKey]}
-                    mode="inline"
-                    onClick={(e) => setSelectedKey(e.key)}
-                    items={[
-                        {
-                            key: '1',
-                            label: <span style={{ color: selectedKey === '1' ? 'black' : 'white' }}>จัดการการนัดหมาย</span>,
-                            onClick: () => window.location.href = '/Admin/home/0'
-                        },
-                        {
-                            key: '2',
-                            label: <span style={{ color: selectedKey === '2' ? 'black' : 'white' }}>ประกันอุบัติเหตุ</span>,
-                            onClick: () => window.location.href = '/Admin/prakan/0'
-                        },
-                        {
-                            key: '3',
-                            label: <span style={{ color: selectedKey === '3' ? 'black' : 'white' }}>การขอผ่อนผันการเข้ารับราชการทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/ponpan/0'
-                        },
-                        {
-                            key: '4',
-                            label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd/0'
-                        },
-                        {
-                            key: '5',
-                            label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard/page/0'
-                        },
-                        {
-                            key: '6',
-                            label: <span style={{ color: selectedKey === '6' ? 'black' : 'white' }}>Health Insurance For Foreigner Student</span>,
-                            onClick: () => window.location.href = '/Admin/prakan-inter/0'
-                        },
-                        {
-                            key: '7',
-                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
-                            onClick: () => window.location.href = '/Admin/editMaxStudent'
-                        },
-                        {
-                            key: '8',
-                            label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
-                            onClick: () => window.location.href = '/Admin/user'
-                        },
-                        {
-                            key: '9',
-                            label: <span style={{ color: selectedKey === '9' ? 'black' : 'white' }}>เปิด-ปิดวันให้บริการ</span>,
-                            onClick: () => window.location.href = '/Admin/editServiceDate'
-                        }
-
-                    ]}
-                />
+                <Menubar />
             </Sider>
             <Layout style={{ background: "rgb(255,157,210)" }}>
                 <Content
@@ -284,7 +200,7 @@ const AppointmentManagement = () => {
                         </div>
                     </div>
                     <div>
-                        
+
                         <Table
                             dataSource={dataSource}
                             columns={[
@@ -302,31 +218,31 @@ const AppointmentManagement = () => {
                                     dataIndex: 'max_stu',
                                     key: 'max_stu',
                                 },
-                               {
-                                           title: 'แก้ไข / ลบ',
-                                           dataIndex: 'edit',
-                                           render: (text, record) => (
-                                               <Space size="middle">
-                                                   <Button
-                                                       // type="primary"
-                                                       onClick={() => {
-                                                           handleEdit(record);
-                                                       }}
-                                                   >
-                                                       แก้ไข
-                                                   </Button>
-                                                   <Button
-                                                       type="primary"
-                                                       // danger
-                                                       onClick={() => {
-                                                           handleDelete(record);
-                                                       }}
-                                                   >
-                                                       ลบ
-                                                   </Button>
-                                               </Space>
-                                           ),
-                                       },
+                                {
+                                    title: 'แก้ไข / ลบ',
+                                    dataIndex: 'edit',
+                                    render: (text, record) => (
+                                        <Space size="middle">
+                                            <Button
+                                                // type="primary"
+                                                onClick={() => {
+                                                    handleEdit(record);
+                                                }}
+                                            >
+                                                แก้ไข
+                                            </Button>
+                                            <Button
+                                                type="primary"
+                                                // danger
+                                                onClick={() => {
+                                                    handleDelete(record);
+                                                }}
+                                            >
+                                                ลบ
+                                            </Button>
+                                        </Space>
+                                    ),
+                                },
                             ]}
                         />
                     </div>
@@ -357,52 +273,52 @@ const AppointmentManagement = () => {
                         visible={isModalVisible}
                         onCancel={handleCancel}
                         footer={[
-                        <Button key="cancel" onClick={handleCancel}>
-                            ปิดหน้าต่าง
-                        </Button>,
-                        <Button key="save" type="primary" loading={loading} onClick={handleSave}>
-                            แก้ไข
-                        </Button>,
+                            <Button key="cancel" onClick={handleCancel}>
+                                ปิดหน้าต่าง
+                            </Button>,
+                            <Button key="save" type="primary" loading={loading} onClick={handleSave}>
+                                แก้ไข
+                            </Button>,
                         ]}
-                        >
+                    >
                         <Form form={formEdit} layout="vertical">
 
-                        <Form.Item label="วันที่">
-                        <Input
-                            type='date'
-                            name="newDate"
-                            value={editingUser?.newDate.split('T')[0]}
-                            onChange={handleInputChange}
-                        />
-                        </Form.Item>
-                        <Form.Item label="เลือกจำนวนนิสิตสูงสุดที่รองรับได้">
-                        <Input
-                            type='number'
-                            name="max_stu"
-                            value={editingUser?.max_stu}
-                            onChange={handleInputChange}
-                        />
-                        
-                        </Form.Item>
-                       
-                        </Form>
-                        </Modal>
+                            <Form.Item label="วันที่">
+                                <Input
+                                    type='date'
+                                    name="newDate"
+                                    value={editingUser?.newDate.split('T')[0]}
+                                    onChange={handleInputChange}
+                                />
+                            </Form.Item>
+                            <Form.Item label="เลือกจำนวนนิสิตสูงสุดที่รองรับได้">
+                                <Input
+                                    type='number'
+                                    name="max_stu"
+                                    value={editingUser?.max_stu}
+                                    onChange={handleInputChange}
+                                />
 
-    <Modal
-      title="ต้องการเปิดวันให้บริการใช่ไหม"
-      visible={isDeleteModalVisible}
-      onCancel={handleDeleteCancel}
-      footer={[
-        <Button key="cancel" onClick={handleDeleteCancel}>
-          ปิดหน้าต่าง
-        </Button>,
-        <Button key="delete" type="primary" loading={loading} onClick={handleDeleteConfirm}>
-          เปิดกลับมาให้บริการอีกครั้ง
-        </Button>,
-      ]}
-    >
-      <p>คุณต้องการจะเปิดวันนี้ให้กลับมาให้บริการได้อีกครั้งใช่ไหม</p>
-    </Modal>
+                            </Form.Item>
+
+                        </Form>
+                    </Modal>
+
+                    <Modal
+                        title="ต้องการเปิดวันให้บริการใช่ไหม"
+                        visible={isDeleteModalVisible}
+                        onCancel={handleDeleteCancel}
+                        footer={[
+                            <Button key="cancel" onClick={handleDeleteCancel}>
+                                ปิดหน้าต่าง
+                            </Button>,
+                            <Button key="delete" type="primary" loading={loading} onClick={handleDeleteConfirm}>
+                                เปิดกลับมาให้บริการอีกครั้ง
+                            </Button>,
+                        ]}
+                    >
+                        <p>คุณต้องการจะเปิดวันนี้ให้กลับมาให้บริการได้อีกครั้งใช่ไหม</p>
+                    </Modal>
 
                 </Content>
             </Layout>
