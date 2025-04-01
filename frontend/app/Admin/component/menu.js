@@ -4,18 +4,18 @@ import React, { useState, useEffect } from "react";
 import { Menu } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 
-
 const Menubar = () => {
     const router = useRouter();
-    const logout = () => {
-        router.push("/login");
-    }
-    const pathname = usePathname(); // ✅ ใช้ `usePathname()` เพื่อให้แน่ใจว่า Next.js รู้จัก path ปัจจุบัน
+    const pathname = usePathname();
     const [selectedKey, setSelectedKey] = useState(pathname || "/Admin/home/0");
 
     useEffect(() => {
         setSelectedKey(pathname);
-    }, [pathname]); // ✅ ทำให้ selectedKey อัปเดตอัตโนมัติเมื่อเปลี่ยนเส้นทาง
+    }, [pathname]);
+
+    const logout = () => {
+        router.push("/login");
+    };
 
     const menuItems = [
         { key: "/Admin/home/0", label: "จัดการการนัดหมาย" },
@@ -30,9 +30,8 @@ const Menubar = () => {
     ];
 
     return (
-        <div>
-            {/* ✅ เพิ่มส่วนหัวเมนู */}
-            <div className="demo-logo-vertical" />
+        <div className="h-screen flex flex-col">
+            {/* ✅ หัวเมนู */}
             <div className="text-center mt-10 ml-3 mr-3">
                 <p className="font-mono font-bold text-xl text-white">
                     ฝ่ายทุนการศึกษาและบริการนิสิต
@@ -60,32 +59,38 @@ const Menubar = () => {
             </div>
 
             {/* ✅ เมนูหลัก */}
-            <Menu
-                selectedKeys={[selectedKey]}
-                style={{
-                    background: "rgb(255,157,210)",
-                    marginTop: "20px",
-                    height: "100%",
-                    borderRight: 0,
-                }}
-                mode="inline"
-                onClick={(e) => {
-                    setSelectedKey(e.key);
-                    router.push(e.key);
-                }}
-                items={menuItems.map((item) => ({
-                    key: item.key,
-                    label: (
-                        <span style={{ color: selectedKey === item.key ? "black" : "white" }}>
-                            {item.label}
-                        </span>
-                    ),
-                }))}
-            />
-            <div>
-                <button className="w-full text-pink"
-                    onClick={logout} >Logout</button>
+            <div className="flex-1 overflow-y-auto">
+                <Menu
+                    selectedKeys={[selectedKey]}
+                    style={{
+                        background: "rgb(255,157,210)",
+                        marginTop: "20px",
+                        borderRight: 0,
+                    }}
+                    mode="inline"
+                    onClick={(e) => {
+                        setSelectedKey(e.key);
+                        router.push(e.key);
+                    }}
+                    items={menuItems.map((item) => ({
+                        key: item.key,
+                        label: (
+                            <span style={{ color: selectedKey === item.key ? "black" : "white" }}>
+                                {item.label}
+                            </span>
+                        ),
+                    }))}
+                />
+            </div>
 
+            {/* ✅ ปุ่ม Logout ที่อยู่ล่างสุด */}
+            <div className="p-4">
+                <button
+                    className="w-full py-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition"
+                    onClick={logout}
+                >
+                    Logout
+                </button>
             </div>
         </div>
     );
