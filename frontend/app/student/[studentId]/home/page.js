@@ -39,6 +39,9 @@ export const Form = () => {
   const [RD, SETRD] = useState(true)
   const [GC, SETGC] = useState(true)
   const router = useRouter();
+  const logout = () => {
+    router.push("/login");
+  }
   const showModal = (item) => {
     console.log("item :", item);
     setDeleteQueueId(item.id);
@@ -314,6 +317,11 @@ export const Form = () => {
                 title={profileData ? profileData.fnameTH + " " + profileData.lnameTH + " " + profileData.id : ""}
                 icon={<FaUser />}
               />
+              <button
+              onClick={logout}
+              >
+                Logout
+              </button>
             </div>
 
             <div className=" py-8">

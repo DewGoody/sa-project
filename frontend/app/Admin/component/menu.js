@@ -4,8 +4,12 @@ import React, { useState, useEffect } from "react";
 import { Menu } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 
+
 const Menubar = () => {
     const router = useRouter();
+    const logout = () => {
+        router.push("/login");
+    }
     const pathname = usePathname(); // ✅ ใช้ `usePathname()` เพื่อให้แน่ใจว่า Next.js รู้จัก path ปัจจุบัน
     const [selectedKey, setSelectedKey] = useState(pathname || "/Admin/home/0");
 
@@ -78,6 +82,11 @@ const Menubar = () => {
                     ),
                 }))}
             />
+            <div>
+                <button className="w-full text-pink"
+                    onClick={logout} >Logout</button>
+
+            </div>
         </div>
     );
 };
