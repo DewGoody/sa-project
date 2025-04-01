@@ -313,6 +313,7 @@ export const Form = () => {
               <ServiceCard
                 title={profileData ? profileData.fnameTH + " " + profileData.lnameTH + " " + profileData.id : ""}
                 icon={<FaUser />}
+                stu={true}
               />
             </div>
 
@@ -591,7 +592,7 @@ export const Form = () => {
   );
 }
 
-const ServiceCard = ({ title, icon }) => {
+const ServiceCard = ({ title, icon, stu }) => {
   const router = useRouter();
 
   const logout = () => {
@@ -603,16 +604,17 @@ const ServiceCard = ({ title, icon }) => {
       {/* Icon and Title */}
       <div className="flex items-center">
         {icon && <div className="text-xl">{icon}</div>}
-        <div className="ml-6 text-gray-700 font-medium text-lg">{title}</div>
+        <div className="ml-6 text-gray-700 ">{title}</div>
       </div>
 
-      {/* Logout Button on the right */}
-      <button
-        onClick={logout}
-        className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition-all"
-      >
-        Logout
-      </button>
+      {stu && (
+        <button
+          onClick={logout}
+          className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition-all"
+        >
+          Logout
+        </button>
+      )}
     </div>
   );
 };
