@@ -11,6 +11,7 @@ import {
     OrderedListOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Divider, Radio, Space, Modal, Select } from 'antd';
+import Menubar from '../../../component/menu';
 
 
 
@@ -103,33 +104,17 @@ const App = () => {
     }
 
     const showModal = (record) => {
-        setReqMoreInfo(record.reqId);
-        setMoreInfoValue(record.more_info || ""); // ✅ ตั้งค่าให้แก้ไขได้
-        console.log("moreinfo :", record.more_info);
+        setReqMoreInfo(record);
         console.log("recordModalJa :", record);
-
         setIsModalOpen(true);
     };
 
 
-    const handleOk = async () => {
-        if (!reqMoreInfo) {
-            console.error("reqMoreInfo is null or undefined");
-            return;
-        }
+    const handleOk = () => {
+        const response = axios.post('/api/request/createMoreInfo', { id: parseInt(reqMoreInfo), more_info: moreInfoValue });
 
-        try {
-            await axios.post("/api/request/createMoreInfo", {
-                id: parseInt(reqMoreInfo),
-                more_info: moreInfoValue
-            });
-
-            setIsModalOpen(false);
-        } catch (error) {
-            console.error("Error sending request:", error);
-        }
+        setIsModalOpen(false);
     };
-
 
 
     const handleCancel = () => {
@@ -699,60 +684,9 @@ const App = () => {
 
                 </>
 
-                <Menu
-                    style={{ background: "rgb(255,157,210)", marginTop: "20px", height: '100%', borderRight: 0 }}
-                    defaultSelectedKeys={[selectedKey]}
-                    mode="inline"
-                    onClick={(e) => setSelectedKey(e.key)}
-                    items={[
-                        {
-                            key: '1',
-                            label: <span style={{ color: selectedKey === '1' ? 'black' : 'white' }}>จัดการการนัดหมาย</span>,
-                            onClick: () => window.location.href = '/Admin/home/0'
-                        },
-                        {
-                            key: '2',
-                            label: <span style={{ color: selectedKey === '2' ? 'black' : 'white' }}>ประกันอุบัติเหตุ</span>,
-                            onClick: () => window.location.href = '/Admin/prakan/0'
-                        },
-                        {
-                            key: '3',
-                            label: <span style={{ color: selectedKey === '3' ? 'black' : 'white' }}>การขอผ่อนผันการเข้ารับราชการทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/ponpan/0'
-                        },
-                        {
-                            key: '4',
-                            label: <span style={{ color: selectedKey === '4' ? 'black' : 'white' }}>การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร</span>,
-                            onClick: () => window.location.href = '/Admin/rd/0'
-                        },
-                        {
-                            key: '5',
-                            label: <span style={{ color: selectedKey === '5' ? 'black' : 'white' }}>บัตรทอง</span>,
-                            onClick: () => window.location.href = '/Admin/goldencard/page/0'
-                        },
-                        {
-                            key: '6',
-                            label: <span style={{ color: selectedKey === '6' ? 'black' : 'white' }}>Health Insurance For Foreigner Student</span>,
-                            onClick: () => window.location.href = '/Admin/prakan-inter/0'
-                        },
-                        {
-                            key: '7',
-                            label: <span style={{ color: selectedKey === '7' ? 'black' : 'white' }}>จัดการจำนวนผู้เข้ารับบริการ</span>,
-                            onClick: () => window.location.href = '/Admin/editMaxStudent'
-                        },
-                        {
-                            key: '8',
-                            label: <span style={{ color: selectedKey === '8' ? 'black' : 'white' }}>จัดการผู้ใช้งาน</span>,
-                            onClick: () => window.location.href = '/Admin/user'
-                        },
-                        {
-                            key: '9',
-                            label: <span style={{ color: selectedKey === '9' ? 'black' : 'white' }}>เปิด-ปิดวันให้บริการ</span>,
-                            onClick: () => window.location.href = '/Admin/editServiceDate'
-                        }
-                    ]}
-                />
+                <Menubar/>
             </Sider>
+
             <Layout style={{ background: "rgb(255,157,210)" }}>
                 <Content
                     style={{
@@ -819,17 +753,19 @@ const App = () => {
                             <Button key="submit" type="primary" onClick={handleOk}>
                                 ยืนยัน
                             </Button>,
-
                         ]}
                     >
                         <textarea
                             style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
                             onChange={(e) => setMoreInfoValue(e.target.value)}
-                            value={moreInfoValue} 
-                        />
-
+                        >
+                            {Data.map((item) => {
+                                if (item.reqId === reqMoreInfo) {
+                                    return item.more_info
+                                }
+                            })}
+                        </textarea>
                     </Modal>
-
                 </Content>
             </Layout>
         </Layout>
