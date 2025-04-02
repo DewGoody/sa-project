@@ -20,7 +20,6 @@ function Page() {
 
     const requiredFields = [
       
-     
     ];
 
     for (let field of requiredFields) {
