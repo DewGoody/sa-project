@@ -1,59 +1,90 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from "react";
-import { useRouter,useParams } from 'next/navigation';
+import { useRouter, useParams } from "next/navigation";
 import axios from "axios";
 import { Header } from "../../../../components/Header.js";
 import numberToThaiText from "../../../../components/numberToThaiText.js";
+import { PatternFormat } from "react-number-format";
 
 function Page() {
   const [vendorData, setVendorData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [profileData, setProfileData] = useState(null);
-  const {studentId} = useParams();
+  const { studentId } = useParams();
   const { form } = useParams();
   const router = useRouter();
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
 
     const requiredFields = [
-      
-     
+      "houseID",
+      "moo",
+      "buildingVillage",
+      "soi",
+      "road",
+      "subDistrict",
+      "district",
+      "province",
+      "postalCode",
+      "tel",
+      "citizenId",
+      "citizenIssueDate",
+      "citizenExpireDate",
+      "claimType",
+      "amount",
+      "bankCompany",
+      "bankBranch",
+      "bankAccountType",
+      "bankAccountName",
+      "bankAccountNumber",
     ];
-
+    vendorData.citizenId = vendorData.citizenId.replace(/-/g, "");
     for (let field of requiredFields) {
       if (!vendorData[field] || vendorData[field].trim() === "") {
         alert(`Please fill in the "${field}" field.`);
         return;
       }
     }
-    
-    console.log(vendorData);
-   if(studentId !== '0'){
-    if(form !== '0'){
-      try {
-        const response = await axios.post("/api/vendor/update", vendorData);
-        console.log("update", response.data);
-        const reqId = response.data.data.req_id
-        router.push(`/student/${studentId}/vendor/checkVendor/${reqId}`);
-      } catch (error) {
-        console.error(error);
-      }
-    }else{
-      try {
-        const response = await axios.post("/api/vendor/create", vendorData);
-        console.log(response.data);
-        const reqId = response.data.data.req_id
-        router.push(`/student/${studentId}/vendor/checkVendor/${reqId}`);
-      } catch (error) {
-        console.error(error);
+    if (vendorData.claimType === "อื่นๆ (ระบุ)") {
+      if (!vendorData.claimOtherReason) {
+        alert(`Please fill in the "Other case, please specify" field.`);
+        return;
       }
     }
-   }
-   
-    
+    if (vendorData.citizenIssueDate > vendorData.citizenExpireDate) {
+      alert("Identification card issue date must be before expire date");
+      return;
+    }
+    if (vendorData.citizenId.length !== 13) {
+      alert("Identification number must be 13 digits");
+      return;
+    }
+
+    console.log(vendorData);
+    if (studentId !== "0") {
+      if (form !== "0") {
+        try {
+          const response = await axios.post("/api/vendor/update", vendorData);
+          console.log("update", response.data);
+          const reqId = response.data.data.req_id;
+          router.push(`/student/${studentId}/vendor/checkVendor/${reqId}`);
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        try {
+          const response = await axios.post("/api/vendor/create", vendorData);
+          console.log(response.data);
+          const reqId = response.data.data.req_id;
+          router.push(`/student/${studentId}/vendor/checkVendor/${reqId}`);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
   };
   const handleChange = (event, field) => {
     console.log(field + " : " + event.target.value);
@@ -79,7 +110,6 @@ function Page() {
         nameTH: response.data.fnameTH + " " + response.data.lnameTH,
         faculty: response.data.facultyNameTH,
       }));
-
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -103,17 +133,14 @@ function Page() {
   console.log("vendorData", vendorData);
 
   useEffect(() => {
-    if(studentId !== '0'){
+    if (studentId !== "0") {
       fetchProfile();
-      if(form !== '0'){
+      if (form !== "0") {
         fetchVendorData();
-        console.log("formKKK : ", form);
       }
-    }else{
-      
+    } else {
       fetchVendorData();
     }
-
   }, []);
 
   if (loading) return <div>Loading...</div>;
@@ -148,9 +175,7 @@ function Page() {
                       disabled
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="ชื่อและนามสกุล (Name-Surname)"
-                       value={
-                        profileData?.fnameTH + " " + profileData?.lnameTH
-                      }
+                      value={profileData?.fnameTH + " " + profileData?.lnameTH}
                     />
                   </div>
                   <div className="pt-4 md:pt-0">
@@ -160,7 +185,7 @@ function Page() {
                     <select
                       id="faculty"
                       disabled
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-[#f3f4f6]"
                       value={vendorData.facultyNameTH}
                     >
                       <option defaultValue value="null">
@@ -347,13 +372,15 @@ function Page() {
                     <label className="block text-gray-700 mb-2">
                       เลขบัตรประชาชน (Identification number)
                     </label>
-                    <input
-                      type="text"
+                    <PatternFormat
+                      ype="text"
                       name="citizenId"
                       value={vendorData?.citizenId}
                       onChange={(event) => handleChange(event, "citizenId")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="เลขบัตรประชาชน (Identification number)"
+                      format="#-####-#####-##-#"
+                      allowEmptyFormatting
+                      mask="_"
                     />
                   </div>
                   <div>
@@ -383,7 +410,6 @@ function Page() {
                         handleChange(event, "citizenExpireDate")
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      max={new Date()?.toISOString()?.slice(0, 10)}
                     />
                   </div>
                 </div>
@@ -428,17 +454,30 @@ function Page() {
                     <label className="block text-gray-700 mb-2 ">
                       กรณีอื่นๆ โปรดระบุ (Other case, please specify)
                     </label>
-                    <input
-                      type="text"
-                      name="claimOtherReason"
-                      value={vendorData?.claimOtherReason}
-                      onChange={(event) =>
-                        handleChange(event, "claimOtherReason")
-                      }
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
-                      placeholder="กรณีอื่นๆ โปรดระบุ (Other case, please specify)"
-                      defaultValue={"test"}
-                    />
+                    {vendorData?.claimType === "อื่นๆ (ระบุ)" ? (
+                      <input
+                        type="text"
+                        name="claimOtherReason"
+                        value={vendorData?.claimOtherReason}
+                        onChange={(event) =>
+                          handleChange(event, "claimOtherReason")
+                        }
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
+                        placeholder="กรณีอื่นๆ โปรดระบุ (Other case, please specify)"
+                      />
+                    ) : (
+                      <input
+                        type="text"
+                        name="claimOtherReason"
+                        value={vendorData?.claimOtherReason}
+                        disabled
+                        onChange={(event) =>
+                          handleChange(event, "claimOtherReason")
+                        }
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
+                        placeholder="กรณีอื่นๆ โปรดระบุ (Other case, please specify)"
+                      />
+                    )}
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
@@ -455,7 +494,7 @@ function Page() {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
-                    บัญชีของธนาคาร (Bank)
+                      บัญชีของธนาคาร (Bank)
                     </label>
                     <input
                       type="text"
@@ -463,7 +502,7 @@ function Page() {
                       value={vendorData?.bankCompany}
                       onChange={(event) => handleChange(event, "bankCompany")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                     placeholder="บัญชีของธนาคาร (Bank)"
+                      placeholder="บัญชีของธนาคาร (Bank)"
                     />
                   </div>
                   <div>
