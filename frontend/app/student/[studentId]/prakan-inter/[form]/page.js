@@ -57,43 +57,30 @@ function page() {
   const handleSubmit = (event) => {
     // event.preventDefault(); // Prevent the default form submission behavior
 
-    // // List of required fields
-    // const requiredFields = [
-    //   "title",
-    //   "lnameEN",
-    //   "fnameEN",
-    //   "id",
-    //   "phone_num",
-    //   "presentAddress",
-    //   "bd",
-    // ];
+    // List of required fields
+    const requiredFields = [
+      "title",
+      "lnameEN",
+      "fnameEN",
+      "id",
+      "phone_num",
+      "presentAddress",
+      "bd",
+      "hospitalName",
+      "hospitalProvince",
+      "hospitalPhoneNumber",
+      "hospitalAmittedDate",
+      "hospitalDischargedDate",
+    ];
 
-    // // Check if all required fields are present and not empty
-    // for (let field of requiredFields) {
-    //   if (!prakanData[field] || prakanData[field].trim() === "") {
-    //     alert(`Please fill in the "${field}" field.`);
-    //     return;
-    //   }
-    // }
+    // Check if all required fields are present and not empty
+    for (let field of requiredFields) {
+      if (!prakanData[field] || prakanData[field].trim() === "") {
+        alert(`Please fill in the "${field}" field.`);
+        return;
+      }
+    }
 
-    // if (claimType === "accident") {
-    //   const accidentRequiredFields = [
-    //     "accidentDate",
-    //     "accidentTime",
-    //     "accidentCause",
-    //     "hospitalName",
-    //     "hospitalProvince",
-    //     "hospitalPhoneNumber",
-    //     "hospitalAmittedDate",
-    //     "hospitalDischargedDate",
-    //   ];
-
-    //   for (let field of accidentRequiredFields) {
-    //     if (!prakanData[field] || prakanData[field].trim() === "") {
-    //       alert(`Please fill in the "${field}" field.`);
-    //       return;
-    //     }
-    //   }
     // } else if (claimType === "illness") {
     //   const illnessRequiredFields = [
     //     "hospitalName",
@@ -123,7 +110,9 @@ function page() {
         .post("/api/prakanInter/create", allData)
         .then((response) => {
           console.log("Form submitted successfully:", response.data);
-          router.push(`/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/0`);
+          router.push(
+            `/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/0`
+          );
         })
         .catch((error) => {
           console.error("Error submitting form:", error);
@@ -180,14 +169,12 @@ function page() {
   return (
     <>
       <div className=" bg-white min-h-screen">
-        <Header
-          req1="Health Insurance For Foreigner Student (Claim Illness)"
-        />
+        <Header req1="Health Insurance For Foreigner Student (Claim Illness)" />
         <div className=" mx-24 ">
           <main className="flex justify-center bg-white w-full">
             <div className="bg-white  w-full min-w-screen-6xl">
               <section className="ml-5 py-4">
-              <div
+                <div
                   class="flex items-center p-4 mb-4 text-sm text-pink-500 border border-pink-400 rounded-lg bg-pink-50 "
                   role="alert"
                 >
@@ -204,21 +191,18 @@ function page() {
                   <div>
                     This service covers illnesses only. For accidents, please
                     use the accident insurance claim service.{"   "}
-                    
-                      <span 
-                        onClick={() => {
-                          router.push(`/student/${studentId}/prakan/0`);
-                        }
-                      }
-                        className="font-medium underline cursor-pointer"
-                      >
-                          Click Here!
-                      </span>
-                    
+                    <span
+                      onClick={() => {
+                        router.push(`/student/${studentId}/prakan/0`);
+                      }}
+                      className="font-medium underline cursor-pointer"
+                    >
+                      Click Here!
+                    </span>
                   </div>
                 </div>
                 <h3 className="text-lg font-semibold my-4 flex gap-4">
-                <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 ">
+                  <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 ">
                     1
                   </span>
                   Personal information
@@ -250,6 +234,7 @@ function page() {
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Name"
                         defaultValue={profileData?.fnameEN}
+                        disabled
                       />
                     </div>
                   </div>
@@ -263,6 +248,7 @@ function page() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                       placeholder="Surname"
                       defaultValue={profileData?.lnameEN}
+                      disabled
                     />
                   </div>
                   <div>
@@ -277,6 +263,7 @@ function page() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Student ID"
                       defaultValue={profileData?.id}
+                      disabled
                     />
                   </div>
                   <div>
@@ -295,7 +282,7 @@ function page() {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      Present address
+                      Current address
                     </label>
                     <input
                       type="text"
@@ -336,11 +323,11 @@ function page() {
               </section>
 
               <div className="flex justify-between mt-8">
-                {/*TODO Edit Link*/}
-                <a onClick={()=>{
-                  router.push(`/student/${studentId}/home`)
-                }
-                }>
+                <a
+                  onClick={() => {
+                    router.push(`/student/${studentId}/home`);
+                  }}
+                >
                   <button className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11">
                     Back
                   </button>
