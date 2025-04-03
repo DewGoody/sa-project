@@ -572,11 +572,17 @@ function Page() {
             </div>
             <div>
               <div className="flex justify-between mt-8">
-                <a href="/home">
-                  <button className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11">
+                
+                  <button 
+                    className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                    onClick={() => {
+                      router.push(`/student/${studentId}/home`);
+                    }
+                    }
+                  >
                     Back
                   </button>
-                </a>
+                
 
                 <button
                   onClick={handleSubmit}

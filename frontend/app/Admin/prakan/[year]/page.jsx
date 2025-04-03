@@ -194,68 +194,34 @@ const App = () => {
     const handleChangeStatus = async (record) => {
         setStatusRequest(record.status);
         console.log("record", record);
-        if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
+        try {
+            setLoading(true);
+            let res;
+            if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
+                res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
+            } else if (record.status === "ส่งเอกสารแล้ว") {
+                res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+            } else if (record.status === "ขอข้อมูลเพิ่มเติม") {
+                res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
+            } else if (record.status === "ไม่อนุมัติ") {
+                res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
+            } else if (record.status === "โอนเงินเรียบร้อย") {
+                res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
             }
-        }
-        else if (record.status === "ส่งเอกสารแล้ว") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
-        }
+            console.log("res", res);
 
-        else if (record.status === "ขอข้อมูลเพิ่มเติม") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("resPerm", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
+            // Update the dataSource without refreshing the page
+            setDataSource((prevDataSource) =>
+                prevDataSource.map((item) =>
+                    item.reqId === record.reqId ? { ...item, status: record.status } : item
+                )
+            );
+        } catch (error) {
+            console.error('Error updating status:', error);
+        } finally {
+            setLoading(false);
         }
-        else if (record.status === "ไม่อนุมัติ") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
-        }
-        else if (record.status === "โอนเงินเรียบร้อย") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("resOwn", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
-        }
-    }
+    };
 
 
     const columns = [
