@@ -23,7 +23,7 @@ export async function createPrakan(data) {
         data: {
             type: "การเบิกจ่ายประกันอุบัติเหตุ",
             status: "รอจองคิว",
-            stu_id: data.stu_id,
+            stu_id: data.id,
         }
     })   
 
