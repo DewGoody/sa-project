@@ -432,6 +432,10 @@ const App = () => {
         {
             title: 'ค่ารักษาพบาบาล',
             dataIndex: 'medical_fee',
+            render: (text) => {
+                const number = parseFloat(text.replace(/[^\d.-]/g, ''));
+                return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            },
         },
 
     ];
