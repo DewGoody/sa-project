@@ -208,65 +208,36 @@ const App = () => {
         console.log("editFormResponse :", response.data.data.path);
         router.push(`/Admin/goldencard/${response.data.data.form}`);
     }
+
+
+
     const handleChangeStatus = async (record) => {
-        console.log("status11", parseInt(record.status))
-        if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusProcess', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
+        try {
+            setLoading(true);
+            let res;
+            if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
+                res = await axios.post('/api/request/changeStatusProcess', { id: parseInt(record.reqId) });
+            } else if (record.status === "ขอข้อมูลเพิ่มเติม") {
+                res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
+            }else if (record.status === "ส่งข้อมูลให้ รพ. แล้ว") {
+                res = await axios.post('/api/request/changeStatusToHospital', { id: parseInt(record.reqId) });
+            } else if (record.status === "ย้ายสิทธิ์สำเร็จ") {
+                res = await axios.post('/api/request/changeToTranApprove', { id: parseInt(record.reqId) });
+            } else if (record.status === "ย้ายสิทธิ์ไม่สำเร็จ") {
+                res = await axios.post('/api/request/changeToTranNotApprove', { id: parseInt(record.reqId) });
             }
-        } else if (record.status === "ขอข้อมูลเพิ่มเติม") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
+            console.log("res", res);
+            setData((prevDataSource) =>
+                prevDataSource.map((item) =>
+                    item.reqId === record.reqId ? { ...item, status: record.status } : item
+                )
+            );
+        } catch (error) {
+            console.error('Error updating status:', error);
+        } finally {
+            setLoading(false);
         }
-        else if (record.status === "ส่งข้อมูลให้ รพ. แล้ว") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToHospital', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
-        } else if (record.status === "ย้ายสิทธิ์สำเร็จ") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeToTranApprove', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
-        } else if (record.status === "ย้ายสิทธิ์ไม่สำเร็จ") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/ç', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
-        }
+
     }
 
     const handleSearch = (value, dataIndex) => {
@@ -421,7 +392,7 @@ const App = () => {
                                 options={options}
                                 onChange={(value) => handleChangeStatus({ ...record, status: value })}
                             />
-                            {record.status === "ขอข้อมูลเพิ่มเติม" ?
+                            {(record.status === "ขอข้อมูลเพิ่มเติม" || record.status === "ย้ายสิทธิ์ไม่สำเร็จ") ?
                                 <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
                                 : null}
                         </div>
@@ -610,18 +581,37 @@ const App = () => {
     useEffect(() => {
         console.log("Updated selected reqids:", selectedRowReqid);
     }, [selectedRowReqid]);
+    // const handleChangeStatusAll = async (ids, status) => {
+    //     try {
+    //         setLoading(true);
+    //         setShouldReload(true);
+    //         const res = await axios.post('/api/request/changeStatusAll', { ids, status });
+    //         setLoading(false);
+    //         setShouldReload(false);
+    //         console.log("res", res);
+
+    //     } catch (error) {
+    //         console.log(error);
+
+    //     }
+    // }
     const handleChangeStatusAll = async (ids, status) => {
         try {
-            setLoading(true);
-            setShouldReload(true);
-            const res = await axios.post('/api/request/changeStatusAll', { ids, status });
-            setLoading(false);
-            setShouldReload(false);
-            console.log("res", res);
+        setLoading(true);
+        const res = await axios.post('/api/request/changeStatusAll', { ids, status });
+        console.log("res", res);
+
+        // Update the dataSource without refreshing the page
+        setData((prevDataSource) =>
+            prevDataSource.map((item) =>
+            ids.includes(item.reqId) ? { ...item, status } : item
+            )
+        );
 
         } catch (error) {
-            console.log(error);
-
+        console.log(error);
+        } finally {
+        setLoading(false);
         }
     }
 
@@ -655,7 +645,7 @@ const App = () => {
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
-                <Menubar/>
+                <Menubar />
             </Sider>
 
             <Layout style={{ background: "rgb(255,157,210)" }}>
@@ -709,7 +699,7 @@ const App = () => {
 
                     </div>
                     <Table
-                        rowSelection={rowSelection} columns={columns} dataSource={Data}
+                        rowSelection={rowSelection} columns={columns} dataSource={Data} loading={loading}
                         bordered
                     />
                     <Modal
