@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { Header } from '../../../../../components/Header.js';
+import { Header } from '../../../../../../components/Header.js';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
@@ -25,8 +25,10 @@ const RD = () => {
     const [error, setError] = useState(null);
     const [isDownload, setIsDownload] = useState(false);
     const router = useRouter();
+    const { reqId } = useParams();
     const { form } = useParams();
-    console.log("formId :", form);
+    console.log("reqId :", reqId);
+    console.log("form :", form);
 
 
     useEffect(() => {
@@ -49,9 +51,10 @@ const RD = () => {
 
     const handleDownload = async () => {        
         const response = await axios.post('/api/prakan/createPdf', {form: form})
+        console.log("responseDownload", response.data);
         setPrakanData(response.data.data)
         const link = document.createElement('a');
-        link.href = '../../../../documents/accident/'+response.data.data.Student.id+'_accident_insurance.pdf';
+        link.href = '../../../../../documents/accident/'+response.data.data.Student.id+'_accident_insurance.pdf';
         link.download = response.data.data.Student.id+'_accident_insurance.pdf';
         document.body.appendChild(link);
         link.click();
@@ -85,19 +88,20 @@ const RD = () => {
 
     // Function to handle navigation attempt
     const handleNavigation = async (event) => {
-        const response = await axios.post(`/api/request/create`, { type: "การเบิกจ่ายประกันอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id, formId: form });
-        setCreateRequest(response.data);
-        console.log("createRequest", createRequest);
-        const param = response.data.data.id;
-        console.log("responseRequest", response.data);
-        console.log("param", param);
+        // const response = await axios.post(`/api/request/create`, { type: "การเบิกจ่ายประกันอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id, formId: form });
+        // setCreateRequest(response.data);
+        // console.log("createRequest", createRequest);
+        // const param = response.data.data.id;
+        // console.log("responseRequest", response.data);
+        // console.log("param", param);
+        await axios.post(`/api/request/changeStatusToWaitBook`, {req_id:reqId});
 
         if (!allChecked()) {
             event.preventDefault();
             alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
         } else {
             const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
-            router.push(`/student/${studentId}/appointment/${param}/0`);
+            router.push(`/student/${studentId}/appointment/${reqId}/0`);
         }
     };
 
