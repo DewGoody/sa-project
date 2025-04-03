@@ -387,6 +387,9 @@ export const Form = () => {
 
                           )
                           }
+
+
+
                         </div>
                       )}
 
@@ -421,6 +424,13 @@ export const Form = () => {
                         </div>
                       </div>
                       <div className="mb-3 flex mr-1">
+                        {item.status == "ขอข้อมูลเพิ่มเติม" && (
+                          <div className="ml-3 mt- mb-3 flex">
+                            <button onClick={() => { showModalCheckInfo(item.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
+                              view detail
+                            </button>
+                          </div>
+                        )}
                         {!(item.status === "ย้ายสิทธิ์สำเร็จ" ||
                           item.status === "ส่งข้อมูลให้ รพ. แล้ว" ||
                           item.status === "ย้ายสิทธิ์ไม่สำเร็จ") && (
@@ -458,13 +468,7 @@ export const Form = () => {
                             </div>
 
                           )}
-                        {item.status == "ขอข้อมูลเพิ่มเติม" && (
-                          <div className="ml-3 mt- mb-3 flex">
-                            <button onClick={() => { showModalCheckInfo(item.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
-                              view detail
-                            </button>
-                          </div>
-                        )}
+
                       </div>
                     </div>
 
