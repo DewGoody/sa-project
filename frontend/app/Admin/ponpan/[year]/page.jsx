@@ -248,13 +248,26 @@ const AppointmentManagement = () => {
         };
 
         const dropdown = () => {
-                const handleSelect = async (value) => {
-                    try {
-                        handleChangeStatusAll( selectedRowReqidapi, value )
-                    } catch (error) {
-                        console.error("Error:", error);
+            const handleSelect = async (value) => {
+                try {
+                setLoading(true);
+                await handleChangeStatusAll(selectedRowReqidapi, value);
+                const updatedDataSource = dataSource.map((item) => {
+                    if (selectedRowReqidapi.includes(item.reqId)) {
+                    return { ...item, status: value };
                     }
-                };
+                    return item;
+                });
+                setDataSource(updatedDataSource);
+                setSelectedRowKeys([]);
+                setSelectedRowReqid([]);
+                setSelectedRowReqidapi([]);
+                setLoading(false);
+                } catch (error) {
+                console.error("Error:", error);
+                setLoading(false);
+                }
+            };
         
                 return (
                     <Select
@@ -289,55 +302,35 @@ const AppointmentManagement = () => {
     const handleChangeStatus = async (record) => {
         setStatusRequest(record.status);
         console.log("record", record);
-        if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
+        try {
+            setLoading(true);
+            let res;
+            if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
+                res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
+            } else if (record.status === "ส่งเอกสารแล้ว") {
+                res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+            } else if (record.status === "ติดต่อรับเอกสาร") {
+                res = await axios.post('/api/request/changeStatusToRecieveDoc', { id: parseInt(record.reqId) });
+            } else if (record.status === "รับเอกสารเรียบร้อย") {
+                res = await axios.post('/api/request/changeStatusToFinishRecieve', { id: parseInt(record.reqId) });
             }
-        }
-        else if (record.status === "ส่งเอกสารแล้ว") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
+
+            if (res && res.status === 200) {
+                // Update the dataSource with the new status
+                const updatedDataSource = dataSource.map((item) => {
+                    if (item.reqId === record.reqId) {
+                        return { ...item, status: record.status };
+                    }
+                    return item;
+                });
+                setDataSource(updatedDataSource);
             }
+            setLoading(false);
+        } catch (error) {
+            console.error('Error updating status:', error);
+            setLoading(false);
         }
-        else if (record.status === "ติดต่อรับเอกสาร") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToRecieveDoc', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
-        }
-        else if (record.status === "รับเอกสารเรียบร้อย") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToFinishRecieve', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
-        }
-    }
+    };
 
     const handleSearch = (value, dataIndex) => {
         setSearchText(value);

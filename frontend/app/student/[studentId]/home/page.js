@@ -403,8 +403,8 @@ export const Form = () => {
                           <div className="ml-4 text-md">
                             {item.type !== "โครงการหลักประกันสุขภาพถ้วนหน้า" && (
                               <div>
-                                <p className="mt-2">อาคารจุลจักรพงษ์ ชั้น 2</p>
-                                <p className="">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
+                                <p className="text-gray-500 font-semibold text-base">อาคารจุลจักรพงษ์ ชั้น 2</p>
+                                <p className="text-gray-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                               </div>
                             )}
                             <div className="flex">
@@ -421,13 +421,17 @@ export const Form = () => {
                         </div>
                       </div>
                       <div className="flex ml-50">
-                        {item.status !== "ย้ายสิทธิ์สำเร็จ" || item.status !== "ส่งข้อมูลให้ รพ. แล้ว" || item.status !== "ย้ายสิทธิ์ไม่สำเร็จ"(
-                          <button
-                            className="bg-blue-500  hover:bg-blue-400 text-white text-xs py-2 px-4 rounded "
-                            onClick={() => { handleEditForm(item.id) }}
-                          >
-                            Edit form
-                          </button>)}
+                        {!(item.status === "ย้ายสิทธิ์สำเร็จ" ||
+                          item.status === "ส่งข้อมูลให้ รพ. แล้ว" ||
+                          item.status === "ย้ายสิทธิ์ไม่สำเร็จ") && (
+                            <button
+                              className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
+                              onClick={() => handleEditForm(item.id)}
+                            >
+                              Edit form
+                            </button>
+                          )
+                        }
                         {item.type !== "โครงการหลักประกันสุขภาพถ้วนหน้า" && (
                           <button className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded ml-3"
                             onClick={() => { handleBookNotQueue(item.id) }}
@@ -435,14 +439,16 @@ export const Form = () => {
                             Schedule
                           </button>
                         )}
-                        {item.status !== "ย้ายสิทธิ์สำเร็จ" || item.status !== "ส่งข้อมูลให้ รพ. แล้ว" || item.status !== "ย้ายสิทธิ์ไม่สำเร็จ"(
-                          <button
-                            className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-3"
-                            onClick={() => { showModalNotQueue(item.id) }}
-                          >
-                            Cancel
-                          </button>
-                        )}
+                        {!(item.status === "ย้ายสิทธิ์สำเร็จ" ||
+                          item.status === "ส่งข้อมูลให้ รพ. แล้ว" ||
+                          item.status === "ย้ายสิทธิ์ไม่สำเร็จ") && (
+                            <button
+                              className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-3"
+                              onClick={() => { showModalNotQueue(item.id) }}
+                            >
+                              Cancel
+                            </button>
+                          )}
                         {item.status == "ขอข้อมูลเพิ่มเติม" && (
                           <div className="ml-3 mt- mb-3 flex">
                             <button onClick={() => { showModalCheckInfo(item.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
@@ -505,7 +511,7 @@ export const Form = () => {
                 className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
               >
                 <ServiceCard
-                  title="5. Health Insurance For Foreigner Student"
+                  title="5. Health Insurance for Foreigner Student"
                 />
               </a>
               <a onClick={() => router.push(`/student/${studentId}/student-loan`)}

@@ -205,32 +205,40 @@ const App = () => {
     } = theme.useToken();
     const [selectedKey, setSelectedKey] = useState('4');
     const handleChangeStatus = async (record) => {
-
         if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
             try {
                 setLoading(true);
-                setShouldReload(true);
                 const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
                 setLoading(false);
-                setShouldReload(false);
                 console.log("res", res);
+
+                // Update the specific record in the Data state
+                setData(prevData =>
+                    prevData.map(item =>
+                        item.reqId === record.reqId ? { ...item, status: "รอเจ้าหน้าที่ดำเนินการ" } : item
+                    )
+                );
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
-        }
-        else if (record.status === "เสร็จสิ้น") {
+        } else if (record.status === "เสร็จสิ้น") {
             try {
                 setLoading(true);
-                setShouldReload(true);
                 const res = await axios.post('/api/request/changeStatusToSucc', { id: parseInt(record.reqId) });
                 setLoading(false);
-                setShouldReload(false);
                 console.log("res", res);
+
+                // Update the specific record in the Data state
+                setData(prevData =>
+                    prevData.map(item =>
+                        item.reqId === record.reqId ? { ...item, status: "เสร็จสิ้น" } : item
+                    )
+                );
             } catch (error) {
                 console.error('Error fetching status:', error);
             }
         }
-    }
+    };
     const filepdf = async (reqId, year) => {
         try {
             if (year == 1) {
@@ -431,20 +439,27 @@ const App = () => {
     useEffect(() => {
         console.log("Updated selected reqids:", selectedRowReqidapi);
     }, [selectedRowReqid]);
+    const [refreshKey, setRefreshKey] = useState(0);
+
     const handleChangeStatusAll = async (ids, status) => {
         try {
             setLoading(true);
-            setShouldReload(true);
-            const res = await axios.post('/api/request/changeStatusAll', { ids, status });
-            setLoading(false);
-            setShouldReload(false);
-            console.log("res", res);
+            await axios.post('/api/request/changeStatusAll', { ids, status });
 
+            setData((prevDataSource) => {
+                const updatedData = prevDataSource.map((item) =>
+                    ids.includes(item.reqId) ? { ...item, status } : item
+                );
+                return [...updatedData]; // เปลี่ยน reference
+            });
+
+            setRefreshKey(prev => prev + 1); // บังคับให้ Table re-render
         } catch (error) {
             console.log(error);
-
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
     const dropdown = () => {
         const handleSelect = async (value) => {
@@ -554,7 +569,7 @@ const App = () => {
                         </div>
                     </div>
                     <Table
-                        rowSelection={rowSelection} columns={columns} dataSource={Data}
+                        rowSelection={rowSelection} columns={columns} dataSource={Data} loading={loading} key={refreshKey}
                         bordered
                     />
                 </Content>

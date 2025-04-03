@@ -170,14 +170,19 @@ export default function Form() {
           let allData = { ...alreadyData, ...studentInfo, ...thaiText, ...profileData };
           const response = await axios.post('/api/prakan/update', allData);
           console.log("responseId :",response.data.data.id);
-          router.push(`/student/${studentId}/prakan/checkPrakan/${form}`);
+          const req_id = response.data.data.req_id
+          router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${form}`);
         }else{
           let allData = { ...prakanData, ...studentInfo, ...thaiText, ...profileData };
           console.log("prakanData === 0 :",allData);
           console.log("prakanAllData === 0 :",allData);
           const response = await axios.post('/api/prakan/create', allData);
+          console.log("responsePrakan :",response.data.data);
           const formId = response.data.data.id
-          router.push(`/student/${studentId}/prakan/checkPrakan/${formId}`);
+          const req_id = response.data.data.req_id
+          console.log("formIcreate :",formId);
+          router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${formId}`);
+
         }
       }else{
         let allData = { ...alreadyData, ...studentInfo, ...thaiText, ...profileData };

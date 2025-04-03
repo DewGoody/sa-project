@@ -63,7 +63,7 @@ const WaitingQueue = () => {
                 req2={reqType === "การเบิกจ่ายประกันอุบัติเหตุ" ? "Accident insurance claim" : reqType === "การผ่อนผันเข้ารับราชการทหาร" ? "Military Service Postponement Request Form" : ""} 
             />
             <Modal
-                title= {statusUid === 'จองคิวสำเร็จ' ? 'จองคิวสำเร็จ' : statusUid === 'คิวเต็ม' ? 'คิวเต็ม' : 'กลับหน้าจองคิวอีกคร้งเนื่องจากระบบอาจทำงานผิดพลาด'}
+                title= {statusUid === 'จองคิวสำเร็จ' ? 'จองคิวสำเร็จ' : statusUid === 'คิวเต็ม' ? 'คิวเต็ม' : 'ไม่สามารถจองคิวได้โปรดจองคิวใหม่อีกครั้ง'}
                 visible={isNaN(statusUid)}
                 footer={null}
                 closable={false}

@@ -196,27 +196,27 @@ const AppointmentManagement = () => {
         router.push(`/Admin/prakan/${year}`);
     }
 
-    const handleStatusChange = async (reocrd) => {
-        console.log("record : ", reocrd);
+    const handleStatusChange = async (record) => {
+        console.log("record : ", record);
         try {
-            if (reocrd.status === "ไม่มาเข้ารับบริการ") {
-                setLoading(true)
-                setShouldReload(true);
-                await axios.post('/api/queue/changeStatusToLate', { id: reocrd.id });
-                setLoading(false)
-                setShouldReload(false);
+            setLoading(true);
+            if (record.status === "ไม่มาเข้ารับบริการ") {
+                await axios.post('/api/queue/changeStatusToLate', { id: record.id });
+            } else if (record.status === "เข้ารับบริการแล้ว") {
+                await axios.post('/api/queue/changeStatusToReceiveService', { id: record.id });
             }
-            else if (reocrd.status === "เข้ารับบริการแล้ว") {
-                setLoading(true)
-                setShouldReload(true);
-                await axios.post('/api/queue/changeStatusToReceiveService', { id: reocrd.id });
-                setLoading(false)
-                setShouldReload(false);
-            }
+            // Update the dataSource without refreshing the page
+            setDataSource((prevDataSource) =>
+                prevDataSource.map((item) =>
+                    item.id === record.id ? { ...item, status: record.status } : item
+                )
+            );
+            setLoading(false);
         } catch (error) {
             console.error('Error changing status:', error);
+            setLoading(false);
         }
-    }
+    };
 
     const handleSelectDate = async (date) => {
         const formattedDate = new Date(date)

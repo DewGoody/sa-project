@@ -19,7 +19,14 @@ export async function getPrakanDataById(id) {
 }
 
 export async function createPrakan(data) {    
-    // await prakan(data)
+    const createRequest = await prisma.request.create({
+        data: {
+            type: "การเบิกจ่ายประกันอุบัติเหตุ",
+            status: "รอจองคิว",
+            stu_id: data.stu_id,
+        }
+    })   
+
     const createPrakan = await prisma.accident_info.create({
         data: {
             stu_id: Number(data.id),
@@ -30,7 +37,8 @@ export async function createPrakan(data) {
             treatment_place: data.treatment_place,
             hospital_type: data.hospital_type,
             medical_fee: Number(data.medical_fee),
-            medical_fee_text: data.medical_fee_text
+            medical_fee_text: data.medical_fee_text,
+            req_id: createRequest.id,
         }
     })
 
