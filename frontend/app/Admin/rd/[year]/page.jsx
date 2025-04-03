@@ -439,20 +439,27 @@ const App = () => {
     useEffect(() => {
         console.log("Updated selected reqids:", selectedRowReqidapi);
     }, [selectedRowReqid]);
+    const [refreshKey, setRefreshKey] = useState(0);
+
     const handleChangeStatusAll = async (ids, status) => {
         try {
             setLoading(true);
-            setShouldReload(true);
-            const res = await axios.post('/api/request/changeStatusAll', { ids, status });
-            setLoading(false);
-            setShouldReload(false);
-            console.log("res", res);
+            await axios.post('/api/request/changeStatusAll', { ids, status });
 
+            setData((prevDataSource) => {
+                const updatedData = prevDataSource.map((item) =>
+                    ids.includes(item.reqId) ? { ...item, status } : item
+                );
+                return [...updatedData]; // เปลี่ยน reference
+            });
+
+            setRefreshKey(prev => prev + 1); // บังคับให้ Table re-render
         } catch (error) {
             console.log(error);
-
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
     const dropdown = () => {
         const handleSelect = async (value) => {
@@ -562,7 +569,7 @@ const App = () => {
                         </div>
                     </div>
                     <Table
-                        rowSelection={rowSelection} columns={columns} dataSource={Data} loading={loading}
+                        rowSelection={rowSelection} columns={columns} dataSource={Data} loading={loading} key={refreshKey}
                         bordered
                     />
                 </Content>

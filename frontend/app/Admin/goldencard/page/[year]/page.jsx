@@ -595,26 +595,32 @@ const App = () => {
 
     //     }
     // }
+
+    const [refreshKey, setRefreshKey] = useState(0);
+
     const handleChangeStatusAll = async (ids, status) => {
         try {
-        setLoading(true);
-        const res = await axios.post('/api/request/changeStatusAll', { ids, status });
-        console.log("res", res);
-
-        // Update the dataSource without refreshing the page
-        setData((prevDataSource) =>
-            prevDataSource.map((item) =>
-            ids.includes(item.reqId) ? { ...item, status } : item
-            )
-        );
-
+            setLoading(true);
+            await axios.post('/api/request/changeStatusAll', { ids, status });
+    
+            setData((prevDataSource) => {
+                const updatedData = prevDataSource.map((item) =>
+                    ids.includes(item.reqId) ? { ...item, status } : item
+                );
+                return [...updatedData]; 
+            });
+    
+            setRefreshKey(prev => prev + 1); 
         } catch (error) {
-        console.log(error);
+            console.log(error);
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
-    }
-
+    };
+    
+    
+    
+    
     const dropdown = () => {
         const handleSelect = async (value) => {
             try {
@@ -699,7 +705,7 @@ const App = () => {
 
                     </div>
                     <Table
-                        rowSelection={rowSelection} columns={columns} dataSource={Data} loading={loading}
+                        rowSelection={rowSelection} columns={columns} dataSource={Data} loading={loading} key={refreshKey}
                         bordered
                     />
                     <Modal

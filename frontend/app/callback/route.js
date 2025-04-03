@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client';
 import { SignJWT } from "jose";
 import { TextEncoder } from "util";
 import { cookies } from 'next/headers';
+import { log } from "console";
 const prisma = new PrismaClient();
 const role = "student";
 
@@ -12,9 +13,9 @@ function convertToDate(dateString) {
     if (typeof dateString === 'string' && dateString.length === 8) {
         const year = parseInt(dateString.substring(0, 4), 10);
         const month = parseInt(dateString.substring(4, 6), 10) - 1;
-        const day = parseInt(dateString.substring(6, 8), 10)  ;
+        const day = parseInt(dateString.substring(6, 8), 10);
 
-        return new Date(Date.UTC(year, month , day, 7));
+        return new Date(Date.UTC(year, month, day, 7));
     }
     return null;
 }
@@ -28,7 +29,7 @@ async function handler(token) {
     try {
 
         const response = await fetch(`https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token=${token}`, {
-        // const response = await fetch(`https://cunex.meesoft.co.th/service.svc/ext/type3/profile?token=${token}`, {
+            // const response = await fetch(`https://cunex.meesoft.co.th/service.svc/ext/type3/profile?token=${token}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,16 +88,15 @@ export async function GET(req) {
             fnameTH: info.firstNameTH || '',
             fnameEN: info.firstNameEN || '',
             lnameEN: info.lastNameEN || '',
-            thai_id: info.thai_id || '',
-            nationality: info.nationality || '',
+            id: info.studentId || '',
+            bd: convertToDate(info.birthdate) || '',
             facultyNameTH: info.facultyNameTH || '',
             facultyNameEN: info.facultyNameEN || '',
-            fac_id: info.facultyId || '',
-            dept: info.departmentNameTH || '',
-            religion: '',
-            bd: convertToDate(info.birthdate),
+            nationality: info.nationality || '',
+            fac_id: info.facultyCode || '',
             year: String(Convert_Student_Year) || '',
-            id: info.studentId || ''
+            dept : '',
+
         };
 
         const key = new TextEncoder().encode(process.env.JWT_SECRET);
