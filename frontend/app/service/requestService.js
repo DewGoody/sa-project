@@ -79,13 +79,10 @@ export async function getRequestById(id) {
 export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
         where: {
-            type: {
-                not: "โครงการหลักประกันสุขภาพถ้วนหน้า",
-                not: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร"
-            },
+            NOT: { Queue: { some: {} } }, 
             status: {
-                in: ["รอจองคิว"],
-
+                in: ["รอจองคิว", "ยังไม่ได้ Upload เอกสาร", "รอเจ้าหน้าที่ดำเนินการ", "ขอข้อมูลเพิ่มเติม", "ส่งข้อมูลให้ รพ. แล้ว", "ย้ายสิทธิ์ไม่สำเร็จ", "ย้ายสิทธิ์สำเร็จ"],
+                notIn: ["ประวัติการแก้ไข"]
             },
             stu_id: data,
             deleted_at: null
@@ -96,14 +93,11 @@ export async function getShowRequestNotQueue(data) {
             UHC_request: true,
             prakan_inter_info: true,
         }
-    })
-    if (requests) {
-        return requests
-    }
-    else {
-        return "Not found"
-    }
+    });
+
+    return requests.length ? requests : "Not found";
 }
+
 
 export async function getShowRequestNotQueueGoldenCard(data) {
     const requests = await prisma.request.findMany({

@@ -133,52 +133,52 @@ export const Form = () => {
       setFormId(response.data.data[0].id);
       setNotQueue(response.data.data);
       setLoading(false);
-      fetchNotQueueGoldencard();
+      // fetchNotQueueGoldencard();
 
     } catch (error) {
       setError(error.message);
       setLoading(false);
     }
   }
-  const fetchNotQueueGoldencard = async () => {
-    try {
-      const response = await axios.post('/api/request/getNotQueueGoldencard', { id: profileData.id }); // Example API
-      console.log("getNotQueueGoldencard", response.data.data);
-      console.log("formIdgetNotQueueGoldencard", response.data.data[0].id);
-      setFormId(response.data.data[0].id);
-      setNotQueue((prevNotQueue) => [...prevNotQueue, ...response.data.data]);
+  // const fetchNotQueueGoldencard = async () => {
+  //   try {
+  //     const response = await axios.post('/api/request/getNotQueueGoldencard', { id: profileData.id }); // Example API
+  //     console.log("getNotQueueGoldencard", response.data.data);
+  //     console.log("formIdgetNotQueueGoldencard", response.data.data[0].id);
+  //     setFormId(response.data.data[0].id);
+  //     setNotQueue((prevNotQueue) => [...prevNotQueue, ...response.data.data]);
 
-      console.log("notqueueformgoldencard", notQueue);
-      setLoading(false);
-      if (response.data.data) {
-        SETGC(false)
-      }
+  //     console.log("notqueueformgoldencard", notQueue);
+  //     setLoading(false);
+  //     if (response.data.data) {
+  //       SETGC(false)
+  //     }
 
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  }
+  //   } catch (error) {
+  //     setError(error.message);
+  //     setLoading(false);
+  //   }
+  // }
 
-  const fetchRD = async () => {
-    try {
-      const response = await axios.post('/api/request/getRD', { id: profileData.id }); // Example API
-      console.log("getRD", response.data.data);
-      console.log("formidRD", response.data.data[0].id);
-      setFormId(response.data.data[0].id);
-      setNotQueue((prevNotQueue) => [...prevNotQueue, ...response.data.data]);
-      setLoading(false);
-      if (response.data.data) {
-        SETRD(false)
-      }
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  }
+  // const fetchRD = async () => {
+  //   try {
+  //     const response = await axios.post('/api/request/getRD', { id: profileData.id }); // Example API
+  //     console.log("getRD", response.data.data);
+  //     console.log("formidRD", response.data.data[0].id);
+  //     setFormId(response.data.data[0].id);
+  //     setNotQueue((prevNotQueue) => [...prevNotQueue, ...response.data.data]);
+  //     setLoading(false);
+  //     if (response.data.data) {
+  //       SETRD(false)
+  //     }
+  //   } catch (error) {
+  //     setError(error.message);
+  //     setLoading(false);
+  //   }
+  // }
 
   const fetchAllData = async () => {
-    await fetchNotQueueGoldencard();
+    // await fetchNotQueueGoldencard();
     await fetchNotQueue();
     await fetchQueue();
     // await fetchRD()
@@ -387,6 +387,9 @@ export const Form = () => {
 
                           )
                           }
+
+
+
                         </div>
                       )}
 
@@ -420,35 +423,7 @@ export const Form = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="flex ml-50">
-                        {!(item.status === "ย้ายสิทธิ์สำเร็จ" ||
-                          item.status === "ส่งข้อมูลให้ รพ. แล้ว" ||
-                          item.status === "ย้ายสิทธิ์ไม่สำเร็จ") && (
-                            <button
-                              className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded"
-                              onClick={() => handleEditForm(item.id)}
-                            >
-                              Edit form
-                            </button>
-                          )
-                        }
-                        {item.type !== "โครงการหลักประกันสุขภาพถ้วนหน้า" && (
-                          <button className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded ml-3"
-                            onClick={() => { handleBookNotQueue(item.id) }}
-                          >
-                            Schedule
-                          </button>
-                        )}
-                        {!(item.status === "ย้ายสิทธิ์สำเร็จ" ||
-                          item.status === "ส่งข้อมูลให้ รพ. แล้ว" ||
-                          item.status === "ย้ายสิทธิ์ไม่สำเร็จ") && (
-                            <button
-                              className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded ml-3"
-                              onClick={() => { showModalNotQueue(item.id) }}
-                            >
-                              Cancel
-                            </button>
-                          )}
+                      <div className="mb-3 flex mr-1">
                         {item.status == "ขอข้อมูลเพิ่มเติม" && (
                           <div className="ml-3 mt- mb-3 flex">
                             <button onClick={() => { showModalCheckInfo(item.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
@@ -456,6 +431,44 @@ export const Form = () => {
                             </button>
                           </div>
                         )}
+                        {!(item.status === "ย้ายสิทธิ์สำเร็จ" ||
+                          item.status === "ส่งข้อมูลให้ รพ. แล้ว" ||
+                          item.status === "ย้ายสิทธิ์ไม่สำเร็จ") && (
+                            <div className="ml-3 mt- mb-3 flex">
+                              <button
+                                className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
+                                onClick={() => handleEditForm(item.id)}
+                              >
+                                Edit form
+                              </button>
+                            </div>
+
+                          )
+                        }
+                        {item.type !== "โครงการหลักประกันสุขภาพถ้วนหน้า" && (
+                          <div className="ml-3 mt- mb-3 flex">
+                            <button className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
+                              onClick={() => { handleBookNotQueue(item.id) }}
+                            >
+                              Schedule
+                            </button>
+                          </div>
+
+                        )}
+                        {!(item.status === "ย้ายสิทธิ์สำเร็จ" ||
+                          item.status === "ส่งข้อมูลให้ รพ. แล้ว" ||
+                          item.status === "ย้ายสิทธิ์ไม่สำเร็จ") && (
+                            <div className="ml-3 mt- mb-3 flex">
+                              <button
+                                className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
+                                onClick={() => { showModalNotQueue(item.id) }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+
+                          )}
+
                       </div>
                     </div>
 
