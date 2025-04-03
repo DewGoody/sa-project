@@ -169,7 +169,7 @@ function page() {
   return (
     <>
       <div className=" bg-white min-h-screen">
-        <Header req1="Health Insurance For Foreigner Student (Claim Illness)" />
+        <Header req1="Health Insurance for Foreigner Student (Claim Illness)" />
         <div className=" mx-24 ">
           <main className="flex justify-center bg-white w-full">
             <div className="bg-white  w-full min-w-screen-6xl">
