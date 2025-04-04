@@ -602,8 +602,8 @@ const AppointmentManagement = () => {
                         padding: 24,
                         minHeight: 280,
                         background: "white",
-                        borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
-                        borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
+                        // borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
+                        // borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
 
                     }}
                 >
