@@ -396,7 +396,7 @@ export const Form = () => {
                     </div>
                   ))
                 ) : null}
-                {notQueue.length > 0 && (
+                {notQueue.length > 0 ? (
                   notQueue.map((item, index) => (
                     console.log("✅ item:", item),
                     <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
@@ -473,7 +473,7 @@ export const Form = () => {
                     </div>
 
                   ))
-                )}
+                ): null}
 
                 {prakanData.length === 0 && notQueue.length === 0 && (
                   <div className="text-center mt-4">
