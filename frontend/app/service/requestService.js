@@ -79,7 +79,7 @@ export async function getRequestById(id) {
 export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
         where: {
-            NOT: { Queue: { some: {} } }, 
+            NOT: { Queue: { some: {} } },
             status: {
                 in: ["รอจองคิว", "ยังไม่ได้ Upload เอกสาร", "รอเจ้าหน้าที่ดำเนินการ", "ขอข้อมูลเพิ่มเติม", "ส่งข้อมูลให้ รพ. แล้ว", "ย้ายสิทธิ์ไม่สำเร็จ", "ย้ายสิทธิ์สำเร็จ"],
                 notIn: ["ประวัติการแก้ไข"]
@@ -282,7 +282,7 @@ export async function changeStatusToSended(id) {
 export async function changeStatusToHospital(id) {
     if (id) {
         const request = await getRequestByIdFast({ id: id })
-        if (request.status !== "รอเจ้าหน้าที่ดำเนินการ" && request.status !== "ขอข้อมูลเพิ่มเติม") {
+        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "รอเจ้าหน้าที่ดำเนินการ" && request.status !== "ย้ายสิทธิ์ไม่สำเร็จ") {
             throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
@@ -314,7 +314,7 @@ export async function changeStatusToSucc(id) {
 export async function changeStatusToWantInfo(id) {
     if (id) {
         const request = await getRequestByIdFast({ id: id })
-        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "รอเจ้าหน้าที่ดำเนินการ" && request.status !== "ย้ายสิทธิ์ไม่สำเร็จ" ) {
+        if (request.status !== "ส่งข้อมูลให้ รพ. แล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"  && request.status !== "ย้ายสิทธิ์ไม่สำเร็จ") { 
             throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
@@ -412,7 +412,7 @@ export async function changeStatusToFinish(id) {
 export async function changeToTranApprove(id) {
     if (id) {
         const request = await getRequestByIdFast({ id: id })
-        if (request.status !== "ส่งข้อมูลให้ รพ. แล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"  && request.status !== "ย้ายสิทธิ์ไม่สำเร็จ") {
+        if (request.status !== "ส่งข้อมูลให้ รพ. แล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม" && request.status !== "ย้ายสิทธิ์ไม่สำเร็จ") {
             throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
