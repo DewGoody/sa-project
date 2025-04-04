@@ -650,7 +650,7 @@ export const Form = () => {
                     </div>
 
                   ))
-                ): null}
+                )}
 
                 {prakanData.length === 0 && notQueue.length === 0 && (
                   <div className="text-center mt-4">
