@@ -224,22 +224,20 @@ model RD_info {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Request {
-  id                    BigInt                  @id @default(autoincrement())
-  created_at            DateTime                @default(now()) @db.Timestamptz(6)
-  type                  String?
-  status                String?
-  stu_id                Decimal?                @db.Decimal
-  deleted_at            DateTime?               @db.Timestamptz(6)
-  more_info             String?
-  Ponpan                Ponpan[]
-  Queue                 Queue[]
-  RD_info               RD_info[]
-  Student               Student?                @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  UHC_request           UHC_request[]
-  accident_info         accident_info[]
-  prakan_inter_info     prakan_inter_info[]
-  prakan_inter_info_old prakan_inter_info_old[]
-  vendor_info           vendor_info[]
+  id                BigInt              @id @default(autoincrement())
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  type              String?
+  status            String?
+  stu_id            Decimal?            @db.Decimal
+  deleted_at        DateTime?           @db.Timestamptz(6)
+  more_info         String?
+  Ponpan            Ponpan[]
+  Queue             Queue[]
+  RD_info           RD_info[]
+  Student           Student?            @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  UHC_request       UHC_request[]
+  accident_info     accident_info[]
+  prakan_inter_info prakan_inter_info[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -371,8 +369,8 @@ model accident_info {
   acc_date         DateTime? @db.Date
   accident_place   String?
   treatment_place  String?
-  hospital_type    Int?      @db.SmallInt
-  medical_fee      Float?
+  hospital_type    String?
+  medical_fee      Int?
   req_id           BigInt?
   des_injury       String?
   medical_fee_text String?
@@ -454,9 +452,9 @@ model prakan_inter_info {
 }
 
 model vendor_info {
-  id                BigInt    @id @default(autoincrement())
-  created_at        DateTime  @default(now()) @db.Timestamptz(6)
-  stu_id            Decimal?  @db.Decimal
+  id                BigInt   @id @default(autoincrement())
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  stu_id            String?
   nameTH            String?
   faculty           String?
   houseID           String?
@@ -470,19 +468,16 @@ model vendor_info {
   postalCode        String?
   tel               String?
   citizenId         String?
-  citizenIssueDate  DateTime? @db.Date
-  citizenExpireDate DateTime? @db.Date
+  citizenIssueDate  String?
+  citizenExpireDate String?
   claimType         String?
-  amount            Decimal?  @db.Decimal
+  amount            Decimal? @db.Decimal
   bankCompany       String?
   bankBranch        String?
   bankAccountType   String?
   bankAccountName   String?
   bankAccountNumber String?
   claimOtherReason  String?
-  req_id            BigInt?
-  Request           Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student           Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
