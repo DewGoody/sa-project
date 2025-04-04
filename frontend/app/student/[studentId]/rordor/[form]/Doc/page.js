@@ -150,9 +150,12 @@ const RD = () => {
                     <div className="bg-white p-8 w-full max-w-4xl">
 
 
-                        <h2 className="text-mb pt-4 font-bold text-center mb-4 text-gray-800">
-                            Download เอกสาร และโปรดเตรียมเอกสารดังนี้ (Please prepare the following documents to submit to the staff)
-                        </h2>
+                        <h3 className="text-lg font-semibold mb-4 text-center">
+                            โปรดเตรียมเอกสารดังต่อไปนี้
+                        </h3>
+                        <h3 className="text-lg font-normal mb-4 text-center">
+                            Please prepare the following documents
+                        </h3>
 
                         <section>
 
