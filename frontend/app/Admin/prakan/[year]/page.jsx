@@ -223,6 +223,14 @@ const App = () => {
         }
     };
 
+    
+    useEffect(() => {
+        const matched = dataSource.find((item) => item.reqId === reqMoreInfo);
+        if (matched) {
+            setMoreInfoValue(matched.more_info || "");
+        }
+    }, [reqMoreInfo, dataSource]);
+    
 
     const columns = [
         {
@@ -473,13 +481,20 @@ const App = () => {
                             </Button>,
                         ]}
                     >
-                        <textarea
-                            style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
-                            onChange={(e) => setMoreInfoValue(e.target.value)}
-                            value={
-                                dataSource.find((item) => item.reqId === reqMoreInfo)?.more_info || ""
-                            }
-                        />
+                      <textarea
+                        style={{
+                            width: "100%",
+                            height: "200px",
+                            border: "gray solid",
+                            borderRadius: "15px",
+                            padding: "15px",
+                            fontSize: "18px"
+                        }}
+                        value={moreInfoValue}
+                        onChange={(e) => setMoreInfoValue(e.target.value)}
+                    />
+
+
                     </Modal>
 
                 </Content>
