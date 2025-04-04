@@ -314,7 +314,7 @@ export async function changeStatusToSucc(id) {
 export async function changeStatusToWantInfo(id) {
     if (id) {
         const request = await getRequestByIdFast({ id: id })
-        if (request.status !== "ส่งข้อมูลให้ รพ. แล้ว" && request.status !== "ขอข้อมูลเพิ่มเติม"  && request.status !== "ย้ายสิทธิ์ไม่สำเร็จ") { 
+        if (request.status !== "ส่งเอกสารแล้ว" && request.status !== "รอเจ้าหน้าที่ดำเนินการ" && request.status !== "ย้ายสิทธิ์ไม่สำเร็จ") {
             throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({
