@@ -175,17 +175,17 @@ const App = () => {
     const columns = [
         
         {
-            title: 'ชื่อจริงเจ้าหน้าที่',
+            title: 'ชื่อ',
             dataIndex: 'first_name',
             ...getColumnSearchProps('first_name'),
         },
         {
-          title: 'นามสกุลเจ้าหน้าที่',
+          title: 'นามสกุล',
           dataIndex: 'last_name',
           ...getColumnSearchProps('last_name'),
       },
         {
-          title: 'ชื่อผู้ใช้งาน',
+          title: 'ชื่อผู้ใช้งาน (Username)',
           dataIndex: 'username',
           ...getColumnSearchProps('username'),
       },
@@ -249,18 +249,18 @@ const App = () => {
             />
             <Form form={form} onFinish={onFinish} layout="vertical">
         {/* Username Field */}
-        <Form.Item name="first_name" label="ชื่อจริงเจ้าหน้าที่" rules={[{ required: true, message: "Please enter your username" }]}>
+        <Form.Item name="first_name" label="ชื่อ" rules={[{ required: true, message: "Please enter your username" }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="last_name" label="นามสกุลเจ้าหน้าที่" rules={[{ required: true, message: "Please enter your username" }]}>
+        <Form.Item name="last_name" label="นามสกุล" rules={[{ required: true, message: "Please enter your username" }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="username" label="ชื่อผู้ใช้งาน" rules={[{ required: true, message: "Please enter your username" }]}>
+        <Form.Item name="username" label="ชื่อผู้ใช้งาน (Username)" rules={[{ required: true, message: "Please enter your username" }]}>
           <Input />
         </Form.Item>
         <Form.Item
           name="password"
-          label="รหัสผ่าน"
+          label="รหัสผ่าน (Password)"
           rules={[
           { required: true, message: "โปรดใส่รหัสผ่าน" },
           { min: 6, message: "รหัสผ่านต้องมากกว่า 6 ตัว" }
@@ -270,7 +270,7 @@ const App = () => {
         </Form.Item>
         <Form.Item
           name="confirmPassword"
-          label="ยืนยันรหัสผ่าน"
+          label="ยืนยันรหัสผ่าน (Confirm Password)"
           dependencies={["password"]}
           rules={[
           { required: true, message: "โปรดใส่รหัสผ่าน" },
