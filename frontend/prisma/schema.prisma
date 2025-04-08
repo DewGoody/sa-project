@@ -359,6 +359,11 @@ model accident_info {
   req_id           BigInt?
   des_injury       String?
   medical_fee_text String?
+  in_university    Boolean?
+  treatment_place2 String?
+  hospital_type2   Int?      @db.SmallInt
+  time_acc         DateTime? @db.Timetz(6)
+  amount_doc       Int[]
   Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

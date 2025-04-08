@@ -36,9 +36,14 @@ export async function createPrakan(data) {
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
             hospital_type: data.hospital_type,
+            treatment_place2: data.treatment_place2,
+            hospital_type2: data.hospital_type2,
             medical_fee: Number(data.medical_fee),
             medical_fee_text: data.medical_fee_text,
             req_id: createRequest.id,
+            time_acc: data.time_acc,
+            in_university: data.in_university,
+            amount_doc: data.amount_doc
         }
     })
 
@@ -74,8 +79,13 @@ export async function updatePrakanForm(data) {
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
             hospital_type: data.hospital_type,
+            treatment_place2: data.treatment_place2,
+            hospital_type2: data.hospital_type2,
             medical_fee: Number(data.medical_fee),
             medical_fee_text: data.medical_fee_text,
+            time_acc: data.time_acc,
+            in_university: data.in_university,
+            amount_doc: data.amount_doc
         }
     })    
     await prisma.student.update({
