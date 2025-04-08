@@ -396,7 +396,7 @@ export const Form = () => {
                     </div>
                   ))
                 ) : null}
-                {notQueue.length > 0 && (
+                {Array.isArray(notQueue) && notQueue.length > 0 && (
                   notQueue.map((item, index) => (
                     console.log("✅ item:", item),
                     <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
@@ -424,7 +424,7 @@ export const Form = () => {
                         </div>
                       </div>
                       <div className="mb-3 flex mr-1">
-                        {item.status == "ขอข้อมูลเพิ่มเติม" || item.status == "ย้ายสิทธิ์ไม่สำเร็จ" && (
+                        {(item.status == "ขอข้อมูลเพิ่มเติม" || item.status == "ย้ายสิทธิ์ไม่สำเร็จ") && (
                           <div className="ml-3 mt- mb-3 flex">
                             <button onClick={() => { showModalCheckInfo(item.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
                               view detail
