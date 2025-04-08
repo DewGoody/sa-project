@@ -540,7 +540,7 @@ async function uhc(data) {
         color: rgb(0, 0, 0),
       });
       break;
-    case 'government':
+    case 'goverment': 
       secondPage.drawImage(tick, {
         x: 47,
         y: height2 - 288,

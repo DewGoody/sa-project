@@ -73,6 +73,7 @@ export async function GET(req) {
     }
 
     try {
+        let currentDate = new Date();
         const info = await handler(token);
 
         if (!info) {
@@ -80,9 +81,9 @@ export async function GET(req) {
         }
         const currentYear = new Date().getFullYear() + 543;
         const studentYearPrefix = parseInt(info.studentId.substring(0, 2), 10);
-        const Convert_Student_Year = currentYear - (studentYearPrefix + 2500);
+        let Convert_Student_Year = currentYear - (studentYearPrefix + 2500);
         if (currentDate.getMonth() > 8) {
-          Convert_Student_Year += 1;
+            Convert_Student_Year += 1;
         }
 
         const Student = {

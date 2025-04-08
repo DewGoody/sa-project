@@ -135,11 +135,13 @@ const page = () => {
                 // console.log("other")
                 return Data.otherStatus
             }
-        }
-        const status_only = () => {
-            if (Data.benefitStatus === "existing") {
-                // console.log("exxxxxxxxxx")
-                return Data.hospitalName
+            else if (Data.benefitStatus === "goverment") {
+                // console.log("goverment")
+                return "-"
+            }
+            else if (Data.benefitStatus === "social") {
+                // console.log("social")
+                return "-"
             }
         }
         const id = Data.id
@@ -161,7 +163,7 @@ const page = () => {
                     thai_id_card_issured: formatDateToISO(Data.Idcardissuedate),
                     thai_id_card_expired: formatDateToISO(Data.Idcardexpiraiton),
                     personal_email: Data.email,
-                    // contactable_tel: Data.Phonenumber,
+                    phone_num: Data.Phonenumber,
                 },
                 UHC_reg_info: {
                     id: id,
@@ -522,8 +524,8 @@ const page = () => {
                                                 onChange={handleChange}
                                                 value={Data.hospitalName}
                                                 className="border rounded-lg px-2 py-1 ml-2"
-                                                placeholder="ชื่อโรงพยาบาล" // กำหนด placeholder เริ่มต้น
-                                                disabled={Data.benefitStatus !== "existing"} // ปิดการกรอกถ้าไม่ใช่ตัวเลือกนี้
+                                                placeholder="ชื่อโรงพยาบาล" 
+                                                disabled={Data.benefitStatus !== "existing"} 
                                             />
                                         </label>
                                     </div>
@@ -533,7 +535,7 @@ const page = () => {
                                         <input
                                             type="radio"
                                             id="goverment"
-                                            name="benefitStatus" // ใช้ name เดียวกันสำหรับ radio ทั้งหมด
+                                            name="benefitStatus" 
                                             value="goverment"
                                             checked={Data.benefitStatus === "goverment"}
                                             onChange={handleChange}
@@ -547,7 +549,7 @@ const page = () => {
                                         <input
                                             type="radio"
                                             id="social"
-                                            name="benefitStatus" // ใช้ name เดียวกันสำหรับ radio ทั้งหมด
+                                            name="benefitStatus" 
                                             value="social"
                                             checked={Data.benefitStatus === "social"}
                                             onChange={handleChange}
