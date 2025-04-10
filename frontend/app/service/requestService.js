@@ -552,8 +552,17 @@ export async function getRequestPonpanInAdmin(year) {
             }
         })
     }
-    if (requests) {
-        return requests
+    const sorted = requests.sort((a, b) => {        
+        const provA = a.Ponpan[0]?.province_sd || "";
+        const provB = b.Ponpan[0]?.province_sd || "";
+        const distA = a.Ponpan[0]?.district_sd || "";
+        const distB = b.Ponpan[0]?.district_sd || "";
+      
+        if (provA !== provB) return provA.localeCompare(provB, 'th', { sensitivity: 'base' });
+        return distA.localeCompare(distB, 'th', { sensitivity: 'base' });
+    });
+    if (sorted) {
+        return sorted
     }
     else {
         return "Not found"
