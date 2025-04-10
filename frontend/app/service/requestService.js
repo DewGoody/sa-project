@@ -68,6 +68,14 @@ export async function getRequestById(id) {
                 }
                 return result
             }
+            else if (request.type == "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)"){
+                result = {
+                    ...request,
+                    path: "student-loan"
+                }
+                return result
+            }
+               
             // return request
         }
         else {
@@ -552,6 +560,68 @@ export async function getRequestPonpanInAdmin(year) {
     }
 }
 
+export async function getRequestStudentLoanInAdmin(year) {
+    const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
+    const endOfYear = new Date(year + 1, 0, 1);
+    let requests = null
+    if (year !== 0) {
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                },
+                type: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)",
+                deleted_at: null,
+                created_at: {
+                    gte: startOfYear, // Greater than or equal to start of year
+                    lt: endOfYear, // Less than start of the next year
+                },
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameTH: true,
+                        lnameTH: true,
+                    },
+                },
+            }
+        })
+    }
+    else {
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                },
+                type: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)",
+                deleted_at: null
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameTH: true,
+                        lnameTH: true,
+                    },
+                },
+            }
+        })
+    }
+    if (requests) {
+        return requests
+    }
+    else {
+        return "Not found"
+    }
+}
+
 export async function getUniqueYearPonpan() {
     const requests = await prisma.request.findMany({
         where: {
@@ -570,7 +640,24 @@ export async function getUniqueYearPonpan() {
 
     return uniqueYears;
 }
+export async function getUniqueYearStudentLoan() {
+    const requests = await prisma.request.findMany({
+        where: {
+            type: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)",
+            deleted_at: null
+        },
+        select: {
+            created_at: true,
+        },
+    });
 
+    // Extract unique years
+    const uniqueYears = Array.from(
+        new Set(requests.map((request) => request.created_at.getFullYear()))
+    );
+
+    return uniqueYears;
+}
 export async function getUniqueYearGoldencard() {
     const requests = await prisma.request.findMany({
         where: {

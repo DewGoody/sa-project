@@ -646,7 +646,7 @@ const handleDistrictSD9Change = (e) => {
                     />
                    <div className="mt-1">
                       <a
-                        href="https://anan-hosp.go.th/%E0%B9%80%E0%B8%81%E0%B8%93%E0%B8%91%E0%B9%8C%E0%B8%97%E0%B8%AB%E0%B8%B2%E0%B8%A3/img/%E0%B8%AA%E0%B8%949.PNG"
+                        href="/Sd9num-1.jpg"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
