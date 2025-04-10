@@ -43,7 +43,6 @@ export async function createPrakan(data) {
             req_id: createRequest.id,
             time_acc: data.time_acc,
             in_university: data.in_university,
-            amount_doc: data.amount_doc
         }
     })
 
@@ -85,7 +84,6 @@ export async function updatePrakanForm(data) {
             medical_fee_text: data.medical_fee_text,
             time_acc: data.time_acc,
             in_university: data.in_university,
-            amount_doc: data.amount_doc
         }
     })    
     await prisma.student.update({

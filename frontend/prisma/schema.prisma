@@ -363,7 +363,6 @@ model accident_info {
   treatment_place2 String?
   hospital_type2   Int?      @db.SmallInt
   time_acc         DateTime? @db.Timetz(6)
-  amount_doc       Int[]
   Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
