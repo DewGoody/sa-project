@@ -3,7 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Header } from "../../../../components/Header.js";
-import AccidentForm from "./AccidentForm.js";
+import IPD from "./IPD.js";
 import IllnessForm from "./IllnessForm.js";
 import { useRouter, useParams } from "next/navigation";
 
@@ -320,18 +320,27 @@ function page() {
                       onChange={(event) => handleChange(event, "treatmentType")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
-                      <option value="inpatient">Select treatment type</option>
+                      <option value="null">Select treatment type</option>
                       <option value="inpatient">Inpatient (IPD)</option>
-                      <option value="inpatient">Outpatient (OPD)</option>
+                      <option value="outpatient">Outpatient (OPD)</option>
                     </select>
                   </div>
                 </div>
-                <h3 className="text-lg font-semibold my-4 pt-8 flex gap-4 ">
-                  <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
-                    3
-                  </span>
-                  ⚠️ Please select treatment type. ⚠️
-                </h3>
+                {prakanData?.treatmentType === "inpatient" ? (
+                  <IPD handleChange={handleChange} prakanData={prakanData} />
+                ) : prakanData?.treatmentType === "outpatient" ? (
+                  <IllnessForm
+                    handleChange={handleChange}
+                    prakanData={prakanData}
+                  />
+                ) : (
+                  <h3 className="text-lg font-semibold my-4 pt-8 flex gap-4 ">
+                    <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
+                      3
+                    </span>
+                    ⚠️ Please select treatment type. ⚠️
+                  </h3>
+                )}
               </section>
 
               <div className="flex justify-between mt-8">
