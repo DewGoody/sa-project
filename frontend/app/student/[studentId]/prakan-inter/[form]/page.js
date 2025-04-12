@@ -64,8 +64,7 @@ function page() {
       "fnameEN",
       "id",
       "phone_num",
-      "presentAddress",
-      "bd",
+      "email",
       "hospitalName",
       "hospitalProvince",
       "hospitalPhoneNumber",
@@ -80,25 +79,6 @@ function page() {
         return;
       }
     }
-
-    // } else if (claimType === "illness") {
-    //   const illnessRequiredFields = [
-    //     "hospitalName",
-    //     "hospitalProvince",
-    //     "hospitalPhoneNumber",
-    //     "hospitalAmittedDate",
-    //     "hospitalDischargedDate",
-    //   ];
-
-    //   for (let field of illnessRequiredFields) {
-    //     if (!prakanData[field] || prakanData[field].trim() === "") {
-    //       alert(`Please fill in the "${field}" field.`);
-    //       return;
-    //     }
-    //   }
-    // } else {
-    //   alert(`Please Select an Claim Type.`);
-    // }
 
     console.log(prakanData);
     let allData = { ...prakanData };
@@ -281,45 +261,77 @@ function page() {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 mb-2">
-                      Current address
+                    <label className="block text-gray-700 mb-2" for="email">
+                      Email address
                     </label>
                     <input
-                      type="text"
-                      name="presentAddress"
-                      value={alreadyData?.presentAddress}
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      type="email"
+                      name="email"
+                      value={alreadyData?.email}
+                      onChange={(event) => handleChange(event, "email")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Date of birth
-                    </label>
-                    <input
-                      type="date"
-                      name="bd"
-                      //value={formData.religion}
-                      onChange={(event) => handleChange(event, "bd")}
-                      defaultValue={
-                        profileData?.bd
-                          ? new Date(profileData.bd).toISOString().split("T")[0]
-                          : ""
-                      }
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Birthdate"
-                      max={new Date()?.toISOString()?.slice(0, 10)}
+                      placeholder="example@email.com"
                     />
                   </div>
                 </div>
 
-                <IllnessForm
-                  handleChange={handleChange}
-                  prakanData={prakanData}
-                />
+                <h3 className="text-lg font-semibold my-4 pt-8 flex gap-4 ">
+                  <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
+                    2
+                  </span>
+                  Treatment details
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      Place of treatment
+                    </label>
+                    <input
+                      type="text"
+                      name="hospitalName"
+                      //value={formData.citizenId}
+                      onChange={(event) => handleChange(event, "hospitalName")}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Hospital / Clinic Name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      Additional place of treatment (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      name="hospitalName2"
+                      //value={formData.citizenId}
+                      onChange={(event) => handleChange(event, "hospitalName2")}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Hospital / Clinic Name (Optional)"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      Type of treatment
+                    </label>
+                    <select
+                      type="date"
+                      name="treatmentType"
+                      onChange={(event) => handleChange(event, "treatmentType")}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                      <option value="inpatient">Select treatment type</option>
+                      <option value="inpatient">Inpatient (IPD)</option>
+                      <option value="inpatient">Outpatient (OPD)</option>
+                    </select>
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold my-4 pt-8 flex gap-4 ">
+                  <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
+                    3
+                  </span>
+                  ⚠️ Please select treatment type. ⚠️
+                </h3>
               </section>
 
               <div className="flex justify-between mt-8">
