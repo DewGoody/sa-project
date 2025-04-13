@@ -160,7 +160,7 @@ function page() {
         response.data.phone_num = response.data.tel_num;
         setProfileData(response.data);
         setLoading(false);
-        setClaimType("illness");
+
         //console.log(response.data);
         // Create a new object to hold the updated state
         const updatedData = {};
