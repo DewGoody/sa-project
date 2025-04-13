@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Header } from "../../../../components/Header.js";
 import IPD from "./IPD.js";
-import IllnessForm from "./IllnessForm.js";
+import OPD from "./OPD.js";
 import { useRouter, useParams } from "next/navigation";
 
 function page() {
@@ -329,10 +329,7 @@ function page() {
                 {prakanData?.treatmentType === "inpatient" ? (
                   <IPD handleChange={handleChange} prakanData={prakanData} />
                 ) : prakanData?.treatmentType === "outpatient" ? (
-                  <IllnessForm
-                    handleChange={handleChange}
-                    prakanData={prakanData}
-                  />
+                  <OPD handleChange={handleChange} prakanData={prakanData} />
                 ) : (
                   <h3 className="text-lg font-semibold my-4 pt-8 flex gap-4 ">
                     <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
