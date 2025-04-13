@@ -6,23 +6,29 @@ function OPD({ handleChange }) {
   const addDatePicker = () => {
     if (datePickers.length >= 5) return; // Limit to 5 date pickers
     setDatePickers([...datePickers, {}]); // Add a new date picker
-    handleChange({
-      target: {
-        name: `OPDTreatmentDateCount`,
-        value: datePickers.length + 1,
+    handleChange(
+      {
+        target: {
+          name: `OPDTreatmentDateCount`,
+          value: datePickers.length + 1,
+        },
       },
-    });
+      "OPDTreatmentDateCount"
+    );
   };
 
   const removeDatePicker = () => {
     if (datePickers.length > 1) {
       setDatePickers(datePickers.slice(0, -1)); // Remove the last date picker
-      handleChange({
-        target: {
-          name: `OPDTreatmentDateCount`,
-          value: datePickers.length - 1,
+      handleChange(
+        {
+          target: {
+            name: `OPDTreatmentDateCount`,
+            value: datePickers.length - 1,
+          },
         },
-      });
+        "OPDTreatmentDateCount"
+      );
     }
   };
 

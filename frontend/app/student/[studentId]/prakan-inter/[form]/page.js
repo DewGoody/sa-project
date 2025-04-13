@@ -66,10 +66,8 @@ function page() {
       "phone_num", // Mobile phone number
       "email", // Email address
       "hospitalName", // Place of treatment
-      "hospitalAmittedDate", // Date admitted
-      "hospitalDischargedDate", // Date discharged
-      "treatmentType", // Type of treatment
       "totalMedicalFees", // Total Medical Fees (Net)
+      "treatmentType", // Type of treatment
     ];
 
     // Check if all required fields are present and not empty
@@ -98,8 +96,12 @@ function page() {
 
     if (prakanData.treatmentType === "inpatient") {
       const { IPDAmittedDate, IPDDischargedDate } = prakanData;
-      if (!IPDAmittedDate || !IPDDischargedDate) {
-        alert("Please fill in the treatment dates.");
+      if (!IPDAmittedDate) {
+        alert("Please fill in the admitted date.");
+        return;
+      }
+      if (!IPDDischargedDate) {
+        alert("Please fill in the discharged date.");
         return;
       }
       if (new Date(IPDAmittedDate) > new Date(IPDDischargedDate)) {
@@ -108,9 +110,12 @@ function page() {
       }
     }
     if (prakanData.treatmentType === "outpatient") {
-      if (prakanData.OPDTreatmentDate1 == "") {
-        alert("Please fill in the treatment dates.");
-        return;
+      for (let i = 1; i <= prakanData.OPDTreatmentDateCount; i++) {
+        const date = prakanData[`OPDTreatmentDate${i}`];
+        if (!date) {
+          alert(`Please fill in the treatment date ${i}`);
+          return;
+        }
       }
     }
 
@@ -352,15 +357,14 @@ function page() {
                         const value = event.target.value;
                         const formattedValue = parseFloat(value).toFixed(2); // Restrict to 2 decimal places
                         handleChange(
-                          {
-                            target: {
-                              name: "hospitalName2",
-                              value: formattedValue,
-                            },
-                          },
-                          "hospitalName2"
+                          { target: { value: formattedValue } },
+                          "totalMedicalFees"
                         );
                       }}
+                      onBlur={(event) => {
+                        event.target.value = prakanData.totalMedicalFees;
+                      }}
+                      step="0.01"
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="1500.00"
                     />
