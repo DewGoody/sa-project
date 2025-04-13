@@ -47,6 +47,31 @@ function page() {
     console.log("alreadydata inside :", event.target.value);
     setPrakanData({ ...prakanData, [field]: event.target.value });
     setAlreadyData({ ...alreadyData, [field]: event.target.value });
+    if (field === "treatmentType") {
+      setPrakanData({
+        ...prakanData,
+        [field]: event.target.value,
+        OPDTreatmentDateCount: event.target.value === "outpatient" ? 1 : null, // Reset the count when treatment type changes
+        IPDAdmittedDate: null,
+        IPDDischargedDate: null,
+        OPDTreatmentDate1: null,
+        OPDTreatmentDate2: null,
+        OPDTreatmentDate3: null,
+        OPDTreatmentDate4: null,
+        OPDTreatmentDate5: null,
+      });
+      setAlreadyData({
+        ...alreadyData,
+        [field]: event.target.value,
+        OPDTreatmentDateCount: event.target.value === "outpatient" ? 1 : null, // Reset the count when treatment type changes
+        IPDDischargedDate: null,
+        OPDTreatmentDate1: null,
+        OPDTreatmentDate2: null,
+        OPDTreatmentDate3: null,
+        OPDTreatmentDate4: null,
+        OPDTreatmentDate5: null,
+      });
+    }
   };
 
   const handleCiaimTypeChange = (event) => {
@@ -375,7 +400,6 @@ function page() {
                       Type of treatment
                     </label>
                     <select
-                      type="date"
                       name="treatmentType"
                       onChange={(event) => handleChange(event, "treatmentType")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"

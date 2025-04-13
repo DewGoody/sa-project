@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+import { parseISO, format } from "date-fns";
 function OPD({ handleChange }) {
   const [datePickers, setDatePickers] = useState([{}]); // Initialize with one date picker
 
@@ -47,15 +49,22 @@ function OPD({ handleChange }) {
             <label className="block text-gray-700 mb-2">
               Date of treatment {i + 1}
             </label>
-            <input
-              type="date"
+            <DatePicker
+              format="DD/MM/YYYY"
               name={`OPDTreatmentDate${i + 1}`}
-              onChange={(event) =>
-                handleChange(event, `OPDTreatmentDate${i + 1}`)
-              }
+              onChange={(date) => {
+                handleChange(
+                  {
+                    target: {
+                      name: `OPDTreatmentDate${i + 1}`,
+                      value: format(date, "dd-MM-yyyy"),
+                    },
+                  },
+                  `OPDTreatmentDate${i + 1}`
+                );
+              }}
+              allowClear={false}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-              max={new Date()?.toISOString()?.slice(0, 10)}
-              required
             />
           </div>
           <div className="hidden md:flex gap-4 mt-8">
