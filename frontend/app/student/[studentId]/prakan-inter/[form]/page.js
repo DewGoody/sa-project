@@ -309,6 +309,31 @@ function page() {
                       placeholder="Hospital / Clinic Name (Optional)"
                     />
                   </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      Total Medical Fees (Net)
+                    </label>
+                    <input
+                      type="number"
+                      data-type="currency"
+                      name="hospitalName2"
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        const formattedValue = parseFloat(value).toFixed(2); // Restrict to 2 decimal places
+                        handleChange(
+                          {
+                            target: {
+                              name: "hospitalName2",
+                              value: formattedValue,
+                            },
+                          },
+                          "hospitalName2"
+                        );
+                      }}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="1500.00"
+                    />
+                  </div>
 
                   <div>
                     <label className="block text-gray-700 mb-2">
