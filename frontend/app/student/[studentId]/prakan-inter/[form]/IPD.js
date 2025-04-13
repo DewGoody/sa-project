@@ -26,7 +26,7 @@ function IPD({ handleChange, prakanData }) {
                 {
                   target: {
                     name: "IPDAmittedDate",
-                    value: format(date, "dd-MM-yyyy"),
+                    value: format(date, "yyyy-MM-dd"),
                   },
                 },
                 "IPDAmittedDate"
@@ -47,7 +47,7 @@ function IPD({ handleChange, prakanData }) {
                 {
                   target: {
                     name: "IPDDischargedDate",
-                    value: format(date, "dd-MM-yyyy"),
+                    value: format(date, "yyyy-MM-dd"),
                   },
                 },
                 "IPDDischargedDate"
@@ -55,7 +55,7 @@ function IPD({ handleChange, prakanData }) {
             }}
             allowClear={false}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            minDate={dayjs(prakanData?.IPDAmittedDate, "DD-MM-YYYY")}
+            minDate={dayjs(prakanData?.IPDAmittedDate)}
           />
         </div>
       </div>

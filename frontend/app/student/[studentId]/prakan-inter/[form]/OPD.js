@@ -57,7 +57,7 @@ function OPD({ handleChange }) {
                   {
                     target: {
                       name: `OPDTreatmentDate${i + 1}`,
-                      value: format(date, "dd-MM-yyyy"),
+                      value: format(date, "yyyy-MM-dd"),
                     },
                   },
                   `OPDTreatmentDate${i + 1}`

@@ -59,36 +59,19 @@ async function prakanFormBuilder(data) {
   };
   drawTextOnPage(
     firstPage,
-    `${data.Student.fnameEN} ${data.Student.lnameEN}`,
-    190,
-    height - 135
-  );
-  drawTextOnPage(firstPage, String(stdAge), 490, height - 135);
-  drawTextOnPage(firstPage, data.presentAddress, 123, height - 155);
-  drawTextOnPage(firstPage, "-", 140, height - 173);
-  drawTextOnPage(firstPage, "Student", 396, height - 173);
-  drawTextOnPage(firstPage, data.Student.phone_num, 454, height - 192);
-  drawTextOnPage(firstPage, data.hospitalName, 196, height - 303);
-  drawTextOnPage(firstPage, data.hospitalProvince, 350, height - 303);
-  drawTextOnPage(firstPage, data.hospitalPhoneNumber, 462, height - 303);
-  drawTextOnPage(
-    firstPage,
-    convertDateFormat(data.hospitalAmittedDate),
-    270,
-    height - 420
-  );
-  drawTextOnPage(
-    firstPage,
-    convertDateFormat(data.hospitalDischargedDate),
-    435,
-    height - 420
+    data.title + " " + data.fnameEN + " " + data.lnameEN,
+    145,
+    height - 135,
+    thSarabunFont,
+    14
   );
   const pdfBytes = await pdfDoc.save();
   fs.writeFileSync(
-    'public/documents/prakan-inter/'+data.Student.id+'_Health_claim.pdf',
+    "public/documents/prakan-inter/" + data.Student.id + "_Health_claim.pdf",
     pdfBytes
   );
-  return 'public/documents/prakan-inter/'+data.Student.id+'_Health_claim.pdf';
-
+  return (
+    "public/documents/prakan-inter/" + data.Student.id + "_Health_claim.pdf"
+  );
 }
 module.exports = { prakanFormBuilder };
