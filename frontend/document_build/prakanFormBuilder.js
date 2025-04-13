@@ -198,6 +198,27 @@ async function prakanFormBuilder(data) {
       14
     );
   }
+  drawTextOnPage(
+    firstPage,
+    data.illnessDescription,
+    166,
+    height - 349,
+    thSarabunFont,
+    14
+  );
+  drawTextOnPage(
+    firstPage,
+    new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      useGrouping: true, // Adds grouping separators (e.g., commas)
+    }).format(data.totalMedicalFees) + " Baht",
+    230,
+    height - 376,
+    thSarabunFont,
+    14
+  );
+
   const pdfBytes = await pdfDoc.save();
   fs.writeFileSync(
     "public/documents/prakan-inter/" + data.Student.id + "_Health_claim.pdf",

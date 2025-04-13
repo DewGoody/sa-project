@@ -196,22 +196,26 @@ model Queue {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model RD_info {
-  id                  BigInt    @id @default(autoincrement())
-  created_at          DateTime  @default(now()) @db.Timestamptz(6)
-  RD_type             Decimal?  @db.Decimal
-  student_id          Decimal?  @db.Decimal
-  req_id              BigInt?
-  date                DateTime? @db.Date
-  money               String?
-  citizenRD           Int?      @db.SmallInt
-  YearGradeRD         Int?      @db.SmallInt
-  register_type       Int?      @db.SmallInt
-  Branches            String?
-  corps               String?
-  certification_left  Int?      @db.SmallInt
-  certification_right Int?      @db.SmallInt
-  Request             Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student             Student?  @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  id             BigInt    @id @default(autoincrement())
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  RD_type        Decimal?  @db.Decimal
+  student_id     Decimal?  @db.Decimal
+  req_id         BigInt?
+  date           DateTime? @db.Date
+  money          String?
+  citizenRD      Int?      @db.SmallInt
+  YearGradeRD    Int?      @db.SmallInt
+  register_type  Int?      @db.SmallInt
+  Branches       String?
+  corps          String?
+  registermyself Boolean?
+  notmilitary    Boolean?
+  readymilitary  Boolean?
+  man_right      Boolean?
+  women_right    Boolean?
+  ready_right    Boolean?
+  Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student        Student?  @relation(fields: [student_id], references: [id], onDelete: Cascade)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -399,13 +403,15 @@ model guardian_info {
   guardian_occupation  String?
   guardian_age         Int?
   guardian_relation    String?
-  id                   Decimal @id(map: "parent_info_pkey") @db.Decimal
+  id                   Decimal  @id(map: "parent_info_pkey") @db.Decimal
   guardian_title       String?
   guardian_address     String?
-  guardian_nationality String? @default("")
-  phone_num            Int?    @db.SmallInt
-  Consent              Int?    @db.SmallInt
-  Student              Student @relation(fields: [id], references: [id], onDelete: Cascade, map: "parent_info_id_fkey")
+  guardian_nationality String?  @default("")
+  phone_num            Int?     @db.SmallInt
+  consent1             Boolean?
+  consent2             Boolean?
+  consent21            Boolean?
+  Student              Student  @relation(fields: [id], references: [id], onDelete: Cascade, map: "parent_info_id_fkey")
 }
 
 model pdffile {
@@ -436,6 +442,7 @@ model prakan_inter_info {
   OPDTreatmentDate4     DateTime? @db.Date
   OPDTreatmentDate5     DateTime? @db.Date
   hospitalName2         String?
+  illnessDescription    String?
   Request               Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student               Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

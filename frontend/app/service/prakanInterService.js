@@ -16,6 +16,7 @@ export async function createPrakanInter(data) {
       title: data.title,
       email: data.email,
       totalMedicalFees: data.totalMedicalFees,
+      illnessDescription: data.illnessDescription,
       IPDAmittedDate: data.IPDAmittedDate
         ? new Date(`${data.IPDAmittedDate}T00:00:00.000Z`)
         : null, // Convert to ISO datetime or set to null
@@ -86,6 +87,7 @@ export async function updatePrakanForm(data) {
       hospitalName2: data.hospitalName2 || null,
       title: data.title,
       email: data.email,
+      illnessDescription: data.illnessDescription,
       totalMedicalFees: data.totalMedicalFees,
       IPDAmittedDate: data.IPDAmittedDate
         ? new Date(`${data.IPDAmittedDate}T00:00:00.000Z`)
