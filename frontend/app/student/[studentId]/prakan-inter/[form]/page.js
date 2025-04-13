@@ -398,6 +398,17 @@ function page() {
                     ⚠️ Please select treatment type. ⚠️
                   </h3>
                 )}
+                <h3 className="text-lg font-semibold my-4 pt-8">
+                  *Access to policy benefit details is available at{" "}
+                  <a
+                    href="https://www.sa.chula.ac.th/service/health-insurance-for-foreigner-student/"
+                    className="text-blue-500 hover:underline"
+                    target="_blank" // Open link in a new tab
+                    rel="noopener noreferrer" // Security best practice
+                  >
+                    https://www.sa.chula.ac.th
+                  </a>
+                </h3>
               </section>
 
               <div className="flex justify-between mt-8">
