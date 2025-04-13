@@ -59,23 +59,57 @@ function page() {
 
     // List of required fields
     const requiredFields = [
-      "title",
-      "lnameEN",
-      "fnameEN",
-      "id",
-      "phone_num",
-      "email",
-      "hospitalName",
-      "hospitalProvince",
-      "hospitalPhoneNumber",
-      "hospitalAmittedDate",
-      "hospitalDischargedDate",
+      "title", // Prefix
+      "fnameEN", // First Name
+      "lnameEN", // Last Name
+      "id", // Student ID
+      "phone_num", // Mobile phone number
+      "email", // Email address
+      "hospitalName", // Place of treatment
+      "hospitalAmittedDate", // Date admitted
+      "hospitalDischargedDate", // Date discharged
+      "treatmentType", // Type of treatment
+      "totalMedicalFees", // Total Medical Fees (Net)
     ];
 
     // Check if all required fields are present and not empty
     for (let field of requiredFields) {
       if (!prakanData[field] || prakanData[field].trim() === "") {
         alert(`Please fill in the "${field}" field.`);
+        return;
+      }
+    }
+
+    // Check if treatment type is selected
+    if (prakanData.treatmentType === "null") {
+      alert("Please select a treatment type.");
+      return;
+    }
+    // Check if the total medical fees is a valid number
+    if (isNaN(prakanData.totalMedicalFees)) {
+      alert("Please enter a valid number for total medical fees.");
+      return;
+    }
+    // Check if the total medical fees is greater than 0
+    if (parseFloat(prakanData.totalMedicalFees) <= 0) {
+      alert("Total medical fees must be greater than 0.");
+      return;
+    }
+
+    if (prakanData.treatmentType === "inpatient") {
+      const { IPDAmittedDate, IPDDischargedDate } = prakanData;
+      if (!IPDAmittedDate || !IPDDischargedDate) {
+        alert("Please fill in the treatment dates.");
+        return;
+      }
+      if (new Date(IPDAmittedDate) > new Date(IPDDischargedDate)) {
+        alert("Admitted date cannot be later than discharged date.");
+        return;
+      }
+    }
+    if (prakanData.treatmentType === "outpatient") {
+      if (prakanData.OPDTreatmentDate1 == "") {
+        alert("Please fill in the treatment dates.");
         return;
       }
     }
@@ -238,7 +272,6 @@ function page() {
                     <input
                       type="text"
                       name="id"
-                      //value={formData.citizenId}
                       onChange={(event) => handleChange(event, "id")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Student ID"
@@ -290,7 +323,6 @@ function page() {
                     <input
                       type="text"
                       name="hospitalName"
-                      //value={formData.citizenId}
                       onChange={(event) => handleChange(event, "hospitalName")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Hospital / Clinic Name"
@@ -303,7 +335,6 @@ function page() {
                     <input
                       type="text"
                       name="hospitalName2"
-                      //value={formData.citizenId}
                       onChange={(event) => handleChange(event, "hospitalName2")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Hospital / Clinic Name (Optional)"
@@ -316,7 +347,7 @@ function page() {
                     <input
                       type="number"
                       data-type="currency"
-                      name="hospitalName2"
+                      name="totalMedicalFees"
                       onChange={(event) => {
                         const value = event.target.value;
                         const formattedValue = parseFloat(value).toFixed(2); // Restrict to 2 decimal places

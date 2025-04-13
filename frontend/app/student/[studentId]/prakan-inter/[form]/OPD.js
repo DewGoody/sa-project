@@ -4,12 +4,25 @@ function OPD({ handleChange }) {
   const [datePickers, setDatePickers] = useState([{}]); // Initialize with one date picker
 
   const addDatePicker = () => {
+    if (datePickers.length >= 5) return; // Limit to 5 date pickers
     setDatePickers([...datePickers, {}]); // Add a new date picker
+    handleChange({
+      target: {
+        name: `OPDTreatmentDateCount`,
+        value: datePickers.length + 1,
+      },
+    });
   };
 
   const removeDatePicker = () => {
     if (datePickers.length > 1) {
       setDatePickers(datePickers.slice(0, -1)); // Remove the last date picker
+      handleChange({
+        target: {
+          name: `OPDTreatmentDateCount`,
+          value: datePickers.length - 1,
+        },
+      });
     }
   };
 
@@ -39,7 +52,7 @@ function OPD({ handleChange }) {
               required
             />
           </div>
-          <div className="flex gap-4 mt-8">
+          <div className="hidden md:flex gap-4 mt-8">
             {i < 4 ? (
               <button
                 type="button"
@@ -66,9 +79,30 @@ function OPD({ handleChange }) {
                 -
               </button>
             ) : null}
+            <div></div>
           </div>
         </div>
       ))}
+      <div className="md:hidden flex gap-4 mt-8">
+        {datePickers.length < 5 && (
+          <button
+            type="button"
+            onClick={addDatePicker}
+            className="bg-green-400 text-white px-4 py-2 rounded-md"
+          >
+            +
+          </button>
+        )}
+        {datePickers.length > 1 && (
+          <button
+            type="button"
+            onClick={removeDatePicker}
+            className="bg-red-500 text-white px-4 py-2 rounded-md"
+          >
+            -
+          </button>
+        )}
+      </div>
     </div>
   );
 }
