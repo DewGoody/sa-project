@@ -93,6 +93,7 @@ function page() {
       "hospitalName", // Place of treatment
       "totalMedicalFees", // Total Medical Fees (Net)
       "treatmentType", // Type of treatment
+      "illnessDescription", // Description of illness
     ];
 
     // Check if all required fields are present and not empty
@@ -370,44 +371,61 @@ function page() {
                       placeholder="Hospital / Clinic Name (Optional)"
                     />
                   </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Total Medical Fees (Net)
+                </div>
+                <div>
+                  <div className="grid gap-4 pt-4 ">
+                    <label className="block text-gray-700 ">
+                      Description of illness
                     </label>
-                    <input
-                      type="number"
-                      data-type="currency"
-                      name="totalMedicalFees"
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        const formattedValue = parseFloat(value).toFixed(2); // Restrict to 2 decimal places
-                        handleChange(
-                          { target: { value: formattedValue } },
-                          "totalMedicalFees"
-                        );
-                      }}
-                      onBlur={(event) => {
-                        event.target.value = prakanData.totalMedicalFees;
-                      }}
-                      step="0.01"
+                    <textarea
+                      name="hospitalName2"
+                      onChange={(event) => handleChange(event, "illnessDescription")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="1500.00"
+                      placeholder="Description of illness"
                     />
                   </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 ">
+                    <div>
+                      <label className="block text-gray-700 mb-2">
+                        Total Medical Fees (Net)
+                      </label>
+                      <input
+                        type="number"
+                        data-type="currency"
+                        name="totalMedicalFees"
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          const formattedValue = parseFloat(value).toFixed(2); // Restrict to 2 decimal places
+                          handleChange(
+                            { target: { value: formattedValue } },
+                            "totalMedicalFees"
+                          );
+                        }}
+                        onBlur={(event) => {
+                          event.target.value = prakanData.totalMedicalFees;
+                        }}
+                        step="0.01"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="Total Medical Fees (Net)"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Type of treatment
-                    </label>
-                    <select
-                      name="treatmentType"
-                      onChange={(event) => handleChange(event, "treatmentType")}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    >
-                      <option value="null">Select treatment type</option>
-                      <option value="inpatient">Inpatient (IPD)</option>
-                      <option value="outpatient">Outpatient (OPD)</option>
-                    </select>
+                    <div>
+                      <label className="block text-gray-700 mb-2">
+                        Type of treatment
+                      </label>
+                      <select
+                        name="treatmentType"
+                        onChange={(event) =>
+                          handleChange(event, "treatmentType")
+                        }
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      >
+                        <option value="null">Select treatment type</option>
+                        <option value="inpatient">Inpatient (IPD)</option>
+                        <option value="outpatient">Outpatient (OPD)</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
                 {prakanData?.treatmentType === "inpatient" ? (
