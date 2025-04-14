@@ -203,7 +203,7 @@ model RD_info {
   req_id         BigInt?
   date           DateTime? @db.Date
   money          String?
-  citizenRD      Int?      @db.SmallInt
+  citizenRD      BigInt?
   YearGradeRD    Int?      @db.SmallInt
   register_type  Int?      @db.SmallInt
 
