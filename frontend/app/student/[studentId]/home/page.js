@@ -333,7 +333,7 @@ export const Form = () => {
                               <p className="text-gray-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                             </div>
                             {(item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ส่งเอกสารแล้ว") ? (
-                              <div className="ml-4 mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด</div>
+                              <div className="ml-4 mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว</div>
                             ) : (
                               <div className="ml-4 mt-1 font-semibold text-base text-blue-500">
                                 {
@@ -543,7 +543,7 @@ export const Form = () => {
       </div>
 
       <Modal
-        title="ต้องการยกเลิกคิวแล้วแก้ไขฟอร์มใช่ไหม (Are you sure to delete queue and edit form ?)"
+        title="ยืนยันการยกเลิกคิวนี้แล้วแก้ไขฟอร์ม (Do you confirm to delete this queue and edit this form ?)"
         open={isModalEditFormOpen}
         onOk={handleEditFormDeleteQueue}
         onCancel={handleCancel}
@@ -557,7 +557,7 @@ export const Form = () => {
 
 
       <Modal
-        title="ต้องการลบคิวใช่ไหม (Are you sure to delete queue)"
+        title="ยืนยันการลบคำขอและยกเลิกคิวนี้ (Do you confirm to delete this request and cancel this queue ?)"
         open={isModalOpen && deleteQueueId !== ''}
         onOk={handleDeleteQueue}
         onCancel={handleCancel}
@@ -569,7 +569,7 @@ export const Form = () => {
       >
       </Modal>
       <Modal
-        title="ต้องการลบคำขอใช่ไหม (Are you sure to delete request)"
+        title="ยืนยันลบคำขอนี้ ((Do you confirm to delete this request ?)"
         open={isModalOpen && deleteNotQueueId !== ''}
         onOk={handleDeleteNotQueue}
         onCancel={handleCancel}

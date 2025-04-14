@@ -1,8 +1,37 @@
 'use client';
 import Image from "next/image";
 import { Header } from '../../../components/Header.js';
+import { useState, useEffect, use } from "react";
+import axios from "axios";
+import { useRouter, useParams } from "next/navigation";
 
 export default function StudentLoan() {
+ const [profileData, setProfileData] = useState(null);
+ const router = useRouter();
+ const { studentId } = useParams();
+ const fetchStudentData = async () => {
+  const response = await axios.get('/api/profile');
+      console.log(response.data);
+      setProfileData(response.data);
+      console.log(response.data);
+}
+useEffect(() => {
+    fetchStudentData();
+}, []);
+
+
+  const handleSubmit = async () => {
+    const response = await axios.post('/api/studentLoan/create', {
+      stu_id: profileData.id,
+    });
+    console.log("submitkub",response.data);
+    const reqId = response.data.data.id;
+    await axios.post(`/api/request/changeStatusToWaitBook`, {req_id:reqId});
+    router.push(`/student/${studentId}/appointment/${reqId}/0`);
+
+  }
+
+  
   return (
     <>
     <Header req1="กองทุนกู้ยืมเงินเพื่อการศึกษา (กยศ.)" req2="STUDENT LOAN FUND ACT"/>
@@ -26,6 +55,7 @@ export default function StudentLoan() {
         <li><span className="font-semibold">ลักษณะที่ 3:</span> นักเรียนหรือนักศึกษาที่ศึกษาในสาขาวิชาขาดแคลน หรือที่กองทุนมุ่งส่งเสริมเป็นพิเศษ</li>
         <li><span className="font-semibold">ลักษณะที่ 4:</span> นักเรียนหรือนักศึกษาที่เรียนดีเพื่อสร้างความเป็นเลิศ โดยให้กู้ในระดับปริญญาโท</li>
       </ul>
+      
       <div className="flex justify-center mt-4">
         <Image 
           src="/kys.jpg" 
@@ -48,7 +78,16 @@ export default function StudentLoan() {
       <p className="text-gray-700 mb-4">
       โทรศัพท์ 081-4533233 (10.00-17.00 น.)
       </p>
+      <div className="flex justify-end mt-4">
+      <button 
+        className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-400"
+        onClick={handleSubmit}
+        >
+       จองคิวมายื่นเอกสาร
+      </button>
     </div>
+    </div>
+    
     </>
     
   );
