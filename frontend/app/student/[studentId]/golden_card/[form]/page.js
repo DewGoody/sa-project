@@ -4,8 +4,10 @@ import axios from 'axios';
 import { Header } from '../../../../components/Header';
 import { useGoldenContext } from '../../../../contexts/GoldenData';
 import { useParams, useRouter } from 'next/navigation';
-import { DatePicker } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
+import { DatePicker } from 'antd';
+import dayjs from "dayjs";
+import { parseISO, format } from "date-fns";
 import 'react-toastify/dist/ReactToastify.css';
 const notifyerror = () => {
     toast.error('👆🏻 กรอกข้อมูลให้ถูกต้อง', {
@@ -17,7 +19,6 @@ const notifyerror = () => {
         draggable: true,
         progress: undefined,
         theme: "colored",
-        // transition: Bounce,
     });
 }
 const notifyinprocess = () => {
@@ -49,7 +50,7 @@ const notifysuccess = () => {
 }
 const page = () => {
     const { form } = useParams()
-    const {studentId} = useParams()
+    const { studentId } = useParams()
     const router = useRouter();
     const { Data, updateData } = useGoldenContext();
     const { updateDataid } = useGoldenContext(); // ใช้ context
@@ -241,7 +242,7 @@ const page = () => {
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                                 placeholder="Nametitle"
-                                                
+
                                             />
                                         </div>
                                         <div className="w-1/2">
@@ -304,23 +305,41 @@ const page = () => {
                                             placeholder="Identification number"
                                         />
                                     </div>
+
                                     <div>
-                                        <label className="block text-gray-700 mb-2">วันที่ออกบัตรประชาชน (Issue date of Id card )</label>
-                                        <input
-                                            type="date"
-                                            name="Idcardissuedate"
-                                            value={Data.Idcardissuedate}
-                                            onChange={handleChange}
+                                        <label className="block text-gray-700 mb-2">
+                                            วันที่ออกบัตรประชาชน (Issue date of ID card)
+                                        </label>
+                                        <DatePicker
+                                            format="DD/MM/YYYY"
+                                            value={Data.Idcardissuedate ? dayjs(Data.Idcardissuedate, "YYYY-MM-DD") : null}
+                                            onChange={(date) => {
+                                                handleChange({
+                                                    target: {
+                                                        name: "Idcardissuedate",
+                                                        value: format(date, "yyyy-MM-dd"),
+                                                    },
+                                                });
+                                            }}
+                                            allowClear={false}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         />
                                     </div>
+
                                     <div>
                                         <label className="block text-gray-700 mb-2">วันที่บัตรบัตรประชาชนหมดอายุ (Exp date of Id card )</label>
-                                        <input
-                                            type="date"
-                                            name="Idcardexpiraiton"
-                                            value={Data.Idcardexpiraiton}
-                                            onChange={handleChange}
+                                        <DatePicker
+                                            allowClear={false}
+                                            format="DD/MM/YYYY"
+                                            value={Data.Idcardexpiraiton ? dayjs(Data.Idcardexpiraiton, "YYYY-MM-DD") : null}
+                                            onChange={(date) => {
+                                                handleChange({
+                                                    target: {
+                                                        name: "Idcardexpiraiton",
+                                                        value: format(date, "yyyy-MM-dd"),
+                                                    },
+                                                });
+                                            }}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         />
                                     </div>
@@ -328,21 +347,23 @@ const page = () => {
                                         <div className="w-1/2">
 
                                             <label className="block text-gray-700 mb-2">วันเกิด (Date of birth)</label>
-                                            <input
-                                                type="date"
-                                                name="birthDate"
-                                                value={Data.birthDate}
-                                                onChange={handleChange}
+                                            <DatePicker
+
+                                                allowClear={false}
+                                                format="DD/MM/YYYY"
+                                                value={Data.birthDate ? dayjs(Data.birthDate, "YYYY-MM-DD") : null}
+                                                onChange={(date) => {
+                                                    handleChange({
+                                                        target: {
+                                                            name: "birthDate",
+                                                            value: format(date, "yyyy-MM-dd"),
+                                                        },
+                                                    });
+                                                }}
+                                                disabled={true}
                                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                placeholder="Date of birth"
-                                                disabled
                                             />
-                                            {/* <DatePicker
-                                                type="date"
-                                                name="birthDate"
-                                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                                onChange={onChange}
-                                            /> */}
+
                                         </div>
                                         <div className="w-1/2">
                                             <label className="block text-gray-700 mb-2">อาชีพ (Occupation)</label>
@@ -524,8 +545,8 @@ const page = () => {
                                                 onChange={handleChange}
                                                 value={Data.hospitalName}
                                                 className="border rounded-lg px-2 py-1 ml-2"
-                                                placeholder="ชื่อโรงพยาบาล" 
-                                                disabled={Data.benefitStatus !== "existing"} 
+                                                placeholder="ชื่อโรงพยาบาล"
+                                                disabled={Data.benefitStatus !== "existing"}
                                             />
                                         </label>
                                     </div>
@@ -535,7 +556,7 @@ const page = () => {
                                         <input
                                             type="radio"
                                             id="goverment"
-                                            name="benefitStatus" 
+                                            name="benefitStatus"
                                             value="goverment"
                                             checked={Data.benefitStatus === "goverment"}
                                             onChange={handleChange}
@@ -549,7 +570,7 @@ const page = () => {
                                         <input
                                             type="radio"
                                             id="social"
-                                            name="benefitStatus" 
+                                            name="benefitStatus"
                                             value="social"
                                             checked={Data.benefitStatus === "social"}
                                             onChange={handleChange}

@@ -161,30 +161,30 @@ export const Form = () => {
     fetchAllData();
   }, [profileData, deleteQueueId, deleteNotQueueId]);
 
-  useEffect(() => {
-    const checkGCStatus = async () => {
-      console.log("GC_time changed:", GC_time);
-      if (GC_time.status === "ย้ายสิทธิ์ไม่สำเร็จ") {
-        if (GC_time.created_at) {
-          const createdAt = new Date(GC_time.created_at);
-          const currentDate = new Date();
-          const timeDiff = Math.abs(currentDate - createdAt);
-          const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-          console.log("diffDays", diffDays);
-          if (diffDays > 30) {
-            try {
-              await axios.post('/api/request/delete', { id: GC_time.id }); 
-              window.location.reload();
-            } catch (error) {
-              console.error("Error deleting request:", error);
-            }
-          }
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const checkGCStatus = async () => {
+  //     console.log("GC_time changed:", GC_time);
+  //     if (GC_time.status === "ย้ายสิทธิ์ไม่สำเร็จ") {
+  //       if (GC_time.created_at) {
+  //         const createdAt = new Date(GC_time.created_at);
+  //         const currentDate = new Date();
+  //         const timeDiff = Math.abs(currentDate - createdAt);
+  //         const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  //         console.log("diffDays", diffDays);
+  //         if (diffDays > 30) {
+  //           try {
+  //             await axios.post('/api/request/delete', { id: GC_time.id }); 
+  //             window.location.reload();
+  //           } catch (error) {
+  //             console.error("Error deleting request:", error);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   };
 
-    checkGCStatus();
-  }, [GC_time]);
+  //   checkGCStatus();
+  // }, [GC_time]);
 
   const formatDate = (dateString) => {
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };

@@ -126,18 +126,11 @@ const RD = () => {
     }
     console.log("studentIDJaaa ", profileData?.id);
     const handleNavigation = async (event) => {
-        console.log("formmm", int_form);
-
-        const response = await axios.post(`/api/request/create`, { type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร", status: "รอจองคิว", stuId: profileData.id, formId: int_form });
-        const param = response.data.data.id;
-        console.log("responseRequest", response.data);
-        console.log("param", param);
-
         if (!allChecked()) {
             event.preventDefault();
             alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
         } else {
-            router.push(`/student/${studentId}/appointment/${param}/0`);
+            router.push(`/student/${studentId}/appointment/${int_form}/0`);
         }
     };
 

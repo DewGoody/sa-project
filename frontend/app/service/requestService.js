@@ -86,25 +86,57 @@ export async function getRequestById(id) {
 
 export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
-        where: {
-            NOT: { Queue: { some: {} } },
-            status: {
-                in: ["รอจองคิว", "ยังไม่ได้ Upload เอกสาร", "รอเจ้าหน้าที่ดำเนินการ", "ขอข้อมูลเพิ่มเติม", "ส่งข้อมูลให้ รพ. แล้ว", "ย้ายสิทธิ์ไม่สำเร็จ", "ย้ายสิทธิ์สำเร็จ"],
-                notIn: ["ประวัติการแก้ไข"]
-            },
-            stu_id: data,
-            deleted_at: null
+      where: {
+        NOT: { Queue: { some: {} } },
+        status: {
+          in: [
+            "รอจองคิว",
+            "ยังไม่ได้ Upload เอกสาร",
+            "รอเจ้าหน้าที่ดำเนินการ",
+            "ขอข้อมูลเพิ่มเติม",
+            "ส่งข้อมูลให้ รพ. แล้ว",
+            "ย้ายสิทธิ์ไม่สำเร็จ",
+            "ย้ายสิทธิ์สำเร็จ",
+          ],
+          notIn: ["ประวัติการแก้ไข"],
         },
-        include: {
-            accident_info: true,
-            Ponpan: true,
-            UHC_request: true,
-            prakan_inter_info: true,
-        }
+        stu_id: data,
+        deleted_at: null,
+      },
+      include: {
+        accident_info: true,
+        Ponpan: true,
+        UHC_request: true,
+        prakan_inter_info: true,
+      },
     });
+  
 
-    return requests.length ? requests : "Not found";
-}
+    const now = new Date();
+    const filteredRequests = [];
+  
+    for (const req of requests) {
+      if (req.status === "ย้ายสิทธิ์ไม่สำเร็จ" && req.created_at) {
+        const createdAt = new Date(req.created_at);
+        const diffDays = Math.ceil((now - createdAt) / (1000 * 3600 * 24));
+  
+        if (diffDays > 30) {
+          await prisma.request.update({
+            where: { id: req.id },
+            data: { deleted_at: new Date() ,
+                status: "คำขอถูกยกเลิก"
+            }, 
+          });
+          continue;
+        }
+      }
+  
+      filteredRequests.push(req);
+    }
+  
+    return filteredRequests.length ? filteredRequests : "Not found";
+  }
+  
 
 
 export async function getShowRequestNotQueueGoldenCard(data) {
