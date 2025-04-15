@@ -3,41 +3,35 @@ import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
-function serializeBigInt(obj) {
-    if (obj === null || obj === undefined) return obj;
+// function serializeBigInt(obj) {
+//     if (obj === null || obj === undefined) return obj;
 
-    if (typeof obj === 'bigint') {
-        return obj.toString(); // แปลง BigInt เป็น string
-    }
+//     if (typeof obj === 'bigint') {
+//         return obj.toString(); // แปลง BigInt เป็น string
+//     }
 
-    if (Array.isArray(obj)) {
-        return obj.map((item) => serializeBigInt(item));
-    }
+//     if (Array.isArray(obj)) {
+//         return obj.map((item) => serializeBigInt(item));
+//     }
 
-    if (typeof obj === 'object') {
-        // Handle special cases for Prisma nested fields
-        if (obj.hasOwnProperty('s') && obj.hasOwnProperty('e') && obj.hasOwnProperty('d')) {
-            // กรณีโครงสร้าง Prisma ID ที่เป็น object แบบ nested
-            return obj.d.join(""); // นำเลขที่อยู่ใน d มาต่อกัน
-        }
+//     if (typeof obj === 'object') {
+//         return Object.fromEntries(
+//             Object.entries(obj).map(([key, value]) => [key, serializeBigInt(value)])
+//         );
+//     }
 
-        return Object.fromEntries(
-            Object.entries(obj).map(([key, value]) => [key, serializeBigInt(value)])
-        );
-    }
-
-    return obj;
-}
-
+//     return obj;
+// }
 
 export async function POST(req, res) {
     try {
         // Fetch data with related RD_info
-        const data = await req.json()
-        const year = data.year
+        const data = await req.json();
+        const year = data.year;
         const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
         const endOfYear = new Date(year + 1, 0, 1);
-        let queue = null
+        let queue = null;
+
         if (year == 0) {
             queue = await prisma.request.findMany({
                 where: {
@@ -45,10 +39,10 @@ export async function POST(req, res) {
                 },
                 include: {
                     RD_info: true, // Include related RD_info
+                    Student: true
                 },
             });
-        }
-        else {
+        } else {
             queue = await prisma.request.findMany({
                 where: {
                     type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
@@ -59,32 +53,16 @@ export async function POST(req, res) {
                 },
                 include: {
                     RD_info: true, // Include related RD_info
+                    Student: true
                 },
             });
-
         }
 
-        // Flatten RD_info into the parent object
-        const flattenedQueue = queue.map((entry) => {
-            // Merge RD_info properties with the main entry
-            if (entry.RD_info[0]) {
-                entry.yearRD = entry.RD_info[0].RD_type
-                entry.json = entry.RD_info[0].json_history
-                return {
-                    entry,
-                    // ...entry.RD_info, // Flatten RD_info into the parent
-                    // ...entry.json = entry.RD_info.json_history,
-                };
-            }
-            return entry; // In case RD_info is null or missing
-        });
+        // Convert BigInt values to strings before JSON serialization
+        const serializedQueue = JSON.parse(JSON.stringify(queue, (key, value) =>
+            typeof value === 'bigint' ? value.toString() : value
+        ));
 
-        // Serialize BigInt values
-        const serializedQueue = serializeBigInt(flattenedQueue);
-        console.log( serializedQueue);
-        
-
-        // Return the flattened and serialized data
         return NextResponse.json(serializedQueue, { status: 200 });
     } catch (error) {
         console.error("Error fetching data:", error);

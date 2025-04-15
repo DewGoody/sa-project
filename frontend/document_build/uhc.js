@@ -162,9 +162,9 @@ async function uhc(data) {
 
   // student year cut in 1 aug every year
   let stu_year =  parseInt(year);
-  if (currentDate.getMonth() < 8) {
-    stu_year += 1;
-  }
+  // if (currentDate.getMonth() < 8) {
+  //   stu_year += 1;
+  // }
   console.log('stu_year', stu_year);
   firstPage.drawText(`${stu_year || ''}`, {
     x: 195,
@@ -540,7 +540,7 @@ async function uhc(data) {
         color: rgb(0, 0, 0),
       });
       break;
-    case 'government':
+    case 'goverment': 
       secondPage.drawImage(tick, {
         x: 47,
         y: height2 - 288,

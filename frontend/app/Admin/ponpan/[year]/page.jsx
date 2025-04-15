@@ -397,21 +397,21 @@ const AppointmentManagement = () => {
                 if (status === 'รอเข้ารับบริการ') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว', style: { color: 'gray' }, disabled: true },
                         { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 } else if (status === 'รอเจ้าหน้าที่ดำเนินการ') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'black' } },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว', style: { color: 'black' } },
                         { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 } else if (status === 'ส่งเอกสารแล้ว') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว', style: { color: 'gray' }, disabled: true },
                         { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'black' } },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
@@ -419,14 +419,14 @@ const AppointmentManagement = () => {
                 else if (status === 'ติดต่อรับเอกสาร') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว', style: { color: 'gray' }, disabled: true },
                         { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'black' } },
                     ];
                 } else if (status === 'รับเอกสารเรียบร้อย') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว', style: { color: 'gray' }, disabled: true },
                         { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
@@ -444,7 +444,7 @@ const AppointmentManagement = () => {
             filters: [
                 { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
                 { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
-                { text: "ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด", value: "ส่งเอกสารแล้ว" },
+                { text: "ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว", value: "ส่งเอกสารแล้ว" },
                 { text: "มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล", value: "ติดต่อรับเอกสาร" },
                 { text: "รับเอกสารเรียบร้อย", value: "รับเอกสารเรียบร้อย" },
             ],

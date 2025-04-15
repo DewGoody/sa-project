@@ -36,8 +36,9 @@ export const Form = () => {
   const [notQueue, setNotQueue] = useState([]);
   const [moreInfo, setMoreInfo] = useState('');
   const [reqIdEdit, setReqIdEdit] = useState(0);
-  const [RD, SETRD] = useState(true)
-  const [GC, SETGC] = useState(true)
+  const [RD, SETRD] = useState(false)
+  const [GC, SETGC] = useState(false)
+  const [GC_time, SETGC_time] = useState({ id: "", created_at: "", status: "" });
   const router = useRouter();
   const showModal = (item) => {
     console.log("item :", item);
@@ -71,7 +72,6 @@ export const Form = () => {
     setIsModalOpen(false);
     setIsModalEditFormOpen(false);
   };
-
 
   const showModalCheckInfo = (item) => {
     console.log("info :", item);
@@ -111,6 +111,8 @@ export const Form = () => {
       response.data.data.map((item) => {
         if (item.Request.type === "การผ่อนผันเข้ารับราชการทหาร") {
           setHasPonpan(true);
+        } if (item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
+          SETRD(true);
         }
       })
       console.log("hasPonpan", hasPonpan);
@@ -129,69 +131,65 @@ export const Form = () => {
     try {
       const response = await axios.post('/api/request/getNotQueue', { id: profileData.id }); // Example API
       console.log("getNotQueue", response.data.data);
+      response.data.data.map((item) => {
+        console.log("item", item);
+
+        if (item.type === "โครงการหลักประกันสุขภาพถ้วนหน้า") {
+          SETGC(true);
+          SETGC_time({
+            id: item.id,
+            created_at: item.created_at,
+            status: item.status
+          });
+        }
+        if (item.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
+          SETRD(true);
+        }
+      })
       console.log("formId", response.data.data[0].id);
       setFormId(response.data.data[0].id);
       setNotQueue(response.data.data);
       setLoading(false);
-      // fetchNotQueueGoldencard();
 
     } catch (error) {
       setError(error.message);
       setLoading(false);
     }
   }
-  // const fetchNotQueueGoldencard = async () => {
-  //   try {
-  //     const response = await axios.post('/api/request/getNotQueueGoldencard', { id: profileData.id }); // Example API
-  //     console.log("getNotQueueGoldencard", response.data.data);
-  //     console.log("formIdgetNotQueueGoldencard", response.data.data[0].id);
-  //     setFormId(response.data.data[0].id);
-  //     setNotQueue((prevNotQueue) => [...prevNotQueue, ...response.data.data]);
-
-  //     console.log("notqueueformgoldencard", notQueue);
-  //     setLoading(false);
-  //     if (response.data.data) {
-  //       SETGC(false)
-  //     }
-
-  //   } catch (error) {
-  //     setError(error.message);
-  //     setLoading(false);
-  //   }
-  // }
-
-  // const fetchRD = async () => {
-  //   try {
-  //     const response = await axios.post('/api/request/getRD', { id: profileData.id }); // Example API
-  //     console.log("getRD", response.data.data);
-  //     console.log("formidRD", response.data.data[0].id);
-  //     setFormId(response.data.data[0].id);
-  //     setNotQueue((prevNotQueue) => [...prevNotQueue, ...response.data.data]);
-  //     setLoading(false);
-  //     if (response.data.data) {
-  //       SETRD(false)
-  //     }
-  //   } catch (error) {
-  //     setError(error.message);
-  //     setLoading(false);
-  //   }
-  // }
 
   const fetchAllData = async () => {
-    // await fetchNotQueueGoldencard();
     await fetchNotQueue();
     await fetchQueue();
-    // await fetchRD()
   };
 
   useEffect(() => {
     fetchAllData();
   }, [profileData, deleteQueueId, deleteNotQueueId]);
 
+  // useEffect(() => {
+  //   const checkGCStatus = async () => {
+  //     console.log("GC_time changed:", GC_time);
+  //     if (GC_time.status === "ย้ายสิทธิ์ไม่สำเร็จ") {
+  //       if (GC_time.created_at) {
+  //         const createdAt = new Date(GC_time.created_at);
+  //         const currentDate = new Date();
+  //         const timeDiff = Math.abs(currentDate - createdAt);
+  //         const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  //         console.log("diffDays", diffDays);
+  //         if (diffDays > 30) {
+  //           try {
+  //             await axios.post('/api/request/delete', { id: GC_time.id }); 
+  //             window.location.reload();
+  //           } catch (error) {
+  //             console.error("Error deleting request:", error);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   };
 
-
-  console.log("prakanData", prakanData);
-  console.log("prakanData length", prakanData.length);
+  //   checkGCStatus();
+  // }, [GC_time]);
 
   const formatDate = (dateString) => {
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -340,7 +338,7 @@ export const Form = () => {
                               <p className="text-gray-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                             </div>
                             {(item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ส่งเอกสารแล้ว") ? (
-                              <div className="ml-4 mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้วที่ศาลากลางจังหวัด</div>
+                              <div className="ml-4 mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว</div>
                             ) : (
                               <div className="ml-4 mt-1 font-semibold text-base text-blue-500">
                                 {
@@ -398,7 +396,6 @@ export const Form = () => {
                 ) : null}
                 {Array.isArray(notQueue) && notQueue.length > 0 && (
                   notQueue.map((item, index) => (
-                    console.log("✅ item:", item),
                     <div key={index} className="flex justify-between items-center border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full mt-5">
                       <div>
                         {count++ + ". " + item.type}
@@ -424,7 +421,7 @@ export const Form = () => {
                         </div>
                       </div>
                       <div className="mb-3 flex mr-1">
-                        {item.status == "ขอข้อมูลเพิ่มเติม" || item.status == "ย้ายสิทธิ์ไม่สำเร็จ" && (
+                        {(item.status == "ขอข้อมูลเพิ่มเติม" || item.status == "ย้ายสิทธิ์ไม่สำเร็จ") && (
                           <div className="ml-3 mt- mb-3 flex">
                             <button onClick={() => { showModalCheckInfo(item.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
                               view detail
@@ -494,8 +491,9 @@ export const Form = () => {
               </a>
 
               <a
-                onClick={() => RD && router.push(`/student/${studentId}/rordor/0`)}
-                className={`block ${RD ? "cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg" : "pointer-events-none opacity-50"}`}
+                onClick={() => !RD && router.push(`/student/${studentId}/rordor/0`)}
+                className={`block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg 
+                              ${RD ? "pointer-events-none opacity-50" : ""}`}
               >
                 <ServiceCard
                   title="2. การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)"
@@ -513,8 +511,9 @@ export const Form = () => {
               </a>
 
               <a
-                onClick={() => GC && router.push(`/student/${studentId}/golden_card/0`)}
-                className={`block ${GC ? "cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg" : "pointer-events-none opacity-50"}`}
+                onClick={() => !GC && router.push(`/student/${studentId}/golden_card/0`)}
+                className={`block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg 
+                  ${GC ? "pointer-events-none opacity-50" : ""}`}
               >
                 <ServiceCard
                   title="4. โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)"
@@ -550,7 +549,7 @@ export const Form = () => {
       </div>
 
       <Modal
-        title="ต้องการยกเลิกคิวแล้วแก้ไขฟอร์มใช่ไหม (Are you sure to delete queue and edit form ?)"
+        title="ยืนยันการยกเลิกคิวนี้แล้วแก้ไขฟอร์ม (Do you confirm to delete this queue and edit this form ?)"
         open={isModalEditFormOpen}
         onOk={handleEditFormDeleteQueue}
         onCancel={handleCancel}
@@ -564,7 +563,7 @@ export const Form = () => {
 
 
       <Modal
-        title="ต้องการลบคิวใช่ไหม (Are you sure to delete queue)"
+        title="ยืนยันการลบคำขอและยกเลิกคิวนี้ (Do you confirm to delete this request and cancel this queue ?)"
         open={isModalOpen && deleteQueueId !== ''}
         onOk={handleDeleteQueue}
         onCancel={handleCancel}
@@ -576,7 +575,7 @@ export const Form = () => {
       >
       </Modal>
       <Modal
-        title="ต้องการลบคำขอใช่ไหม (Are you sure to delete request)"
+        title="ยืนยันลบคำขอนี้ ((Do you confirm to delete this request ?)"
         open={isModalOpen && deleteNotQueueId !== ''}
         onOk={handleDeleteNotQueue}
         onCancel={handleCancel}

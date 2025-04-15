@@ -22,7 +22,7 @@ export async function GET(req) {
     } else {
       // console.log("in else");
       const idbefore = await prisma.rD_info.findFirst({
-        where: { id: parseInt(formId) }
+        where: { req_id: parseInt(formId) }
       })
       id = idbefore.student_id
     }

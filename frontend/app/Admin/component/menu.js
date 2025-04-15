@@ -27,6 +27,7 @@ const Menubar = () => {
         { key: "/Admin/editMaxStudent", label: "จัดการจำนวนผู้เข้ารับบริการ" },
         { key: "/Admin/user", label: "จัดการผู้ใช้งาน" },
         { key: "/Admin/editServiceDate", label: "เปิด-ปิดวันให้บริการ" },
+        { key: "/Admin/student-loan/0", label: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ)" },
     ];
 
     return (
