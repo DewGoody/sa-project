@@ -28,8 +28,10 @@ async function handler(token) {
 
     try {
 
-        const response = await fetch(`https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token=${token}`, {
-            // const response = await fetch(`https://cunex.meesoft.co.th/service.svc/ext/type3/profile?token=${token}`, {
+
+        // const response = await fetch(`https://cunexdev.azurewebsites.net/service.svc/ext/type3/profile?token=${token}`, {
+        const response = await fetch(`https://cunex.meesoft.co.th/service.svc/ext/type3/profile?token=${token}`, {
+
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
