@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Parent } from '../component/parent';
 import { Personal } from '../component/personal';
 const notifyerror = () => {
-    toast.error('👆🏻 กรอกข้อมูลให้ถูกต้อง', {
+    toast.error('👆🏻 กรอกข้อมูลไม่ครบถ้วน', {
         position: "bottom-right",
         autoClose: 2000,
         hideProgressBar: false,
