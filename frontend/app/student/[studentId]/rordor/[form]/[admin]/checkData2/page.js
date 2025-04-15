@@ -145,8 +145,8 @@ const CheckData = () => {
                     register_type: parseInt(formData.register_type),
                     RD_type: parseInt(formData.YearGradeRD),
                     Branches: formData.Branches,
-                    corps: formData.corps,
-                    man_right: formData.man_right,
+                    corps: formData.corps || "",
+                    man_right: formData.man_right || "",
                     women_right: formData.women_right,
                 },
                 guardian_info: {

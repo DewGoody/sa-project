@@ -182,8 +182,8 @@ const page = () => {
                     house_moo: Data.house_moo,
                     soi: Data.soi,
                     street: Data.road,
-                    subdistrict: Data.amphure,
-                    district: Data.district,
+                    subdistrict: Data.district,
+                    district: Data.amphure,
                     province: Data.province,
                     postal_code: Data.zipCode,
                 }
