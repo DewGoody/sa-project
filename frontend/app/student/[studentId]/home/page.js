@@ -111,6 +111,8 @@ export const Form = () => {
       response.data.data.map((item) => {
         if (item.Request.type === "การผ่อนผันเข้ารับราชการทหาร") {
           setHasPonpan(true);
+        } if (item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
+          SETRD(true);
         }
       })
       console.log("hasPonpan", hasPonpan);
@@ -139,6 +141,9 @@ export const Form = () => {
             created_at: item.created_at,
             status: item.status
           });
+        }
+        if (item.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
+          SETRD(true);
         }
       })
       console.log("formId", response.data.data[0].id);
@@ -486,8 +491,9 @@ export const Form = () => {
               </a>
 
               <a
-                onClick={() => RD && router.push(`/student/${studentId}/rordor/0`)}
-                className={`block ${RD ? "cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg" : "pointer-events-none opacity-50"}`}
+                onClick={() => !RD && router.push(`/student/${studentId}/rordor/0`)}
+                className={`block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg 
+                              ${RD ? "pointer-events-none opacity-50" : ""}`}
               >
                 <ServiceCard
                   title="2. การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)"
