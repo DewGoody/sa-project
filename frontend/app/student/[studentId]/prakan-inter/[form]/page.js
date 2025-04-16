@@ -425,6 +425,7 @@ function page() {
                         step="0.01"
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Total Medical Fees (Net)"
+                        min={0}
                       />
                     </div>
                   </div>
