@@ -122,10 +122,7 @@ const RD = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header
-        req1="Health Insurance For Foreigner Student (Claim Injury/Illness)"
-        req2=""
-      />
+      <Header req1="Group Health Insurance Claim Form" req2="" />
       <main className="flex justify-center items-center">
         <div className="bg-white p-8 w-full max-w-4xl">
           {/* Personal & Contact Information Section */}
@@ -188,7 +185,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        5. Copy of your bank account passbook
+                        5. COPY of your BANK account passbook
                       </strong>
                     </div>
                   </label>

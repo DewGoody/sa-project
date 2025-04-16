@@ -47,7 +47,7 @@ function OPD({ handleChange }) {
         <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 ">
           <div>
             <label className="block text-gray-700 mb-2">
-              Date of treatment {i + 1}
+              Date of Treatment {i + 1}
             </label>
             <DatePicker
               format="DD/MM/YYYY"

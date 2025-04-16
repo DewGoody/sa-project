@@ -214,7 +214,7 @@ function page() {
   return (
     <>
       <div className=" bg-white min-h-screen">
-        <Header req1="Health Insurance for Foreigner Student (Claim Illness)" />
+        <Header req1="Group Health Insurance Claim Form" />
         <div className=" mx-24 ">
           <main className="flex justify-center bg-white w-full">
             <div className="bg-white  w-full min-w-screen-6xl">
@@ -361,7 +361,7 @@ function page() {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      Additional place of treatment (Optional)
+                      Place of treatment 2 (Optional)
                     </label>
                     <input
                       type="text"
@@ -379,12 +379,30 @@ function page() {
                     </label>
                     <textarea
                       name="hospitalName2"
-                      onChange={(event) => handleChange(event, "illnessDescription")}
+                      onChange={(event) =>
+                        handleChange(event, "illnessDescription")
+                      }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Description of illness"
                     />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 ">
+                    <div>
+                      <label className="block text-gray-700 mb-2">
+                        Type of treatment
+                      </label>
+                      <select
+                        name="treatmentType"
+                        onChange={(event) =>
+                          handleChange(event, "treatmentType")
+                        }
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      >
+                        <option value="null">Select type of treatment</option>
+                        <option value="inpatient">Inpatient (IPD)</option>
+                        <option value="outpatient">Outpatient (OPD)</option>
+                      </select>
+                    </div>
                     <div>
                       <label className="block text-gray-700 mb-2">
                         Total Medical Fees (Net)
@@ -409,37 +427,13 @@ function page() {
                         placeholder="Total Medical Fees (Net)"
                       />
                     </div>
-
-                    <div>
-                      <label className="block text-gray-700 mb-2">
-                        Type of treatment
-                      </label>
-                      <select
-                        name="treatmentType"
-                        onChange={(event) =>
-                          handleChange(event, "treatmentType")
-                        }
-                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      >
-                        <option value="null">Select treatment type</option>
-                        <option value="inpatient">Inpatient (IPD)</option>
-                        <option value="outpatient">Outpatient (OPD)</option>
-                      </select>
-                    </div>
                   </div>
                 </div>
                 {prakanData?.treatmentType === "inpatient" ? (
                   <IPD handleChange={handleChange} prakanData={prakanData} />
                 ) : prakanData?.treatmentType === "outpatient" ? (
                   <OPD handleChange={handleChange} prakanData={prakanData} />
-                ) : (
-                  <h3 className="text-lg font-semibold my-4 pt-8 flex gap-4 ">
-                    <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
-                      3
-                    </span>
-                    ⚠️ Please select treatment type. ⚠️
-                  </h3>
-                )}
+                ) : null}
                 <h3 className="text-lg font-semibold my-4 pt-8">
                   *Access to policy benefit details is available at{" "}
                   <a
