@@ -195,26 +195,22 @@ model Queue {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model RD_info {
-  id             BigInt    @id @default(autoincrement())
-  created_at     DateTime  @default(now()) @db.Timestamptz(6)
-  RD_type        Decimal?  @db.Decimal
-  student_id     Decimal?  @unique @db.Decimal
-  req_id         BigInt?
-  date           DateTime? @db.Date
-  money          String?
-  citizenRD      BigInt?
-  YearGradeRD    Int?      @db.SmallInt
-  Branches       String?
-  corps          String?
-  registermyself Boolean?
-  notmilitary    Boolean?
-  readymilitary  Boolean?
-  man_right      Boolean?
-  women_right    Boolean?
-  ready_right    Boolean?
-  register_type  Int?      @db.SmallInt
-  Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student        Student?  @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  id                  BigInt    @id @default(autoincrement())
+  created_at          DateTime  @default(now()) @db.Timestamptz(6)
+  RD_type             Decimal?  @db.Decimal
+  student_id          Decimal?  @db.Decimal
+  req_id              BigInt?
+  date                DateTime? @db.Date
+  money               String?
+  citizenRD           Int?      @db.SmallInt
+  YearGradeRD         Int?      @db.SmallInt
+  register_type       Int?      @db.SmallInt
+  Branches            String?
+  corps               String?
+  certification_left  Int?      @db.SmallInt
+  certification_right Int?      @db.SmallInt
+  Request             Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student             Student?  @relation(fields: [student_id], references: [id], onDelete: Cascade)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -369,7 +365,6 @@ model accident_info {
   acc_date         DateTime? @db.Date
   accident_place   String?
   treatment_place  String?
-
   hospital_type    Int?      @db.SmallInt
   medical_fee      Float?
 
