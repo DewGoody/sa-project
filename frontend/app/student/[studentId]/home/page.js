@@ -27,8 +27,10 @@ export const Form = () => {
   const [reqBookNotQueue, setReqBookNotQueue] = useState(false);
   const [reqBookQueue, setReqBookQueue] = useState(false);
   const [itemBoookQueue, setItemBookQueue] = useState(false);
+  const [reqIdEditNotQueue, setReqIdNotQueue] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalEditFormOpen, setIsModalEditFormOpen] = useState(false);
+  const [isModalEditFormNotqueue, setIsModalEditFormNotQueue] = useState(false);
   const [isModalCheckInfoOpen, setIsModalCheckInfoOpen] = useState(false);
   const [deleteQueueId, setDeleteQueueId] = useState('');
   const [deleteNotQueueId, setDeleteNotQueueId] = useState('');
@@ -64,6 +66,15 @@ export const Form = () => {
     setIsModalEditFormOpen(true);
   };
 
+  const showModalEditFormNotQueue = (item) => {
+    console.log("item:", item);
+    setReqIdNotQueue(item.id)
+    // setReqIdEdit(item.id)
+    // setDeleteNotQueueId(item.id);
+    // setPrakanDataLength(notQueue.length);
+    setIsModalEditFormNotQueue(true);
+  };
+
   const showModalNotQueue = (id) => {
     console.log("deleteIdNotQueue :", id);
     setNotQueueLength(notQueue.length);
@@ -89,6 +100,7 @@ export const Form = () => {
     setIsModalOpen(false);
     setIsModalEditFormOpen(false);
     setIsModalScheduleNotQueueOpen(false);
+    setIsModalScheduleOpen(false);
   };
 
   const showModalCheckInfo = (item) => {
@@ -261,10 +273,9 @@ export const Form = () => {
     }
   }
 
-  const handleEditForm = async (id) => {
+  const handleEditForm = async () => {
     // console.log("sfjkfhksjdfnsmd,nfsdm,nfds,mnfsd,",id);
-    console.log("editFormReqId : ", id);
-    const response = await axios.post('/api/request/getById', { id: id }); // Example API
+    const response = await axios.post('/api/request/getById', { id: reqIdEditNotQueue }); // Example API
     console.log("editFormResponse :", response.data.data);
     router.push(`/student/${studentId}/${response.data.data.path}/${response.data.data.form}`);
   }
@@ -453,7 +464,7 @@ export const Form = () => {
                             <div className="ml-3 mt- mb-3 flex">
                               <button
                                 className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
-                                onClick={() => handleEditForm(item.id)}
+                                onClick={() => showModalEditFormNotQueue(item)}
                               >
                                 Edit form
                               </button>
@@ -571,6 +582,19 @@ export const Form = () => {
         title="ยืนยันการยกเลิกคิวนี้แล้วแก้ไขฟอร์ม (Do you confirm to delete this queue and edit this form ?)"
         open={isModalEditFormOpen}
         onOk={handleEditFormDeleteQueue}
+        onCancel={handleCancel}
+        okButtonProps={{
+          style: { backgroundColor: '#f9a8d4' },
+          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
+          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
+        }}
+      >
+      </Modal>
+
+      <Modal
+        title="ยืนยันการยกเลิกคิวนี้แล้วแก้ไขฟอร์ม (Do you confirm to delete this queue and edit this form ?)"
+        open={isModalEditFormNotqueue}
+        onOk={handleEditForm}
         onCancel={handleCancel}
         okButtonProps={{
           style: { backgroundColor: '#f9a8d4' },
