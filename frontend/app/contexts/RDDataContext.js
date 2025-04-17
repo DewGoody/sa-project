@@ -111,16 +111,16 @@ export const FormDataProvider = ({ children }) => {
         Parentconsent2: datafromapimilitary.guardian_info?.consent2,
         Parentconsent21: datafromapimilitary.guardian_info?.consent21,
         //คำรับรอง
-        registermyself: datafromapimilitary.rD_info?.registermyself , 
-        notmilitary: datafromapimilitary.rD_info?.notmilitary, 
-        readymilitary: datafromapimilitary.rD_info?.readymilitary,
+        registermyself: datafromapimilitary.rD_info?.registermyself || true, 
+        notmilitary: datafromapimilitary.rD_info?.notmilitary || true, 
+        readymilitary: datafromapimilitary.rD_info?.readymilitary || true,
 
-        man_right:datafromapimilitary.rD_info?.man_right,
-        women_right:datafromapimilitary.rD_info?.women_right,
-        ready_right:datafromapimilitary.rD_info?.ready_right,
+        man_right:datafromapimilitary.rD_info?.man_right || datafromapiprofile.title === "นาย" ? true : false,
+        women_right:datafromapimilitary.rD_info?.women_right || datafromapiprofile.title === "นางสาว" ? true : false,
+        ready_right:datafromapimilitary.rD_info?.ready_right || true,
 
       }));
-      console.log("Context RD", datafromapimilitary);
+      // console.log("Context RD", datafromapimilitary);
       
     }
   }, [datafromapiprofile, datafromapimilitary]);

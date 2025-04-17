@@ -297,8 +297,8 @@ const CheckData = () => {
                                         คำรับรองและคำยินยอมของผู้รายงานตัว (Declaration and consent of the reporter)
                                     </h3>
                                 </div>
-                                <div className='flex space-x-4 w-full pb-2'>
-                                    <div className="flex items-center space-x-4 w-1/3">
+                                <div className='flex flex-col space-y-4 w-full pb-2'>
+                                    <div className="flex items-start space-x-2">
                                         <input
                                             type="checkbox"
                                             id="registermyself"
@@ -306,11 +306,12 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             checked={formData.registermyself}
                                         />
-                                        <label htmlFor="registermyself" className="block text-gray-700">
+                                        <label htmlFor="registermyself" className="text-gray-700">
                                             สมัครใจเข้ารับการฝึกวิชาทหาร (Voluntary enlistment for military training)
                                         </label>
                                     </div>
-                                    <div className="flex items-center space-x-4 w-1/3">
+
+                                    <div className="flex items-start space-x-2">
                                         <input
                                             type="checkbox"
                                             id="notmilitary"
@@ -318,12 +319,12 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             checked={formData.notmilitary}
                                         />
-                                        <label htmlFor="notmilitary" className="block text-gray-700">
+                                        <label htmlFor="notmilitary" className="text-gray-700">
                                             ไม่เป็นทหารประจำการ กองประจำการ หรือถูกกำหนดตัวเข้ากองประจำการ (Not being a regular soldier, active duty or being assigned to active duty)
                                         </label>
                                     </div>
 
-                                    <div className="flex items-center space-x-4 w-1/3">
+                                    <div className="flex items-start space-x-2">
                                         <input
                                             type="checkbox"
                                             id="readymilitary"
@@ -331,13 +332,12 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             checked={formData.readymilitary}
                                         />
-                                        <label htmlFor="readymilitary" className="block text-gray-700">
+                                        <label htmlFor="readymilitary" className="text-gray-700">
                                             พร้อมปฏิบัติตามเงื่อนไขบังคับในการรายงานตัวเข้าฝึกวิชาทหารทุกประการ (Ready to comply with all the mandatory conditions for reporting for military training)
                                         </label>
                                     </div>
-                                </div>
-                                <div className='flex space-x-4 w-full pt-2'>
-                                    <div className="flex items-center space-x-4 w-1/2">
+
+                                    <div className="flex items-start space-x-2">
                                         <input
                                             type="checkbox"
                                             id="man_right"
@@ -345,12 +345,12 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             checked={formData.man_right}
                                         />
-                                        <label htmlFor="man_right" className="block text-gray-700">
+                                        <label htmlFor="man_right" className="text-gray-700">
                                             ชาย ชั้นปีที่ ๒ - ๓ ไว้ทรงผมรองทรงสูง ความยาวด้านบนไม่เกิน ๕ ซม.หรือสั้นกว่า ชาย ชั้นปีที่ ๔ - ๕ ไว้ทรงผมรองทรง ความยาวด้านบนไม่เกิน๗ ซม. หรือสั้นกว่า (Males in Year 2-3 wear a high crew cut hairstyle with the top length not exceeding 5 cm. or shorter. Males in Year 4-5 wear a crew cut hairstyle with the top length not exceeding 7 cm. or shorter.)
                                         </label>
                                     </div>
 
-                                    <div className="flex items-center space-x-4 w-1/2">
+                                    <div className="flex items-start space-x-2">
                                         <input
                                             type="checkbox"
                                             id="women_right"
@@ -358,7 +358,7 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             checked={formData.women_right}
                                         />
-                                        <label htmlFor="women_right" className="block text-gray-700">
+                                        <label htmlFor="women_right" className="text-gray-700">
                                             หญิง ไว้ทรงผมตามที่ระเบียบกำหนด (Women must have their hair style as prescribed by the regulations.)
                                         </label>
                                     </div>

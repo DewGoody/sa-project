@@ -29,7 +29,7 @@ export const Parent = () => {
                     />
                 </div>
                 <div className="w-1/2">
-                    <label className="block text-gray-700 mb-2">ชื่อบิดา (mother's name)</label>
+                    <label className="block text-gray-700 mb-2">ชื่อมารดา (mother's name)</label>
                     <input
                         type="text"
                         name="motherName"
@@ -42,7 +42,7 @@ export const Parent = () => {
             </div>
             <div className="flex space-x-4 w-full ">
                 <div className="w-1/2">
-                    <label className="block text-gray-700 mb-2">นามสกุลบิดา (mother's surname)</label>
+                    <label className="block text-gray-700 mb-2">นามสกุลมารดา (mother's surname)</label>
                     <input
                         type="text"
                         name="motherSurname"
