@@ -14,6 +14,7 @@ import { DeleteOutlined, EditOutlined, FormOutlined, CalendarOutlined } from '@a
 import { Modal, Spin } from 'antd';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { set } from "date-fns";
 
 export const Form = () => {
   const { studentId } = useParams();
@@ -23,6 +24,9 @@ export const Form = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [prakanDone, setPrakanDone] = useState(false);
+  const [reqBookNotQueue, setReqBookNotQueue] = useState(false);
+  const [reqBookQueue, setReqBookQueue] = useState(false);
+  const [itemBoookQueue, setItemBookQueue] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalEditFormOpen, setIsModalEditFormOpen] = useState(false);
   const [isModalCheckInfoOpen, setIsModalCheckInfoOpen] = useState(false);
@@ -36,6 +40,8 @@ export const Form = () => {
   const [notQueue, setNotQueue] = useState([]);
   const [moreInfo, setMoreInfo] = useState('');
   const [reqIdEdit, setReqIdEdit] = useState(0);
+  const [isModalSheduleOpen, setIsModalScheduleOpen] = useState(false);
+  const [isModalSheduleNotQueueOpen, setIsModalScheduleNotQueueOpen] = useState(false);
   const [RD, SETRD] = useState(false)
   const [GC, SETGC] = useState(false)
   const [GC_time, SETGC_time] = useState({ id: "", created_at: "", status: "" });
@@ -68,9 +74,21 @@ export const Form = () => {
     setIsModalOpen(true);
   }
 
+  const showModalBookNotQueue = (item) => {
+    setReqBookNotQueue(item.id);
+    setIsModalScheduleNotQueueOpen(true);
+  };
+
+  const showModalBookQueue = (item) => {
+    console.log("itemBookQueue", item);
+    setReqBookQueue(item.req_id);
+    setItemBookQueue(item.id);
+    setIsModalScheduleOpen(true);
+  };
   const handleCancel = () => {
     setIsModalOpen(false);
     setIsModalEditFormOpen(false);
+    setIsModalScheduleNotQueueOpen(false);
   };
 
   const showModalCheckInfo = (item) => {
@@ -196,20 +214,21 @@ export const Form = () => {
     return new Date(dateString).toLocaleDateString('en-GB', options);
   };
 
-  const handleBookQueue = async (item) => {
-    console.log("item", item);
-    const response = await axios.post('/api/queue/delete', { id: item.id }); // Example API
-    const queueId = item.id
-    const id = item.req_id;
-    router.push(`/student/${studentId}/appointment/${id}/${queueId}`);
+  const handleBookQueue = async () => {
+    // console.log("item", item);
+    const response = await axios.post('/api/queue/delete', { id: itemBoookQueue }); // Example API
+    const queueId = 0
+    // const id = item.req_id;
+    router.push(`/student/${studentId}/appointment/${reqBookQueue}/${queueId}`);
 
   }
 
   const handleBookNotQueue = async (reqID) => {
-    const id = reqID;
+    // const id = reqID;
+    // console.log("req_IdNotqueue", id);
     const queueId = 0;
-    console.log("req_Id", id);
-    router.push(`/student/${studentId}/appointment/${id}/${queueId}`);
+    // console.log("req_Id", id);
+    router.push(`/student/${studentId}/appointment/${reqBookNotQueue}/${queueId}`);
   }
 
   const handleDeleteQueue = async () => {
@@ -364,7 +383,7 @@ export const Form = () => {
                               </button>
                               <button
                                 className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2"
-                                onClick={() => { handleBookQueue(item) }}
+                                onClick={() => { showModalBookQueue(item) }}
                               >
                                 Schedule
                               </button>
@@ -445,7 +464,7 @@ export const Form = () => {
                         {item.type !== "โครงการหลักประกันสุขภาพถ้วนหน้า" && (
                           <div className="ml-3 mt- mb-3 flex">
                             <button className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
-                              onClick={() => { handleBookNotQueue(item.id) }}
+                              onClick={() => { showModalBookNotQueue(item) }}
                             >
                               Schedule
                             </button>
@@ -552,6 +571,32 @@ export const Form = () => {
         title="ยืนยันการยกเลิกคิวนี้แล้วแก้ไขฟอร์ม (Do you confirm to delete this queue and edit this form ?)"
         open={isModalEditFormOpen}
         onOk={handleEditFormDeleteQueue}
+        onCancel={handleCancel}
+        okButtonProps={{
+          style: { backgroundColor: '#f9a8d4' },
+          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
+          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
+        }}
+      >
+      </Modal>
+
+      <Modal
+        title="ต้องการลบคิวและจองคิวใช่ไหม (Do you want delete to booking new queue ?)"
+        open={isModalSheduleOpen}
+        onOk={handleBookQueue}
+        onCancel={handleCancel}
+        okButtonProps={{
+          style: { backgroundColor: '#f9a8d4' },
+          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
+          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
+        }}
+      >
+      </Modal>
+
+      <Modal
+        title="ต้องการจองคิวใช่ไหม (Do you want to booking queue ?)"
+        open={isModalSheduleNotQueueOpen}
+        onOk={handleBookNotQueue}
         onCancel={handleCancel}
         okButtonProps={{
           style: { backgroundColor: '#f9a8d4' },
