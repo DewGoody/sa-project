@@ -3,7 +3,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Header } from '../../../../components/Header.js';
-import numberToThaiText from "../../../../components/numberToThaiText.js";
 import { useRouter,useParams } from 'next/navigation';
 import { Select, DatePicker, Space } from 'antd';
 import dayjs from 'dayjs';
@@ -12,14 +11,14 @@ export default function Form() {
   const {studentId} = useParams();
   const [prakanData, setPrakanData] = useState({});
   const [studentInfo, setStudentInfo] = useState({});
-
+  const [degree, setDegree] = useState('');
   const [inputValue, setInputValue] = useState('');
-  const [thaiText, setThaiText] = useState('');
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [alreadyData, setAlreadyData] = useState('');
   const [date, setDate] = useState("");
+  const [yearLevel, setYearLevel] = useState('');
 
   const router = useRouter();
   const {form} = useParams();
@@ -35,8 +34,6 @@ export default function Form() {
       const isoDate = response.data.data.acc_date;
       const formattedDate = isoDate.split("T")[0];
       setDate(formattedDate); 
-      const thaiText = numberToThaiText(response.data.data.medical_fee);
-      response.data.data.thaiText = thaiText
       response.data.data.formId = form
       response.data.data.acc_date = formattedDate
       setAlreadyData(response.data.data);
@@ -79,43 +76,16 @@ export default function Form() {
       console.log("profileData",profileData);
       console.log("studentInfo",studentInfo);
 
-  const handleChangeThai = (e) => {
-    const value = e.target.value;
-        // Allow only numbers and decimal point
-        if (!/^(\d+(\.\d{0,2})?)?$/.test(value)) {
-            return;
-        }
-        setInputValue(value);
-        if (value !== '') {
-            const number = parseFloat(value);
-            const thaiText = numberToThaiText(number);
-            setThaiText(thaiText);
-            setPrakanData({ ...prakanData, medical_fee_text: thaiText , medical_fee: value});
-            setAlreadyData({ ...alreadyData, medical_fee_text: thaiText , medical_fee: value});
-            console.log(thaiText);
-        } else {
-            setThaiText('');
-            console.log(thaiText);
-        }
-  };
-
-  const handleChangeName = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...data, name: event.target.value });
-  };
-
-  const handleChangeId = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...data, stu_id: event.target.value });
+  const handleChangeYearLevel = (e) => {
+    setYearLevel(e.target.value);
+    setProfileData({ ...profileData, yearLevel: e.target.value });
+    setAlreadyData({ ...alreadyData, year: e.target.value });
+    console.log("yearLevel : ", yearLevel);
   };
 
   const handleChangePhone = (event) => {
     console.log(event.target.value);
     setProfileData({ ...profileData, phone_num: event.target.value });
-  };
-  const handleChangeFaculty = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, faculty: event.target.value });
   };
   const handleChangeDesAcc = (event) => {
     console.log(event.target.value);
@@ -142,23 +112,57 @@ export default function Form() {
 
   };
   const handleChangePlaceAcc = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, accident_place: event.target.value });
-    setAlreadyData({ ...alreadyData, accident_place: event.target.value });
+    console.log("valueChangePlaceAcc",typeof event.target.value);
+    if(event.target.value === "true"){
+      setPrakanData({ ...prakanData, in_university: true });
+      setAlreadyData({ ...alreadyData, in_university: true });
+    }else if(event.target.value === "false"){
+      setPrakanData({ ...prakanData, in_university: false });
+      setAlreadyData({ ...alreadyData, in_university: false });
+    }
   };
   const handleChangePlaceTreat = (event) => {
     console.log(event.target.value);
     setPrakanData({ ...prakanData, treatment_place: event.target.value });
     setAlreadyData({ ...alreadyData, treatment_place: event.target.value });
   };
-  const handleChangeTypeHos = (event) => {
-    console.log("event",event);
-    setPrakanData({ ...prakanData, hospital_type: event });
-    setAlreadyData({ ...alreadyData, hospital_type: event });
+  const handleChangePlaceTreat2 = (event) => {
+    console.log(event.target.value);
+    setPrakanData({ ...prakanData, treatment_place2: event.target.value });
+    setAlreadyData({ ...alreadyData, treatment_place2: event.target.value });
+  };
+  const handleChangeTypeHos1 = (event) => {
+    console.log("event",event.target.value);
+    setPrakanData({ ...prakanData, hospital_type: event.target.value });
+    setAlreadyData({ ...alreadyData, hospital_type: event.target.value });
+  };
+  const handleChangeTypeHos2 = (event) => {
+    console.log("event",event.target.value);
+    setPrakanData({ ...prakanData, hospital_type2: event.target.value });
+    setAlreadyData({ ...alreadyData, hospital_type2: event.target.value });
   };
   const handleChangeMedicalFeeNum = (event) => {
-    console.log(event.target.value);
+    console.log("medicalFee",event.target.value);
     setPrakanData({ ...prakanData, medical_fee: (event.target.value)});
+    setAlreadyData({ ...alreadyData, medical_fee: (event.target.value)});
+  };
+  const handleChangeTimeAcc = (event) => {
+    console.log("time",event.target.value);
+    console.log("typeTime",typeof event.target.value);
+    setPrakanData({ ...prakanData, time_acc: event.target.value });
+    setAlreadyData({ ...alreadyData, time_acc: event.target.value });
+  };
+  const handleChangeDegree = (e) => {
+    setDegree(e.target.value);
+    setProfileData({ ...profileData, degree: e.target.value });
+    setAlreadyData({ ...alreadyData, degree: e.target.value });
+    console.log("degree : ", degree);
+  };
+
+  const handleChangePlaceAccInfo = (event) => {
+    console.log(event.target.value);
+    setPrakanData({ ...prakanData, accident_place: event.target.value });
+    setAlreadyData({ ...alreadyData, accident_place: event.target.value });
   };
 
   console.log("prakanDataJaa",prakanData);
@@ -167,13 +171,13 @@ export default function Form() {
     try {
       if(studentId !== '0'){
         if(form !== '0'){
-          let allData = { ...alreadyData, ...studentInfo, ...thaiText, ...profileData };
+          let allData = { ...alreadyData, ...studentInfo, ...profileData };
           const response = await axios.post('/api/prakan/update', allData);
           console.log("responseId :",response.data.data.id);
           const req_id = response.data.data.req_id
           router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${form}`);
         }else{
-          let allData = { ...prakanData, ...studentInfo, ...thaiText, ...profileData };
+          let allData = { ...prakanData, ...studentInfo, ...profileData };
           console.log("prakanData === 0 :",allData);
           console.log("prakanAllData === 0 :",allData);
           const response = await axios.post('/api/prakan/create', allData);
@@ -185,7 +189,7 @@ export default function Form() {
 
         }
       }else{
-        let allData = { ...alreadyData, ...studentInfo, ...thaiText, ...profileData };
+        let allData = { ...alreadyData, ...studentInfo, ...profileData };
         const response = await axios.post('/api/prakan/update', allData);
         console.log("responseId :",response.data.data.id);
         router.push(`/Admin/prakan/0`);
@@ -212,22 +216,23 @@ export default function Form() {
               ข้อมูลส่วนตัว (Personal & contact information)
             </h3>
             <div>
-              <form className="grid grid-cols-2 gap-7 m-6 bg-white">
-                <div className="flex">
+            <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6">
+
+                <div className="lex flex-col">
                   <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname) :</label>
                   <div>
                     <input
                       type="text"
                       name="name"
                       disabled
-                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={
                         profileData?.fnameTH + " " + profileData?.lnameTH
                       }
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1">รหัสนิสิต (Student ID) :</label>
                   <div>
                     <input
@@ -235,20 +240,20 @@ export default function Form() {
                       name="id"
                       disabled
                       defaultValue={profileData?.id}
-                      className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       
                     />
                   </div>
                 </div>
 
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1">คณะ (Faculty) :</label>
                   <div className="">
                     <input
                       type="text"
                       name="faculty"
                       disabled
-                      className="ml-2 w-96 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.facultyNameTH}
                     />
                   </div>
@@ -256,29 +261,56 @@ export default function Form() {
                 <div>
                   
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Phone number) :</label>
                   <div>
                     <input
                       type="text"
                       name="phone"
                       onChange={handleChangePhone}
-                     className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                     className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.phone_num}
                     />
                   </div>
                 </div>
-                <div>
+                <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1" >
                     อีเมล (Email) :
                     <input
                       type="email"
                       name="email"
                       onChange={handleChangeEmail}
-                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.personal_email}
                     />
                   </label>
+                </div>
+                <div className="flex flex-col">
+                  <label className="block text-gray-700 mt-1" >ศึกษาในระดับ (Degree) :</label>
+                  <div>
+                    <select
+                      name="degree"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      value={alreadyData?.degree}
+                      onChange={handleChangeDegree}
+                    >
+                    <option value="">เลือกระดับการศึกษา (select degree)</option>
+                    <option value="ปริญญาตรี">ปริญญาตรี (Undergraduate)</option>
+                    <option value="บัณฑิตศึกษา">บัณฑิตศึกษา (Graduate)</option>
+                  </select>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Academic year) :</label>
+                  <div>
+                    <input
+                      type="text"
+                      name="year"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      value={alreadyData?.year}
+                      onChange={handleChangeYearLevel}
+                    />
+                  </div>
                 </div>
               </form>
             </div>
@@ -292,64 +324,144 @@ export default function Form() {
               ข้อมุลการเกิดอุบัติเหตุและการรักษาพาบาล (Accident & treatment details)
             </h3>
             <div>
-              <form className="grid grid-cols-2  gap-y-12 gap-x-7 m-6 bg-white">
-                <div>
-                  <label className="flex">
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6">
+                <div className="flex flex-col">
+                  
+                  <label className="">
+                    
+                    <div className="block text-gray-700 mt-1" >
+                    เหตุการณ์ขณะเกิดอุบัติเหตุ (Cause of accident) :
+                    </div>
+                    <textarea 
+                      className="w-full px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" cols="23" rows="2" 
+                      onChange={handleChangeDesAcc}
+                      value={alreadyData.acc_desc}
+                      >
+                      </textarea>
+                  </label>
+                  <div className="text text-xs text-red-600 mt-2">
+                  * โปรดระบุตามใบรับรองแพทย์ (Please specify according to the doctor's certificate)
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                <label className="">
                     <div className="block text-gray-700 mt-1" >
                     อาการบาดเจ็บ (Description of injury) :
                     </div>
                     <textarea 
-                      className="ml-2 px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" cols="32" rows="2" 
+                      className="w-full px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" cols="32" rows="2" 
                       onChange={handleChangeDesInj}
                       value={alreadyData.des_injury}
                     >
 
                     </textarea>
                   </label>
-                  <div className="text text-sm text-red-600 mt-2">
+                  <div className="text text-xs text-red-600 mt-2">
                   * โปรดระบุตามใบรับรองแพทย์ (Please specify according to the doctor's certificate)
                   </div>
                 </div>
-                <div>
-                <label className="flex">
-                    
-                    <div className="block text-gray-700 mt-1" >
-                    การเกิดอุบัติเหตุ (Description of accident) :
-                    </div>
-                    <textarea 
-                      className="ml-2 px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" cols="23" rows="2" 
-                      onChange={handleChangeDesAcc}
-                      value={alreadyData.acc_desc}
-                      >
-
-                      </textarea>
-                   
-                  </label>
-                  <div className="text text-sm text-red-600 mt-2">
-                  * โปรดระบุตามใบรับรองแพทย์ (Please specify according to the doctor's certificate)
-                  </div>
-                </div>
-                <div>
+                
+                <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1" >
-                    ชื่อสถานพยาบาลที่เข้ารับการรักษา (Place of treatment) :
+                    วันที่เกิดอุบัติเหตุ (Date of accident) :
+                    <input
+                        type="date"
+                        onChange={handleChangeDateAcc}
+                        // value={alreadyData?.acc_date}
+                        className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
+                      />
+                  </label>
+                </div>
+                
+                <div className="flex flex-col">
+                <label className="block text-gray-700 mt-1" >
+                    เวลาเกิดอุบัติเหตุ (Time of accident) :
+                    <input
+                        type="time"
+                        onChange={handleChangeTimeAcc}
+                        className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
+                      />
+                  </label>
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-gray-700" >
+                    สถานที่เกิดอุบัติเหตุ (Place of accident) :
+                  </label>
+                  <select
+                    onChange={handleChangePlaceAcc}
+                    className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    defaultValue="เลือกสถานที่เกิดอุบัติเหตุ"
+                    value={alreadyData.in_university}
+                  >
+                    <option value="เลือกสถานที่เกิดอุบัติเหตุ" disabled>
+                      เลือกสถานที่เกิดอุบัติเหตุ (Select place of accident)
+                    </option>
+                    <option value={true} className="text-gray-800">ภายในมหาวิทยาลัย (In the university)</option>
+                    <option value={false}>ภายนอกมหาวิทยาลัย (Outside the university)</option>
+                  </select>
+                </div>
+                <div className="flex flex-col">
+                <label className=" text-gray-700" >
+                    ระบุสถานที่เกิดอุบัติเหตุ (Specify the place of accident) :
+                    </label>
+                  <input
+                    type="text"
+                    name="id"
+                    onChange={handleChangePlaceAccInfo}
+                    value={alreadyData.accident_place}
+                    className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                </div>
+                <div>
+                  
+                </div>
+                <div className="flex flex-col -mt-2">
+                  <label className="text text-xs text-red-600 " >
+                    * หากเกิดในมหาวิทยาลัย ระบุคณะ/อาคาร/สถานที่ (If on university, specify faculty/building/place of accident)
+                  </label>
+                </div>
+                
+                <div className="flex flex-col">
+                  <div className="text text-md font-semibold" >
+                  สถานพยาบาลที่เข้ารับการรักษา (Place of Treatments)
+                  </div>
+                  <div className="text text-xs text-red-600 mt-2">
+                    * หากเข้ารักษาเกิน 2 ที่ ให้กรอก 2 ที่แรก (If more than 2 places, list the first 2 places)
+                  </div>
+                </div>
+                 <div>
+                </div>
+                <div className="flex flex-col">
+                <div className="flex">
+                  <div className="text text-xs text-red-600 mt-1">
+                      *&nbsp;
+                  </div>
+                  <label className="block text-gray-700" >
+                    1. ชื่อสถานพยาบาลที่เข้ารับการรักษา (Name of Medical Institution) :
                     <input
                       type="text"
                       name="phone"
                       onChange={handleChangePlaceTreat}
                       value={alreadyData.treatment_place}
-                      className="ml-2  px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full -ml-2 px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
-                  </label>
+                </label>
                 </div>
-                
+                </div>
+                <div className="flex flex-col">
                 <div className="flex">
-                <label className="block text-gray-700 mt-1" >
+                <div className="text text-xs text-red-600 mt-1">
+                    *
+                </div>
+                <label className="block text-gray-700 ml-2" >
                     ประเภทสถานพยาบาล (Type of hospital) :
-                  </label>
+                </label>
+                </div>
                   <div className="ml-2">
-                    <Select
-                      onChange={handleChangeTypeHos}
-                      style={{ width: 220 }}
+                    <select
+                      onChange={handleChangeTypeHos1}
+                      // style={{ width: 220 }}
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       defaultValue="เลือกประเภทสถานพยาบาล"
                       value={alreadyData.hospital_type}
                       
@@ -358,37 +470,49 @@ export default function Form() {
                       <option value="เลือกประเภทสถานพยาบาล" disabled>
                         เลือกประเภท (select type)
                        </option>
-                      <option value="โรงพยาบาลรัฐ" className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>
-                      <option value="โรงพยาบาลเอกชน">โรงพยาบาลเอกชน (private hospital)</option>
-                      <option value="คลินิก">คลินิก (clinic)</option>
-                    </Select>
+                      <option value={0} className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>
+                      <option value={1}>โรงพยาบาลเอกชน (private hospital)</option>
+                      <option value={2}>คลินิก (clinic)</option>
+                    </select>
                   </div>
                 </div>
-                <div className="flex">
-                <label className="block text-gray-700 mt-1" >
-                    วันที่เกิดอุบัติเหตุ (Date of accident) :
-                    <Space direction="vertical" className="ml-3">
-                      <input
-                        type="date"
-                        onChange={handleChangeDateAcc}
-                        // value={alreadyData?.acc_date}
-                        className="px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
-                      />
-                    </Space>  
-                  </label>
-                </div>
-                <div>
-                  <label className="block text-gray-700 mt-1" >
-                    สถานที่เกิดอุบัติเหตุ (Place of accident) :
+                <div className="flex flex-col">
+                <label className="block text-gray-700" >
+                    2. ชื่อสถานพยาบาลที่เข้ารับการรักษา (Name of Medical Institution) :
                     <input
                       type="text"
-                      name="id"
-                      onChange={handleChangePlaceAcc}
-                      value={alreadyData.accident_place}
-                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      name="phone"
+                      onChange={handleChangePlaceTreat2}
+                      value={alreadyData.treatment_place2}
+                      className="w-full  px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </label>
                 </div>
+                
+                <div className="flex flex-col">
+                <label className="block text-gray-700" >
+                    ประเภทสถานพยาบาล (Type of hospital) :
+                  </label>
+                  <div className="ml-2">
+                    <select
+                      onChange={handleChangeTypeHos2}
+                      // style={{ width: 220 }}
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      defaultValue="เลือกประเภทสถานพยาบาล"
+                      value={alreadyData.hospital_type2}
+                      
+                      
+                    >
+                      <option value="เลือกประเภทสถานพยาบาล" disabled>
+                        เลือกประเภท (select type)
+                       </option>
+                      <option value={0} className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>
+                      <option value={1}>โรงพยาบาลเอกชน (private hospital)</option>
+                      <option value={2}>คลินิก (clinic)</option>
+                    </select>
+                  </div>
+                </div>
+                
               </form>
             </div>
           </div>
@@ -400,15 +524,16 @@ export default function Form() {
               ค่ารักษาพยาบาลรวมสุทธิ (Net of medical fee total amount)
             </h3>
             <div>
-              <form className="grid grid-cols-2 gap-7 m-6 bg-white">
-                <div className="">
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >
                     ตัวเลข (in numbers) :
                     <input
                       type="num"
-                      onChange={handleChangeThai}
+                      onChange={handleChangeMedicalFeeNum}
+                      name="medical_fee"
                       value={alreadyData.medical_fee}
-                      className="ml-2  px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </label>
                 </div>
