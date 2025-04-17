@@ -46,11 +46,11 @@ const RD = () => {
   console.log(profileData);
 
   const handleDownload = async () => {
-    const response = await axios.post('/api/prakanInter/createPdf', {form: form})
+    const response = await axios.post('/api/prakanInter/createPdf', { form: form })
     setPrakanData(response.data.data)
     const link = document.createElement("a");
-    link.href = "../../../../../documents/prakan-inter/"+response.data.data.Student.id+"_Health_claim.pdf";
-    link.download = response.data.data.Student.id+"_Health_claim.pdf";
+    link.href = "../../../../../documents/prakan-inter/" + response.data.data.Student.id + "_Health_claim.pdf";
+    link.download = response.data.data.Student.id + "_Health_claim.pdf";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -101,8 +101,8 @@ const RD = () => {
           "กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)"
         );
       } else {
-        console.log("dataaa", prakanData,"-------------------------------");
-        
+        console.log("dataaa", prakanData, "-------------------------------");
+
         const response2 = await axios.post('/api/prakanInter/deletePdf', prakanData)
         router.push(`/student/${studentId}/appointment/${param}/0`);
       }
@@ -123,10 +123,10 @@ const RD = () => {
           {/* Personal & Contact Information Section */}
           <section>
             <h3 className="text-lg font-semibold mb-4 text-center">
-              Please prepare the following documents to submit to the staff
+              โปรดเตรียมเอกสารดังต่อไปนี้
             </h3>
             <h3 className="text-lg font-normal mb-4 text-center">
-              โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
+              Please prepare the following documents
             </h3>
             <div className="grid grid-cols-1 gap-6">
               <fieldset>

@@ -112,10 +112,10 @@ const RD = () => {
                 <div className="bg-white p-8 w-full max-w-4xl">
                     <section>
                         <h3 className="text-lg font-semibold mb-4 text-center">
-                            Download เอกสาร และโปรดเตรียมเอกสารดังนี้
+                            โปรดเตรียมเอกสารดังต่อไปนี้
                         </h3>
                         <h3 className="text-lg font-normal mb-4 text-center">
-                            Please download and prepare the following documents to submit to the staff
+                            Please prepare the following documents 
                         </h3>
                         <div className="grid grid-cols-1 gap-6">
                             <fieldset>
@@ -155,7 +155,17 @@ const RD = () => {
 
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">4. สำเนาบัญชีธนาคาร (Bank account copy)</strong>
+                                            <strong className="font-medium text-gray-900">4. รายการยา/รายละเอียดค่ารักษาพยาบาล (List of medicines and medical expenses details)</strong>
+                                        </div>
+                                    </label>
+                                    <label
+                                        htmlFor="Option4"
+                                        className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                    >
+
+
+                                        <div>
+                                            <strong className="font-medium text-gray-900">5. สำเนาหน้าบัญชีธนาคารแบบออมทระพย์ของนิสิต (Bank account copy)</strong>
                                         </div>
                                     </label>
                                 </div>
