@@ -785,6 +785,32 @@ export const Form = () => {
       </Modal>
 
       <Modal
+        title="ยืนยันการยกเลิกคิวนี้แล้วแก้ไขฟอร์ม (Do you confirm to delete this queue and edit this form ?)"
+        open={isModalEditFormNotqueue}
+        onOk={handleEditForm}
+        onCancel={handleCancel}
+        okButtonProps={{
+          style: { backgroundColor: '#f9a8d4' },
+          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
+          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
+        }}
+      >
+      </Modal>
+
+      <Modal
+        title="ยืนยันการยกเลิกคิวนี้แล้วแก้ไขฟอร์ม (Do you confirm to delete this queue and edit this form ?)"
+        open={isModalEditFormNotqueue}
+        onOk={handleEditForm}
+        onCancel={handleCancel}
+        okButtonProps={{
+          style: { backgroundColor: '#f9a8d4' },
+          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
+          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
+        }}
+      >
+      </Modal>
+
+      <Modal
         title="ต้องการลบคิวและจองคิวใช่ไหม (Do you want delete to booking new queue ?)"
         open={isModalSheduleOpen}
         onOk={handleBookQueue}
