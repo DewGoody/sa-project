@@ -165,7 +165,7 @@ const RD = () => {
 
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">5. สำเนาหน้าบัญชีธนาคารแบบออมทระพย์ของนิสิต (Bank account copy)</strong>
+                                            <strong className="font-medium text-gray-900">5. สำเนาหน้าบัญชีธนาคารแบบออมทรัพย์ของนิสิต (Bank account copy)</strong>
                                         </div>
                                     </label>
                                 </div>
