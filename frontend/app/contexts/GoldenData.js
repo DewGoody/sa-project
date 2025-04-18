@@ -57,8 +57,8 @@ export const GoldenDataProvider = ({ children }) => {
         soi: datafromapi.DOPA_address.soi,
         road: datafromapi.DOPA_address.street,
         province: datafromapi.DOPA_address.province,
-        amphure: datafromapi.DOPA_address.subdistrict,
-        district: datafromapi.DOPA_address.district,
+        amphure: datafromapi.DOPA_address.district,
+        district: datafromapi.DOPA_address.subdistrict,
         zipCode: datafromapi.DOPA_address.postal_code,
         Telnumber: datafromapi.Student.tel_num,
 

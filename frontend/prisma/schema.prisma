@@ -1,12 +1,11 @@
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model Address {
@@ -199,6 +198,7 @@ model RD_info {
   id             BigInt    @id @default(autoincrement())
   created_at     DateTime  @default(now()) @db.Timestamptz(6)
   RD_type        Decimal?  @db.Decimal
+
   student_id     Decimal?  @db.Decimal
   req_id         BigInt?
   date           DateTime? @db.Date
@@ -206,6 +206,7 @@ model RD_info {
   citizenRD      Int?      @db.SmallInt
   YearGradeRD    Int?      @db.SmallInt
   register_type  Int?      @db.SmallInt
+
   Branches       String?
   corps          String?
   registermyself Boolean?
@@ -214,6 +215,9 @@ model RD_info {
   man_right      Boolean?
   women_right    Boolean?
   ready_right    Boolean?
+
+  register_type  Int?      @db.SmallInt
+
   Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student        Student?  @relation(fields: [student_id], references: [id], onDelete: Cascade)
 }
@@ -268,7 +272,8 @@ model Student {
   Military_info         Military_info?
   Ponpan                Ponpan[]
   Queue                 Queue[]
-  RD_info               RD_info[]
+  RD_info               RD_info?
+
   Request               Request[]
   UHC_reg_info          UHC_reg_info?
   UHC_request           UHC_request[]
@@ -408,6 +413,7 @@ model guardian_info {
   guardian_address     String?
   guardian_nationality String?  @default("")
   phone_num            Int?     @db.SmallInt
+
   consent1             Boolean?
   consent2             Boolean?
   consent21            Boolean?

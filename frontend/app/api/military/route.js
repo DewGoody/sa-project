@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import { NextResponse } from "next/server"
 import { getID, getIDbyToken } from "../../../lib/session"
 import { getMilitaryInfo } from "../../../lib/prisma/prisma"
+import { convertBigIntToString } from '../../../utills/convertBigInt'
 
 const prisma = new PrismaClient()
 
@@ -42,6 +43,8 @@ export async function GET(req, res) {
 }
 
 export async function PUT(req, res) {
+    console.log();
+
     try {
         let id = 0
         const formId = req.nextUrl.searchParams.get('id')
@@ -59,14 +62,14 @@ export async function PUT(req, res) {
             return NextResponse.json({ error: "ID is required or session is expired" }, { status: 401 });
         }
 
-        // Parse the incoming JSON body
         const {
-            addresses,
             guardian_info,
-            Military_info,
+            rD_info,
             father_mother_info,
             student
         } = await req.json();
+        console.log("fdljsgjkhbfsdalkfghhjsdfghjklkjhgfdsasdfdsasdfghjkjhgfdsasdfghjkjhgfdsdfghj" , student);
+        
 
         let { year, thai_id, phone_num, tel_num, personal_email, race, religion, nationality } = await student;
 
@@ -89,68 +92,14 @@ export async function PUT(req, res) {
 
         //console.log(addresses.Military_address);
 
-        const create = await prisma.Military_info.upsert({
-            where: { id },
-            update: { ...Military_info },
-            create: { id, ...Military_info }
+        const RD_info = await prisma.rD_info.upsert({
+            where: {student_id: id },
+            update: { ...rD_info },
+            create: { ...rD_info }
         });
 
-        // Upsert addresses (DOPA and Military)
-        if (addresses?.DOPA_address) {
-            await prisma.Address.upsert({
-                where: { id_address_type: { id: id, address_type: "DOPA_address" } },
-                update: { ...addresses.DOPA_address },
-                create: { id: id, address_type: "DOPA_address", ...addresses.DOPA_address }
-            });
-        }
 
-        if (addresses?.Military_address) {
-            // console.log("testestetstestetstestetsteset", addresses.Military_address)
-            await prisma.Address.upsert({
-                where: { id_address_type: { id: id, address_type: "Military_address" } },
-                update: { ...addresses.Military_address },
-                create: { id: id, address_type: "Military_address", ...addresses.Military_address }
-            });
-        }
-        if (addresses?.Father_address) {
-            await prisma.Address.upsert({
-                where: { id_address_type: { id: id, address_type: "Father_address" } },
-                update: { ...addresses.Father_address },
-                create: { id: id, address_type: "Father_address", ...addresses.Father_address }
-            });
-        }
-
-        if (addresses?.Mother_address) {
-            await prisma.Address.upsert({
-                where: { id_address_type: { id: id, address_type: "Mother_address" } },
-                update: { ...addresses.Mother_address },
-                create: { id: id, address_type: "Mother_address", ...addresses.Mother_address }
-            });
-        }
-
-        if (addresses?.Follower_address1) {
-            await prisma.Address.upsert({
-                where: { id_address_type: { id: id, address_type: "Follower_address1" } },
-                update: { ...addresses.Follower_address1 },
-                create: { id: id, address_type: "Follower_address1", ...addresses.Follower_address1 }
-            });
-        }
-
-        if (addresses?.Follower_address2) {
-            await prisma.Address.upsert({
-                where: { id_address_type: { id: id, address_type: "Follower_address2" } },
-                update: { ...addresses.Follower_address2 },
-                create: { id: id, address_type: "Follower_address2", ...addresses.Follower_address2 }
-            });
-        }
-
-        if (addresses?.Contactable_address) {
-            await prisma.Address.upsert({
-                where: { id_address_type: { id: id, address_type: "Contactable_address" } },
-                update: { ...addresses.Contactable_address },
-                create: { id: id, address_type: "Contactable_address", ...addresses.Contactable_address }
-            });
-        }
+        
 
         if (father_mother_info?.father) {
             let father = { ...father_mother_info.father };
@@ -181,19 +130,8 @@ export async function PUT(req, res) {
                 create: { id, ...guardian }
             });
         }
-        // const createRequest = await prisma.request.create({
-        //     data: {
-        //         type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
-        //         status: "รอจองคิว",
-        //         stu_id: id,
-        //     }
-        // })    
-        // await prisma.military_info.update({
-        //     where: {id: create.id},
-        //     data: {req_id: createRequest.id}
-        // })
 
-        return NextResponse.json({ message: "Data updated successfully" });
+        return NextResponse.json({ id : convertBigIntToString(RD_info.id), status: 200 });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: "An error occurred while updating the profile" }, { status: 500 });

@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
 import { saveAs } from 'file-saver';
 import dayjs from 'dayjs';// เพิ่ม FileSaver สำหรับบันทึกไฟล์
+import { parseISO, format } from "date-fns";
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -171,20 +172,20 @@ const App = () => {
         try {
             const response = await axios.post(`/api/Admin/getrordor`, { year: parseInt(year) })
             response.data.map((item) => {
-                console.log("กหดหกดกหดกหดกหดหก", item.entry?.json.student);
+                console.log("กหดหกดกหดกหดกหดหก", item);
 
             });
 
             setData(...Data, response.data.map((item, index) => ({
                 key: index, // Unique key for each row
-                fullname: `${item.entry?.json.student?.fnameTH || ''} ${item.entry?.json.student?.lnameTH || ''}`,
-                student_ID: item.entry?.json.student?.id,
-                citizen_ID: item.entry?.json.student.thai_id || 'N/A',
-                birthdate: formatDateToDMYWithTime(item.entry?.json.student?.bd) || 'N/A',
-                status: item.entry?.status,
-                reqId: item.entry?.id,
-                rd_ID: item.entry?.json.Military_info.military_id || '-',
-                yearRD: item.entry?.yearRD
+                fullname: `${item.Student?.fnameTH || ''} ${item.Student?.lnameTH || ''}`,
+                student_ID: item.Student?.id,
+                citizen_ID: item.Student?.thai_id || '-',
+                birthdate: formatDateToDMYWithTime(item.Student?.bd) || '-',
+                status: item.status,
+                reqId: item.id,
+                rd_ID: item.RD_info?.[0]?.citizenRD || '-',
+                yearRD: item.RD_info?.[0]?.RD_type || '-',
             })))
             console.log(Data.student_ID)
         } catch (error) {
@@ -244,12 +245,14 @@ const App = () => {
             if (year == 1) {
                 console.log(reqId);
 
-                const response = await axios.get(`/api/export/AdminRD1?id=${reqId}`, { responseType: 'blob' });
+                const response = await axios.get(`/api/export/RD1?id=${reqId}`, { responseType: 'blob' });
+
                 return response.data;
             } else {
                 console.log(reqId);
 
-                const response = await axios.get(`/api/export/AdminRD2?id=${reqId}`, { responseType: 'blob' });
+                const response = await axios.get(`/api/export/RD2?id=${reqId}`, { responseType: 'blob' });
+
                 return response.data;
             }
         } catch (error) {
@@ -307,7 +310,6 @@ const App = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
-            width: "200px",
             render: (status, record) => {
                 console.log("status", status)
                 let options = [];
@@ -362,7 +364,6 @@ const App = () => {
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
-            width: 1000,
             ...getColumnSearchProps('student_ID'),
         },
         {
@@ -543,12 +544,22 @@ const App = () => {
                         >
                             <h1>วันที่</h1>
                             <DatePicker
+                                format="DD/MM/YYYY"
+                                value={formData.date ? dayjs(formData.date, "YYYY-MM-DD") : null}
+                                onChange={(date) => {
+                                    handleChange("date", format(date, "yyyy-MM-dd"));
+                                }}
+                                allowClear={false}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            />
+
+                            {/* <DatePicker
                                 style={{ width: '100%', marginBottom: 10 }}
                                 value={formData.date ? dayjs(formData.date) : null}
                                 onChange={(date, dateString) => handleChange('date', dateString)}
                                 placeholder="เลือกวันที่"
                                 format="DD/MM/YYYY"
-                            />
+                            /> */}
                             <h1>ค่าสมัคร นศท</h1>
                             <Input
                                 value={formData.firstPayment}

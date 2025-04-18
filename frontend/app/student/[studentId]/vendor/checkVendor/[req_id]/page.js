@@ -3,19 +3,19 @@ import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { Header } from "../../../../../components/Header";
 import axios from "axios";
-import { useRouter,useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import "react-toastify/dist/ReactToastify.css";
 
 const Page = () => {
-    
-    const router = useRouter();
-    const {studentId} = useParams();
-    const {req_id} = useParams();
-    const [profileData, setProfileData] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [createRequest, setCreateRequest] = useState(null);
-    console.log("reqId",req_id);
+
+  const router = useRouter();
+  const { studentId } = useParams();
+  const { req_id } = useParams();
+  const [profileData, setProfileData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [createRequest, setCreateRequest] = useState(null);
+  console.log("reqId", req_id);
 
   const [checkboxes, setCheckboxes] = useState({
     Option1: false,
@@ -25,21 +25,21 @@ const Page = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            const response = await axios.get('/api/profile'); // Example API
-            console.log(response.data);
+      try {
+        const response = await axios.get('/api/profile'); // Example API
+        console.log(response.data);
 
-            setProfileData(response.data);
-            setLoading(false);
-            console.log(response.data);
-        } catch (error) {
-            setError(error.message);
-            setLoading(false);
-        }
+        setProfileData(response.data);
+        setLoading(false);
+        console.log(response.data);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
     };
 
     fetchData();
-}, []);
+  }, []);
 
   const handleDownload = () => {
     const link = document.createElement("a");
@@ -73,32 +73,32 @@ const Page = () => {
   };
 
 
-//   const handleNavigation = async (event) => {
-//     const response = await axios.post(`/api/request/create`, { type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย", status: "รอจองคิว", stuId: profileData.id, formId: form });
-//     setCreateRequest(response.data);
-//     console.log("createRequest", createRequest);
-//     const param = response.data.data.id;
-//     console.log("responseRequest", response.data);
-//     console.log("param", param);
-//     router.push(`/student/${studentId}/appointment/${param}/0`);
+  //   const handleNavigation = async (event) => {
+  //     const response = await axios.post(`/api/request/create`, { type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย", status: "รอจองคิว", stuId: profileData.id, formId: form });
+  //     setCreateRequest(response.data);
+  //     console.log("createRequest", createRequest);
+  //     const param = response.data.data.id;
+  //     console.log("responseRequest", response.data);
+  //     console.log("param", param);
+  //     router.push(`/student/${studentId}/appointment/${param}/0`);
 
-//     // if (!allChecked()) {
-//     //     event.preventDefault();
-//     //     alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
-//     // } else {
-//     //     const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
-//     //     router.push(`/student/${studentId}/appointment/${param}/0`);
-//     // }
-// };
+  //     // if (!allChecked()) {
+  //     //     event.preventDefault();
+  //     //     alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
+  //     // } else {
+  //     //     const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
+  //     //     router.push(`/student/${studentId}/appointment/${param}/0`);
+  //     // }
+  // };
 
-const handleNavigation = async (event) => {
- const response =  await axios.post(`/api/request/changeStatusToWaitBook`, {req_id:req_id});
- console.log("response",response);
-  
- 
-      router.push(`/student/${studentId}/appointment/${req_id}/0`);
-  
-};
+  const handleNavigation = async (event) => {
+    const response = await axios.post(`/api/request/changeStatusToWaitBook`, { req_id: req_id });
+    console.log("response", response);
+
+
+    router.push(`/student/${studentId}/appointment/${req_id}/0`);
+
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -110,12 +110,11 @@ const handleNavigation = async (event) => {
         <div className="bg-white p-8 w-full max-w-4xl">
           {/* Personal & Contact Information Section */}
           <section>
-            <h3 className="text-lg font-normal mb-4 text-center">
-              นิสิตโปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
-            </h3>
             <h3 className="text-lg font-semibold mb-4 text-center">
-              Students, please prepare the following documents to submit to the
-              staff
+              โปรดเตรียมเอกสารดังต่อไปนี้
+            </h3>
+            <h3 className="text-lg font-normal mb-4 text-center">
+              Please prepare the following documents
             </h3>
             <div className="grid grid-cols-1 gap-6">
               <fieldset>
@@ -205,17 +204,17 @@ const handleNavigation = async (event) => {
               Download
             </button>
 
-           <a
+            <a
               onClick={(event) => handleNavigation(event)}
-           >
+            >
               <button
-                  type="submit"
-                  className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                type="submit"
+                className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
               >
-                  Book queue
-                  <ToastContainer />
+                Book queue
+                <ToastContainer />
               </button>
-          </a>
+            </a>
           </div>
         </div>
       </main>

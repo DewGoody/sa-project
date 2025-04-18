@@ -46,6 +46,7 @@ const RD = () => {
   console.log(profileData);
 
   const handleDownload = async () => {
+
     const response = await axios.post("/api/prakanInter/createPdf", {
       form: form,
     });
@@ -55,6 +56,7 @@ const RD = () => {
       "../../../../../documents/prakan-inter/" +
       response.data.data.Student.id +
       "_Health_claim.pdf";
+
     link.download = response.data.data.Student.id + "_Health_claim.pdf";
     document.body.appendChild(link);
     link.click();
@@ -108,10 +110,14 @@ const RD = () => {
       } else {
         console.log("dataaa", prakanData, "-------------------------------");
 
+
         const response2 = await axios.post(
           "/api/prakanInter/deletePdf",
           prakanData
         );
+
+        const response2 = await axios.post('/api/prakanInter/deletePdf', prakanData)
+
         router.push(`/student/${studentId}/appointment/${param}/0`);
       }
     }
@@ -128,10 +134,10 @@ const RD = () => {
           {/* Personal & Contact Information Section */}
           <section>
             <h3 className="text-lg font-semibold mb-4 text-center">
-              Please prepare the following documents to submit to the staff
+              โปรดเตรียมเอกสารดังต่อไปนี้
             </h3>
             <h3 className="text-lg font-normal mb-4 text-center">
-              โปรดเตรียมเอกสารดังนี้มายื่นให้เจ้าหน้าที่
+              Please prepare the following documents
             </h3>
             <div className="grid grid-cols-1 gap-6">
               <fieldset>

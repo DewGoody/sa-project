@@ -126,18 +126,11 @@ const RD = () => {
     }
     console.log("studentIDJaaa ", profileData?.id);
     const handleNavigation = async (event) => {
-        console.log("formmm", int_form);
-
-        const response = await axios.post(`/api/request/create`, { type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร", status: "รอจองคิว", stuId: profileData.id, formId: int_form });
-        const param = response.data.data.id;
-        console.log("responseRequest", response.data);
-        console.log("param", param);
-
         if (!allChecked()) {
             event.preventDefault();
             alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
         } else {
-            router.push(`/student/${studentId}/appointment/${param}/0`);
+            router.push(`/student/${studentId}/appointment/${int_form}/0`);
         }
     };
 
@@ -150,9 +143,12 @@ const RD = () => {
                     <div className="bg-white p-8 w-full max-w-4xl">
 
 
-                        <h2 className="text-mb pt-4 font-bold text-center mb-4 text-gray-800">
-                            Download เอกสาร และโปรดเตรียมเอกสารดังนี้ (Please prepare the following documents to submit to the staff)
-                        </h2>
+                        <h3 className="text-lg font-semibold mb-4 text-center">
+                            โปรดเตรียมเอกสารดังต่อไปนี้
+                        </h3>
+                        <h3 className="text-lg font-normal mb-4 text-center">
+                            Please prepare the following documents
+                        </h3>
 
                         <section>
 

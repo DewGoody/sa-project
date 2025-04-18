@@ -42,105 +42,318 @@ async function prakan(data){
     console.log(formattedDate);
 
     const newMedicalFee = data.medical_fee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const stuId1 = data.Student.id.toString().slice(0, 1);
+    const stuId2 = data.Student.id.toString().slice(1, 2);
+    const stuId3 = data.Student.id.toString().slice(2, 3);
+    const stuId4 = data.Student.id.toString().slice(3, 4);
+    const stuId5 = data.Student.id.toString().slice(4, 5);
+    const stuId6 = data.Student.id.toString().slice(5, 6);
+    const stuId7 = data.Student.id.toString().slice(6, 7);
+    const stuId8 = data.Student.id.toString().slice(7, 8);
+    const stuId9 = data.Student.id.toString().slice(8, 9);
+    const stuId10 = data.Student.id.toString().slice(9, 10);
+
+    const facNameTH = data.Student.facultyNameTH.split('คณะ')[1]
+    console.log("facNameTHJaa", facNameTH);
+    console.log("timeKub", data.time_acc);
+
+    const isoTime = data.time_acc; // ได้แบบนี้จาก time input (05:42)
+    console.log("isoTime", isoTime); 
+    const [hours, minutes] = isoTime.toString().split(':');
+    const hours1 = hours.split(' ')[4];
+    const myDate = `${hours1}:${minutes}`;
+    console.log("myDate", myDate); // "05:42"
+
       
 
     firstPage.drawText(data.Student.fnameTH + ' ' + data.Student.lnameTH, {
-        x: 204,
-        y: height-223.3,
+        x: 120,
+        y: height-140,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.Student.id+'', {
-        x: 460,
-        y: height-223.3,
+    firstPage.drawText(stuId1+'', {
+        x: 400,
+        y: height-140,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.Student.facultyNameTH + ' / '+ data.Student.facultyNameEN, {
-        x: 124,
-        y: height-249,
+    firstPage.drawText(stuId2+'', {
+        x: 415,
+        y: height-140,
         size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+    firstPage.drawText(stuId3+'', {
+        x: 430,
+        y: height-140,
+        size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+    firstPage.drawText(stuId4+'', {
+        x: 450,
+        y: height-140,
+        size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+    firstPage.drawText(stuId5+'', {
+        x: 465,
+        y: height-140,
+        size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+    firstPage.drawText(stuId6+'', {
+        x: 480,
+        y: height-140,
+        size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+    firstPage.drawText(stuId7+'', {
+        x: 495,
+        y: height-140,
+        size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+    firstPage.drawText(stuId8+'', {
+        x: 510,
+        y: height-140,
+        size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+    firstPage.drawText(stuId9+'', {
+        x: 530,
+        y: height-140,
+        size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+    firstPage.drawText(stuId10+'', {
+        x: 545,
+        y: height-140,
+        size: 14,   
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+    if (data.Student.degree === "บัณฑิตศึกษา") {
+        firstPage.drawText("/", {
+            x: 150,
+            y: height - 172,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1, // Ensure full opacity for bold effect
+        });
+    } else {
+        firstPage.drawText("/", {
+            x: 94,
+            y: height - 172,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1, // Ensure full opacity for bold effect
+        });
+    }
+    firstPage.drawText(data.Student.year , {
+        x: 487,
+        y: height-172,
+        size: 14,
+        font: thSarabunFont,
+        color: rgb(0, 0, 0),
+    })
+    firstPage.drawText(facNameTH + ' / '+ data.Student.facultyNameEN, {
+        x: 232,
+        y: height-172,
+        size: 10,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText(data.Student.phone_num+'', {
-        x: 231,
-        y: height-275,
+        x: 210,
+        y: height-205,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText(data.Student.personal_email, {
-        x: 360,
-        y: height-274.6,
+        x: 380,
+        y: height-205,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText(data.acc_desc, {
-        x: 239,
-        y: height-346,
+        x: 223,
+        y: height-245,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText(data.des_injury, {
-        x: 220,
-        y: height-372.3,
+        x: 180,
+        y: height-322,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
     firstPage.drawText(`${formattedDate}`, {
-        x: 206,
-        y: height-397.3,
+        x: 180,
+        y: height-305,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.accident_place, {
-        x: 225,
-        y: height-422.6,
+    
+    firstPage.drawText(myDate + " น.", {
+        x: 452,
+        y: height-305,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
+
+    if (data.in_university === true) {
+        firstPage.drawText("/", {
+            x: 132,
+            y: height - 350,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1, // Ensure full opacity for bold effect
+        });
+        firstPage.drawText(data.accident_place , {
+            x: 357,
+            y: height - 347,
+            size: 14,
+            font: thSarabunFont,
+        });
+    } else if (data.in_university === false) {
+        firstPage.drawText("/", {
+            x: 132,
+            y: height - 387,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1,
+        });
+        firstPage.drawText(data.accident_place , {
+            x: 282,
+            y: height - 387,
+            size: 14,
+            font: thSarabunFont,
+        });
+    }
+
 
     firstPage.drawText(data.treatment_place, {
-        x: 299,
-        y: height-449,
+        x: 60,
+        y: height-451,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),
     })
-    firstPage.drawText(data.hospital_type, {
-        x: 304,
-        y: height-475,
-        size: 14,   
-        font: thSarabunFont,
-        color: rgb(0, 0, 0),
-    })
-    firstPage.drawText(newMedicalFee + ' บาท', {
-        x: 143,
-        y: height-552.5,
-        size: 14,   
-        font: thSarabunFont,
-        color: rgb(0, 0, 0),
-    })
-   
-    firstPage.drawText(data.medical_fee_text, {
-        x: 143,
-        y: height-578,
-        size: 14,   
-        font: thSarabunFont,
-        color: rgb(0, 0, 0),
-    })
+    if(data.hospital_type === 0){
+        firstPage.drawText("/", {
+            x: 265,
+            y: height - 453,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1,
+        });
+    }
 
-    firstPage.drawText("( "+data.Student.fnameTH + ' ' + data.Student.lnameTH+" )", {
-        x: 397,
-        y: height-710,
+    else if(data.hospital_type === 1){
+        firstPage.drawText("/", {
+            x: 371,
+            y: height - 453,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1,
+        });
+    }
+    else if(data.hospital_type === 2){
+        firstPage.drawText("/", {
+            x: 485,
+            y: height - 453,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1,
+        });
+    }
+
+    if(data.treatment_place2 === null){
+        firstPage.drawText("", {
+            x: 60,
+            y: height-483,
+            size: 14,   
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+        })
+    }
+    else{
+        firstPage.drawText(data.treatment_place2, {
+            x: 60,
+            y: height-483,
+            size: 14,   
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+        })
+    }
+    if(data.hospital_type2 === 0){
+        firstPage.drawText("/", {
+            x: 265,
+            y: height - 485,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1,
+        });
+    }
+    else if(data.hospital_type2 === 1){
+        firstPage.drawText("/", {
+            x: 371,
+            y: height - 485,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1,
+        });
+    }
+    else if(data.hospital_type2 === 2){
+        firstPage.drawText("/", {
+            x: 485,
+            y: height - 485,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1,
+        });
+    }
+    else if(data.hospital_type2 === null){
+        firstPage.drawText("", {
+            x: 485,
+            y: height - 485,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1,
+        });
+    }
+
+    firstPage.drawText(newMedicalFee + ' บาท', {
+        x: 251,
+        y: height-524,
         size: 14,   
         font: thSarabunFont,
         color: rgb(0, 0, 0),

@@ -19,6 +19,16 @@ export async function getPrakanDataById(id) {
 }
 
 export async function createPrakan(data) {    
+    const [hours,minutes] = data.time_acc.split(':');    
+    const time = new Date();
+    time.setHours(hours+7);
+    time.setMinutes(minutes);
+    time.setSeconds(0);
+    time.setMilliseconds(0);
+    console.log("time1", time);
+    time.toISOString('th-TH', {timeZone: 'Asia/Bangkok'});   
+    console.log("time2", time); 
+    
     const createRequest = await prisma.request.create({
         data: {
             type: "การเบิกจ่ายประกันอุบัติเหตุ",
@@ -35,10 +45,14 @@ export async function createPrakan(data) {
             acc_date: new Date(data.acc_date),
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
-            hospital_type: data.hospital_type,
+            hospital_type: Number(data.hospital_type),
+            treatment_place2: data.treatment_place2,
+            hospital_type2: Number(data.hospital_type2),
             medical_fee: Number(data.medical_fee),
-            medical_fee_text: data.medical_fee_text,
+            // medical_fee_text: data.medical_fee_text,
             req_id: createRequest.id,
+            time_acc: time,
+            in_university: Boolean(data.in_university),
         }
     })
 
@@ -47,7 +61,9 @@ export async function createPrakan(data) {
         data: {
             phone_num: data.phone_num,
             tel_num: data.tel_num,
-            personal_email: data.personal_email
+            personal_email: data.personal_email,
+            year: data.year,
+            degree: data.degree
         }
     })
     return createPrakan
@@ -60,10 +76,16 @@ export async function createPdfPrakan(formId) {
 }
 
 export async function updatePrakanForm(data) {
-    if(data.token !== "0"){
-        await prakan(data)
-    }
-    console.log("yayyay", data);
+    const [hours,minutes] = data.time_acc.split(':');
+    const time = new Date();
+    time.setHours(hours);
+    time.setMinutes(minutes);
+    time.setSeconds(0);
+    time.setMilliseconds(0);
+    time.toISOString();
+    // if(data.token !== "0"){
+    //     await prakan(data)
+    // }
     
     const prakanUpdated = await prisma.accident_info.update({
         where: {id: data.formId},
@@ -74,17 +96,24 @@ export async function updatePrakanForm(data) {
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
             hospital_type: data.hospital_type,
+            treatment_place2: data.treatment_place2,
+            hospital_type2: Number(data.hospital_type2),
             medical_fee: Number(data.medical_fee),
-            medical_fee_text: data.medical_fee_text,
+            // medical_fee_text: data.medical_fee_text,
+            time_acc: time,
+            in_university: Boolean(data.in_university),
         }
     })    
-    await prisma.student.update({
-        where: {id: data.stu_id},
+     await prisma.student.update({
+        where: {id: Number(data.id)},
         data: {
             phone_num: data.phone_num,
-            personal_email: data.personal_email
+            tel_num: data.tel_num,
+            personal_email: data.personal_email,
+            year: data.year,
+            degree: data.degree
         }
-    })    
+    })
     if(prakanUpdated){           
         return prakanUpdated
     }
