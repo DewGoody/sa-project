@@ -3,8 +3,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Header } from "../../../../components/Header.js";
-import AccidentForm from "./AccidentForm.js";
-import IllnessForm from "./IllnessForm.js";
+import IPD from "./IPD.js";
+import OPD from "./OPD.js";
 import { useRouter, useParams } from "next/navigation";
 
 function page() {
@@ -47,6 +47,31 @@ function page() {
     console.log("alreadydata inside :", event.target.value);
     setPrakanData({ ...prakanData, [field]: event.target.value });
     setAlreadyData({ ...alreadyData, [field]: event.target.value });
+    if (field === "treatmentType") {
+      setPrakanData({
+        ...prakanData,
+        [field]: event.target.value,
+        OPDTreatmentDateCount: event.target.value === "outpatient" ? 1 : null, // Reset the count when treatment type changes
+        IPDAdmittedDate: null,
+        IPDDischargedDate: null,
+        OPDTreatmentDate1: null,
+        OPDTreatmentDate2: null,
+        OPDTreatmentDate3: null,
+        OPDTreatmentDate4: null,
+        OPDTreatmentDate5: null,
+      });
+      setAlreadyData({
+        ...alreadyData,
+        [field]: event.target.value,
+        OPDTreatmentDateCount: event.target.value === "outpatient" ? 1 : null, // Reset the count when treatment type changes
+        IPDDischargedDate: null,
+        OPDTreatmentDate1: null,
+        OPDTreatmentDate2: null,
+        OPDTreatmentDate3: null,
+        OPDTreatmentDate4: null,
+        OPDTreatmentDate5: null,
+      });
+    }
   };
 
   const handleCiaimTypeChange = (event) => {
@@ -59,18 +84,16 @@ function page() {
 
     // List of required fields
     const requiredFields = [
-      "title",
-      "lnameEN",
-      "fnameEN",
-      "id",
-      "phone_num",
-      "presentAddress",
-      "bd",
-      "hospitalName",
-      "hospitalProvince",
-      "hospitalPhoneNumber",
-      "hospitalAmittedDate",
-      "hospitalDischargedDate",
+      "title", // Prefix
+      "fnameEN", // First Name
+      "lnameEN", // Last Name
+      "id", // Student ID
+      "phone_num", // Mobile phone number
+      "email", // Email address
+      "hospitalName", // Place of treatment
+      "totalMedicalFees", // Total Medical Fees (Net)
+      "treatmentType", // Type of treatment
+      "illnessDescription", // Description of illness
     ];
 
     // Check if all required fields are present and not empty
@@ -81,24 +104,46 @@ function page() {
       }
     }
 
-    // } else if (claimType === "illness") {
-    //   const illnessRequiredFields = [
-    //     "hospitalName",
-    //     "hospitalProvince",
-    //     "hospitalPhoneNumber",
-    //     "hospitalAmittedDate",
-    //     "hospitalDischargedDate",
-    //   ];
+    // Check if treatment type is selected
+    if (prakanData.treatmentType === "null") {
+      alert("Please select a treatment type.");
+      return;
+    }
+    // Check if the total medical fees is a valid number
+    if (isNaN(prakanData.totalMedicalFees)) {
+      alert("Please enter a valid number for total medical fees.");
+      return;
+    }
+    // Check if the total medical fees is greater than 0
+    if (parseFloat(prakanData.totalMedicalFees) <= 0) {
+      alert("Total medical fees must be greater than 0.");
+      return;
+    }
 
-    //   for (let field of illnessRequiredFields) {
-    //     if (!prakanData[field] || prakanData[field].trim() === "") {
-    //       alert(`Please fill in the "${field}" field.`);
-    //       return;
-    //     }
-    //   }
-    // } else {
-    //   alert(`Please Select an Claim Type.`);
-    // }
+    if (prakanData.treatmentType === "inpatient") {
+      const { IPDAmittedDate, IPDDischargedDate } = prakanData;
+      if (!IPDAmittedDate) {
+        alert("Please fill in the admitted date.");
+        return;
+      }
+      if (!IPDDischargedDate) {
+        alert("Please fill in the discharged date.");
+        return;
+      }
+      if (new Date(IPDAmittedDate) > new Date(IPDDischargedDate)) {
+        alert("Admitted date cannot be later than discharged date.");
+        return;
+      }
+    }
+    if (prakanData.treatmentType === "outpatient") {
+      for (let i = 1; i <= prakanData.OPDTreatmentDateCount; i++) {
+        const date = prakanData[`OPDTreatmentDate${i}`];
+        if (!date) {
+          alert(`Please fill in the treatment date ${i}`);
+          return;
+        }
+      }
+    }
 
     console.log(prakanData);
     let allData = { ...prakanData };
@@ -141,7 +186,7 @@ function page() {
         response.data.phone_num = response.data.tel_num;
         setProfileData(response.data);
         setLoading(false);
-        setClaimType("illness");
+
         //console.log(response.data);
         // Create a new object to hold the updated state
         const updatedData = {};
@@ -169,7 +214,7 @@ function page() {
   return (
     <>
       <div className=" bg-white min-h-screen">
-        <Header req1="Health Insurance for Foreigner Student (Claim Illness)" />
+        <Header req1="Group Health Insurance Claim Form" />
         <div className=" mx-24 ">
           <main className="flex justify-center bg-white w-full">
             <div className="bg-white  w-full min-w-screen-6xl">
@@ -258,7 +303,6 @@ function page() {
                     <input
                       type="text"
                       name="id"
-                      //value={formData.citizenId}
                       onChange={(event) => handleChange(event, "id")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Student ID"
@@ -281,45 +325,127 @@ function page() {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 mb-2">
-                      Current address
+                    <label className="block text-gray-700 mb-2" for="email">
+                      Email address
                     </label>
                     <input
-                      type="text"
-                      name="presentAddress"
-                      value={alreadyData?.presentAddress}
-                      onChange={(event) =>
-                        handleChange(event, "presentAddress")
-                      }
+                      type="email"
+                      name="email"
+                      value={alreadyData?.email}
+                      onChange={(event) => handleChange(event, "email")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Present address"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      Date of birth
-                    </label>
-                    <input
-                      type="date"
-                      name="bd"
-                      //value={formData.religion}
-                      onChange={(event) => handleChange(event, "bd")}
-                      defaultValue={
-                        profileData?.bd
-                          ? new Date(profileData.bd).toISOString().split("T")[0]
-                          : ""
-                      }
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="Birthdate"
-                      max={new Date()?.toISOString()?.slice(0, 10)}
+                      placeholder="example@email.com"
                     />
                   </div>
                 </div>
 
-                <IllnessForm
-                  handleChange={handleChange}
-                  prakanData={prakanData}
-                />
+                <h3 className="text-lg font-semibold my-4 pt-8 flex gap-4 ">
+                  <span className=" text-lg font-semibold flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
+                    2
+                  </span>
+                  Treatment details
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      Place of treatment
+                    </label>
+                    <input
+                      type="text"
+                      name="hospitalName"
+                      onChange={(event) => handleChange(event, "hospitalName")}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Hospital / Clinic Name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      Place of treatment 2 (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      name="hospitalName2"
+                      onChange={(event) => handleChange(event, "hospitalName2")}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Hospital / Clinic Name (Optional)"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div className="grid gap-4 pt-4 ">
+                    <label className="block text-gray-700 ">
+                      Description of illness
+                    </label>
+                    <textarea
+                      name="hospitalName2"
+                      onChange={(event) =>
+                        handleChange(event, "illnessDescription")
+                      }
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      placeholder="Description of illness"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 ">
+                    <div>
+                      <label className="block text-gray-700 mb-2">
+                        Type of treatment
+                      </label>
+                      <select
+                        name="treatmentType"
+                        onChange={(event) =>
+                          handleChange(event, "treatmentType")
+                        }
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      >
+                        <option value="null">Select type of treatment</option>
+                        <option value="inpatient">Inpatient (IPD)</option>
+                        <option value="outpatient">Outpatient (OPD)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-gray-700 mb-2">
+                        Total Medical Fees (Net)
+                      </label>
+                      <input
+                        type="number"
+                        data-type="currency"
+                        name="totalMedicalFees"
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          const formattedValue = parseFloat(value).toFixed(2); // Restrict to 2 decimal places
+                          handleChange(
+                            { target: { value: formattedValue } },
+                            "totalMedicalFees"
+                          );
+                        }}
+                        onBlur={(event) => {
+                          event.target.value = prakanData.totalMedicalFees;
+                        }}
+                        step="0.01"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="Total Medical Fees (Net)"
+                        min={0}
+                      />
+                    </div>
+                  </div>
+                </div>
+                {prakanData?.treatmentType === "inpatient" ? (
+                  <IPD handleChange={handleChange} prakanData={prakanData} />
+                ) : prakanData?.treatmentType === "outpatient" ? (
+                  <OPD handleChange={handleChange} prakanData={prakanData} />
+                ) : null}
+                <h3 className="text-lg font-semibold my-4 pt-8">
+                  *Access to policy benefit details is available at{" "}
+                  <a
+                    href="https://www.sa.chula.ac.th/service/health-insurance-for-foreigner-student/"
+                    className="text-blue-500 hover:underline"
+                    target="_blank" // Open link in a new tab
+                    rel="noopener noreferrer" // Security best practice
+                  >
+                    https://www.sa.chula.ac.th
+                  </a>
+                </h3>
               </section>
 
               <div className="flex justify-between mt-8">

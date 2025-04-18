@@ -46,10 +46,17 @@ const RD = () => {
   console.log(profileData);
 
   const handleDownload = async () => {
-    const response = await axios.post('/api/prakanInter/createPdf', { form: form })
-    setPrakanData(response.data.data)
+
+    const response = await axios.post("/api/prakanInter/createPdf", {
+      form: form,
+    });
+    setPrakanData(response.data.data);
     const link = document.createElement("a");
-    link.href = "../../../../../documents/prakan-inter/" + response.data.data.Student.id + "_Health_claim.pdf";
+    link.href =
+      "../../../../../documents/prakan-inter/" +
+      response.data.data.Student.id +
+      "_Health_claim.pdf";
+
     link.download = response.data.data.Student.id + "_Health_claim.pdf";
     document.body.appendChild(link);
     link.click();
@@ -103,7 +110,14 @@ const RD = () => {
       } else {
         console.log("dataaa", prakanData, "-------------------------------");
 
+
+        const response2 = await axios.post(
+          "/api/prakanInter/deletePdf",
+          prakanData
+        );
+
         const response2 = await axios.post('/api/prakanInter/deletePdf', prakanData)
+
         router.push(`/student/${studentId}/appointment/${param}/0`);
       }
     }
@@ -114,10 +128,7 @@ const RD = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header
-        req1="Health Insurance For Foreigner Student (Claim Injury/Illness)"
-        req2=""
-      />
+      <Header req1="Group Health Insurance Claim Form" req2="" />
       <main className="flex justify-center items-center">
         <div className="bg-white p-8 w-full max-w-4xl">
           {/* Personal & Contact Information Section */}
@@ -134,10 +145,13 @@ const RD = () => {
 
                 <div className="divide-y divide-gray-200">
                   <div className="items-center py-4">
-                    <div className="font-medium text-gray-900 pr-4">1. Download เอกสารได้ที่นี่ </div>
+                    <div className="font-medium text-gray-900 pr-4">
+                      1. Download เอกสารได้ที่นี่{" "}
+                    </div>
                     <button
                       onClick={handleDownload}
-                      className="mt-3 ml-3 px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
+                      className="mt-3 ml-3 px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32"
+                    >
                       Download
                     </button>
                   </div>
@@ -147,7 +161,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900 ">
-                        2. Claim Form for Injury / Illness
+                        2. Medical certificate
                       </strong>
                     </div>
                   </label>
@@ -157,7 +171,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        3. Original receipt
+                        3. Receipt
                       </strong>
                     </div>
                   </label>
@@ -167,7 +181,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        4. Medical certificate
+                        4. List of medicines and medical expenses details
                       </strong>
                     </div>
                   </label>
@@ -177,17 +191,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        5. Copy of student card
-                      </strong>
-                    </div>
-                  </label>
-                  <label
-                    htmlFor="Option2"
-                    className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                  >
-                    <div>
-                      <strong className="font-medium text-gray-900">
-                        6. Copy of bank account passbook
+                        5. COPY of your BANK account passbook
                       </strong>
                     </div>
                   </label>
