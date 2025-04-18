@@ -361,7 +361,7 @@ async function prakan(data){
 
     const pdfBytes = await pdfDoc.save()
     fs.writeFileSync('public/documents/accident/'+data.Student.id+'_accident_insurance.pdf', pdfBytes);
-    return 'public/documents/accident/prakanformfilled.pdf'
+    return 'public/documents/accident/'+data.Student.id+'_accident_insurance.pdf'
 }
 
 module.exports = { prakan };

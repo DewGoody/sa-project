@@ -52,6 +52,7 @@ const AppointmentManagement = () => {
 
     useEffect(() => {
         if (shouldReload) {
+            setShouldReload(false);
             window.location.reload();
         }
     }, [shouldReload]);
@@ -76,7 +77,9 @@ const AppointmentManagement = () => {
     console.log("value", value);
 
     const handleOk = async () => {
-        setShouldReload(true);
+        // setShouldReload(true);
+        console.log(selectDate, nameDate, value);
+        
         try {
             const res = await axios.post('/api/dayoff/create', {
                 date: selectDate,
@@ -87,7 +90,7 @@ const AppointmentManagement = () => {
         } catch (error) {
             console.error('Error editing max student:', error);
         } finally {
-            setShouldReload(false);
+            setShouldReload(true);
         }
     };
 

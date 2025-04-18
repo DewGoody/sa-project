@@ -13,16 +13,18 @@ export async function POST(req,res){
     console.log(data);
     
     const filePath = await downloadPrakanAdmin(data.id)        
-    const fileBuffer = fs.readFileSync(filePath);
+    
+    // const fileBuffer = fs.readFileSync(filePath);
 
     // Set the response headers for file download
-    return new Response(fileBuffer, {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename="prakanformfilled.pdf"`,
-        },
-      });
+    // return new Response(fileBuffer, {
+    //     status: 200,
+    //     headers: {
+    //       'Content-Type': 'application/pdf',
+    //       'Content-Disposition': `attachment; filename="prakanformfilled.pdf"`,
+    //     },
+    //   });
+    return NextResponse.json({ data: convertBigIntToString(filePath) });
     }
     catch(error){        
         console.log(error);

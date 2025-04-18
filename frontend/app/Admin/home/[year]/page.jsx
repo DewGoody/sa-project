@@ -230,10 +230,11 @@ const AppointmentManagement = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
+            
             render: (status, record) => (
                 <Select
                     defaultValue={record.status}
-                    style={{ width: 120 }}
+                    style={{ width: 170 }}
                     onChange={(value) => handleStatusChange({ ...record, status: value })}
                 >
                     <Select.Option value="จองคิวสำเร็จ" disabled={record.status === "ไม่มาเข้ารับบริการ"}>จองคิวสำเร็จ</Select.Option>
@@ -344,7 +345,7 @@ const AppointmentManagement = () => {
                             จัดการการนัดหมาย
                         </div>
                     </div>
-                    <div className='flex mt-12'>
+                    {/* <div className='flex mt-12'>
                         <div className='mt-2 ml-3 font-normal text-base'>
                             เลือกปีการศึกษา
                         </div>
@@ -362,7 +363,7 @@ const AppointmentManagement = () => {
                             </Select>
                         </div>
 
-                    </div>
+                    </div> */}
 
                     <Table
                         dataSource={dataSource}

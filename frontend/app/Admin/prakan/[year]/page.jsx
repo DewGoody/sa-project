@@ -119,12 +119,15 @@ const App = () => {
                     accident_place: item.accident_info[0].accident_place,
                     acc_date: formattedDate,
                     treatment_place: item.accident_info[0].treatment_place,
+                    treatment_place2: item.accident_info[0].treatment_place2,
                     hospital_type: item.accident_info[0].hospital_type,
+                    hospital_type2: item.accident_info[0].hospital_type2,
                     medical_fee: item.accident_info[0].medical_fee + ' บาท',
                     status: item.status,
                     id: item.accident_info[0].id,
                     reqId: item.id,
-                    more_info: item.more_info
+                    more_info: item.more_info,
+                    time_acc: item.accident_info[0].time_acc,
 
                 };
             }));
@@ -165,20 +168,18 @@ const App = () => {
 
     const handleDownload = async (dataDownload) => {
 
-        console.log("dataDownloadJaa", typeof dataDownload);
+        console.log("dataDownloadJaa", dataDownload);
 
         try {
-            const res = await axios.post('/api/request/downloadPrakan', { id: parseInt(dataDownload) }, {
-                responseType: 'blob',
-            });
-            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const response = await axios.post('/api/prakan/createPdf', {form: dataDownload.id})
+            console.log("kselmgseg",response.data.data.stu_id, response.data.data.Student.id);
+
             const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'prakanformfilled.pdf');
+            link.href = '../../../../../documents/accident/'+response.data.data.stu_id+'_accident_insurance.pdf';
+            link.download = response.data.data.stu_id+'_accident_insurance.pdf';
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
-            console.log("download", res);
+            document.body.removeChild(link);            
         } catch (error) {
             console.error('Error downloading file:', error);
         }
@@ -264,7 +265,7 @@ const App = () => {
                             fontSize: '21px', // Increase the size (e.g., 24px)
                             cursor: 'pointer', // Optional: changes the cursor to a pointer
                         }}
-                        onClick={() => handleDownload(record.id)}
+                        onClick={() => handleDownload(record)}
                     />
                 </div>
             ),
@@ -272,6 +273,8 @@ const App = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
+            align: 'center',
+            width: 200,
             render: (status, record) => {
                 let options = [];
                 if (status === 'รอเข้ารับบริการ') {
@@ -360,17 +363,20 @@ const App = () => {
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'name',
+            align: 'center',
             ...getColumnSearchProps('name'),
         },
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
+            align: 'center',
             ...getColumnSearchProps('student_ID'),
         },
         {
             title: 'วันที่เกิดอุบัติเหตุ',
             dataIndex: 'acc_date',
             width: 160,
+            align: 'center',
             sorter: (a, b) => {
                 const dateA = new Date(a.acc_date.split('/').reverse().join('-'));
                 const dateB = new Date(b.acc_date.split('/').reverse().join('-'));
@@ -383,32 +389,80 @@ const App = () => {
             ),
         },
         {
+            title: 'เวลาเกิดอุบัติเหตุ',
+            dataIndex: 'time_acc',
+            width: 160,
+            align: 'center',
+            render: (text) => {
+                const time = new Date(text);
+                const formattedTime = time.toISOString().split('T')[1].slice(0, 5);
+                return formattedTime + ' น.';
+            }
+        },
+        {
             title: 'อาการบาดเจ็บ',
             dataIndex: 'des_injury',
+            align: 'center',
         },
         {
             title: 'การเกิดอุบัติเหตุ',
             dataIndex: 'acc_desc',
+            align: 'center',
         },
         {
             title: 'สถานที่เกิดอุบัติเหตุ',
             dataIndex: 'accident_place',
+            align: 'center',
         },
 
         {
-            title: 'สถานที่รักษา',
+            title: 'สถานที่รักษา 1',
             dataIndex: 'treatment_place',
+            align: 'center',
         },
         {
             title: 'ประเภทสถานพยาบาล',
             dataIndex: 'hospital_type',
+            align: 'center',
+            render: (text) => {
+                if (text === 0) {
+                    return 'โรงพยาบาลรัฐ';
+                } else if (text === 1) {
+                    return 'โรงพยาบาลเอกชน';
+                } else if (text === 2) {
+                    return 'คลินิก';
+                } else {
+                    return text;
+                }
+            }
+        },
+        {
+            title: 'สถานที่รักษา 2',
+            dataIndex: 'treatment_place',
+        },
+        {
+            title: 'ประเภทสถานพยาบาล',
+            dataIndex: 'hospital_type2',
+            align: 'center',
+            render: (text) => {
+                if (text === 0) {
+                    return 'โรงพยาบาลรัฐ';
+                } else if (text === 1) {
+                    return 'โรงพยาบาลเอกชน';
+                } else if (text === 2) {
+                    return 'คลินิก';
+                } else {
+                    return text;
+                }
+            }
         },
         {
             title: 'ค่ารักษาพบาบาล',
             dataIndex: 'medical_fee',
+            align: 'center',
             render: (text) => {
                 const number = parseFloat(text.replace(/[^\d.-]/g, ''));
-                return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';
             },
         },
 

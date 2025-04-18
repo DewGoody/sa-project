@@ -5,7 +5,9 @@ import { convertBigIntToString} from '../../../../utills/convertBigInt'
 
 export async function POST(req,res){
     try{
+    console.log("data",req);
     let data = await req.json()
+    
     const dayoff = await createDayoff(data)
     return NextResponse.json({ data: convertBigIntToString(dayoff) });
     }
