@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
@@ -195,27 +195,30 @@ model Queue {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model RD_info {
-  id                  BigInt    @id @default(autoincrement())
-  created_at          DateTime  @default(now()) @db.Timestamptz(6)
-  RD_type             Decimal?  @db.Decimal
-  student_id          Decimal?  @db.Decimal
-  req_id              BigInt?
-  date                DateTime? @db.Date
-  money               String?
-  citizenRD           Int?      @db.SmallInt
-  YearGradeRD         Int?      @db.SmallInt
-  register_type       Int?      @db.SmallInt
-  Branches            String?
-  corps               String?
-  certification_left  Int?      @db.SmallInt
-  certification_right Int?      @db.SmallInt
-  Request             Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student             Student?  @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  id             BigInt    @id @default(autoincrement())
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  RD_type        Decimal?  @db.Decimal
+  student_id     Decimal?  @unique @db.Decimal
+  req_id         BigInt?
+  date           DateTime? @db.Date
+  money          String?
+  citizenRD      BigInt?
+  YearGradeRD    Int?      @db.SmallInt
+  Branches       String?
+  corps          String?
+  registermyself Boolean?
+  notmilitary    Boolean?
+  readymilitary  Boolean?
+  man_right      Boolean?
+  women_right    Boolean?
+  ready_right    Boolean?
+  register_type  Int?      @db.SmallInt
+  Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student        Student?  @relation(fields: [student_id], references: [id], onDelete: Cascade)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Request {
-
   id                    BigInt                  @id @default(autoincrement())
   created_at            DateTime                @default(now()) @db.Timestamptz(6)
   type                  String?
@@ -232,12 +235,10 @@ model Request {
   prakan_inter_info     prakan_inter_info[]
   prakan_inter_info_old prakan_inter_info_old[]
   vendor_info           vendor_info[]
-
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model Student {
-
   id                    Decimal                 @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
   lnameTH               String
   fnameTH               String
@@ -276,7 +277,6 @@ model Student {
   prakan_inter_info     prakan_inter_info[]
   prakan_inter_info_old prakan_inter_info_old[]
   vendor_info           vendor_info[]
-
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -367,7 +367,6 @@ model accident_info {
   treatment_place  String?
   hospital_type    Int?      @db.SmallInt
   medical_fee      Float?
-
   req_id           BigInt?
   des_injury       String?
   medical_fee_text String?
@@ -448,9 +447,9 @@ model prakan_inter_info {
 }
 
 model vendor_info {
-  id                BigInt   @id @default(autoincrement())
-  created_at        DateTime @default(now()) @db.Timestamptz(6)
-  stu_id            String?
+  id                BigInt    @id @default(autoincrement())
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  stu_id            Decimal?  @db.Decimal
   nameTH            String?
   faculty           String?
   houseID           String?
@@ -464,16 +463,19 @@ model vendor_info {
   postalCode        String?
   tel               String?
   citizenId         String?
-  citizenIssueDate  String?
-  citizenExpireDate String?
+  citizenIssueDate  DateTime? @db.Date
+  citizenExpireDate DateTime? @db.Date
   claimType         String?
-  amount            Decimal? @db.Decimal
+  amount            Decimal?  @db.Decimal
   bankCompany       String?
   bankBranch        String?
   bankAccountType   String?
   bankAccountName   String?
   bankAccountNumber String?
   claimOtherReason  String?
+  req_id            BigInt?
+  Request           Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student           Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
