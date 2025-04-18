@@ -26,7 +26,7 @@ export async function createPrakan(data) {
     time.setSeconds(0);
     time.setMilliseconds(0);
     console.log("time1", time);
-    time.toISOString('th-TH', {timeZone: 'Asia/Bangkok'});   
+    time.toISOString();   
     console.log("time2", time); 
     
     const createRequest = await prisma.request.create({
@@ -78,7 +78,7 @@ export async function createPdfPrakan(formId) {
 export async function updatePrakanForm(data) {
     const [hours,minutes] = data.time_acc.split(':');
     const time = new Date();
-    time.setHours(hours);
+    time.setHours(hours+7);
     time.setMinutes(minutes);
     time.setSeconds(0);
     time.setMilliseconds(0);

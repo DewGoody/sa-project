@@ -438,9 +438,9 @@ const App = () => {
                         </div>
                     </div>
                     <div className='flex mt-12'>
-                        <div className='mt-2 ml-3 font-normal text-base'>
+                        {/* <div className='mt-2 ml-3 font-normal text-base'>
                             เลือกปีการศึกษา
-                        </div>
+                        </div> */}
                         <div className='mt-1 mb-6'>
                             <Select
                                 defaultValue={year}
