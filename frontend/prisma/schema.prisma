@@ -6,6 +6,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Address {
@@ -406,7 +407,7 @@ model guardian_info {
   guardian_title       String?
   guardian_address     String?
   guardian_nationality String?  @default("")
-  phone_num            Int?     @db.SmallInt
+  phone_num            BigInt?
   consent1             Boolean?
   consent2             Boolean?
   consent21            Boolean?

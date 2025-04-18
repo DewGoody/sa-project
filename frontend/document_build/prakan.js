@@ -292,14 +292,24 @@ async function prakan(data){
         });
     }
 
-
-    firstPage.drawText(data.treatment_place2, {
-        x: 60,
-        y: height-483,
-        size: 14,   
-        font: thSarabunFont,
-        color: rgb(0, 0, 0),
-    })
+    if(data.treatment_place2 === null){
+        firstPage.drawText("", {
+            x: 60,
+            y: height-483,
+            size: 14,   
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+        })
+    }
+    else{
+        firstPage.drawText(data.treatment_place2, {
+            x: 60,
+            y: height-483,
+            size: 14,   
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+        })
+    }
     if(data.hospital_type2 === 0){
         firstPage.drawText("/", {
             x: 265,
@@ -322,6 +332,16 @@ async function prakan(data){
     }
     else if(data.hospital_type2 === 2){
         firstPage.drawText("/", {
+            x: 485,
+            y: height - 485,
+            size: 30,
+            font: thSarabunFont,
+            color: rgb(0, 0, 0),
+            opacity: 1,
+        });
+    }
+    else if(data.hospital_type2 === null){
+        firstPage.drawText("", {
             x: 485,
             y: height - 485,
             size: 30,

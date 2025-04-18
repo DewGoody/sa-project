@@ -63,7 +63,7 @@ const RD = () => {
     };
 
     const handleBack = () => {
-        router.push(`/prakan/${form}`);
+        router.push(`/student/${studentId}/prakan/${form}`);
     };
 
     // Function to handle checkbox change

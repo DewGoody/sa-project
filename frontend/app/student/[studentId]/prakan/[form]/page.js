@@ -291,7 +291,7 @@ export default function Form() {
                     <select
                       name="degree"
                        className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={alreadyData?.degree}
+                      value={alreadyData?.Student?.degree}
                       onChange={handleChangeDegree}
                     >
                     <option value="">เลือกระดับการศึกษา (select degree)</option>
@@ -307,7 +307,7 @@ export default function Form() {
                       type="text"
                       name="year"
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={alreadyData?.year}
+                      value={alreadyData?.Student?.year}
                       onChange={handleChangeYearLevel}
                     />
                   </div>
@@ -367,7 +367,7 @@ export default function Form() {
                     <input
                         type="date"
                         onChange={handleChangeDateAcc}
-                        // value={alreadyData?.acc_date}
+                        value={alreadyData?.acc_date}
                         className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                       />
                   </label>
@@ -379,6 +379,7 @@ export default function Form() {
                     <input
                         type="time"
                         onChange={handleChangeTimeAcc}
+                        value={alreadyData?.time_acc?.split("T")[1]?.substring(0, 5)}
                         className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                       />
                   </label>

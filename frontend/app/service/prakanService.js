@@ -96,6 +96,8 @@ export async function updatePrakanForm(data) {
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
             hospital_type: data.hospital_type,
+            treatment_place2: data.treatment_place2,
+            hospital_type2: Number(data.hospital_type2),
             medical_fee: Number(data.medical_fee),
             // medical_fee_text: data.medical_fee_text,
             time_acc: time,

@@ -592,7 +592,7 @@ export const Form = () => {
       </Modal>
 
       <Modal
-        title="ยืนยันการยกเลิกคิวนี้แล้วแก้ไขฟอร์ม (Do you confirm to delete this queue and edit this form ?)"
+        title="ยืนยันการแก้ไขฟอร์ม (Do you confirm to edit this form ?)"
         open={isModalEditFormNotqueue}
         onOk={handleEditForm}
         onCancel={handleCancel}
@@ -605,7 +605,7 @@ export const Form = () => {
       </Modal>
 
       <Modal
-        title="ต้องการลบคิวและจองคิวใช่ไหม (Do you want delete to booking new queue ?)"
+        title="ยืนยันการลบคิวและจองคิว (Do you confirmto delete and booking new queue ?)"
         open={isModalSheduleOpen}
         onOk={handleBookQueue}
         onCancel={handleCancel}
@@ -618,7 +618,7 @@ export const Form = () => {
       </Modal>
 
       <Modal
-        title="ต้องการจองคิวใช่ไหม (Do you want to booking queue ?)"
+        title="ยืนยันการจองคิว (Do you confirm to booking queue ?)"
         open={isModalSheduleNotQueueOpen}
         onOk={handleBookNotQueue}
         onCancel={handleCancel}
