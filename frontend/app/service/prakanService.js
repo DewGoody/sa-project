@@ -18,16 +18,15 @@ export async function getPrakanDataById(id) {
     }
 }
 
-export async function createPrakan(data) {    
-    const [hours,minutes] = data.time_acc.split(':');    
-    const time = new Date();
-    time.setHours(hours+7);
-    time.setMinutes(minutes);
-    time.setSeconds(0);
-    time.setMilliseconds(0);
-    console.log("time1", time);
-    time.toISOString();   
-    console.log("time2", time); 
+export async function createPrakan(data) {  
+    const timeString = data.time_acc  
+    const [hours, minutes] = timeString.split(':').map(Number);
+
+// Create a Date object using today's date (or any dummy date)
+    const timeAsDate = new Date(Date.UTC(1970, 0, 1, hours, minutes)); // fixed UTC
+
+    console.log("Time (UTC):", timeAsDate.toISOString()); // Always consistent
+    console.log("time2", timeAsDate); 
     
     const createRequest = await prisma.request.create({
         data: {
@@ -51,7 +50,7 @@ export async function createPrakan(data) {
             medical_fee: Number(data.medical_fee),
             // medical_fee_text: data.medical_fee_text,
             req_id: createRequest.id,
-            time_acc: time,
+            time_acc: timeAsDate,
             in_university: Boolean(data.in_university),
         }
     })
@@ -76,13 +75,14 @@ export async function createPdfPrakan(formId) {
 }
 
 export async function updatePrakanForm(data) {
-    const [hours,minutes] = data.time_acc.split(':');
-    const time = new Date();
-    time.setHours(hours+7);
-    time.setMinutes(minutes);
-    time.setSeconds(0);
-    time.setMilliseconds(0);
-    time.toISOString();
+    const timeString = data.time_acc  
+    const [hours, minutes] = timeString.split(':').map(Number);
+
+// Create a Date object using today's date (or any dummy date)
+    const timeAsDate = new Date(Date.UTC(1970, 0, 1, hours, minutes)); // fixed UTC
+
+    console.log("Time (UTC):", timeAsDate.toISOString()); // Always consistent
+    console.log("time1", timeAsDate);
     // if(data.token !== "0"){
     //     await prakan(data)
     // }
@@ -100,7 +100,7 @@ export async function updatePrakanForm(data) {
             hospital_type2: Number(data.hospital_type2),
             medical_fee: Number(data.medical_fee),
             // medical_fee_text: data.medical_fee_text,
-            time_acc: time,
+            time_acc: timeAsDate,
             in_university: Boolean(data.in_university),
         }
     })    

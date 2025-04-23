@@ -164,22 +164,21 @@ export default function Form() {
     setPrakanData({ ...prakanData, accident_place: event.target.value });
     setAlreadyData({ ...alreadyData, accident_place: event.target.value });
   };
-
-  console.log("prakanDataJaa",prakanData);
+  console.log("timeIsus", alreadyData?.time_acc?.split("T")[1]?.substring(0, 5))
 
   const handleSubmit = async (event) => {
     try {
       if(studentId !== '0'){
         if(form !== '0'){
-          let allData = { ...alreadyData, ...studentInfo, ...profileData };
+          let allData = { ...alreadyData, ...studentInfo, ...profileData, time_acc:alreadyData?.time_acc?.split("T")[1]?.substring(0, 5) };
+          console.log("submit :",allData);
           const response = await axios.post('/api/prakan/update', allData);
           console.log("responseId :",response.data.data.id);
           const req_id = response.data.data.req_id
           router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${form}`);
         }else{
           let allData = { ...prakanData, ...studentInfo, ...profileData };
-          console.log("prakanData === 0 :",allData);
-          console.log("prakanAllData === 0 :",allData);
+          console.log("submit :",allData);
           const response = await axios.post('/api/prakan/create', allData);
           console.log("responsePrakan :",response.data.data);
           const formId = response.data.data.id
@@ -291,7 +290,7 @@ export default function Form() {
                     <select
                       name="degree"
                        className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={alreadyData?.Student?.degree}
+                      value={profileData?.degree}
                       onChange={handleChangeDegree}
                     >
                     <option value="">เลือกระดับการศึกษา (select degree)</option>
@@ -307,7 +306,7 @@ export default function Form() {
                       type="text"
                       name="year"
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={alreadyData?.Student?.year}
+                      value={profileData?.year}
                       onChange={handleChangeYearLevel}
                     />
                   </div>

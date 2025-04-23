@@ -377,16 +377,16 @@ const App = () => {
             dataIndex: 'acc_date',
             width: 160,
             align: 'center',
-            sorter: (a, b) => {
-                const dateA = new Date(a.acc_date.split('/').reverse().join('-'));
-                const dateB = new Date(b.acc_date.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
+            // sorter: (a, b) => {
+            //     const dateA = new Date(a.acc_date.split('/').reverse().join('-'));
+            //     const dateB = new Date(b.acc_date.split('/').reverse().join('-'));
+            //     return dateA - dateB;
+            // },
+            // sortIcon: (sorted) => (
+            //     <div>
+            //         <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
+            //     </div>
+            // ),
         },
         {
             title: 'เวลาเกิดอุบัติเหตุ',

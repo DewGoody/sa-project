@@ -87,7 +87,7 @@ export async function getRequestById(id) {
 export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
       where: {
-        NOT: { Queue: { some: {} } },
+        // NOT: { Queue: { some: {} } },
         status: {
           in: [
             "รอจองคิว",
@@ -214,7 +214,7 @@ export async function getRequestPrakanInAdmin(year) {
         requests = await prisma.request.findMany({
             where: {
                 status: {
-                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                    notIn: ["คำขอถูกยกเลิก"]
                 },
                 type: "การเบิกจ่ายประกันอุบัติเหตุ",
                 deleted_at: null,
@@ -242,7 +242,7 @@ export async function getRequestPrakanInAdmin(year) {
         requests = await prisma.request.findMany({
             where: {
                 status: {
-                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                    notIn: ["คำขอถูกยกเลิก"]
                 },
                 type: "การเบิกจ่ายประกันอุบัติเหตุ",
                 deleted_at: null
@@ -532,7 +532,7 @@ export async function getRequestPonpanInAdmin(year) {
         requests = await prisma.request.findMany({
             where: {
                 status: {
-                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                    notIn: ["คำขอถูกยกเลิก"]
                 },
                 type: "การผ่อนผันเข้ารับราชการทหาร",
                 deleted_at: null,
@@ -562,7 +562,7 @@ export async function getRequestPonpanInAdmin(year) {
         requests = await prisma.request.findMany({
             where: {
                 status: {
-                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                    notIn: ["คำขอถูกยกเลิก"]
                 },
                 type: "การผ่อนผันเข้ารับราชการทหาร",
                 deleted_at: null
