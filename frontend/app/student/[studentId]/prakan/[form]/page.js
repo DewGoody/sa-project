@@ -164,7 +164,7 @@ export default function Form() {
     setPrakanData({ ...prakanData, accident_place: event.target.value });
     setAlreadyData({ ...alreadyData, accident_place: event.target.value });
   };
-  console.log("timeIsus", alreadyData?.time_acc?.split("T")[1]?.substring(0, 5))
+  console.log("timeLogKub", alreadyData?.time_acc?.split("T")[1]?.substring(0, 5))
 
   const handleSubmit = async (event) => {
     try {
@@ -188,7 +188,8 @@ export default function Form() {
 
         }
       }else{
-        let allData = { ...alreadyData, ...studentInfo, ...profileData };
+        let allData = { ...alreadyData, ...studentInfo, ...profileData, time_acc:alreadyData?.time_acc?.split("T")[1]?.substring(0, 5) };
+        console.log("submit :",allData);
         const response = await axios.post('/api/prakan/update', allData);
         console.log("responseId :",response.data.data.id);
         router.push(`/Admin/prakan/0`);
@@ -320,7 +321,7 @@ export default function Form() {
           <div className="bg-white   w-full min-w-screen-6xl">
             <h3 className="text-md font-semibold mt-8 ml-3">
               {" "}
-              ข้อมุลการเกิดอุบัติเหตุและการรักษาพาบาล (Accident & treatment details)
+              ข้อมูลการเกิดอุบัติเหตุและการรักษาพาบาล (Accident & treatment details)
             </h3>
             <div>
               <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6">
