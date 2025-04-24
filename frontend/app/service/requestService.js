@@ -91,12 +91,12 @@ export async function getShowRequestNotQueue(data) {
         status: {
           in: [
             "รอจองคิว",
-            "ยังไม่ได้ Upload เอกสาร",
-            "รอเจ้าหน้าที่ดำเนินการ",
-            "ขอข้อมูลเพิ่มเติม",
-            "ส่งข้อมูลให้ รพ. แล้ว",
-            "ย้ายสิทธิ์ไม่สำเร็จ",
-            "ย้ายสิทธิ์สำเร็จ",
+            // "ยังไม่ได้ Upload เอกสาร",
+            // "รอเจ้าหน้าที่ดำเนินการ",
+            // "ขอข้อมูลเพิ่มเติม",
+            // "ส่งข้อมูลให้ รพ. แล้ว",
+            // "ย้ายสิทธิ์ไม่สำเร็จ",
+            // "ย้ายสิทธิ์สำเร็จ",
           ],
           notIn: ["ประวัติการแก้ไข"],
         },
@@ -584,8 +584,17 @@ export async function getRequestPonpanInAdmin(year) {
             }
         })
     }
-    if (requests) {
-        return requests
+    const sorted = requests.sort((a, b) => {        
+        const provA = a.Ponpan[0]?.province_sd || "";
+        const provB = b.Ponpan[0]?.province_sd || "";
+        const distA = a.Ponpan[0]?.district_sd || "";
+        const distB = b.Ponpan[0]?.district_sd || "";
+      
+        if (provA !== provB) return provA.localeCompare(provB, 'th', { sensitivity: 'base' });
+        return distA.localeCompare(distB, 'th', { sensitivity: 'base' });
+    });
+    if (sorted) {
+        return sorted
     }
     else {
         return "Not found"

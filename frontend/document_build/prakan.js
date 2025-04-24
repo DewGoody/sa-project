@@ -360,8 +360,9 @@ async function prakan(data){
     })
 
     const pdfBytes = await pdfDoc.save()
-    fs.writeFileSync('public/documents/accident/'+data.Student.id+'_accident_insurance.pdf', pdfBytes);
-    return 'public/documents/accident/'+data.Student.id+'_accident_insurance.pdf'
+    // fs.writeFileSync('public/documents/accident/'+data.Student.id+'_accident_insurance.pdf', pdfBytes);
+    // return 'public/documents/accident/'+data.Student.id+'_accident_insurance.pdf'
+    return Buffer.from(pdfBytes); 
 }
 
 module.exports = { prakan };

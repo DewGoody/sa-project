@@ -69,9 +69,9 @@ export async function createPrakan(data) {
 }
 
 export async function createPdfPrakan(formId) {
-    const response = await getPrakanDataById(formId)
-    await prakan(response)
-    return response
+    const response = await getPrakanDataById(formId);  // Fetch data
+    const pdfBuffer = await prakan(response);  // Generate PDF and get the buffer
+    return pdfBuffer;  // Return the actual PDF buffer
 }
 
 export async function updatePrakanForm(data) {
@@ -95,7 +95,7 @@ export async function updatePrakanForm(data) {
             acc_date: new Date(data.acc_date),
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
-            hospital_type: data.hospital_type,
+            hospital_type: Number(data.hospital_type),
             treatment_place2: data.treatment_place2,
             hospital_type2: Number(data.hospital_type2),
             medical_fee: Number(data.medical_fee),

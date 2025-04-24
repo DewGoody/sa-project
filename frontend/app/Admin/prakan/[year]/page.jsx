@@ -167,23 +167,20 @@ const App = () => {
     }
 
     const handleDownload = async (dataDownload) => {
-
-        console.log("dataDownloadJaa", dataDownload);
-
-        try {
-            const response = await axios.post('/api/prakan/createPdf', {form: dataDownload.id})
-            console.log("kselmgseg",response.data.data.stu_id, response.data.data.Student.id);
-
-            const link = document.createElement('a');
-            link.href = '../../../../../documents/accident/'+response.data.data.stu_id+'_accident_insurance.pdf';
-            link.download = response.data.data.stu_id+'_accident_insurance.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);            
-        } catch (error) {
-            console.error('Error downloading file:', error);
-        }
-    }
+        const response = await axios.post('/api/prakan/createPdf', { form: dataDownload.id }, {
+          responseType: 'blob'
+        });
+        
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+      
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = dataDownload.student_ID + '_accident_insurance.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
 
     const handleEditForm = async (id) => {
         console.log("editFormReqId : ", id);
@@ -273,7 +270,7 @@ const App = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
-            align: 'center',
+            align: 'left',
             width: 200,
             render: (status, record) => {
                 let options = [];
@@ -332,7 +329,7 @@ const App = () => {
                     <>
                         <Select
                             defaultValue={record.status}
-                            style={{ width: "180px" }}
+                            style={{ width: "220px" }}
                             options={options}
                             onChange={(value) => handleChangeStatus({ ...record, status: value })}
                         />
@@ -421,7 +418,7 @@ const App = () => {
             align: 'center',
         },
         {
-            title: 'ประเภทสถานพยาบาล',
+            title: 'ประเภทสถานพยาบาล 1',
             dataIndex: 'hospital_type',
             align: 'center',
             render: (text) => {
@@ -438,10 +435,18 @@ const App = () => {
         },
         {
             title: 'สถานที่รักษา 2',
-            dataIndex: 'treatment_place',
+            dataIndex: 'treatment_place2',
+            align:'center',
+            render: (text) => {
+                if(text===null || text===""){
+                    return "-"
+                }else{
+                    return text
+                }
+            }
         },
         {
-            title: 'ประเภทสถานพยาบาล',
+            title: 'ประเภทสถานพยาบาล 2',
             dataIndex: 'hospital_type2',
             align: 'center',
             render: (text) => {
@@ -452,7 +457,7 @@ const App = () => {
                 } else if (text === 2) {
                     return 'คลินิก';
                 } else {
-                    return text;
+                    return "-";
                 }
             }
         },

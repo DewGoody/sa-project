@@ -442,10 +442,13 @@ const handleSubmit = async () => {
                        className="ml-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                     <div className="mt-1">
-                        <a href='https://anan-hosp.go.th/%E0%B9%80%E0%B8%81%E0%B8%93%E0%B8%91%E0%B9%8C%E0%B8%97%E0%B8%AB%E0%B8%B2%E0%B8%A3/img/%E0%B8%AA%E0%B8%949.PNG'>
-                        
-                        <QuestionCircleOutlined style={{color:"red", fontSize:"larger", marginLeft:"10px"}} />
-                        </a>
+                      <a
+                        href="/Sd9num-1.jpg"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <QuestionCircleOutlined style={{ color: "red", fontSize: "larger", marginLeft: "10px" }} />
+                      </a>
                     </div>
                   </div>
                 </div>

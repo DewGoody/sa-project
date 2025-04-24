@@ -31,6 +31,7 @@ export default function Form() {
     try {
       const response = await axios.post(`/api/prakan/getDataById`, { id: parseInt(form) });
       console.log("fetchData",response.data.data);
+      console.log("typeHospital_type2", response.data.data.hospital_type2)
       const isoDate = response.data.data.acc_date;
       const formattedDate = isoDate.split("T")[0];
       setDate(formattedDate); 
@@ -173,6 +174,7 @@ export default function Form() {
           let allData = { ...alreadyData, ...studentInfo, ...profileData, time_acc:alreadyData?.time_acc?.split("T")[1]?.substring(0, 5) };
           console.log("submit :",allData);
           const response = await axios.post('/api/prakan/update', allData);
+          console.log("responseSubmit",response.data.data)
           console.log("responseId :",response.data.data.id);
           const req_id = response.data.data.req_id
           router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${form}`);
@@ -366,6 +368,7 @@ export default function Form() {
                     วันที่เกิดอุบัติเหตุ (Date of accident) :
                     <input
                         type="date"
+                        max={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
                         onChange={handleChangeDateAcc}
                         value={alreadyData?.acc_date}
                         className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
@@ -443,7 +446,7 @@ export default function Form() {
                       type="text"
                       name="phone"
                       onChange={handleChangePlaceTreat}
-                      value={alreadyData.treatment_place}
+                      value={alreadyData?.treatment_place}
                       className="w-full -ml-2 px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                 </label>
@@ -463,12 +466,11 @@ export default function Form() {
                       onChange={handleChangeTypeHos1}
                       // style={{ width: 220 }}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      defaultValue="เลือกประเภทสถานพยาบาล"
-                      value={alreadyData.hospital_type}
+                      value={alreadyData?.hospital_type ?? 3}
                       
                       
                     >
-                      <option value="เลือกประเภทสถานพยาบาล" disabled>
+                        <option value={3} disabled>
                         เลือกประเภท (select type)
                        </option>
                       <option value={0} className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>
@@ -484,7 +486,7 @@ export default function Form() {
                       type="text"
                       name="phone"
                       onChange={handleChangePlaceTreat2}
-                      value={alreadyData.treatment_place2}
+                      value={alreadyData?.treatment_place2}
                       className="w-full  px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </label>
@@ -499,12 +501,11 @@ export default function Form() {
                       onChange={handleChangeTypeHos2}
                       // style={{ width: 220 }}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      defaultValue="เลือกประเภทสถานพยาบาล"
-                      value={alreadyData.hospital_type2}
+                      value={alreadyData?.hospital_type2 ?? 3}
                       
                       
                     >
-                      <option value="เลือกประเภทสถานพยาบาล" disabled>
+                      <option value={3}>
                         เลือกประเภท (select type)
                        </option>
                       <option value={0} className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>

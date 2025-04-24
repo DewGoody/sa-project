@@ -99,6 +99,7 @@ export const Form = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
     setIsModalEditFormOpen(false);
+    setIsModalEditFormNotQueue(false);
     setIsModalScheduleNotQueueOpen(false);
     setIsModalScheduleOpen(false);
   };
