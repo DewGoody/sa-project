@@ -19,6 +19,7 @@ export default function Form() {
   const [alreadyData, setAlreadyData] = useState('');
   const [date, setDate] = useState("");
   const [yearLevel, setYearLevel] = useState('');
+  const [isEditTime, setIsEditTime] = useState(false);
 
   const router = useRouter();
   const {form} = useParams();
@@ -150,6 +151,7 @@ export default function Form() {
   const handleChangeTimeAcc = (event) => {
     console.log("time",event.target.value);
     console.log("typeTime",typeof event.target.value);
+    setIsEditTime(true);
     setPrakanData({ ...prakanData, time_acc: event.target.value });
     setAlreadyData({ ...alreadyData, time_acc: event.target.value });
   };
@@ -165,19 +167,31 @@ export default function Form() {
     setPrakanData({ ...prakanData, accident_place: event.target.value });
     setAlreadyData({ ...alreadyData, accident_place: event.target.value });
   };
-  console.log("timeLogKub", alreadyData?.time_acc?.split("T")[1]?.substring(0, 5))
+  // console.log("timeLogKub", alreadyData?.time_acc?.split("T")[1]?.substring(0, 5))
 
   const handleSubmit = async (event) => {
     try {
       if(studentId !== '0'){
         if(form !== '0'){
-          let allData = { ...alreadyData, ...studentInfo, ...profileData, time_acc:alreadyData?.time_acc?.split("T")[1]?.substring(0, 5) };
-          console.log("submit :",allData);
-          const response = await axios.post('/api/prakan/update', allData);
-          console.log("responseSubmit",response.data.data)
-          console.log("responseId :",response.data.data.id);
-          const req_id = response.data.data.req_id
-          router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${form}`);
+          if(isEditTime === false){
+            let allData = { ...alreadyData, ...studentInfo, ...profileData, time_acc:alreadyData?.time_acc?.split("T")[1]?.substring(0, 5) };
+            console.log("submit :",allData);
+            const response = await axios.post('/api/prakan/update', allData);
+            console.log("responseSubmit",response.data.data)
+            console.log("responseId :",response.data.data.id);
+            const req_id = response.data.data.req_id
+            router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${form}`);
+          }
+          else{
+            let allData = { ...alreadyData, ...studentInfo, ...profileData};
+            console.log("submit :",allData);
+            const response = await axios.post('/api/prakan/update', allData);
+            console.log("responseSubmit",response.data.data)
+            console.log("responseId :",response.data.data.id);
+            const req_id = response.data.data.req_id
+            router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${form}`);
+          }
+          
         }else{
           let allData = { ...prakanData, ...studentInfo, ...profileData };
           console.log("submit :",allData);
@@ -190,11 +204,24 @@ export default function Form() {
 
         }
       }else{
-        let allData = { ...alreadyData, ...studentInfo, ...profileData, time_acc:alreadyData?.time_acc?.split("T")[1]?.substring(0, 5) };
-        console.log("submit :",allData);
-        const response = await axios.post('/api/prakan/update', allData);
-        console.log("responseId :",response.data.data.id);
-        router.push(`/Admin/prakan/0`);
+        if(isEditTime === false){
+          let allData = { ...alreadyData, ...studentInfo, ...profileData, time_acc:alreadyData?.time_acc?.split("T")[1]?.substring(0, 5) };
+          console.log("submit :",allData);
+          const response = await axios.post('/api/prakan/update', allData);
+          console.log("responseSubmit",response.data.data)
+          console.log("responseId :",response.data.data.id);
+          const req_id = response.data.data.req_id
+          router.push(`/Admin/prakan/0`);
+        }
+        else{
+          let allData = { ...alreadyData, ...studentInfo, ...profileData};
+          console.log("submit :",allData);
+          const response = await axios.post('/api/prakan/update', allData);
+          console.log("responseSubmit",response.data.data)
+          console.log("responseId :",response.data.data.id);
+          const req_id = response.data.data.req_id
+          router.push(`/Admin/prakan/0`);
+        }   
       }
     } catch (error) {
       console.error("There was an error submitting the form!", error);
