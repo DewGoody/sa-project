@@ -66,10 +66,9 @@ const RD = () => {
         const response = await axios.post('/api/prakan/createPdf', { form: form }, {
           responseType: 'blob'
         });
-        
+
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
-      
         const link = document.createElement('a');
         link.href = url;
         link.download = studentId + '_accident_insurance.pdf';
