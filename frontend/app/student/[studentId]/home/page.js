@@ -187,10 +187,37 @@ export const Form = () => {
       setLoading(false);
     }
   }
+  const fetchGolden = async () => {
+    try {
+      const response = await axios.post('/api/request/getNotQueueGoldencard', { id: profileData.id }); // Example API
+      console.log("getNotQueue", response.data.data);
+      response.data.data.map((item) => {
+        console.log("item", item);
+
+        if (item.type === "โครงการหลักประกันสุขภาพถ้วนหน้า") {
+          SETGC(true);
+          SETGC_time({
+            id: item.id,
+            created_at: item.created_at,
+            status: item.status
+          });
+        }
+      })
+      console.log("formId", response.data.data[0].id);
+      setFormId(prevFormId => Array.isArray(prevFormId) ? [...prevFormId, response.data.data[0].id] : [response.data.data[0].id]);
+      setNotQueue(prevNotQueue => Array.isArray(prevNotQueue) ? [...prevNotQueue, ...response.data.data] : [...response.data.data]);
+      setLoading(false);
+
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  }
 
   const fetchAllData = async () => {
     await fetchNotQueue();
     await fetchQueue();
+    await fetchGolden();
   };
 
   useEffect(() => {

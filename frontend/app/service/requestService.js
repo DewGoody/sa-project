@@ -68,14 +68,14 @@ export async function getRequestById(id) {
                 }
                 return result
             }
-            else if (request.type == "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)"){
+            else if (request.type == "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)") {
                 result = {
                     ...request,
                     path: "student-loan"
                 }
                 return result
             }
-               
+
             // return request
         }
         else {
@@ -86,57 +86,57 @@ export async function getRequestById(id) {
 
 export async function getShowRequestNotQueue(data) {
     const requests = await prisma.request.findMany({
-      where: {
-        // NOT: { Queue: { some: {} } },
-        status: {
-          in: [
-            "รอจองคิว",
-            // "ยังไม่ได้ Upload เอกสาร",
-            // "รอเจ้าหน้าที่ดำเนินการ",
-            // "ขอข้อมูลเพิ่มเติม",
-            // "ส่งข้อมูลให้ รพ. แล้ว",
-            // "ย้ายสิทธิ์ไม่สำเร็จ",
-            // "ย้ายสิทธิ์สำเร็จ",
-          ],
-          notIn: ["ประวัติการแก้ไข"],
+        where: {
+            // NOT: { Queue: { some: {} } },
+            status: {
+                in: [
+                    "รอจองคิว",
+                    // "ยังไม่ได้ Upload เอกสาร",
+                    // "รอเจ้าหน้าที่ดำเนินการ",
+                    // "ขอข้อมูลเพิ่มเติม",
+                    // "ส่งข้อมูลให้ รพ. แล้ว",
+                    // "ย้ายสิทธิ์ไม่สำเร็จ",
+                    // "ย้ายสิทธิ์สำเร็จ",
+                ],
+                notIn: ["ประวัติการแก้ไข"],
+            },
+            stu_id: data,
+            deleted_at: null,
         },
-        stu_id: data,
-        deleted_at: null,
-      },
-      include: {
-        accident_info: true,
-        Ponpan: true,
-        UHC_request: true,
-        prakan_inter_info: true,
-      },
+        include: {
+            accident_info: true,
+            Ponpan: true,
+            // UHC_request: true,
+            prakan_inter_info: true,
+        },
     });
-  
+
 
     const now = new Date();
     const filteredRequests = [];
-  
+
     for (const req of requests) {
-      if (req.status === "ย้ายสิทธิ์ไม่สำเร็จ" && req.created_at) {
-        const createdAt = new Date(req.created_at);
-        const diffDays = Math.ceil((now - createdAt) / (1000 * 3600 * 24));
-  
-        if (diffDays > 30) {
-          await prisma.request.update({
-            where: { id: req.id },
-            data: { deleted_at: new Date() ,
-                status: "คำขอถูกยกเลิก"
-            }, 
-          });
-          continue;
+        if (req.status === "ย้ายสิทธิ์ไม่สำเร็จ" && req.created_at) {
+            const createdAt = new Date(req.created_at);
+            const diffDays = Math.ceil((now - createdAt) / (1000 * 3600 * 24));
+
+            if (diffDays > 30) {
+                await prisma.request.update({
+                    where: { id: req.id },
+                    data: {
+                        deleted_at: new Date(),
+                        status: "คำขอถูกยกเลิก"
+                    },
+                });
+                continue;
+            }
         }
-      }
-  
-      filteredRequests.push(req);
+
+        filteredRequests.push(req);
     }
-  
+
     return filteredRequests.length ? filteredRequests : "Not found";
-  }
-  
+}
 
 
 export async function getShowRequestNotQueueGoldenCard(data) {
@@ -154,7 +154,29 @@ export async function getShowRequestNotQueueGoldenCard(data) {
         }
     })
     if (requests) {
-        return requests
+        const now = new Date();
+        const filteredRequests = [];
+
+        for (const req of requests) {
+            if (req.status === "ย้ายสิทธิ์ไม่สำเร็จ" && req.created_at) {
+                const createdAt = new Date(req.created_at);
+                const diffDays = Math.ceil((now - createdAt) / (1000 * 3600 * 24));
+
+                if (diffDays > 30) {
+                    await prisma.request.update({
+                        where: { id: req.id },
+                        data: {
+                            deleted_at: new Date(),
+                            status: "คำขอถูกยกเลิก"
+                        },
+                    });
+                    continue;
+                }
+            }
+
+            filteredRequests.push(req);
+        }
+        return filteredRequests.length ? filteredRequests : "Not found";
     }
     else {
         return "Not found"
@@ -584,12 +606,12 @@ export async function getRequestPonpanInAdmin(year) {
             }
         })
     }
-    const sorted = requests.sort((a, b) => {        
+    const sorted = requests.sort((a, b) => {
         const provA = a.Ponpan[0]?.province_sd || "";
         const provB = b.Ponpan[0]?.province_sd || "";
         const distA = a.Ponpan[0]?.district_sd || "";
         const distB = b.Ponpan[0]?.district_sd || "";
-      
+
         if (provA !== provB) return provA.localeCompare(provB, 'th', { sensitivity: 'base' });
         return distA.localeCompare(distB, 'th', { sensitivity: 'base' });
     });
