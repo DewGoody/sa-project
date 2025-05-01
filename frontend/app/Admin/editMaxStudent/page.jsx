@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -36,6 +36,8 @@ const AppointmentManagement = () => {
     const [maxStu, setMaxStu] = useState();
     const [form] = Form.useForm();
     const [formEdit] = Form.useForm();
+    const [isModalDefaultVisible, setIsModalDefaultVisible] = useState(false);
+    const [showModalDefault, setShowModalDeFault] = useState();
 
     const timeSlots =
         [
@@ -49,6 +51,21 @@ const AppointmentManagement = () => {
             window.location.reload();
         }
     }, [shouldReload]);
+    useEffect(() => {
+        if(isModalDefaultVisible===true){
+            console.log("isModalDefaultVisible",isModalDefaultVisible);
+        }},[])
+
+    const fetchDefaultMaxStu = async () => {
+        try {
+            const res = await axios.post('/api/maxStu/getDefault');
+            console.log("resDefaultMaxStu", res.data.data);
+            setShowModalDeFault(res.data.data.max_stu);
+            
+        } catch (error) {
+            console.error('Error fetching default max student:', error);
+        }
+    };
 
     const fetchGetAllTimeSlots = async () => {
         try {
@@ -67,6 +84,24 @@ const AppointmentManagement = () => {
         }
     };
 
+    const handleDefaultMaxStuChange = async (input) => {
+        setShowModalDeFault(input.target.value);
+        console.log("inputDefault", input.target.value);
+       
+    };
+
+    
+    const handleDefaultMaxStuOk = async () => {
+        setShouldReload(true);
+        try {
+            const res = await axios.post('/api/maxStu/editDefault', { max_stu: showModalDefault });
+            console.log("resEditDefault", res);
+        } catch (error) {
+            console.error('Error editing default max student:', error);
+        } finally {
+            setShouldReload(false);
+        }
+    };
     const fetchTableData = async () => {
         try {
             const res = await axios.post('/api/maxStu/getAll');
@@ -80,6 +115,7 @@ const AppointmentManagement = () => {
     useEffect(() => {
         fetchGetAllTimeSlots();
         fetchTableData();
+        fetchDefaultMaxStu();
     }, []);
 
     console.log("dataSource", dataSource);
@@ -199,7 +235,15 @@ const AppointmentManagement = () => {
                             จัดการจำนวนผู้เข้ารับบริการ
                         </div>
                     </div>
-                    <div>
+                    <div className='flex justify-end'>
+                        <button 
+                            className='bg-blue-500 text-white rounded-lg px-4 py-2'
+                            onClick={() => setIsModalDefaultVisible(true)}
+                        >
+                            แก้ไขค่าเริ่มต้นจำนวนผู้เข้ารับบริการ
+                        </button>
+                    </div>
+                    <div className='mt-4'>
 
                         <Table
                             dataSource={dataSource}
@@ -318,6 +362,39 @@ const AppointmentManagement = () => {
                         ]}
                     >
                         <p>คุณต้องการจะเปิดวันนี้ให้กลับมาให้บริการได้อีกครั้งใช่ไหม</p>
+                    </Modal>
+
+                    <Modal
+                        title="แก้ไขค่าเริ่มต้นจำนวนผู้เข้ารับบริการ"
+                        visible={isModalDefaultVisible}
+                        onCancel={() => setIsModalDefaultVisible(false)}
+                        footer={[
+                            <Button key="cancel" onClick={() => setIsModalDefaultVisible(false)}>
+                                ปิดหน้าต่าง
+                            </Button>,
+                            <Button key="save" type="primary" loading={loading} onClick={handleDefaultMaxStuOk}>
+                                แก้ไข
+                            </Button>,
+                        ]}
+                    >
+                        <div>
+                            <p>ค่าเริ่มต้นจำนวนผู้เข้ารับบริการสูงสุด</p>
+                            <Input
+                                type='number'
+                                name="max_stu"
+                                value={showModalDefault}
+                                disabled
+                            />
+                        </div>
+                        <Form form={form} layout="vertical">
+                            <Form.Item label="แก้ไขจำนวนผู้เข้ารับบริการสูงสุด">
+                                <Input
+                                    type='number'
+                                    name="max_stu"
+                                    onChange={handleDefaultMaxStuChange}
+                                />
+                            </Form.Item>
+                        </Form>
                     </Modal>
 
                 </Content>

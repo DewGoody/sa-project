@@ -511,3 +511,10 @@ model prakan_inter_info_old {
   Request                Request? @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student                Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Default_max_student {
+  id         BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  max_stu    BigInt?
+}

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import {getShowQueueInAdmin} from '../../../service/queueService'
+import {getAllQueueInAdmin} from '../../../service/queueService'
 import { NextResponse } from "next/server"
 import { convertBigIntToString} from '../../../../utills/convertBigInt'
 
@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export async function POST(req,res){
     try{
     let data = await req.json()
-    const year = await getShowQueueInAdmin(Number(data.year))
+    const year = await getAllQueueInAdmin(Number(data.year))
     return NextResponse.json({ data: convertBigIntToString(year) });
     }
     catch(error){

@@ -162,7 +162,7 @@ const AppointmentManagement = () => {
         fetchUniqueYear()
     }, [])
 
-    const formattedData = dataSource.map((row) => ({
+    const formattedData = dataSource?.map((row) => ({
         'พ.ศ. เกิด': row.bd,
         'รหัสนิสิต': row.stu_id,
         'เลขประจำตัวประชาชน': row.thai_id,
@@ -233,9 +233,13 @@ const AppointmentManagement = () => {
                     )
                 ];
             }
+
     
             // สร้าง Worksheet ด้วยข้อมูลที่มี Header
             const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+            worksheet['!cols'] = columnHeaders.map(col => {
+                return { wch: col.header.length + 8 }; // ปรับขนาดตามความยาว header + padding
+            });
     
             // สร้าง Workbook และเพิ่ม Worksheet
             const workbook = XLSX.utils.book_new();
