@@ -46,7 +46,6 @@ const RD = () => {
   console.log(profileData);
 
   const handleDownload = async () => {
-
     const response = await axios.post("/api/prakanInter/createPdf", {
       form: form,
     });
@@ -110,13 +109,10 @@ const RD = () => {
       } else {
         console.log("dataaa", prakanData, "-------------------------------");
 
-
         const response2 = await axios.post(
           "/api/prakanInter/deletePdf",
           prakanData
         );
-
-        const response2 = await axios.post('/api/prakanInter/deletePdf', prakanData)
 
         router.push(`/student/${studentId}/appointment/${param}/0`);
       }

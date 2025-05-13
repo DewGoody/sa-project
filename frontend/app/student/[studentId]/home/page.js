@@ -10,12 +10,6 @@ import {
   FaRegHospital,
   FaGlobeAmericas,
 } from "react-icons/fa";
-import { DeleteOutlined, EditOutlined, FormOutlined, CalendarOutlined } from '@ant-design/icons';
-import { Modal, Spin } from 'antd';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { set } from "date-fns";
-
 import {
   DeleteOutlined,
   EditOutlined,
@@ -25,7 +19,7 @@ import {
 import { Modal, Spin } from "antd";
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import { set } from "date-fns";
 
 export const Form = () => {
   const { studentId } = useParams();
@@ -35,9 +29,6 @@ export const Form = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [prakanDone, setPrakanDone] = useState(false);
-  const [reqBookNotQueue, setReqBookNotQueue] = useState(false);
-  const [reqBookQueue, setReqBookQueue] = useState(false);
-  const [itemBoookQueue, setItemBookQueue] = useState(false);
   const [reqBookNotQueue, setReqBookNotQueue] = useState(false);
   const [reqBookQueue, setReqBookQueue] = useState(false);
   const [itemBoookQueue, setItemBookQueue] = useState(false);
@@ -57,17 +48,15 @@ export const Form = () => {
   const [moreInfo, setMoreInfo] = useState("");
   const [reqIdEdit, setReqIdEdit] = useState(0);
   const [isModalSheduleOpen, setIsModalScheduleOpen] = useState(false);
-  const [isModalSheduleNotQueueOpen, setIsModalScheduleNotQueueOpen] = useState(false);
-  const [RD, SETRD] = useState(false)
-  const [GC, SETGC] = useState(false)
-  const [GC_time, SETGC_time] = useState({ id: "", created_at: "", status: "" });
-
-  const [isModalSheduleOpen, setIsModalScheduleOpen] = useState(false);
-  const [isModalSheduleNotQueueOpen, setIsModalScheduleNotQueueOpen] = useState(false);
-  const [RD, SETRD] = useState(false)
-  const [GC, SETGC] = useState(false)
-  const [GC_time, SETGC_time] = useState({ id: "", created_at: "", status: "" });
-
+  const [isModalSheduleNotQueueOpen, setIsModalScheduleNotQueueOpen] =
+    useState(false);
+  const [RD, SETRD] = useState(false);
+  const [GC, SETGC] = useState(false);
+  const [GC_time, SETGC_time] = useState({
+    id: "",
+    created_at: "",
+    status: "",
+  });
   const router = useRouter();
   const showModal = (item) => {
     console.log("item :", item);
@@ -89,7 +78,7 @@ export const Form = () => {
 
   const showModalEditFormNotQueue = (item) => {
     console.log("item:", item);
-    setReqIdNotQueue(item.id)
+    setReqIdNotQueue(item.id);
     // setReqIdEdit(item.id)
     // setDeleteNotQueueId(item.id);
     // setPrakanDataLength(notQueue.length);
@@ -104,19 +93,6 @@ export const Form = () => {
     console.log("comfirm", confirmDelete);
     console.log("prakanDataLength", prakanDataLength);
     setIsModalOpen(true);
-  }
-
-  const showModalBookNotQueue = (item) => {
-    setReqBookNotQueue(item.id);
-    setIsModalScheduleNotQueueOpen(true);
-  };
-
-  const showModalBookQueue = (item) => {
-    console.log("itemBookQueue", item);
-    setReqBookQueue(item.req_id);
-    setItemBookQueue(item.id);
-    setIsModalScheduleOpen(true);
-  };
   };
 
   const showModalBookNotQueue = (item) => {
@@ -133,7 +109,6 @@ export const Form = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
     setIsModalEditFormOpen(false);
-    setIsModalScheduleNotQueueOpen(false);
     setIsModalScheduleNotQueueOpen(false);
     setIsModalScheduleOpen(false);
   };
@@ -190,7 +165,11 @@ export const Form = () => {
       response.data.data.map((item) => {
         if (item.Request.type === "การผ่อนผันเข้ารับราชการทหาร") {
           setHasPonpan(true);
-        } if (item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
+        }
+        if (
+          item.Request.type ===
+          "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร"
+        ) {
           SETRD(true);
         }
       });
@@ -222,12 +201,10 @@ export const Form = () => {
             status: item.status,
           });
         }
-
         if (item.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
           SETRD(true);
         }
-      })
-
+      });
       console.log("formId", response.data.data[0].id);
       setFormId(response.data.data[0].id);
       setNotQueue(response.data.data);
@@ -247,8 +224,6 @@ export const Form = () => {
     fetchAllData();
   }, [profileData, deleteQueueId, deleteNotQueueId]);
 
-
-
   // useEffect(() => {
   //   const checkGCStatus = async () => {
   //     console.log("GC_time changed:", GC_time);
@@ -261,7 +236,7 @@ export const Form = () => {
   //         console.log("diffDays", diffDays);
   //         if (diffDays > 30) {
   //           try {
-  //             await axios.post('/api/request/delete', { id: GC_time.id }); 
+  //             await axios.post('/api/request/delete', { id: GC_time.id });
   //             window.location.reload();
   //           } catch (error) {
   //             console.error("Error deleting request:", error);
@@ -274,7 +249,6 @@ export const Form = () => {
   //   checkGCStatus();
   // }, [GC_time]);
 
-
   const formatDate = (dateString) => {
     const options = { day: "2-digit", month: "2-digit", year: "numeric" };
     return new Date(dateString).toLocaleDateString("en-GB", options);
@@ -282,37 +256,23 @@ export const Form = () => {
 
   const handleBookQueue = async () => {
     // console.log("item", item);
-    const response = await axios.post('/api/queue/delete', { id: itemBoookQueue }); // Example API
-    const queueId = 0
+    const response = await axios.post("/api/queue/delete", {
+      id: itemBoookQueue,
+    }); // Example API
+    const queueId = 0;
     // const id = item.req_id;
     router.push(`/student/${studentId}/appointment/${reqBookQueue}/${queueId}`);
-
-  }
-
-  const handleBookQueue = async () => {
-    // console.log("item", item);
-    const response = await axios.post('/api/queue/delete', { id: itemBoookQueue }); // Example API
-    const queueId = 0
-    // const id = item.req_id;
-    router.push(`/student/${studentId}/appointment/${reqBookQueue}/${queueId}`);
-
-  }
-
+  };
 
   const handleBookNotQueue = async (reqID) => {
     // const id = reqID;
     // console.log("req_IdNotqueue", id);
-    // const id = reqID;
-    // console.log("req_IdNotqueue", id);
     const queueId = 0;
     // console.log("req_Id", id);
-    router.push(`/student/${studentId}/appointment/${reqBookNotQueue}/${queueId}`);
-  }
-
-    // console.log("req_Id", id);
-    router.push(`/student/${studentId}/appointment/${reqBookNotQueue}/${queueId}`);
-  }
-
+    router.push(
+      `/student/${studentId}/appointment/${reqBookNotQueue}/${queueId}`
+    );
+  };
 
   const handleDeleteQueue = async () => {
     try {
@@ -349,9 +309,9 @@ export const Form = () => {
 
   const handleEditForm = async () => {
     // console.log("sfjkfhksjdfnsmd,nfsdm,nfds,mnfsd,",id);
-
-    const response = await axios.post('/api/request/getById', { id: reqIdEditNotQueue }); // Example API
-
+    const response = await axios.post("/api/request/getById", {
+      id: reqIdEditNotQueue,
+    }); // Example API
     console.log("editFormResponse :", response.data.data);
     router.push(
       `/student/${studentId}/${response.data.data.path}/${response.data.data.form}`
@@ -500,40 +460,6 @@ export const Form = () => {
                                 )}
                               </div>
 
-                            )
-                            }
-
-                          </div>
-
-                          {item.Request.status === "รอเข้ารับบริการ" ? (
-                            <div className="mb-3 flex mr-1">
-                              <button
-                                className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
-                                onClick={() => { showModalEditForm(item) }}
-                              >
-                                Edit form
-                              </button>
-                              <button
-                                className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2"
-                                onClick={() => { showModalBookQueue(item) }}
-                                onClick={() => { showModalBookQueue(item) }}
-                              >
-                                Schedule
-                              </button>
-                              <button
-                                className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2"
-                                onClick={() => { showModal(item) }}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          ) : (item.Request.status === "ขอข้อมูลเพิ่มเติม" || item.Request.status === "โอนเงินเรียบร้อย" || item.Request.status === "ไม่อนุมัติ") && (
-                            <div className="ml-3 mt- mb-3 flex">
-                              <button onClick={() => { showModalCheckInfo(item.Request.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
-                                view detail
-                              </button>
-
-
                               {item.Request.status === "รอเข้ารับบริการ" ? (
                                 <div className="mb-3 flex mr-1">
                                   <button
@@ -547,7 +473,7 @@ export const Form = () => {
                                   <button
                                     className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2"
                                     onClick={() => {
-                                      handleBookQueue(item);
+                                      showModalBookQueue(item);
                                     }}
                                   >
                                     Schedule
@@ -648,26 +574,24 @@ export const Form = () => {
                         {!(
                           item.status === "ย้ายสิทธิ์สำเร็จ" ||
                           item.status === "ส่งข้อมูลให้ รพ. แล้ว" ||
-
-                          item.status === "ย้ายสิทธิ์ไม่สำเร็จ") && (
-                            <div className="ml-3 mt- mb-3 flex">
-                              <button
-                                className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
-                                onClick={() => showModalEditFormNotQueue(item)}
-                              >
-                                Edit form
-                              </button>
-                            </div>
-
-                          )
-                        }
+                          item.status === "ย้ายสิทธิ์ไม่สำเร็จ"
+                        ) && (
+                          <div className="ml-3 mt- mb-3 flex">
+                            <button
+                              className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
+                              onClick={() => showModalEditFormNotQueue(item)}
+                            >
+                              Edit form
+                            </button>
+                          </div>
+                        )}
                         {item.type !== "โครงการหลักประกันสุขภาพถ้วนหน้า" && (
                           <div className="ml-3 mt- mb-3 flex">
-                            <button className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
-                              onClick={() => { showModalBookNotQueue(item) }}
-                            <button className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
-                              onClick={() => { showModalBookNotQueue(item) }}
-
+                            <button
+                              className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
+                              onClick={() => {
+                                showModalBookNotQueue(item);
+                              }}
                             >
                               Schedule
                             </button>
@@ -691,9 +615,7 @@ export const Form = () => {
                         )}
                       </div>
                     </div>
-
-                  ))
-                )}
+                  ))}
 
                 {prakanData.length === 0 && notQueue.length === 0 && (
                   <div className="text-center mt-4">
@@ -713,11 +635,11 @@ export const Form = () => {
               </a>
 
               <a
-
-                onClick={() => !RD && router.push(`/student/${studentId}/rordor/0`)}
+                onClick={() =>
+                  !RD && router.push(`/student/${studentId}/rordor/0`)
+                }
                 className={`block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg 
                               ${RD ? "pointer-events-none opacity-50" : ""}`}
-
               >
                 <ServiceCard title="2. การสมัคร นศท. รายใหม่และรายงานตัวนักศึกษาวิชาทหาร (Application and registration for Thai Reserve Officer Training Corps Students)" />
               </a>
@@ -747,7 +669,7 @@ export const Form = () => {
                 }
                 className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
               >
-                <ServiceCard title="5. Group Health Insurance Claim Form (For International Students)" />
+                <ServiceCard title="5. Health Insurance for Foreigner Student" />
               </a>
               <a
                 onClick={() =>
@@ -781,64 +703,7 @@ export const Form = () => {
           onMouseLeave: (e) =>
             (e.currentTarget.style.backgroundColor = "#f9a8d4"),
         }}
-      >
-      </Modal>
-
-      <Modal
-        title="ยืนยันการยกเลิกคิวนี้แล้วแก้ไขฟอร์ม (Do you confirm to delete this queue and edit this form ?)"
-        open={isModalEditFormNotqueue}
-        onOk={handleEditForm}
-        onCancel={handleCancel}
-        okButtonProps={{
-          style: { backgroundColor: '#f9a8d4' },
-          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
-          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
-        }}
-      >
-      </Modal>
-
-      <Modal
-        title="ยืนยันการยกเลิกคิวนี้แล้วแก้ไขฟอร์ม (Do you confirm to delete this queue and edit this form ?)"
-        open={isModalEditFormNotqueue}
-        onOk={handleEditForm}
-        onCancel={handleCancel}
-        okButtonProps={{
-          style: { backgroundColor: '#f9a8d4' },
-          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
-          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
-        }}
-      >
-      </Modal>
-
-      <Modal
-        title="ต้องการลบคิวและจองคิวใช่ไหม (Do you want delete to booking new queue ?)"
-        open={isModalSheduleOpen}
-        onOk={handleBookQueue}
-        onCancel={handleCancel}
-        okButtonProps={{
-          style: { backgroundColor: '#f9a8d4' },
-          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
-          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
-        }}
-      >
-      </Modal>
-
-      <Modal
-        title="ต้องการจองคิวใช่ไหม (Do you want to booking queue ?)"
-        open={isModalSheduleNotQueueOpen}
-        onOk={handleBookNotQueue}
-        onCancel={handleCancel}
-        okButtonProps={{
-          style: { backgroundColor: '#f9a8d4' },
-          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
-          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
-        }}
-      >
-      </Modal>
-
-
-      >
-      </Modal>
+      ></Modal>
 
       <Modal
         title="ยืนยันการแก้ไขฟอร์ม (Do you confirm to edit this form ?)"
@@ -846,12 +711,13 @@ export const Form = () => {
         onOk={handleEditForm}
         onCancel={handleCancel}
         okButtonProps={{
-          style: { backgroundColor: '#f9a8d4' },
-          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
-          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
+          style: { backgroundColor: "#f9a8d4" },
+          onMouseEnter: (e) =>
+            (e.currentTarget.style.backgroundColor = "#f472b6"),
+          onMouseLeave: (e) =>
+            (e.currentTarget.style.backgroundColor = "#f9a8d4"),
         }}
-      >
-      </Modal>
+      ></Modal>
 
       <Modal
         title="ยืนยันการลบคิวและจองคิว (Do you confirmto delete and booking new queue ?)"
@@ -859,12 +725,13 @@ export const Form = () => {
         onOk={handleBookQueue}
         onCancel={handleCancel}
         okButtonProps={{
-          style: { backgroundColor: '#f9a8d4' },
-          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
-          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
+          style: { backgroundColor: "#f9a8d4" },
+          onMouseEnter: (e) =>
+            (e.currentTarget.style.backgroundColor = "#f472b6"),
+          onMouseLeave: (e) =>
+            (e.currentTarget.style.backgroundColor = "#f9a8d4"),
         }}
-      >
-      </Modal>
+      ></Modal>
 
       <Modal
         title="ยืนยันการจองคิว (Do you confirm to booking queue ?)"
@@ -872,13 +739,13 @@ export const Form = () => {
         onOk={handleBookNotQueue}
         onCancel={handleCancel}
         okButtonProps={{
-          style: { backgroundColor: '#f9a8d4' },
-          onMouseEnter: (e) => (e.currentTarget.style.backgroundColor = '#f472b6'),
-          onMouseLeave: (e) => (e.currentTarget.style.backgroundColor = '#f9a8d4'),
+          style: { backgroundColor: "#f9a8d4" },
+          onMouseEnter: (e) =>
+            (e.currentTarget.style.backgroundColor = "#f472b6"),
+          onMouseLeave: (e) =>
+            (e.currentTarget.style.backgroundColor = "#f9a8d4"),
         }}
-      >
-      </Modal>
-
+      ></Modal>
 
       <Modal
         title="ยืนยันการลบคำขอและยกเลิกคิวนี้ (Do you confirm to delete this request and cancel this queue ?)"

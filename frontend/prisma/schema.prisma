@@ -216,7 +216,6 @@ model RD_info {
   women_right    Boolean?
   ready_right    Boolean?
 
-  register_type  Int?      @db.SmallInt
 
   Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student        Student?  @relation(fields: [student_id], references: [id], onDelete: Cascade)
