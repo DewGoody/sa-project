@@ -40,6 +40,13 @@ const App = () => {
             window.location.reload();
             }
         }, [shouldReload]);
+
+    const handleEditForm = async (id) => {
+            console.log("editFormReqId : ", id);
+            const response = await axios.post('/api/request/getById', { id: id }); // Example API
+            console.log("editFormResponse :", response.data.data.path);
+            router.push(`/student/0/prakan-inter/${response.data.data.form}`);
+        }
     
 
     const fetchStuData = async () => {
@@ -63,19 +70,25 @@ const App = () => {
                     reqId: data.reqId,
                     name: data.Student.fnameEN + " " + data.Student.lnameEN,
                     student_ID: data.Student.id,
-                    accidentCause: data.prakan_inter_info[0].accidentCause || "-",
-                    accidentDate: formatDate(data.prakan_inter_info[0].accidentDate),
-                    accidentTime: data.prakan_inter_info[0].accidentTime + " น." || "-",
-                    hospitalAmittedDate: formatDate(data.prakan_inter_info[0].hospitalAmittedDate),
-                    hospitalDischargedDate: formatDate(data.prakan_inter_info[0].hospitalDischargedDate),
-                    hospitalName: data.prakan_inter_info[0].hospitalName || "-",
-                    hospitalPhoneNumber: data.prakan_inter_info[0].hospitalPhoneNumber || "-",
-                    hospitalProvince: data.prakan_inter_info[0].hospitalProvince || "-",
                     phone_num: data.prakan_inter_info[0].phone_num || "-",
-                    presentAddress: data.prakan_inter_info[0].presentAddress || "-",
-                    type: data.prakan_inter_info[0].claimType || "-",
-                    status: data.status || "-",
+                    hospitalName: data.prakan_inter_info[0].hospitalName || "-",
+                    hospitalName2: data.prakan_inter_info[0].hospitalName2 || "-",
+                    title: data.prakan_inter_info[0].title || "-",
+                    stu_id: data.prakan_inter_info[0].stu_id || "-",
+                    email: data.prakan_inter_info[0].email || "-",
+                    totalMedicalFees: data.prakan_inter_info[0].totalMedicalFees ?? "-",
+                    treatmentType: data.prakan_inter_info[0].treatmentType || "-",
+                    IPDAmittedDate: data.prakan_inter_info[0].IPDAmittedDate ? formatDate(data.prakan_inter_info[0].IPDAmittedDate) : "-",
+                    IPDDischargedDate: data.prakan_inter_info[0].IPDDischargedDate ? formatDate(data.prakan_inter_info[0].IPDDischargedDate) : "-",
+                    OPDTreatmentDateCount: data.prakan_inter_info[0].OPDTreatmentDateCount ?? "-",
+                    OPDTreatmentDate1: data.prakan_inter_info[0].OPDTreatmentDate1 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate1) : "-",
+                    OPDTreatmentDate2: data.prakan_inter_info[0].OPDTreatmentDate2 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate2) : "-",
+                    OPDTreatmentDate3: data.prakan_inter_info[0].OPDTreatmentDate3 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate3) : "-",
+                    OPDTreatmentDate4: data.prakan_inter_info[0].OPDTreatmentDate4 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate4) : "-",
+                    OPDTreatmentDate5: data.prakan_inter_info[0].OPDTreatmentDate5 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate5) : "-",
+                    illnessDescription: data.prakan_inter_info[0].illnessDescription || "-",
                     reqId: data.prakan_inter_info[0].req_id,
+                    status: data.status || "-",
                     prakanId: data.prakan_inter_info[0].id
                 }
             }
@@ -241,6 +254,20 @@ const App = () => {
 
 
     const columns = [
+        {
+                    align: 'center',
+                    width: 100,
+                    title: 'แก้ไข',
+                    dataIndex: 'status',
+                    render: (status, record) => {
+                        if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ") {
+                            return (
+                                <Space size="middle">
+                                    <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
+                                </Space>)
+                        }
+                    },
+                },
         {
             align: 'right', // เพิ่ม align ขวา
             title: 'ดาวน์โหลด',
