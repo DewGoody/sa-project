@@ -77,7 +77,6 @@ const App = () => {
                     stu_id: data.prakan_inter_info[0].stu_id || "-",
                     email: data.prakan_inter_info[0].email || "-",
                     totalMedicalFees: data.prakan_inter_info[0].totalMedicalFees ?? "-",
-                    treatmentType: data.prakan_inter_info[0].treatmentType || "-",
                     IPDAmittedDate: data.prakan_inter_info[0].IPDAmittedDate ? formatDate(data.prakan_inter_info[0].IPDAmittedDate) : "-",
                     IPDDischargedDate: data.prakan_inter_info[0].IPDDischargedDate ? formatDate(data.prakan_inter_info[0].IPDDischargedDate) : "-",
                     OPDTreatmentDateCount: data.prakan_inter_info[0].OPDTreatmentDateCount ?? "-",
