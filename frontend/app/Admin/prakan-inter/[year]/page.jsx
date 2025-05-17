@@ -63,6 +63,14 @@ const App = () => {
                     const year = date.getFullYear();
                     return `${day}/${month}/${year}`;
                 };
+            // use to convert "inpatient" and "outpatient" to "IPD" and "OPD" below
+            const treatmentType = data.prakan_inter_info[0].treatmentType || "-"
+            let displayTreatmentType = "-";
+            if (treatmentType === "inpatient") {
+                displayTreatmentType = "IPD"
+            } else if (treatmentType === "outpatient") {    
+                displayTreatmentType = "OPD"
+            }
 
                 return {
                     key: index,
@@ -76,6 +84,7 @@ const App = () => {
                     title: data.prakan_inter_info[0].title || "-",
                     stu_id: data.prakan_inter_info[0].stu_id || "-",
                     email: data.prakan_inter_info[0].email || "-",
+                    displayedtreatmentType: displayTreatmentType  || "-",
                     totalMedicalFees: data.prakan_inter_info[0].totalMedicalFees ?? "-",
                     IPDAmittedDate: data.prakan_inter_info[0].IPDAmittedDate ? formatDate(data.prakan_inter_info[0].IPDAmittedDate) : "-",
                     IPDDischargedDate: data.prakan_inter_info[0].IPDDischargedDate ? formatDate(data.prakan_inter_info[0].IPDDischargedDate) : "-",
@@ -292,6 +301,7 @@ const App = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
+            width: 200,
             render: (status,record) => {
                 let options = [];
                 if (status === 'รอเข้ารับบริการ') {
@@ -373,13 +383,14 @@ const App = () => {
         },
         {
             title: 'ประเภท',
-            dataIndex: 'type',
+            dataIndex: 'displayedtreatmentType',
+
             filters: [
-                { text: "accident", value: "accident" },
-                { text: "illness", value: "illness" },
+                { text: "IPD", value: "IPD" },
+                { text: "OPD", value: "OPD" },
             ],
-            filteredValue: filteredInfo?.type,
-            onFilter: (value, record) => record?.type.includes(value),
+            filteredValue: filteredInfo?.displayedtreatmentType,
+            onFilter: (value, record) => record?.displayedtreatmentType.includes(value),
             ellipsis: true,
             filterIcon: (filtered) => (
                 <div>
@@ -391,21 +402,44 @@ const App = () => {
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'name',
+            width: 200,
             ...getColumnSearchProps('name'),
         },
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
             ...getColumnSearchProps('student_ID'),
+            width: 125,
         },
         {
-            title: 'สาเหตุการเกิดอุบัติเหตุ',
-            dataIndex: 'accidentCause',
+            title: 'รายละเอียดของอาการป่วย',
+            dataIndex: 'illnessDescription',
+            width: 250,
         },
+
         {
-            title: 'วันที่เกิดอุบัติเหตุ',
-            dataIndex: 'accidentDate',
+            title: 'ชื่อสถานพยาบาลที่ 1',
+            dataIndex: 'hospitalName',
             width:180,
+        },
+        {
+            title: 'ชื่อสถานพยาบาลที่ 2',
+            dataIndex: 'hospitalName2',
+            width:180,
+        },
+        {
+            title: 'ค่ารักษาพยาบาล',
+            dataIndex: 'totalMedicalFees',
+            render: (text) => {
+                const number = parseFloat(text.replace(/[^\d.-]/g, ''));
+                return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';
+            },
+            width: 125,
+        },
+        {
+            title: 'ผู้ป่วยใน (IPD) : วันที่เข้ารักษา',
+            dataIndex: 'IPDAmittedDate',
+            width:150,
              sorter: (a, b) => {
                     const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
                     const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
@@ -443,10 +477,7 @@ const App = () => {
             title: 'วันที่ออกโรงพยาบาล',
             dataIndex: 'hospitalDischargedDate',
         },
-        {
-            title: 'ชื่อโรงพยาบาล',
-            dataIndex: 'hospitalName',
-        },
+        
         {
             title: 'เบอร์โรงพยาบาล',
             dataIndex: 'hospitalPhoneNumber',
