@@ -6,9 +6,9 @@ import {
     FilterOutlined,
     OrderedListOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Input, Table, Space,Select } from 'antd';
+import { Button, Layout, Menu, theme, Input, Table, Space, Select, Modal } from 'antd';
 import axios from 'axios';
-import { useRouter,useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Menubar from '../../component/menu';
 
 
@@ -29,6 +29,10 @@ const App = () => {
     const [loading, setLoading] = useState(false);
     const [shouldReload, setShouldReload] = useState(false);
     const [filteredInfo, setFilteredInfo] = useState({});
+    // for modal and modal value
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [reqMoreInfo, setReqMoreInfo] = useState('');
+    const [moreInfoValue, setMoreInfoValue] = useState('');
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
@@ -36,18 +40,32 @@ const App = () => {
     console.log("selectedKey", selectedKey);
 
     useEffect(() => {
-            if (shouldReload) {
+        if (shouldReload) {
             window.location.reload();
-            }
-        }, [shouldReload]);
+        }
+    }, [shouldReload]);
 
     const handleEditForm = async (id) => {
-            console.log("editFormReqId : ", id);
-            const response = await axios.post('/api/request/getById', { id: id }); // Example API
-            console.log("editFormResponse :", response.data.data.path);
-            router.push(`/student/0/prakan-inter/${response.data.data.form}`);
-        }
-    
+        console.log("editFormReqId : ", id);
+        const response = await axios.post('/api/request/getById', { id: id }); // Example API
+        console.log("editFormResponse :", response.data.data.path);
+        router.push(`/student/0/prakan-inter/${response.data.data.form}`);
+    }
+    const showModal = (record) => {
+        setReqMoreInfo(record);
+        console.log("recordModalJa :", typeof record);
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        const response = axios.post('/api/request/createMoreInfo', { id: parseInt(reqMoreInfo), more_info: moreInfoValue });
+
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
     const fetchStuData = async () => {
         try {
@@ -63,14 +81,14 @@ const App = () => {
                     const year = date.getFullYear();
                     return `${day}/${month}/${year}`;
                 };
-            // use to convert "inpatient" and "outpatient" to "IPD" and "OPD" below
-            const treatmentType = data.prakan_inter_info[0].treatmentType || "-"
-            let displayTreatmentType = "-";
-            if (treatmentType === "inpatient") {
-                displayTreatmentType = "IPD"
-            } else if (treatmentType === "outpatient") {    
-                displayTreatmentType = "OPD"
-            }
+                // use to convert "inpatient" and "outpatient" to "IPD" and "OPD" below
+                const treatmentType = data.prakan_inter_info[0].treatmentType || "-"
+                let displayTreatmentType = "-";
+                if (treatmentType === "inpatient") {
+                    displayTreatmentType = "IPD"
+                } else if (treatmentType === "outpatient") {
+                    displayTreatmentType = "OPD"
+                }
 
                 return {
                     key: index,
@@ -84,7 +102,7 @@ const App = () => {
                     title: data.prakan_inter_info[0].title || "-",
                     stu_id: data.prakan_inter_info[0].stu_id || "-",
                     email: data.prakan_inter_info[0].email || "-",
-                    displayedtreatmentType: displayTreatmentType  || "-",
+                    displayedtreatmentType: displayTreatmentType || "-",
                     totalMedicalFees: data.prakan_inter_info[0].totalMedicalFees ?? "-",
                     IPDAmittedDate: data.prakan_inter_info[0].IPDAmittedDate ? formatDate(data.prakan_inter_info[0].IPDAmittedDate) : "-",
                     IPDDischargedDate: data.prakan_inter_info[0].IPDDischargedDate ? formatDate(data.prakan_inter_info[0].IPDDischargedDate) : "-",
@@ -135,18 +153,17 @@ const App = () => {
         router.push(`/Admin/prakan/${year}`);
     }
 
-    const handleDownload = async (dataDownload) => {
-
-        console.log("dataDownloadJaa", dataDownload);
-
+    const handleDownload = async (record) => {
         try {
-            const res = await axios.post('/api/request/downloadPrakanInter', { id: parseInt(dataDownload) }, {
-                responseType: 'blob',
-            });
+            const res = await axios.post(
+                '/api/request/downloadPrakanInter',
+                { id: parseInt(record.prakanId), stu_id: record.stu_id || "-" },
+                { responseType: 'blob' }
+            );
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'prakanformfilled.pdf');
+            link.setAttribute('download', `${record.stu_id || "-"}_Health_claim.pdf`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -154,176 +171,177 @@ const App = () => {
         } catch (error) {
             console.error('Error downloading file:', error);
         }
-    }
+    };
 
     const handleChangeStatus = async (record) => {
         setStatusRequest(record.status);
         console.log("record", record);
-       if(record.status === "รอเจ้าหน้าที่ดำเนินการ"){
-        try {
-            setLoading(true);
-            setShouldReload(true);
-            const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
-            setLoading(false);
-            setShouldReload(false);
-            console.log("res", res);
-        } catch (error) {
-            console.error('Error fetching status:', error);
+        if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
+            try {
+                setLoading(true);
+                setShouldReload(true);
+                const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
+                console.log("res", res);
+            } catch (error) {
+                console.error('Error fetching status:', error);
+            }
         }
-       }
-       else if(record.status === "ส่งเอกสารแล้ว"){
-        try {
-            setLoading(true);
-            setShouldReload(true);
-            const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
-            setLoading(false);
-            setShouldReload(false);
-            console.log("res", res);
-        } catch (error) {
-            console.error('Error fetching status:', error);
+        else if (record.status === "ส่งเอกสารแล้ว") {
+            try {
+                setLoading(true);
+                setShouldReload(true);
+                const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
+                console.log("res", res);
+            } catch (error) {
+                console.error('Error fetching status:', error);
+            }
         }
-       } 
-       
-       else if(record.status === "ขอข้อมูลเพิ่มเติม"){
-        try {
-            setLoading(true);
-            setShouldReload(true);
-            const res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
-            setLoading(false);
-            setShouldReload(false);
-            console.log("resPerm", res);
-        } catch (error) {
-            console.error('Error fetching status:', error);
+
+        else if (record.status === "ขอข้อมูลเพิ่มเติม") {
+            try {
+                setLoading(true);
+                setShouldReload(true);
+                const res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
+                console.log("resPerm", res);
+            } catch (error) {
+                console.error('Error fetching status:', error);
+            }
         }
-       }
-       else if(record.status === "ไม่อนุมัติ"){
-        try {
-            setLoading(true);
-            setShouldReload(true);
-            const res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
-            setLoading(false);
-            setShouldReload(false);
-            console.log("res", res);
-        } catch (error) {
-            console.error('Error fetching status:', error);
+        else if (record.status === "ไม่อนุมัติ") {
+            try {
+                setLoading(true);
+                setShouldReload(true);
+                const res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
+                console.log("res", res);
+            } catch (error) {
+                console.error('Error fetching status:', error);
+            }
         }
-       }
-       else if(record.status === "โอนเงินเรียบร้อย"){
-        try {
-            setLoading(true);
-            setShouldReload(true);
-            const res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
-            setLoading(false);
-            setShouldReload(false);
-            console.log("resOwn", res);
-        } catch (error) {
-            console.error('Error fetching status:', error);
+        else if (record.status === "โอนเงินเรียบร้อย") {
+            try {
+                setLoading(true);
+                setShouldReload(true);
+                const res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
+                setLoading(false);
+                setShouldReload(false);
+                console.log("resOwn", res);
+            } catch (error) {
+                console.error('Error fetching status:', error);
+            }
         }
-       }
     }
     const handleSearch = (value, dataIndex) => {
         setSearchText(value);
         setSearchedColumn(dataIndex);
-      };
-    
-      const getColumnSearchProps = (dataIndex) => ({
+    };
+
+    const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, confirm }) => (
-          <div style={{ padding: 8 }}>
-            <Input
-              placeholder={`Search ${dataIndex}`}
-              value={searchText}
-              onChange={(e) => {
-                const value = e.target.value;
-                setSelectedKeys(value ? [value] : []);
-                handleSearch(value, dataIndex);
-                confirm({ closeDropdown: false }); // Keep the dropdown open
-              }}
-              style={{ marginBottom: 8, display: "block" }}
-            />
-          </div>
+            <div style={{ padding: 8 }}>
+                <Input
+                    placeholder={`Search ${dataIndex}`}
+                    value={searchText}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setSelectedKeys(value ? [value] : []);
+                        handleSearch(value, dataIndex);
+                        confirm({ closeDropdown: false }); // Keep the dropdown open
+                    }}
+                    style={{ marginBottom: 8, display: "block" }}
+                />
+            </div>
         ),
         filterIcon: (filtered) => (
-          <SearchOutlined style={{ color: "white", fontSize:"18px" }} />
+            <SearchOutlined style={{ color: "white", fontSize: "18px" }} />
         ),
         onFilter: (value, record) =>
-          record[dataIndex]
-            ?.toString()
-            .toLowerCase()
-            .includes(value.toLowerCase()),
+            record[dataIndex]
+                ?.toString()
+                .toLowerCase()
+                .includes(value.toLowerCase()),
         render: (text) =>
-          searchedColumn === dataIndex ? (
-            <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
-              {text}
-            </span>
-          ) : (
-            text
-          ),
-      });
+            searchedColumn === dataIndex ? (
+                <span style={{ backgroundColor: "#ffc069", padding: "0 4px" }}>
+                    {text}
+                </span>
+            ) : (
+                text
+            ),
+    });
 
 
     const columns = [
         {
-                    align: 'center',
-                    width: 100,
-                    title: 'แก้ไข',
-                    dataIndex: 'status',
-                    render: (status, record) => {
-                        if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ") {
-                            return (
-                                <Space size="middle">
-                                    <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
-                                </Space>)
-                        }
-                    },
-                },
+            align: 'center',
+            width: 100,
+            title: 'แก้ไข',
+            dataIndex: 'status',
+            render: (status, record) => {
+                if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ") {
+                    return (
+                        <Space size="middle">
+                            <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
+                        </Space>)
+                }
+            },
+        },
         {
             align: 'right', // เพิ่ม align ขวา
             title: 'ดาวน์โหลด',
             render: (_, record) => (
                 <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '100%', // Optional: ensures full height centering within the parent
-                }}
-              >
-                <DownloadOutlined
-                  style={{
-                    fontSize: '21px', // Increase the size (e.g., 24px)
-                    cursor: 'pointer', // Optional: changes the cursor to a pointer
-                  }}
-                  onClick={() => handleDownload(record.prakanId)}
-                />
-              </div>
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '100%', // Optional: ensures full height centering within the parent
+                    }}
+                >
+                    <DownloadOutlined
+                        style={{
+                            fontSize: '21px', // Increase the size (e.g., 24px)
+                            cursor: 'pointer', // Optional: changes the cursor to a pointer
+                        }}
+                        onClick={() => handleDownload(record)}
+                    />
+                </div>
             ),
         },
         {
             title: 'สถานะ',
             dataIndex: 'status',
-            width: 200,
-            render: (status,record) => {
+            width: 360,
+
+            render: (status, record) => {
                 let options = [];
                 if (status === 'รอเข้ารับบริการ') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'black' } , },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' } , disabled: true},
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' } , disabled: true},
-                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' } , disabled: true},
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'black' }, },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' }, disabled: true },
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
+                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 } else if (status === 'รอเจ้าหน้าที่ดำเนินการ') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'black' } },
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' } , disabled: true},
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' } , disabled: true},
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' }, disabled: true },
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
                         { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 } else if (status === 'ส่งเอกสารแล้ว') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'black' } },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
                         { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'black' } },
@@ -331,37 +349,46 @@ const App = () => {
                 }
                 else if (status === 'ขอข้อมูลเพิ่มเติม') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'black' }, disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
                         { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'black' } },
                     ];
-                }else if (status === 'ไม่อนุมัติ') {
+                } else if (status === 'ไม่อนุมัติ') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' },disabled: true },
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' },disabled: true },
-                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' },disabled: true },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' }, disabled: true },
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
+                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 }
                 else if (status === 'โอนเงินเรียบร้อย') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' } , disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' } , disabled: true},
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' },disabled: true },
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' },disabled: true },
-                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' },disabled: true },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' }, disabled: true },
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
+                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 }
                 return (
-                    <Select
-                        defaultValue={record.status}
-                        style={{ width: "180px" }}
-                        options={options}
-                        onChange={(value) => handleChangeStatus({ ...record, status: value })}
-                    />
+                    <>
+                        <Select
+                            defaultValue={record.status}
+                            style={{ width: "180px" }}
+                            options={options}
+                            onChange={(value) => handleChangeStatus({ ...record, status: value })}
+                        />
+
+                        {record.status === "ขอข้อมูลเพิ่มเติม" ?
+                            <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
+                            : null}
+
+                    </>
+
+
                 );
             },
             filters: [
@@ -377,7 +404,7 @@ const App = () => {
             ellipsis: true,
             filterIcon: (filtered) => (
                 <div>
-                <FilterOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
         },
@@ -395,7 +422,7 @@ const App = () => {
             ellipsis: true,
             filterIcon: (filtered) => (
                 <div>
-                <FilterOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
 
@@ -421,12 +448,12 @@ const App = () => {
         {
             title: 'ชื่อสถานพยาบาลที่ 1',
             dataIndex: 'hospitalName',
-            width:180,
+            width: 180,
         },
         {
             title: 'ชื่อสถานพยาบาลที่ 2',
             dataIndex: 'hospitalName2',
-            width:180,
+            width: 180,
         },
         {
             title: 'ค่ารักษาพยาบาล',
@@ -440,139 +467,139 @@ const App = () => {
         {
             title: 'ผู้ป่วยใน (IPD) : วันที่เข้ารักษา',
             dataIndex: 'IPDAmittedDate',
-            width:150,
-             sorter: (a, b) => {
-                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                    return dateA - dateB;
-                },
+            width: 150,
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
             sortIcon: (sorted) => (
                 <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
         },
         {
             title: 'ผู้ป่วยใน (IPD) : วันที่ออกจากการรักษา',
             dataIndex: 'IPDDischargedDate',
-            width:150,
-             sorter: (a, b) => {
-                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                    return dateA - dateB;
-                },
+            width: 150,
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
             sortIcon: (sorted) => (
                 <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
         },
         {
             title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 1',
             dataIndex: 'OPDAmittedDate1',
-            width:155,
+            width: 155,
             render: (text) => {
                 if (text === null || text === undefined || text === "-") {
                     return "-";
 
                 }
             },
-             sorter: (a, b) => {
-                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                    return dateA - dateB;
-                },
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
             sortIcon: (sorted) => (
                 <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
         },
         {
             title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 2',
             dataIndex: 'OPDAmittedDate2',
-            width:155,
+            width: 155,
             render: (text) => {
                 if (text === null || text === undefined || text === "-") {
                     return "-";
 
                 }
             },
-             sorter: (a, b) => {
-                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                    return dateA - dateB;
-                },
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
             sortIcon: (sorted) => (
                 <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
         },
         {
             title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 3',
             dataIndex: 'OPDAmittedDate3',
-            width:155,
+            width: 155,
             render: (text) => {
                 if (text === null || text === undefined || text === "-") {
                     return "-";
 
                 }
             },
-             sorter: (a, b) => {
-                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                    return dateA - dateB;
-                },
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
             sortIcon: (sorted) => (
                 <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
         },
         {
             title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 4',
             dataIndex: 'OPDAmittedDate4',
-            width:155,
+            width: 155,
             render: (text) => {
                 if (text === null || text === undefined || text === "-") {
                     return "-";
 
                 }
             },
-             sorter: (a, b) => {
-                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                    return dateA - dateB;
-                },
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
             sortIcon: (sorted) => (
                 <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
         },
         {
             title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 5',
             dataIndex: 'OPDAmittedDate5',
-            width:155,
+            width: 155,
             render: (text) => {
                 if (text === null || text === undefined || text === "-") {
                     return "-";
 
                 }
             },
-             sorter: (a, b) => {
-                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                    return dateA - dateB;
-                },
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
             sortIcon: (sorted) => (
                 <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
         },
-        
+
         {
             title: 'เบอร์โทรนิสิต',
             dataIndex: 'phone_num',
@@ -583,16 +610,16 @@ const App = () => {
             dataIndex: 'email',
             width: 200,
         },
-        
-        
+
+
     ];
 
-    
-   
+
+
     return (
         <Layout style={{ height: "100vh" }}>
             <Sider trigger={null} width={320} style={{ background: "rgb(255,157,210)" }}>
-<Menubar/>
+                <Menubar />
             </Sider>
             <Layout style={{ background: "rgb(255,157,210)" }}>
                 <Content
@@ -615,30 +642,52 @@ const App = () => {
                             เลือกปี
                         </div>
                         <div className='mt-1 mb-6'>
-                                <Select
-                                    defaultValue={year}
-                                    value={year === '0' ? 'ทั้งหมด' : year}
-                                    style={{ width: 120, marginLeft: 10 }}
-                                    onChange={handleYearChange}
-                                >
-                                    <Select.Option value={0}>ทั้งหมด</Select.Option>
-                                    {fetchYear.map((year) => (
-                                        <Select.Option key={year} value={year}>{year}</Select.Option>
-                                    ))}
-                                </Select>
+                            <Select
+                                defaultValue={year}
+                                value={year === '0' ? 'ทั้งหมด' : year}
+                                style={{ width: 120, marginLeft: 10 }}
+                                onChange={handleYearChange}
+                            >
+                                <Select.Option value={0}>ทั้งหมด</Select.Option>
+                                {fetchYear.map((year) => (
+                                    <Select.Option key={year} value={year}>{year}</Select.Option>
+                                ))}
+                            </Select>
                         </div>
-                        
+
                     </div>
-                    
+
                     <Table
                         dataSource={dataSource}
                         columns={columns}
-                        style={{ borderRadius: borderRadiusLG  }}
+                        style={{ borderRadius: borderRadiusLG }}
                         scroll={{ x: 'max-content' }}
                         bordered
-                        
+
                     />
-               
+                    <Modal
+                        title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม"
+                        open={isModalOpen}
+                        onOk={handleOk}
+                        loading={loading}
+                        onCancel={handleCancel}
+                        footer={[
+                            <Button key="back" onClick={handleCancel}>
+                                ปิด
+                            </Button>,
+                            <Button key="submit" type="primary" onClick={handleOk}>
+                                ยืนยัน
+                            </Button>,
+
+                        ]}
+                    >
+                        <textarea
+                            style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
+
+                            onChange={(e) => setMoreInfoValue(e.target.value)}
+                        >
+                        </textarea>
+                    </Modal>
                 </Content>
             </Layout>
         </Layout>
