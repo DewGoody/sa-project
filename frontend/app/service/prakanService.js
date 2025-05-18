@@ -90,7 +90,7 @@ export async function updatePrakanForm(data) {
     const prakanUpdated = await prisma.accident_info.update({
         where: {id: data.formId},
         data:{
-            acc_desc: data.acc_desc,
+             acc_desc: data.acc_desc,
             des_injury: data.des_injury,
             acc_date: new Date(data.acc_date),
             accident_place: data.accident_place,
@@ -100,6 +100,7 @@ export async function updatePrakanForm(data) {
             hospital_type2: data.hospital_type2 == null ? null : Number(data.hospital_type2),
             medical_fee: Number(data.medical_fee),
             // medical_fee_text: data.medical_fee_text,
+            req_id: createRequest.id,
             time_acc: timeAsDate,
             in_university: Boolean(data.in_university),
         }

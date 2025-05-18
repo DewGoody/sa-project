@@ -94,7 +94,7 @@ function page() {
     console.log("title :", prakanData.title)
   }, [prakanData.title]);
 
- 
+
 
 
   const handleSubmit = async (event) => {
@@ -195,10 +195,9 @@ function page() {
         .post("/api/prakanInter/update", dataUpdate)
         .then((response) => {
           console.log("Form submitted successfully:", response.data);
-          router.push(
-            `/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/${response.data.data.req_id}`
-          );
+          router.push("/Admin/prakan-inter/0");
         })
+
         .catch((error) => {
           console.error("Error submitting form:", error);
         });

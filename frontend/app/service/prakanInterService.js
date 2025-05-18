@@ -80,7 +80,7 @@ export async function updatePrakanForm(data) {
   const prakanUpdated = await prisma.prakan_inter_info.update({
     where: { id: data.formId },
     data: {
-      stu_id: data.id,
+      stu_id: data.stu_id,
       phone_num: data.phone_num,
       treatmentType: data.treatmentType,
       hospitalName: data.hospitalName,
