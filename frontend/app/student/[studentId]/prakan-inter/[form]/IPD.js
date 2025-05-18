@@ -4,7 +4,7 @@ import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import { parseISO, format } from "date-fns";
 
-function IPD({ handleChange, prakanData }) {
+function IPD({ handleChange, prakanData, alreadyData }) {
   var customParseFormat = require("dayjs/plugin/customParseFormat");
   dayjs.extend(customParseFormat);
   return (
@@ -21,6 +21,13 @@ function IPD({ handleChange, prakanData }) {
           <DatePicker
             format="DD/MM/YYYY"
             name="IPDAmittedDate"
+            value={
+              alreadyData?.IPDAmittedDate
+                ? dayjs(
+                  alreadyData?.IPDAmittedDate,
+                  "YYYY-MM-DD"
+                ) : null}
+
             onChange={(date) => {
               handleChange(
                 {
@@ -42,6 +49,12 @@ function IPD({ handleChange, prakanData }) {
           <DatePicker
             format="DD/MM/YYYY"
             name="IPDDischargedDate"
+            value={
+              alreadyData?.IPDDischargedDate
+                ? dayjs(
+                  alreadyData?.IPDDischargedDate,
+                  "YYYY-MM-DD"
+                ) : null}
             onChange={(date) => {
               handleChange(
                 {

@@ -6,6 +6,7 @@ import { Header } from "../../../../components/Header.js";
 import IPD from "./IPD.js";
 import OPD from "./OPD.js";
 import { useRouter, useParams } from "next/navigation";
+import { set } from "date-fns";
 
 function page() {
   const [prakanData, setPrakanData] = useState({});
@@ -19,12 +20,20 @@ function page() {
   const { form } = useParams();
   console.log("form : " + form);
 
-  const fetchData = async () => {
+  const fetchPrakanData = async () => {
     try {
       const response = await axios.post("/api/prakanInter/getDataById", {
         id: parseInt(form),
       });
       console.log("responseFetch", response.data.data);
+      const dateList = ['IPDAmittedDate', 'IPDDischargedDate', 'OPDTreatmentDate1', 'OPDTreatmentDate2', 'OPDTreatmentDate3', 'OPDTreatmentDate4', 'OPDTreatmentDate5'];
+      dateList.forEach((dateField) => {
+        if (response.data.data[dateField]) {
+          const formattedDate = response.data.data[dateField].split("T")[0];
+          console.log("formattedDate", formattedDate);
+          response.data.data[dateField] = formattedDate;
+        }
+      });
       setAlreadyData(response.data.data);
       setClaimType(response.data.data.claimType);
       setLoading(false);
@@ -35,14 +44,21 @@ function page() {
   };
 
   useEffect(() => {
-    if (form !== "0") {
-      fetchData();
-    }
-  }, []);
+    const studentData = alreadyData?.Student;
+    setPrakanData((prevData) => ({
+      ...prevData,
+      ...alreadyData,
+      ...studentData,
+    }))
+  }, [alreadyData]);
+
+
+
 
   console.log("alreadyData : ", alreadyData);
 
   const handleChange = (event, field) => {
+
     console.log(field + " : " + event.target.value);
     console.log("alreadydata inside :", event.target.value);
     setPrakanData({ ...prakanData, [field]: event.target.value });
@@ -74,13 +90,24 @@ function page() {
     }
   };
 
-  const handleCiaimTypeChange = (event) => {
-    setClaimType(event.target.value);
-    handleChange(event, "claimType");
-  };
+  useEffect(() => {
+    console.log("title :", prakanData.title)
+  }, [prakanData.title]);
 
-  const handleSubmit = (event) => {
+ 
+
+
+  const handleSubmit = async (event) => {
     // event.preventDefault(); // Prevent the default form submission behavior
+
+    // Option 2: Use a local variable for validation and submission
+    let dataToCheck = { ...prakanData };
+
+    // Ensure title is filled from alreadyData if missing
+    if (!dataToCheck.title || dataToCheck.title === '') {
+      dataToCheck.title = alreadyData?.title || "";
+      setPrakanData(dataToCheck); // Optionally update state for UI consistency
+    }
 
     // List of required fields
     const requiredFields = [
@@ -98,30 +125,30 @@ function page() {
 
     // Check if all required fields are present and not empty
     for (let field of requiredFields) {
-      if (!prakanData[field] || prakanData[field].trim() === "") {
+      if (!dataToCheck[field] || dataToCheck[field].toString().trim() === "") {
         alert(`Please fill in the "${field}" field.`);
         return;
       }
     }
 
     // Check if treatment type is selected
-    if (prakanData.treatmentType === "null") {
+    if (dataToCheck.treatmentType === "null") {
       alert("Please select a treatment type.");
       return;
     }
     // Check if the total medical fees is a valid number
-    if (isNaN(prakanData.totalMedicalFees)) {
+    if (isNaN(dataToCheck.totalMedicalFees)) {
       alert("Please enter a valid number for total medical fees.");
       return;
     }
     // Check if the total medical fees is greater than 0
-    if (parseFloat(prakanData.totalMedicalFees) <= 0) {
+    if (parseFloat(dataToCheck.totalMedicalFees) <= 0) {
       alert("Total medical fees must be greater than 0.");
       return;
     }
 
-    if (prakanData.treatmentType === "inpatient") {
-      const { IPDAmittedDate, IPDDischargedDate } = prakanData;
+    if (dataToCheck.treatmentType === "inpatient") {
+      const { IPDAmittedDate, IPDDischargedDate } = dataToCheck;
       if (!IPDAmittedDate) {
         alert("Please fill in the admitted date.");
         return;
@@ -135,9 +162,9 @@ function page() {
         return;
       }
     }
-    if (prakanData.treatmentType === "outpatient") {
-      for (let i = 1; i <= prakanData.OPDTreatmentDateCount; i++) {
-        const date = prakanData[`OPDTreatmentDate${i}`];
+    if (dataToCheck.treatmentType === "outpatient") {
+      for (let i = 1; i <= dataToCheck.OPDTreatmentDateCount; i++) {
+        const date = dataToCheck[`OPDTreatmentDate${i}`];
         if (!date) {
           alert(`Please fill in the treatment date ${i}`);
           return;
@@ -145,11 +172,12 @@ function page() {
       }
     }
 
-    console.log(prakanData);
-    let allData = { ...prakanData };
+    console.log(dataToCheck);
+    let allData = { ...dataToCheck };
     let dataUpdate = { ...alreadyData, formId: form, ...profileData };
     console.log("allData", allData);
     console.log("dataUpdate", dataUpdate);
+
     if (form === "0") {
       axios
         .post("/api/prakanInter/create", allData)
@@ -177,35 +205,12 @@ function page() {
       console.log("dataUpdate", dataUpdate);
     }
   };
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/api/profile"); // Example API
-        console.log(response.data);
-        response.data.phone_num = response.data.tel_num;
-        setProfileData(response.data);
-        setLoading(false);
+    if (studentId !== '0') {
+      fetchData();
+    }
+    fetchPrakanData();
 
-        //console.log(response.data);
-        // Create a new object to hold the updated state
-        const updatedData = {};
-        Object.keys(response.data).forEach((key) => {
-          updatedData[key] = response.data[key];
-        });
-
-        // Update the state once with the new object
-        setPrakanData(updatedData);
-        setPrakanData((prakanData) => ({
-          ...prakanData,
-        }));
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
   }, []);
 
   if (loading) return <div>Loading...</div>;
@@ -265,7 +270,7 @@ function page() {
                         onChange={(event) => handleChange(event, "title")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Mr. / Mrs. / Miss"
-                        defaultValue={profileData?.title}
+                        value={profileData?.title || alreadyData?.title}
                       />
                     </div>
 
@@ -278,7 +283,8 @@ function page() {
                         onChange={(event) => handleChange(event, "fnameEN")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Name"
-                        defaultValue={profileData?.fnameEN}
+                        defaultValue={profileData?.fnameEN || alreadyData?.Student.fnameEN}
+
                         disabled
                       />
                     </div>
@@ -288,11 +294,11 @@ function page() {
                     <input
                       type="text"
                       name="lnameEN"
-                      //value={formData.Surname}
+
                       onChange={(event) => handleChange(event, "lnameEN")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                       placeholder="Surname"
-                      defaultValue={profileData?.lnameEN}
+                      defaultValue={profileData?.lnameEN || alreadyData?.Student.lnameEN}
                       disabled
                     />
                   </div>
@@ -306,7 +312,7 @@ function page() {
                       onChange={(event) => handleChange(event, "id")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Student ID"
-                      defaultValue={profileData?.id}
+                      defaultValue={profileData?.id || alreadyData?.Student.id}
                       disabled
                     />
                   </div>
@@ -321,7 +327,7 @@ function page() {
                       onChange={(event) => handleChange(event, "phone_num")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Phone number"
-                      defaultValue={profileData?.tel_num}
+                      defaultValue={profileData?.tel_num || alreadyData?.phone_num}
                     />
                   </div>
                   <div>
@@ -357,6 +363,7 @@ function page() {
                       onChange={(event) => handleChange(event, "hospitalName")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Hospital / Clinic Name"
+                      value={alreadyData?.hospitalName}
                     />
                   </div>
                   <div>
@@ -369,6 +376,7 @@ function page() {
                       onChange={(event) => handleChange(event, "hospitalName2")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Hospital / Clinic Name (Optional)"
+                      value={alreadyData?.hospitalName2}
                     />
                   </div>
                 </div>
@@ -384,6 +392,7 @@ function page() {
                       }
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Description of illness"
+                      value={alreadyData?.illnessDescription}
                     />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 ">
@@ -396,6 +405,7 @@ function page() {
                         onChange={(event) =>
                           handleChange(event, "treatmentType")
                         }
+                        value={prakanData.treatmentType}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       >
                         <option value="null">Select type of treatment</option>
@@ -411,6 +421,7 @@ function page() {
                         type="number"
                         data-type="currency"
                         name="totalMedicalFees"
+                        value={prakanData.totalMedicalFees}
                         onChange={(event) => {
                           const value = event.target.value;
                           const formattedValue = parseFloat(value).toFixed(2); // Restrict to 2 decimal places
@@ -431,9 +442,9 @@ function page() {
                   </div>
                 </div>
                 {prakanData?.treatmentType === "inpatient" ? (
-                  <IPD handleChange={handleChange} prakanData={prakanData} />
+                  <IPD handleChange={handleChange} prakanData={prakanData} alreadyData={alreadyData} />
                 ) : prakanData?.treatmentType === "outpatient" ? (
-                  <OPD handleChange={handleChange} prakanData={prakanData} />
+                  <OPD handleChange={handleChange} prakanData={prakanData} alreadyData={alreadyData} />
                 ) : null}
                 <h3 className="text-lg font-semibold my-4 pt-8">
                   *Access to policy benefit details is available at{" "}
