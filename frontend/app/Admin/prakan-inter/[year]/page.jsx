@@ -384,6 +384,7 @@ const App = () => {
         {
             title: 'ประเภท',
             dataIndex: 'displayedtreatmentType',
+            width: 150,
 
             filters: [
                 { text: "IPD", value: "IPD" },
@@ -451,16 +452,120 @@ const App = () => {
                 </div>
             ),
         },
-       
         {
-            title: 'เวลาเกิดอุบัติเหตุ',
-            dataIndex: 'accidentTime',
-            width:180,
-            sorter: (a, b) => {
-                const timeA = timeSlots.indexOf(a.accidentTime.split(' ')[0]);
-                const timeB = timeSlots.indexOf(b.accidentTime.split(' ')[0]);
-                return timeA - timeB;
+            title: 'ผู้ป่วยใน (IPD) : วันที่ออกจากการรักษา',
+            dataIndex: 'IPDDischargedDate',
+            width:150,
+             sorter: (a, b) => {
+                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                    return dateA - dateB;
+                },
+            sortIcon: (sorted) => (
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                </div>
+            ),
+        },
+        {
+            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 1',
+            dataIndex: 'OPDAmittedDate1',
+            width:155,
+            render: (text) => {
+                if (text === null || text === undefined || text === "-") {
+                    return "-";
+
+                }
             },
+             sorter: (a, b) => {
+                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                    return dateA - dateB;
+                },
+            sortIcon: (sorted) => (
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                </div>
+            ),
+        },
+        {
+            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 2',
+            dataIndex: 'OPDAmittedDate2',
+            width:155,
+            render: (text) => {
+                if (text === null || text === undefined || text === "-") {
+                    return "-";
+
+                }
+            },
+             sorter: (a, b) => {
+                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                    return dateA - dateB;
+                },
+            sortIcon: (sorted) => (
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                </div>
+            ),
+        },
+        {
+            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 3',
+            dataIndex: 'OPDAmittedDate3',
+            width:155,
+            render: (text) => {
+                if (text === null || text === undefined || text === "-") {
+                    return "-";
+
+                }
+            },
+             sorter: (a, b) => {
+                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                    return dateA - dateB;
+                },
+            sortIcon: (sorted) => (
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                </div>
+            ),
+        },
+        {
+            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 4',
+            dataIndex: 'OPDAmittedDate4',
+            width:155,
+            render: (text) => {
+                if (text === null || text === undefined || text === "-") {
+                    return "-";
+
+                }
+            },
+             sorter: (a, b) => {
+                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                    return dateA - dateB;
+                },
+            sortIcon: (sorted) => (
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
+                </div>
+            ),
+        },
+        {
+            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 5',
+            dataIndex: 'OPDAmittedDate5',
+            width:155,
+            render: (text) => {
+                if (text === null || text === undefined || text === "-") {
+                    return "-";
+
+                }
+            },
+             sorter: (a, b) => {
+                    const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                    const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                    return dateA - dateB;
+                },
             sortIcon: (sorted) => (
                 <div>
                     <OrderedListOutlined style={{ color: "white", fontSize:"18px" }}/>
@@ -468,31 +573,15 @@ const App = () => {
             ),
         },
         
-       
-        {
-            title: 'วันที่เข้ารักษา',
-            dataIndex: 'hospitalAmittedDate',
-        },
-        {
-            title: 'วันที่ออกโรงพยาบาล',
-            dataIndex: 'hospitalDischargedDate',
-        },
-        
-        {
-            title: 'เบอร์โรงพยาบาล',
-            dataIndex: 'hospitalPhoneNumber',
-        },
-        {
-            title: 'จังหวัดโรงพยาบาล',
-            dataIndex: 'hospitalProvince',
-        },
         {
             title: 'เบอร์โทรนิสิต',
             dataIndex: 'phone_num',
+            width: 150,
         },
         {
-            title: 'ที่อยู่ปัจจุบัน',
-            dataIndex: 'presentAddress',
+            title: 'อีเมลนิสิต',
+            dataIndex: 'email',
+            width: 200,
         },
         
         
