@@ -90,6 +90,7 @@ const App = () => {
                     displayTreatmentType = "OPD"
                 }
 
+
                 return {
                     key: index,
                     id: data.id,
@@ -496,14 +497,9 @@ const App = () => {
         },
         {
             title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 1',
-            dataIndex: 'OPDAmittedDate1',
+            dataIndex: 'OPDTreatmentDate1',
             width: 155,
-            render: (text) => {
-                if (text === null || text === undefined || text === "-") {
-                    return "-";
 
-                }
-            },
             sorter: (a, b) => {
                 const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
                 const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
@@ -517,14 +513,9 @@ const App = () => {
         },
         {
             title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 2',
-            dataIndex: 'OPDAmittedDate2',
+            dataIndex: 'OPDTreatmentDate2',
             width: 155,
-            render: (text) => {
-                if (text === null || text === undefined || text === "-") {
-                    return "-";
 
-                }
-            },
             sorter: (a, b) => {
                 const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
                 const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
@@ -538,14 +529,9 @@ const App = () => {
         },
         {
             title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 3',
-            dataIndex: 'OPDAmittedDate3',
+            dataIndex: 'OPDTreatmentDate3',
             width: 155,
-            render: (text) => {
-                if (text === null || text === undefined || text === "-") {
-                    return "-";
 
-                }
-            },
             sorter: (a, b) => {
                 const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
                 const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
@@ -559,14 +545,9 @@ const App = () => {
         },
         {
             title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 4',
-            dataIndex: 'OPDAmittedDate4',
+            dataIndex: 'OPDTreatmentDate4',
             width: 155,
-            render: (text) => {
-                if (text === null || text === undefined || text === "-") {
-                    return "-";
 
-                }
-            },
             sorter: (a, b) => {
                 const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
                 const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
@@ -580,14 +561,9 @@ const App = () => {
         },
         {
             title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 5',
-            dataIndex: 'OPDAmittedDate5',
+            dataIndex: 'OPDTreatmentDate5',
             width: 155,
-            render: (text) => {
-                if (text === null || text === undefined || text === "-") {
-                    return "-";
 
-                }
-            },
             sorter: (a, b) => {
                 const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
                 const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));

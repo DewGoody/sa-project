@@ -204,6 +204,33 @@ function page() {
       console.log("dataUpdate", dataUpdate);
     }
   };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/profile"); // Example API
+      console.log(response.data);
+      response.data.phone_num = response.data.tel_num;
+      setProfileData(response.data);
+      setLoading(false);
+      setClaimType("illness");
+      //console.log(response.data);
+      // Create a new object to hold the updated state
+      const updatedData = {};
+      Object.keys(response.data).forEach((key) => {
+        updatedData[key] = response.data[key];
+      });
+
+      // Update the state once with the new object
+      setPrakanData(updatedData);
+      setPrakanData((prakanData) => ({
+        ...prakanData,
+      }));
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (studentId !== '0') {
       fetchData();
@@ -269,7 +296,7 @@ function page() {
                         onChange={(event) => handleChange(event, "title")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Mr. / Mrs. / Miss"
-                        value={profileData?.title || alreadyData?.title}
+                        value={profileData?.title || alreadyData?.title || ""}
                       />
                     </div>
 
