@@ -8,7 +8,7 @@ const months = [
   'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
   'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
 ];
-const thaiDigits = ['๐', '๑', '๒', '๓', '๔', '๕', '๖', '๗', '๘', '๙'];
+const thaiDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 // Convert digits to Thai numerals
 function toThaiNumeral(number) {
@@ -407,7 +407,7 @@ async function militaryRD2(data) {
 
   // Save the PDF
   const pdfBytes = await pdfDoc.save();
-  return pdfBytes;
+  return Buffer.from(pdfBytes);
 }
 
 module.exports = { militaryRD2 };

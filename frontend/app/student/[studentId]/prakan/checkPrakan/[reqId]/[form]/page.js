@@ -49,18 +49,34 @@ const RD = () => {
         fetchData();
     }, []);
 
-    const handleDownload = async () => {        
-        const response = await axios.post('/api/prakan/createPdf', {form: form})
-        console.log("responseDownload", response.data);
-        setPrakanData(response.data.data)
+    // const handleDownload = async () => {        
+    //     const response = await axios.post('/api/prakan/createPdf', {form: form})
+    //     console.log("responseDownload", response.data);
+    //     setPrakanData(response.data.data)
+    //     const link = document.createElement('a');
+    //     link.href = '../../../../../documents/accident/'+response.data.data.Student.id+'_accident_insurance.pdf';
+    //     link.download = response.data.data.Student.id+'_accident_insurance.pdf';
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    //     setIsDownload(true);
+    // };
+
+    const handleDownload = async () => {
+        const response = await axios.post('/api/prakan/createPdf', { form: form }, {
+          responseType: 'blob'
+        });
+
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
-        link.href = '../../../../../documents/accident/'+response.data.data.Student.id+'_accident_insurance.pdf';
-        link.download = response.data.data.Student.id+'_accident_insurance.pdf';
+        link.href = url;
+        link.download = studentId + '_accident_insurance.pdf';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         setIsDownload(true);
-    };
+      };
 
     const handleBack = () => {
         router.push(`/student/${studentId}/prakan/${form}`);
@@ -100,7 +116,7 @@ const RD = () => {
             event.preventDefault();
             alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
         } else {
-            const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
+            // const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
             router.push(`/student/${studentId}/appointment/${reqId}/0`);
         }
     };
@@ -165,7 +181,7 @@ const RD = () => {
 
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">5. สำเนาหน้าบัญชีธนาคารแบบออมทระพย์ของนิสิต (Bank account copy)</strong>
+                                            <strong className="font-medium text-gray-900">5. สำเนาหน้าบัญชีธนาคารแบบออมทรัพย์ของนิสิต (Bank account copy)</strong>
                                         </div>
                                     </label>
                                 </div>

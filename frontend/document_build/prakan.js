@@ -60,7 +60,7 @@ async function prakan(data){
     const isoTime = data.time_acc; // ได้แบบนี้จาก time input (05:42)
     console.log("isoTime", isoTime); 
     const [hours, minutes] = isoTime.toString().split(':');
-    const hours1 = hours.split(' ')[4];
+    const hours1 = hours.split(' ')[4]-7;
     const myDate = `${hours1}:${minutes}`;
     console.log("myDate", myDate); // "05:42"
 
@@ -360,8 +360,9 @@ async function prakan(data){
     })
 
     const pdfBytes = await pdfDoc.save()
-    fs.writeFileSync('public/documents/accident/'+data.Student.id+'_accident_insurance.pdf', pdfBytes);
-    return 'public/documents/accident/prakanformfilled.pdf'
+    // fs.writeFileSync('public/documents/accident/'+data.Student.id+'_accident_insurance.pdf', pdfBytes);
+    // return 'public/documents/accident/'+data.Student.id+'_accident_insurance.pdf'
+    return Buffer.from(pdfBytes); 
 }
 
 module.exports = { prakan };

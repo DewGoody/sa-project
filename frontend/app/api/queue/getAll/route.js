@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { getShowRequestNotQueueGoldenCard} from '../../../service/requestService'
+import {getAllQueueInAdmin} from '../../../service/queueService'
 import { NextResponse } from "next/server"
 import { convertBigIntToString} from '../../../../utills/convertBigInt'
 
@@ -8,12 +8,11 @@ const prisma = new PrismaClient();
 export async function POST(req,res){
     try{
     let data = await req.json()
-    const showRequest = await getShowRequestNotQueueGoldenCard(data.id)
-    return NextResponse.json({ data: convertBigIntToString(showRequest) });
+    const year = await getAllQueueInAdmin(Number(data.year))
+    return NextResponse.json({ data: convertBigIntToString(year) });
     }
-    catch(error){      
+    catch(error){
         console.log(error);
-          
         if(!error.code){
             return NextResponse.json({ error: "Server error" }, { status: 500 });
         }

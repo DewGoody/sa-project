@@ -229,3 +229,105 @@ export async function changeStatusToReceiveService(id) {
         throw {code: 400,error: new Error("Bad Request")}
     }
 }
+
+export async function getCountDashboard(year) {
+    const studentCount =  await prisma.student.count()
+    let finishQueueCount = 0
+    let notFinishQueueCount = 0
+    let cancleQueueCount = 0
+    if(year === 0){
+        finishQueueCount = await prisma.queue.count({
+            where: {
+                status: "เข้ารับบริการแล้ว" 
+            }
+        });
+        notFinishQueueCount = await prisma.queue.count({
+            where: {
+                status: "ไม่มาเข้ารับบริการ" 
+            }
+        });
+        cancleQueueCount = await prisma.queue.count({
+            where: {
+                status: "คิวถูกยกเลิก" 
+            }
+        });
+    }
+    else{
+        const startOfYear = new Date(year, 0, 1);
+        const endOfYear = new Date(year + 1, 0, 1);
+        finishQueueCount = await prisma.queue.count({
+            where: {
+                status: "เข้ารับบริการแล้ว",
+                created_at: {
+                    gte: startOfYear,
+                    lt: endOfYear
+                }
+            }
+        });
+        notFinishQueueCount = await prisma.queue.count({
+            where: {
+                status: "ไม่มาเข้ารับบริการ",
+                created_at: {
+                    gte: startOfYear,
+                    lt: endOfYear
+                }
+            }
+        });
+        cancleQueueCount = await prisma.queue.count({
+            where: {
+                status: "คิวถูกยกเลิก",
+                created_at: {
+                    gte: startOfYear,
+                    lt: endOfYear
+                }
+            }
+        });
+    }
+    return {
+        studentCount: studentCount,
+        finishQueueCount: finishQueueCount,
+        notFinishQueueCount: notFinishQueueCount,
+        cancleQueueCount: cancleQueueCount
+    }
+}
+
+export async function getAllQueueInAdmin(year) {
+    const startOfYear = new Date(year, 0, 1);
+    const endOfYear = new Date(year + 1, 0, 1);
+    let queue
+    if(year !== 0){
+        queue = await prisma.queue.findMany({
+            where: {
+                created_at: {
+                    gte: startOfYear, // Greater than or equal to start of year
+                    lt: endOfYear, // Less than start of the next year
+                }
+            },
+            include: {
+                Timeslot: true,
+                Request: true,
+                Student: true
+            },
+            orderBy: [
+                {timeslot_id: 'asc'},
+                {period: 'asc'}
+            ]
+        })
+    }
+    else{
+        queue = await prisma.queue.findMany({
+            include: {
+                Timeslot: true,
+                Request: true,
+                Student: true
+            },
+            orderBy: [
+                {timeslot_id: 'asc'},
+                {period: 'asc'}
+            ]
+        })
+    }
+    if(queue){
+        return queue
+    }
+}

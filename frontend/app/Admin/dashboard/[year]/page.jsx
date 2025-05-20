@@ -5,7 +5,7 @@ import {
     FilterOutlined,
     OrderedListOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Input, Table, Select, Modal } from 'antd';
+import { Button, Layout, Menu, theme, Input, Table, Select, Modal,Card, Row, Col, Statistic, Progress } from 'antd';
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
 import Menubar from '../../component/menu';
@@ -32,6 +32,7 @@ const AppointmentManagement = () => {
     const [loading, setLoading] = useState(false);
     const [shouldReload, setShouldReload] = useState(false);
     const [filteredInfo, setFilteredInfo] = useState({});
+    const [countStudent, setCountStudent] = useState([]);
 
 
     console.log("year", year);
@@ -57,6 +58,16 @@ const AppointmentManagement = () => {
     };
 
 
+    const fetchCountStudent = async () => {
+        try {
+            const res = await axios.post('/api/queue/getCount', { year: year });
+            console.log("countStudent", res.data.data);
+            setCountStudent(res.data.data);
+        }
+        catch (error) {
+            console.error('Error fetching count student:', error);
+        }
+    }
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, confirm }) => (
@@ -128,7 +139,7 @@ const AppointmentManagement = () => {
 
     const fetchStuData = async () => {
         try {
-            const res = await axios.post('/api/queue/getInAdmin', { year: 0 });
+            const res = await axios.post('/api/queue/getAll', { year: 0 });
             console.log("stuData", res.data.data);
             setStuData(res.data.data);
             setDataSource(...dataSource, res.data.data.map((item, index) => {
@@ -147,7 +158,8 @@ const AppointmentManagement = () => {
                         date: formattedDate,
                         period: timeSlots[item.period] + " น.",
                     }
-                } else {
+                } 
+                else {
                     return {
                         key: index,
                         name: item.Student.fnameTH + ' ' + item.Student.lnameTH,
@@ -179,6 +191,7 @@ const AppointmentManagement = () => {
 
     useEffect(() => {
         fetchStuData()
+        fetchCountStudent()
     }, [])
 
     useEffect(() => {
@@ -193,30 +206,9 @@ const AppointmentManagement = () => {
 
     const handleYearChange = async (year) => {
         console.log("year", year);
-        router.push(`/Admin/prakan/${year}`);
+        router.push(`/Admin/dashboard/${year}`);
     }
 
-    const handleStatusChange = async (record) => {
-        console.log("record : ", record);
-        try {
-            setLoading(true);
-            if (record.status === "ไม่มาเข้ารับบริการ") {
-                await axios.post('/api/queue/changeStatusToLate', { id: record.id });
-            } else if (record.status === "เข้ารับบริการแล้ว") {
-                await axios.post('/api/queue/changeStatusToReceiveService', { id: record.id });
-            }
-            // Update the dataSource without refreshing the page
-            setDataSource((prevDataSource) =>
-                prevDataSource.map((item) =>
-                    item.id === record.id ? { ...item, status: record.status } : item
-                )
-            );
-            setLoading(false);
-        } catch (error) {
-            console.error('Error changing status:', error);
-            setLoading(false);
-        }
-    };
 
     const handleSelectDate = async (date) => {
         const formattedDate = new Date(date)
@@ -230,31 +222,6 @@ const AppointmentManagement = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
-            
-            render: (status, record) => (
-                <Select
-                    defaultValue={record.status}
-                    style={{ width: 170 }}
-                    onChange={(value) => handleStatusChange({ ...record, status: value })}
-                >
-                    <Select.Option value="จองคิวสำเร็จ" disabled={record.status === "ไม่มาเข้ารับบริการ"}>จองคิวสำเร็จ</Select.Option>
-                    <Select.Option value="ไม่มาเข้ารับบริการ">ไม่มาเข้ารับบริการ</Select.Option>
-                    <Select.Option value="เข้ารับบริการแล้ว">เข้ารับบริการแล้ว</Select.Option>
-                </Select>
-            ),
-            filters: [
-                { text: "จองคิวสำเร็จ", value: "จองคิวสำเร็จ" },
-                { text: "ไม่มาเข้ารับบริการ", value: "ไม่มาเข้ารับบริการ" },
-                { text: "เข้ารับบริการแล้ว", value: "เข้ารับบริการแล้ว" },
-            ],
-            filteredValue: filteredInfo?.status,
-            onFilter: (value, record) => record?.status.includes(value),
-            ellipsis: true,
-            filterIcon: (filtered) => (
-                <div>
-                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
         },
         {
             title: 'ประเภทการเข้ารับบริการ',
@@ -278,34 +245,6 @@ const AppointmentManagement = () => {
 
         },
         {
-            title: 'วันที่',
-            dataIndex: 'date',
-            sorter: (a, b) => {
-                const dateA = new Date(a.date.split('/').reverse().join('-'));
-                const dateB = new Date(b.date.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-        {
-            title: 'เวลา',
-            dataIndex: 'period',
-            sorter: (a, b) => {
-                const timeA = timeSlots.indexOf(a.period.split(' ')[0]);
-                const timeB = timeSlots.indexOf(b.period.split(' ')[0]);
-                return timeA - timeB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-        {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'name',
             ...getColumnSearchProps("name"),
@@ -314,6 +253,14 @@ const AppointmentManagement = () => {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
             ...getColumnSearchProps("student_ID"),
+        },
+        {
+            title: 'วันที่',
+            dataIndex: 'date',
+        },
+        {
+            title: 'เวลา',
+            dataIndex: 'period',
         },
     ];
 
@@ -342,14 +289,14 @@ const AppointmentManagement = () => {
                 >
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
-                            จัดการการนัดหมาย
+                            หน้าสรุปการนัดหมาย
                         </div>
                     </div>
-                    {/* <div className='flex mt-12'>
+                    <div className='flex mt-12'>
                         <div className='mt-2 ml-3 font-normal text-base'>
                             เลือกปีการศึกษา
                         </div>
-                        <div className='mt-1 mb-6'>
+                        <div className='mt-1 mb-6 '>
                             <Select
                                 defaultValue={year}
                                 value={year === '0' ? 'ทั้งหมด' : year}
@@ -361,20 +308,55 @@ const AppointmentManagement = () => {
                                     <Select.Option key={year} value={year}>{year}</Select.Option>
                                 ))}
                             </Select>
+                            
+                          
                         </div>
+                       
+                       
 
-                    </div> */}
-
+                    </div>
+                    <div className='mt-2'>
+                           <Row gutter={16} style={{ marginTop: '16px' }}>
+                            <Col xs={24} sm={8}>
+                            <Card style={{ width: 300}}>
+                                <Statistic title="นิสิตทั้งหมด" value={countStudent?.studentCount} />
+                            </Card>
+                            </Col>
+                            <Col xs={24} sm={8}>
+                            <Card style={{ width: 300 }}>
+                                <Statistic title="นิสิตที่มาเข้ารับบริการ" value={countStudent?.finishQueueCount}  />
+                            </Card>
+                            </Col>
+                            <Col xs={24} sm={8}>
+                            <Card style={{ width: 300 }}>
+                                <Statistic title="นิสิตที่ไม่มาเข้ารับบริการ" value={countStudent?.notFinishQueueCount} />
+                            </Card>
+                            </Col>
+                            <Col className='mt-3' xs={24} sm={8}>
+                            <Card style={{ width: 300 }}>
+                                <Statistic title="นิสิตที่ยกเลิกคิว" value={countStudent?.cancleQueueCount} />
+                            </Card>
+                            </Col>
+                        </Row>
+                    </div>
                     <Table
-                        dataSource={dataSource}
+                        className="mt-10"
                         columns={columns}
-                        loading={loading}
-                        style={{ borderRadius: borderRadiusLG }}
+                        dataSource={dataSource}
+            
+                        onChange={(pagination, filters) => {
+                            setFilteredInfo(filters);
+                        }}
                         scroll={{ x: 'max-content' }}
-                        bordered
-
+                        style={{
+                            background: colorBgContainer,
+                            borderRadius: borderRadiusLG,
+                            // padding: 24,
+                        }}
                     />
+                    
 
+                   
                 </Content>
             </Layout>
         </Layout>

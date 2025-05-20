@@ -162,7 +162,7 @@ const AppointmentManagement = () => {
         fetchUniqueYear()
     }, [])
 
-    const formattedData = dataSource.map((row) => ({
+    const formattedData = dataSource?.map((row) => ({
         'พ.ศ. เกิด': row.bd,
         'รหัสนิสิต': row.stu_id,
         'เลขประจำตัวประชาชน': row.thai_id,
@@ -201,17 +201,17 @@ const AppointmentManagement = () => {
                 { header: "อีเมล", key: "email" },
                 { header: "ชื่อบิดา", key: "father_name" },
                 { header: "ชื่อมารดา", key: "mother_name" },
-                { header: "ที่อยู่ตามทะเบียนบ้าน บ้านเลขที่", key: "house_num" },
-                { header: "ที่อยู่ตามทะเบียนบ้าน หมู่", key: "house_moo" },
-                { header: "ที่อยู่ตามทะเบียนบ้าน แขวง/ตำบล", key: "sub_district" },
-                { header: "ที่อยู่ตามทะเบียนบ้าน อำเภอ", key: "district" },
-                { header: "ที่อยู่ตามทะเบียนบ้าน จังหวัด", key: "province" },
                 { header: "ใบสำคัญ สด. 9", key: "sdnine_id" },
                 { header: "ที่อยู่ตาม สด.9 บ้านเลขที่", key: "house_num_sd" },
                 { header: "ที่อยู่ตาม สด.9 หมู่", key: "house_moo_sd" },
                 { header: "ที่อยู่ตาม สด.9 แขวง/ตำบล", key: "subdistrict_sd" },
                 { header: "ที่อยู่ตาม สด.9 อำเภอ", key: "district_sd" },
                 { header: "ที่อยู่ตาม สด.9 จังหวัด", key: "province_sd" },
+                { header: "ที่อยู่ตามทะเบียนบ้าน บ้านเลขที่", key: "house_num" },
+                { header: "ที่อยู่ตามทะเบียนบ้าน หมู่", key: "house_moo" },
+                { header: "ที่อยู่ตามทะเบียนบ้าน แขวง/ตำบล", key: "sub_district" },
+                { header: "ที่อยู่ตามทะเบียนบ้าน อำเภอ", key: "district" },
+                { header: "ที่อยู่ตามทะเบียนบ้าน จังหวัด", key: "province" },
                
             ];
     
@@ -220,7 +220,7 @@ const AppointmentManagement = () => {
             if (number == 0) {
                 dataWithHeaders = [
                     columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
-                    ...Data.map((item, index) =>
+                    ...dataSource.map((item, index) =>
                         columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
                     )
                 ];
@@ -233,9 +233,13 @@ const AppointmentManagement = () => {
                     )
                 ];
             }
+
     
             // สร้าง Worksheet ด้วยข้อมูลที่มี Header
             const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+            worksheet['!cols'] = columnHeaders.map(col => {
+                return { wch: col.header.length + 8 }; // ปรับขนาดตามความยาว header + padding
+            });
     
             // สร้าง Workbook และเพิ่ม Worksheet
             const workbook = XLSX.utils.book_new();
@@ -398,21 +402,21 @@ const AppointmentManagement = () => {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 } else if (status === 'รอเจ้าหน้าที่ดำเนินการ') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว', style: { color: 'black' } },
-                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 } else if (status === 'ส่งเอกสารแล้ว') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'black' } },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันที่ตึกจุล', style: { color: 'black' } },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 }
@@ -420,14 +424,14 @@ const AppointmentManagement = () => {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'black' } },
                     ];
                 } else if (status === 'รับเอกสารเรียบร้อย') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันในรับรองที่ตึกจุล', style: { color: 'gray' }, disabled: true },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันที่ตึกจุล', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย', style: { color: 'gray' }, disabled: true },
                     ];
                 }
@@ -435,7 +439,7 @@ const AppointmentManagement = () => {
                 return (
                     <Select
                         defaultValue={record.status}
-                        style={{ width: "180px" }}
+                        style={{ width: "240px" }}
                         options={options}
                         onChange={(value) => handleChangeStatus({ ...record, status: value })}
                     />
@@ -526,37 +530,7 @@ const AppointmentManagement = () => {
             align: 'center',
             ...getColumnSearchProps('sdnine_id'),
         },
-        {
-            title: 'ที่อยู่ตามทะเบียนบ้าน',
-            align: 'center',
-            children: [
-                {
-                    title: 'บ้านเลขที่',
-                    dataIndex: 'house_num',
-                    align: 'center',
-                },
-                {
-                    title: 'หมู่ที่',
-                    dataIndex: 'house_moo',
-                    align: 'center',
-                },
-                {
-                    title: 'แขวง/ตำบล',
-                    dataIndex: 'sub_district',
-                    align: 'center',
-                },
-                {
-                    title: 'อำเภอ',
-                    dataIndex: 'district',
-                    align: 'center',
-                },
-                {
-                    title: 'จังหวัด',
-                    dataIndex: 'province',
-                    align: 'center',
-                },
-            ]
-        },
+        
         {
             title: 'ที่อยู่ตาม สด.9',
             align: 'center',
@@ -584,6 +558,37 @@ const AppointmentManagement = () => {
                 {
                     title: 'จังหวัด',
                     dataIndex: 'province_sd',
+                    align: 'center',
+                },
+            ]
+        },
+        {
+            title: 'ที่อยู่ตามทะเบียนบ้าน',
+            align: 'center',
+            children: [
+                {
+                    title: 'บ้านเลขที่',
+                    dataIndex: 'house_num',
+                    align: 'center',
+                },
+                {
+                    title: 'หมู่ที่',
+                    dataIndex: 'house_moo',
+                    align: 'center',
+                },
+                {
+                    title: 'แขวง/ตำบล',
+                    dataIndex: 'sub_district',
+                    align: 'center',
+                },
+                {
+                    title: 'อำเภอ',
+                    dataIndex: 'district',
+                    align: 'center',
+                },
+                {
+                    title: 'จังหวัด',
+                    dataIndex: 'province',
                     align: 'center',
                 },
             ]

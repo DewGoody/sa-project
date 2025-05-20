@@ -304,7 +304,7 @@ const CheckData = () => {
                                             name="man_right"
                                             onChange={handleChange}
                                             checked={formData.man_right}
-                                            disabled={formData.women_right}
+                                            disabled
                                         />
                                         <label htmlFor="man_right" className="text-gray-700">
                                             ชาย ไว้ทรงผมรองทรงสูง ความยาวด้านบนไม่เกิน ๕ ซม. หรือสั้นกว่า (Men have a high crew cut hairstyle with the top length not exceeding 5 cm. or shorter.)
@@ -318,7 +318,7 @@ const CheckData = () => {
                                             name="women_right"
                                             onChange={handleChange}
                                             checked={formData.women_right}
-                                            disabled={formData.man_right}
+                                            disabled
                                         />
                                         <label htmlFor="women_right" className="text-gray-700">
                                             หญิง ไว้ทรงผมตามที่ระเบียบกำหนด (Women must have their hair style as prescribed by the regulations.)

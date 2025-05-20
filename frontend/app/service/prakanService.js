@@ -18,16 +18,15 @@ export async function getPrakanDataById(id) {
     }
 }
 
-export async function createPrakan(data) {    
-    const [hours,minutes] = data.time_acc.split(':');    
-    const time = new Date();
-    time.setHours(hours+7);
-    time.setMinutes(minutes);
-    time.setSeconds(0);
-    time.setMilliseconds(0);
-    console.log("time1", time);
-    time.toISOString('th-TH', {timeZone: 'Asia/Bangkok'});   
-    console.log("time2", time); 
+export async function createPrakan(data) {  
+    const timeString = data.time_acc  
+    const [hours, minutes] = timeString.split(':').map(Number);
+
+// Create a Date object using today's date (or any dummy date)
+    const timeAsDate = new Date(Date.UTC(1970, 0, 1, hours, minutes)); // fixed UTC
+
+    console.log("Time (UTC):", timeAsDate.toISOString()); // Always consistent
+    console.log("time2", timeAsDate); 
     
     const createRequest = await prisma.request.create({
         data: {
@@ -45,13 +44,13 @@ export async function createPrakan(data) {
             acc_date: new Date(data.acc_date),
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
-            hospital_type: Number(data.hospital_type),
+            hospital_type: data.hospital_type == null ? null : Number(data.hospital_type),
             treatment_place2: data.treatment_place2,
-            hospital_type2: Number(data.hospital_type2),
+            hospital_type2: data.hospital_type2 == null ? null : Number(data.hospital_type2),
             medical_fee: Number(data.medical_fee),
             // medical_fee_text: data.medical_fee_text,
             req_id: createRequest.id,
-            time_acc: time,
+            time_acc: timeAsDate,
             in_university: Boolean(data.in_university),
         }
     })
@@ -70,19 +69,20 @@ export async function createPrakan(data) {
 }
 
 export async function createPdfPrakan(formId) {
-    const response = await getPrakanDataById(formId)
-    await prakan(response)
-    return response
+    const response = await getPrakanDataById(formId);  // Fetch data
+    const pdfBuffer = await prakan(response);  // Generate PDF and get the buffer
+    return pdfBuffer;  // Return the actual PDF buffer
 }
 
 export async function updatePrakanForm(data) {
-    const [hours,minutes] = data.time_acc.split(':');
-    const time = new Date();
-    time.setHours(hours);
-    time.setMinutes(minutes);
-    time.setSeconds(0);
-    time.setMilliseconds(0);
-    time.toISOString();
+    const timeString = data.time_acc  
+    const [hours, minutes] = timeString.split(':').map(Number);
+
+// Create a Date object using today's date (or any dummy date)
+    const timeAsDate = new Date(Date.UTC(1970, 0, 1, hours, minutes)); // fixed UTC
+
+    console.log("Time (UTC):", timeAsDate.toISOString()); // Always consistent
+    console.log("time1", timeAsDate);
     // if(data.token !== "0"){
     //     await prakan(data)
     // }
@@ -95,12 +95,12 @@ export async function updatePrakanForm(data) {
             acc_date: new Date(data.acc_date),
             accident_place: data.accident_place,
             treatment_place: data.treatment_place,
-            hospital_type: data.hospital_type,
+            hospital_type: data.hospital_type == null ? null : Number(data.hospital_type),
             treatment_place2: data.treatment_place2,
-            hospital_type2: Number(data.hospital_type2),
+            hospital_type2: data.hospital_type2 == null ? null : Number(data.hospital_type2),
             medical_fee: Number(data.medical_fee),
             // medical_fee_text: data.medical_fee_text,
-            time_acc: time,
+            time_acc: timeAsDate,
             in_university: Boolean(data.in_university),
         }
     })    

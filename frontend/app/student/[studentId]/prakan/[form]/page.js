@@ -19,6 +19,7 @@ export default function Form() {
   const [alreadyData, setAlreadyData] = useState('');
   const [date, setDate] = useState("");
   const [yearLevel, setYearLevel] = useState('');
+  const [isEditTime, setIsEditTime] = useState(false);
 
   const router = useRouter();
   const {form} = useParams();
@@ -31,6 +32,7 @@ export default function Form() {
     try {
       const response = await axios.post(`/api/prakan/getDataById`, { id: parseInt(form) });
       console.log("fetchData",response.data.data);
+      console.log("typeHospital_type2", response.data.data.hospital_type2)
       const isoDate = response.data.data.acc_date;
       const formattedDate = isoDate.split("T")[0];
       setDate(formattedDate); 
@@ -149,6 +151,7 @@ export default function Form() {
   const handleChangeTimeAcc = (event) => {
     console.log("time",event.target.value);
     console.log("typeTime",typeof event.target.value);
+    setIsEditTime(true);
     setPrakanData({ ...prakanData, time_acc: event.target.value });
     setAlreadyData({ ...alreadyData, time_acc: event.target.value });
   };
@@ -164,22 +167,34 @@ export default function Form() {
     setPrakanData({ ...prakanData, accident_place: event.target.value });
     setAlreadyData({ ...alreadyData, accident_place: event.target.value });
   };
-
-  console.log("prakanDataJaa",prakanData);
+  // console.log("timeLogKub", alreadyData?.time_acc?.split("T")[1]?.substring(0, 5))
 
   const handleSubmit = async (event) => {
     try {
       if(studentId !== '0'){
         if(form !== '0'){
-          let allData = { ...alreadyData, ...studentInfo, ...profileData };
-          const response = await axios.post('/api/prakan/update', allData);
-          console.log("responseId :",response.data.data.id);
-          const req_id = response.data.data.req_id
-          router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${form}`);
+          if(isEditTime === false){
+            let allData = { ...alreadyData, ...studentInfo, ...profileData, time_acc:alreadyData?.time_acc?.split("T")[1]?.substring(0, 5) };
+            console.log("submit :",allData);
+            const response = await axios.post('/api/prakan/update', allData);
+            console.log("responseSubmit",response.data.data)
+            console.log("responseId :",response.data.data.id);
+            const req_id = response.data.data.req_id
+            router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${form}`);
+          }
+          else{
+            let allData = { ...alreadyData, ...studentInfo, ...profileData};
+            console.log("submit :",allData);
+            const response = await axios.post('/api/prakan/update', allData);
+            console.log("responseSubmit",response.data.data)
+            console.log("responseId :",response.data.data.id);
+            const req_id = response.data.data.req_id
+            router.push(`/student/${studentId}/prakan/checkPrakan/${req_id}/${form}`);
+          }
+          
         }else{
           let allData = { ...prakanData, ...studentInfo, ...profileData };
-          console.log("prakanData === 0 :",allData);
-          console.log("prakanAllData === 0 :",allData);
+          console.log("submit :",allData);
           const response = await axios.post('/api/prakan/create', allData);
           console.log("responsePrakan :",response.data.data);
           const formId = response.data.data.id
@@ -189,10 +204,24 @@ export default function Form() {
 
         }
       }else{
-        let allData = { ...alreadyData, ...studentInfo, ...profileData };
-        const response = await axios.post('/api/prakan/update', allData);
-        console.log("responseId :",response.data.data.id);
-        router.push(`/Admin/prakan/0`);
+        if(isEditTime === false){
+          let allData = { ...alreadyData, ...studentInfo, ...profileData, time_acc:alreadyData?.time_acc?.split("T")[1]?.substring(0, 5) };
+          console.log("submit :",allData);
+          const response = await axios.post('/api/prakan/update', allData);
+          console.log("responseSubmit",response.data.data)
+          console.log("responseId :",response.data.data.id);
+          const req_id = response.data.data.req_id
+          router.push(`/Admin/prakan/0`);
+        }
+        else{
+          let allData = { ...alreadyData, ...studentInfo, ...profileData};
+          console.log("submit :",allData);
+          const response = await axios.post('/api/prakan/update', allData);
+          console.log("responseSubmit",response.data.data)
+          console.log("responseId :",response.data.data.id);
+          const req_id = response.data.data.req_id
+          router.push(`/Admin/prakan/0`);
+        }   
       }
     } catch (error) {
       console.error("There was an error submitting the form!", error);
@@ -291,7 +320,7 @@ export default function Form() {
                     <select
                       name="degree"
                        className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={alreadyData?.Student?.degree}
+                      value={profileData?.degree}
                       onChange={handleChangeDegree}
                     >
                     <option value="">เลือกระดับการศึกษา (select degree)</option>
@@ -307,7 +336,7 @@ export default function Form() {
                       type="text"
                       name="year"
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={alreadyData?.Student?.year}
+                      value={profileData?.year}
                       onChange={handleChangeYearLevel}
                     />
                   </div>
@@ -321,7 +350,7 @@ export default function Form() {
           <div className="bg-white   w-full min-w-screen-6xl">
             <h3 className="text-md font-semibold mt-8 ml-3">
               {" "}
-              ข้อมุลการเกิดอุบัติเหตุและการรักษาพาบาล (Accident & treatment details)
+              ข้อมูลการเกิดอุบัติเหตุและการรักษาพาบาล (Accident & treatment details)
             </h3>
             <div>
               <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6">
@@ -366,6 +395,7 @@ export default function Form() {
                     วันที่เกิดอุบัติเหตุ (Date of accident) :
                     <input
                         type="date"
+                        max={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
                         onChange={handleChangeDateAcc}
                         value={alreadyData?.acc_date}
                         className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
@@ -443,7 +473,7 @@ export default function Form() {
                       type="text"
                       name="phone"
                       onChange={handleChangePlaceTreat}
-                      value={alreadyData.treatment_place}
+                      value={alreadyData?.treatment_place}
                       className="w-full -ml-2 px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                 </label>
@@ -463,12 +493,11 @@ export default function Form() {
                       onChange={handleChangeTypeHos1}
                       // style={{ width: 220 }}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      defaultValue="เลือกประเภทสถานพยาบาล"
-                      value={alreadyData.hospital_type}
+                      value={alreadyData?.hospital_type ?? 3}
                       
                       
                     >
-                      <option value="เลือกประเภทสถานพยาบาล" disabled>
+                        <option value={3} disabled>
                         เลือกประเภท (select type)
                        </option>
                       <option value={0} className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>
@@ -484,7 +513,7 @@ export default function Form() {
                       type="text"
                       name="phone"
                       onChange={handleChangePlaceTreat2}
-                      value={alreadyData.treatment_place2}
+                      value={alreadyData?.treatment_place2}
                       className="w-full  px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </label>
@@ -499,12 +528,11 @@ export default function Form() {
                       onChange={handleChangeTypeHos2}
                       // style={{ width: 220 }}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      defaultValue="เลือกประเภทสถานพยาบาล"
-                      value={alreadyData.hospital_type2}
+                      value={alreadyData?.hospital_type2 ?? 3}
                       
                       
                     >
-                      <option value="เลือกประเภทสถานพยาบาล" disabled>
+                      <option value={3}>
                         เลือกประเภท (select type)
                        </option>
                       <option value={0} className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>

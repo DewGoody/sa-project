@@ -816,7 +816,9 @@ async function uhc(data) {
   // // save the pdf to disk
   // fs.writeFileSync('public/documents/uhc/uhc_saved.pdf', pdfBytes);
 
-  return await pdfDoc.save();
+  const pdfBytes = await pdfDoc.save();
+  return Buffer.from(pdfBytes);
+
 }
 module.exports = {uhc};
 

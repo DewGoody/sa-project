@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export async function POST(req,res){
     try{
     let data = await req.json()
-    const year = await getShowQueueInAdmin(data.year)
+    const year = await getShowQueueInAdmin(Number(data.year))
     return NextResponse.json({ data: convertBigIntToString(year) });
     }
     catch(error){
