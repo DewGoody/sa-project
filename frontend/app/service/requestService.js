@@ -91,6 +91,7 @@ export async function getShowRequestNotQueue(data) {
             status: {
                 in: [
                     "รอจองคิว",
+                    "กำลังดำเนินการจองคิว",
                     // "ยังไม่ได้ Upload เอกสาร",
                     // "รอเจ้าหน้าที่ดำเนินการ",
                     // "ขอข้อมูลเพิ่มเติม",

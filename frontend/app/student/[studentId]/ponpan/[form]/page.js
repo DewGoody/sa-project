@@ -475,7 +475,7 @@ const handleDistrictSD9Change = (e) => {
                     >
                     <option value="">เลือกระดับการศึกษา (select degree)</option>
                     <option value="ปริญญาตรี">ปริญญาตรี (Bachelor)</option>
-                    <option value="ปริญาโท">ปริญาโท (Master)</option>
+                    <option value="ปริญญาโท">ปริญญาโท (Master)</option>
                     <option value="ปริญญาเอก">ปริญญาเอก (Doctorate)</option>
                   </select>
                   </div>
