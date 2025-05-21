@@ -8,6 +8,8 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Modal, Select, Space } from 'antd';
 import axios from 'axios';
+import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
+import { saveAs } from 'file-saver'; // เพิ่ม FileSaver สำหรับบันทึกไฟล์
 import { useRouter, useParams } from 'next/navigation';
 import Menubar from '../../component/menu';
 
@@ -32,6 +34,8 @@ const App = () => {
     const [loading, setLoading] = useState(false);
     const [shouldReload, setShouldReload] = useState(false);
     const [filteredInfo, setFilteredInfo] = useState({});
+    const [selectedRowReqid, setSelectedRowReqid] = useState([]);
+    const [selectedRowReqidapi, setSelectedRowReqidapi] = useState([]);
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
@@ -220,6 +224,64 @@ const App = () => {
             setLoading(false);
         }
     };
+
+    const exportToExcel = (number) => {
+                // กำหนดชื่อ Columns ที่ต้องการ
+                const columnHeaders = [
+                    { header: "ลำดับ", key: "index" },
+                    { header: "ชื่อ-นามสกุล", key: "name" },
+                    { header: "รหัสนิสิต", key: "student_ID" },
+                    { header: "วันที่เกิดอุบัติเหตุ", key: "acc_date" },
+                    { header: "เวลาเกิดอุบัติเหตุ", key: "time_acc" },
+                    { header: "อาการบาดเจ็บ", key: "des_injury" },
+                    { header: "การเกิดอุบัติเหตุ", key: "acc_desc" },
+                    { header: "สถานที่เกิดอุบัติเหตุ", key: "accident_place" },
+                    { header: "สถานที่รักษา 1", key: "treatment_place" },
+                    { header: "ประเภทสถานพยาบาล 1", key: "hospital_type" },
+                    { header: "สถานที่รักษา 2", key: "treatment_place2" },
+                    { header: "ประเภทสถานพยาบาล 2", key: "hospital_type2" },
+                    { header: "ค่ารักษาพบาบาล", key: "medical_fee" },
+                    { header: "สถานะ", key: "status" },
+                    { header: "หมายเหตุ", key: "more_info" },
+                   
+                   
+                ];
+        
+                // เพิ่มชื่อ Columns เข้าไปเป็น Row แรก
+                let dataWithHeaders = []
+                if (number == 0) {
+                    dataWithHeaders = [
+                        columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+                        ...dataSource.map((item, index) =>
+                            columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                        )
+                    ];
+                }
+                else {
+                    dataWithHeaders = [
+                        columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+                        ...selectedRowReqid.map((item, index) =>
+                            columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                        )
+                    ];
+                }
+    
+        
+                // สร้าง Worksheet ด้วยข้อมูลที่มี Header
+                const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+                worksheet['!cols'] = columnHeaders.map(col => {
+                    return { wch: col.header.length + 8 }; // ปรับขนาดตามความยาว header + padding
+                });
+        
+                // สร้าง Workbook และเพิ่ม Worksheet
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+        
+                // เขียนไฟล์ Excel และดาวน์โหลด
+                const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+                const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+                saveAs(data, "exported_data.xlsx");
+            };
 
     
     useEffect(() => {
@@ -512,6 +574,24 @@ const App = () => {
                                     <Select.Option key={year} value={year}>{year}</Select.Option>
                                 ))}
                             </Select>
+                        </div>
+                        <div className='ml-3'>
+                            {selectedRowReqid.length > 0 ? (
+                                <>
+                                    <div className='flex'>
+                                    <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
+                                        Export Excel ที่เลือกไว้
+                                    </Button>
+                                    {dropdown()}
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
+                                    Export Excel ทั้งหมด
+                                    </Button>
+                                </>
+                            )}
                         </div>
 
                     </div>

@@ -221,18 +221,13 @@ const AppointmentManagement = () => {
                 dataWithHeaders = [
                     columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
                     ...dataSource.map((item, index) =>
-                        columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                       item.status === "รับเอกสารเรียบร้อย" 
+                       ? columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') 
+                       : []
                     )
                 ];
             }
-            else {
-                dataWithHeaders = [
-                    columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
-                    ...selectedRowReqid.map((item, index) =>
-                        columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
-                    )
-                ];
-            }
+            
 
     
             // สร้าง Worksheet ด้วยข้อมูลที่มี Header
@@ -638,8 +633,8 @@ const AppointmentManagement = () => {
                         {selectedRowReqid.length > 0 ? (
                             <>
                                 <div className='flex'>
-                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
-                                    Export Excel ที่เลือกไว้
+                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
+                                    Export Excel
                                 </Button>
                                 {dropdown()}
                                 </div>
@@ -647,7 +642,7 @@ const AppointmentManagement = () => {
                         ) : (
                             <>
                                 <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
-                                Export Excel ทั้งหมด
+                                Export Excel
                                 </Button>
                             </>
                         )}

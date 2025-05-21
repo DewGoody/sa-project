@@ -7,6 +7,8 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme, Input, Table, Select, Modal,Card, Row, Col, Statistic, Progress } from 'antd';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { useRouter, useParams } from 'next/navigation';
 import Menubar from '../../component/menu';
 
@@ -33,6 +35,33 @@ const AppointmentManagement = () => {
     const [shouldReload, setShouldReload] = useState(false);
     const [filteredInfo, setFilteredInfo] = useState({});
     const [countStudent, setCountStudent] = useState([]);
+    const [tableType, setTableType] = useState(0);
+    const [countAll1, setCountAll1] = useState(0);
+    const [countFinish1, setCountFinish1] = useState(0);
+    const [countNotFinish1, setCountNotFinish1] = useState(0);
+    const [countCancel1, setCountCancel1] = useState(0);
+    const [countAll2, setCountAll2] = useState(0);
+    const [countFinish2, setCountFinish2] = useState(0);
+    const [countNotFinish2, setCountNotFinish2] = useState(0);
+    const [countCancel2, setCountCancel2] = useState(0);
+    const [countAll3, setCountAll3] = useState(0);
+    const [countFinish3, setCountFinish3] = useState(0);
+    const [countNotFinish3, setCountNotFinish3] = useState(0);
+    const [countCancel3, setCountCancel3] = useState(0);
+    const [countAll4, setCountAll4] = useState(0);
+    const [countFinish4, setCountFinish4] = useState(0);
+    const [countNotFinish4, setCountNotFinish4] = useState(0);
+    const [countCancel4, setCountCancel4] = useState(0);
+    const [countAll5, setCountAll5] = useState(0);
+    const [countFinish5, setCountFinish5] = useState(0);
+    const [countNotFinish5, setCountNotFinish5] = useState(0);
+    const [countCancel5, setCountCancel5] = useState(0);
+    const [countAll6, setCountAll6] = useState(0);
+    const [countFinish6, setCountFinish6] = useState(0);
+    const [countNotFinish6, setCountNotFinish6] = useState(0);
+    const [countCancel6, setCountCancel6] = useState(0);
+    const [countAll7, setCountAll7] = useState(0);
+    
 
 
     console.log("year", year);
@@ -50,6 +79,35 @@ const AppointmentManagement = () => {
             window.location.reload();
         }
     }, [shouldReload]);
+    const handleExportExcel = () => {
+        const exportData = dataSource.map(({ key, id, reqId, ...rest }) => rest); // ลบ key, id และ reqId ออกก่อน export
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+        // แก้ไข header ใน Excel
+        const headers = [
+            "ชื่อ-นามสกุล", 
+            "รหัสนิสิต", 
+            "สถานะ", 
+            "ประเภทการเข้ารับบริการ", 
+            "วันที่จองคิว", 
+            "เวลาจองคิว"
+        ];
+        XLSX.utils.sheet_add_aoa(worksheet, [headers], { origin: "A1" });
+
+        // เพิ่มความกว้างของคอลัมน์
+        const columnWidths = headers.map(() => ({ wch: 25 })); // กำหนดความกว้างเป็น 20 สำหรับทุกคอลัมน์
+        worksheet['!cols'] = columnWidths;
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Appointments");
+    
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array",
+        });
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(data, "appointment_summary.xlsx");
+    };
 
 
     const handleSearch = (value, dataIndex) => {
@@ -102,40 +160,6 @@ const AppointmentManagement = () => {
                 text
             ),
     });
-
-    const showModal = async () => {
-        setIsModalOpen(true);
-        try {
-            const res = await axios.post('/api/timeslot/getAll');
-            console.log("resGetAll", res.data.data);
-            const sortedData = res.data.data.sort((a, b) => new Date(b.date) - new Date(a.date));
-            setDateMaxStu(...dateMaxStu, sortedData.map((item) => {
-                const date = new Date(item.date);
-                date.setDate(date.getDate() + 1);
-                return {
-                    date: date.toISOString().split('T')[0],
-                };
-            }));
-        } catch (error) {
-            console.error('Error fetching timeslots:', error);
-        }
-    };
-
-    console.log("dateMaxStu", dateMaxStu);
-
-    const handleOk = () => {
-        const res = axios.post('/api/timeslot/editMaxStudent', { date: selectDate, maxStu: maxStu });
-        console.log("resEditMx", res);
-        setIsModalOpen(false);
-    };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleMaxStuChange = async (input) => {
-        setMaxStu(input);
-    }
 
     const fetchStuData = async () => {
         try {
@@ -192,7 +216,7 @@ const AppointmentManagement = () => {
     useEffect(() => {
         fetchStuData()
         fetchCountStudent()
-    }, [])
+    }, []);
 
     useEffect(() => {
         fetchUniqueYear()
@@ -208,6 +232,177 @@ const AppointmentManagement = () => {
         console.log("year", year);
         router.push(`/Admin/dashboard/${year}`);
     }
+
+    const handleTypeChange = (value) => {
+        setTableType(value);
+        if (value === 1) {
+            const filtered = stuData.filter(item => item.Request.type === "การเบิกจ่ายประกันอุบัติเหตุ");
+            const newData = filtered.map((item, index) => {
+                const date = new Date(item.Timeslot.date);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    
+                return {
+                    key: index,
+                    name: `${item.Student.fnameTH} ${item.Student.lnameTH}`,
+                    student_ID: item.Student.id,
+                    status: item.status,
+                    id: item.id,
+                    reqId: item.Request.id,
+                    type: item.Request.type,
+                    date: formattedDate,
+                    period: timeSlots[item.period] + " น.",
+                };
+                
+            });
+            setDataSource(newData);
+            setCountAll1(filtered.length);
+            setCountFinish1(filtered.filter(item => item.status === "เข้ารับบริการแล้ว").length);
+            setCountNotFinish1(filtered.filter(item => item.status === "ไม่มาเข้ารับบริการ").length);
+            setCountCancel1(filtered.filter(item => item.status === "คิวถูกยกเลิก").length);
+        } 
+        else if (value === 2) {
+            const filtered = stuData.filter(item => item.Request.type === "การผ่อนผันเข้ารับราชการทหาร");
+            const newData = filtered.map((item, index) => {
+                const date = new Date(item.Timeslot.date);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    
+                return {
+                    key: index,
+                    name: `${item.Student.fnameTH} ${item.Student.lnameTH}`,
+                    student_ID: item.Student.id,
+                    status: item.status,
+                    id: item.id,
+                    reqId: item.Request.id,
+                    type: item.Request.type,
+                    date: formattedDate,
+                    period: timeSlots[item.period] + " น.",
+                };
+            });
+            setDataSource(newData);
+            setCountAll2(filtered.length);
+            setCountFinish2(filtered.filter(item => item.status === "เข้ารับบริการแล้ว").length);
+            setCountNotFinish2(filtered.filter(item => item.status === "ไม่มาเข้ารับบริการ").length);
+            setCountCancel2(filtered.filter(item => item.status === "คิวถูกยกเลิก").length);
+
+        }
+        else if (value === 3) {
+            const filtered = stuData.filter(item => item.Request.type === "โครงการหลักประกันสุขภาพถ้วนหน้า");
+            const newData = filtered.map((item, index) => {
+                const date = new Date(item.Timeslot.date);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    
+                return {
+                    key: index,
+                    name: `${item.Student.fnameTH} ${item.Student.lnameTH}`,
+                    student_ID: item.Student.id,
+                    status: item.status,
+                    id: item.id,
+                    reqId: item.Request.id,
+                    type: item.Request.type,
+                    date: formattedDate,
+                    period: timeSlots[item.period] + " น.",
+                };
+            });
+            setDataSource(newData);
+            setCountAll3(filtered.length);
+            setCountFinish3(filtered.filter(item => item.status === "เข้ารับบริการแล้ว").length);
+            setCountNotFinish3(filtered.filter(item => item.status === "ไม่มาเข้ารับบริการ").length);
+            setCountCancel3(filtered.filter(item => item.status === "คิวถูกยกเลิก").length);
+
+        }
+        else if (value === 4) {
+            const filtered = stuData.filter(item => item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร");
+            const newData = filtered.map((item, index) => {
+                const date = new Date(item.Timeslot.date);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    
+                return {
+                    key: index,
+                    name: `${item.Student.fnameTH} ${item.Student.lnameTH}`,
+                    student_ID: item.Student.id,
+                    status: item.status,
+                    id: item.id,
+                    reqId: item.Request.id,
+                    type: item.Request.type,
+                    date: formattedDate,
+                    period: timeSlots[item.period] + " น.",
+                };
+            });
+            setDataSource(newData);
+            setCountAll4(filtered.length);
+            setCountFinish4(filtered.filter(item => item.status === "เข้ารับบริการแล้ว").length);
+            setCountNotFinish4(filtered.filter(item => item.status === "ไม่มาเข้ารับบริการ").length);
+            setCountCancel4(filtered.filter(item => item.status === "คิวถูกยกเลิก").length);
+        }
+        else if (value === 5) {
+            const filtered = stuData.filter(item => item.Request.type === "Health insurance");
+            const newData = filtered.map((item, index) => {
+                const date = new Date(item.Timeslot.date);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    
+                return {
+                    key: index,
+                    name: `${item.Student.fnameTH} ${item.Student.lnameTH}`,
+                    student_ID: item.Student.id,
+                    status: item.status,
+                    id: item.id,
+                    reqId: item.Request.id,
+                    type: item.Request.type,
+                    date: formattedDate,
+                    period: timeSlots[item.period] + " น.",
+                };
+            });
+            setDataSource(newData);
+            setCountAll5(filtered.length);
+            setCountFinish5(filtered.filter(item => item.status === "เข้ารับบริการแล้ว").length);
+            setCountNotFinish5(filtered.filter(item => item.status === "ไม่มาเข้ารับบริการ").length);
+            setCountCancel5(filtered.filter(item => item.status === "คิวถูกยกเลิก").length);
+        }
+        else if (value === 6) {
+            const filtered = stuData.filter(item => item.Request.type === "กองทุนกู้ยืมเพื่อการศึกษา (กยศ)");
+            const newData = filtered.map((item, index) => {
+                const date = new Date(item.Timeslot.date);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    
+                return {
+                    key: index,
+                    name: `${item.Student.fnameTH} ${item.Student.lnameTH}`,
+                    student_ID: item.Student.id,
+                    status: item.status,
+                    id: item.id,
+                    reqId: item.Request.id,
+                    type: item.Request.type,
+                    date: formattedDate,
+                    period: timeSlots[item.period] + " น.",
+                };
+            });
+            setDataSource(newData);
+            setCountAll6(filtered.length);
+            setCountFinish6(filtered.filter(item => item.status === "เข้ารับบริการแล้ว").length);
+            setCountNotFinish6(filtered.filter(item => item.status === "ไม่มาเข้ารับบริการ").length);
+            setCountCancel6(filtered.filter(item => item.status === "คิวถูกยกเลิก").length);
+        }
+        else if (value === 0) {
+            const newData = stuData.map((item, index) => {
+                const date = new Date(item.Timeslot.date);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    
+                return {
+                    key: index,
+                    name: `${item.Student.fnameTH} ${item.Student.lnameTH}`,
+                    student_ID: item.Student.id,
+                    status: item.status,
+                    id: item.id,
+                    reqId: item.Request.id,
+                    type: item.Request.type,
+                    date: formattedDate,
+                    period: timeSlots[item.period] + " น.",
+                };
+            });
+            setDataSource(newData);
+        }
+    };
+    
 
 
     const handleSelectDate = async (date) => {
@@ -226,22 +421,6 @@ const AppointmentManagement = () => {
         {
             title: 'ประเภทการเข้ารับบริการ',
             dataIndex: 'type',
-            filters: [
-                { text: "การเบิกจ่ายประกันอุบัติเหตุ", value: "การเบิกจ่ายประกันอุบัติเหตุ" },
-                { text: "การผ่อนผันเข้ารับราชการทหาร", value: "การผ่อนผันเข้ารับราชการทหาร" },
-                { text: "โครงการหลักประกันสุขภาพถ้วนหน้า", value: "โครงการหลักประกันสุขภาพถ้วนหน้า" },
-                { text: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร", value: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" },
-                { text: "Health insurance", value: "Health insurance" },
-
-            ],
-            filteredValue: filteredInfo?.type,
-            onFilter: (value, record) => record?.type.includes(value),
-            ellipsis: true,
-            filterIcon: (filtered) => (
-                <div>
-                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
 
         },
         {
@@ -255,11 +434,11 @@ const AppointmentManagement = () => {
             ...getColumnSearchProps("student_ID"),
         },
         {
-            title: 'วันที่',
+            title: 'วันที่จองคิว',
             dataIndex: 'date',
         },
         {
-            title: 'เวลา',
+            title: 'เวลาจองคิว',
             dataIndex: 'period',
         },
     ];
@@ -292,6 +471,7 @@ const AppointmentManagement = () => {
                             หน้าสรุปการนัดหมาย
                         </div>
                     </div>
+                    <div className='flex'>
                     <div className='flex mt-12'>
                         <div className='mt-2 ml-3 font-normal text-base'>
                             เลือกปีการศึกษา
@@ -312,33 +492,137 @@ const AppointmentManagement = () => {
                           
                         </div>
                        
+                    </div>
+                    <div className='flex mt-12'>
+                        <div className='mt-2 ml-3 font-normal text-base'>
+                            เลือกประเภทการให้บริการ
+                        </div>
+                        <div className='mt-1 mb-6 '>
+                            <Select
+                                value={tableType}
+                                style={{ width: 180, marginLeft: 10 }}
+                                onChange={handleTypeChange}
+                            >
+                                <Select.Option value={0}>จัดการการนัดหมาย</Select.Option>
+                                <Select.Option value={1}>การเบิกจ่ายประกันอุบัติเหตุ</Select.Option>
+                                <Select.Option value={2}>การผ่อนผันเข้ารับราชการทหาร</Select.Option>
+                                <Select.Option value={3}>โครงการหลักประกันสุขภาพถ้วนหน้า</Select.Option>
+                                <Select.Option value={4}>การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร</Select.Option>
+                                <Select.Option value={5}>Health insurance</Select.Option>
+                                <Select.Option value={6}>กองทุนกู้ยืมเพื่อการศึกษา (กยศ)</Select.Option>
+                               
+                            </Select>
+                            
+                          
+                        </div>
                        
-
+                    </div>
                     </div>
                     <div className='mt-2'>
                            <Row gutter={16} style={{ marginTop: '16px' }}>
                             <Col xs={24} sm={8}>
                             <Card style={{ width: 300}}>
-                                <Statistic title="นิสิตทั้งหมด" value={countStudent?.studentCount} />
+                                <Statistic title="นิสิตทั้งหมด" 
+                                value={
+                                    tableType === 0
+                                      ? countStudent?.studentCount ?? 0
+                                      : tableType === 1
+                                      ? countAll1
+                                      : tableType === 2
+                                      ? countAll2
+                                      : tableType === 3
+                                      ? countAll3
+                                      : tableType === 4
+                                        ? countAll4
+                                        : tableType === 5
+                                        ? countAll5
+                                        : tableType === 6
+                                        ? countAll6
+                                      : countStudent?.studentCount ?? 0
+                                  }
+                                />
                             </Card>
                             </Col>
                             <Col xs={24} sm={8}>
                             <Card style={{ width: 300 }}>
-                                <Statistic title="นิสิตที่มาเข้ารับบริการ" value={countStudent?.finishQueueCount}  />
+                                <Statistic title="นิสิตที่มาเข้ารับบริการ" 
+                                // value={countStudent?.finishQueueCount} 
+                                value={
+                                    tableType === 0
+                                      ? countStudent?.finishQueueCount ?? 0
+                                      : tableType === 1
+                                      ? countFinish1
+                                      : tableType === 2
+                                      ? countFinish2
+                                      : tableType === 3
+                                      ? countFinish3
+                                      : tableType === 4
+                                        ? countFinish4
+                                        : tableType === 5
+                                        ? countFinish5
+                                        : tableType === 6
+                                        ? countFinish6
+                                      : countStudent?.finishQueueCount ?? 0
+                                  } 
+                                />
                             </Card>
                             </Col>
                             <Col xs={24} sm={8}>
                             <Card style={{ width: 300 }}>
-                                <Statistic title="นิสิตที่ไม่มาเข้ารับบริการ" value={countStudent?.notFinishQueueCount} />
+                                <Statistic title="นิสิตที่ไม่มาเข้ารับบริการ" 
+                                // value={countStudent?.notFinishQueueCount} 
+                                value={
+                                    tableType === 0
+                                      ? countStudent?.notFinishQueueCount ?? 0
+                                      : tableType === 1
+                                      ? countNotFinish1
+                                      : tableType === 2
+                                      ? countNotFinish2
+                                      : tableType === 3
+                                      ? countNotFinish3
+                                      : tableType === 4
+                                        ? countNotFinish4
+                                        : tableType === 5
+                                        ? countNotFinish5
+                                        : tableType === 6
+                                        ? countNotFinish6
+                                      : countStudent?.notFinishQueueCount ?? 0
+                                  } 
+                                />
                             </Card>
                             </Col>
                             <Col className='mt-3' xs={24} sm={8}>
                             <Card style={{ width: 300 }}>
-                                <Statistic title="นิสิตที่ยกเลิกคิว" value={countStudent?.cancleQueueCount} />
+                                <Statistic title="นิสิตที่ยกเลิกคิว" 
+                                // value={countStudent?.cancleQueueCount} 
+                                value={
+                                    tableType === 0
+                                      ? countStudent?.cancleQueueCount ?? 0
+                                      : tableType === 1
+                                      ? countCancel1
+                                      : tableType === 2
+                                      ? countCancel2
+                                      : tableType === 3
+                                      ? countCancel3
+                                      : tableType === 4
+                                        ? countCancel4
+                                        : tableType === 5
+                                        ? countCancel5
+                                        : tableType === 6
+                                        ? countCancel6
+                                      : countStudent?.cancleQueueCount ?? 0
+                                  }
+                                />
                             </Card>
                             </Col>
                         </Row>
                     </div>
+                    <div className="flex justify-end mb-4">
+                        <Button type="primary" onClick={handleExportExcel}>
+                            Export to Excel
+                        </Button>
+                    </div>
+
                     <Table
                         className="mt-10"
                         columns={columns}
