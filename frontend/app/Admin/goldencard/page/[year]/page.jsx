@@ -120,6 +120,19 @@ const App = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
+
+    function getStudentEntryYear(currentStudentYear) {
+    const now = new Date();
+    const currentBEYear = now.getFullYear() + 543;
+
+    // ถ้าเดือน > สิงหาคม (เดือน 8) แปลว่าขึ้นปีใหม่การศึกษาแล้ว
+    const adjustedYear = now.getMonth() > 8 ? currentStudentYear - 1 : currentStudentYear;
+
+    // ปีที่เข้าเรียน = ปีปัจจุบัน - adjustedYear + 1
+    return currentBEYear - adjustedYear + 1;
+}
+
+
     const formatDateToDMY = (dateString) => {
         if (!dateString) return 'N/A'; // Handle null or undefined dates
 
@@ -175,6 +188,7 @@ const App = () => {
                 phone: item.Student?.phone_num || "N/A",
                 email: item.Student?.personal_email || "N/A",
                 year: getyear(item.stu_id?.toString()),
+                college_year: getStudentEntryYear(getyear(item.stu_id?.toString())),
             })))
             console.log(Data)
 
@@ -516,9 +530,11 @@ const App = () => {
 
     const exportToExcel = (number) => {
         // กำหนดชื่อ Columns ที่ต้องการ
+        console.log(number , "number");
+        
         const columnHeaders = [
-            { header: "ปี", key: "year" },
-            { header: "ลำดับ", key: "index" }, // ใช้ index เป็น Running Number
+            { header: "ลำดับ", key: "index" }, 
+            { header: "ปี", key: "college_year" },
             { header: "รหัสนิสิต", key: "student_ID" },
             { header: "ชื่อ-นามสกุล", key: "fullname" },
             { header: "คณะ", key: "facultyNameTH" },
