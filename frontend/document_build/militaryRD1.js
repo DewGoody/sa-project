@@ -26,11 +26,11 @@ function calculateAge(birthdate) {
   const birth = new Date(birthdate);
   let age = today.getFullYear() - birth.getFullYear();
   const monthDiff = today.getMonth() - birth.getMonth();
-  
+
   if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
     age--;
   }
-  
+
   return age;
 }
 
@@ -47,64 +47,64 @@ async function militaryRD1(data) {
     rD_info  // Note: changed from RD_info to match new data structure
   } = data;
   console.log("data", data);
-  
+
   // Load the existing PDF
   const pdfPath = path.resolve(process.cwd(), 'public/documents/rd/รด.1.pdf');
   const existingPdfBytes = fs.readFileSync(pdfPath);
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
-  
+
   // Register fontkit
   pdfDoc.registerFontkit(fontkit);
-  
+
   // Load the TH Sarabun font
   const fontPath = path.resolve(process.cwd(), 'public/fonts/THSarabunNew/THSarabunNew.ttf');
   const fontBytes = fs.readFileSync(fontPath);
   const thSarabunFont = await pdfDoc.embedFont(fontBytes);
-  
+
   // Get the first page of the document
   const pages = pdfDoc.getPages();
   const firstPage = pages[0];
-  
+
   // Get the width and height of the first page
   const { width, height } = firstPage.getSize();
-  
+
   // Current date section
   const currentDate = new Date();
   const thaiDateNum = toThaiNumeral(currentDate.getDate());
   // console.log("birthDate",student.birthdate);
-  
+
   // firstPage.drawText(thaiDateNum, {
   //   x: 220,
   //   y: height - 90,
   //   size: 12,
   //   font: thSarabunFont,
   // });
-  
+
   // firstPage.drawText(months[currentDate.getMonth()], {
   //   x: 290,
   //   y: height - 90,
   //   size: 12,
   //   font: thSarabunFont,
   // });
-  
+
   // firstPage.drawText(getThaiYearSuffixInThaiNumerals(currentDate), {
   //   x: 420,
   //   y: height - 90,
   //   size: 12,
   //   font: thSarabunFont,
   // });
-  
+
   // Student name
   const name = `${student?.title || ''}${student?.fnameTH || ''} ${student?.lnameTH || ''}`;
   const fontsize = name.length > 40 ? 500 / name.length : 12;
-  
+
   firstPage.drawText(name, {
     x: 135,
     y: height - 143,
     size: fontsize,
     font: thSarabunFont,
   });
-  
+
   // Thai ID
   const thai_id = student?.thai_id || '';
   firstPage.drawText(thai_id, {
@@ -113,31 +113,31 @@ async function militaryRD1(data) {
     size: 12,
     font: thSarabunFont,
   });
-  
+
   // Handle birthdate
   let birthDate = new Date();
   if (student?.birthdate) {
     birthDate = new Date(student.birthdate);
   }
-  
+
   // Calculate age
   const age = calculateAge(birthDate);
   const thaiAge = toThaiNumeral(age);
-  
+
   // Format birthdate in Thai style
-  const formattedBirthdate = birthDate.toLocaleDateString('th-TH', { 
-    day: 'numeric', 
-    month: 'long', 
-    year: 'numeric' 
+  const formattedBirthdate = birthDate.toLocaleDateString('th-TH', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
   });
-  
+
   firstPage.drawText(formattedBirthdate, {
     x: 123,
     y: height - 158,
     size: 12,
     font: thSarabunFont,
   });
-  
+
   // Add age
   firstPage.drawText(thaiAge, {
     x: 220,
@@ -145,7 +145,7 @@ async function militaryRD1(data) {
     size: 12,
     font: thSarabunFont,
   });
-  
+
   // Race, nationality, religion
   const race = student?.race || '';
   firstPage.drawText(race, {
@@ -154,7 +154,7 @@ async function militaryRD1(data) {
     size: 12,
     font: thSarabunFont,
   });
-  
+
   const nationality = student?.nationality || '';
   firstPage.drawText(nationality, {
     x: 164,
@@ -162,7 +162,7 @@ async function militaryRD1(data) {
     size: 12,
     font: thSarabunFont,
   });
-  
+
   const religion = student?.religion || '';
   firstPage.drawText(religion, {
     x: 230,
@@ -170,7 +170,7 @@ async function militaryRD1(data) {
     size: 12,
     font: thSarabunFont,
   });
-  
+
   // Phone number (not in the original data structure)
   const phoneNumber = student?.phone_num || '';
   if (phoneNumber) {
@@ -181,7 +181,7 @@ async function militaryRD1(data) {
       font: thSarabunFont,
     });
   }
-  
+
   // Education level - From the form, set a default value since not in data
   firstPage.drawText(student?.degree, {
     x: 160,
@@ -189,7 +189,7 @@ async function militaryRD1(data) {
     size: 12,
     font: thSarabunFont,
   });
-  
+
   // Class year
   const year = student?.year || '1';
   firstPage.drawText(year, {
@@ -198,7 +198,7 @@ async function militaryRD1(data) {
     size: 12,
     font: thSarabunFont,
   });
-  
+
   // Parent information
   const father_info = father_mother_info?.father;
   if (father_info) {
@@ -209,7 +209,7 @@ async function militaryRD1(data) {
       size: 12,
       font: thSarabunFont,
     });
-    
+
     // Father's phone
     if (father_info?.phone_num) {
       firstPage.drawText(father_info.phone_num, {
@@ -220,7 +220,7 @@ async function militaryRD1(data) {
       });
     }
   }
-  
+
   const mother_info = father_mother_info?.mother;
   if (mother_info) {
     const mother_name = `${mother_info?.title || ''}${mother_info?.fname || ''} ${mother_info?.lname || ''}`;
@@ -230,7 +230,7 @@ async function militaryRD1(data) {
       size: 12,
       font: thSarabunFont,
     });
-    
+
     // Mother's phone
     if (mother_info?.phone_num) {
       firstPage.drawText(mother_info.phone_num, {
@@ -241,7 +241,7 @@ async function militaryRD1(data) {
       });
     }
   }
-  
+
   // Guardian information
   if (guardian_info) {
     const guardian_name = `${guardian_info?.guardian_title || ''}${guardian_info?.guardian_fname || ''} ${guardian_info?.guardian_lname || ''}`;
@@ -251,7 +251,7 @@ async function militaryRD1(data) {
       size: 12,
       font: thSarabunFont,
     });
-    
+
     // Guardian's phone
     if (guardian_info?.phone_num) {
       firstPage.drawText(guardian_info.phone_num.toString(), {
@@ -262,7 +262,7 @@ async function militaryRD1(data) {
       });
     }
   }
-  
+
   // Mark checkboxes for gender
   // The student's gender isn't explicitly provided in the data, would need to infer from title
   // For demonstration, assuming 'นาย' means male
@@ -283,15 +283,15 @@ async function militaryRD1(data) {
       font: thSarabunFont,
     });
   }
-  
+
   // Student's signature section
-  // firstPage.drawText(name, {
-  //   x: 330,
-  //   y: height - 325,
-  //   size: fontsize,
-  //   font: thSarabunFont,
-  // });
-  
+  firstPage.drawText(name, {
+    x: 335,
+    y: height - 341,
+    size: 73,
+    font: thSarabunFont,
+  });
+
   // Guardian section
   const guardian_name = `${guardian_info?.guardian_title || ''}${guardian_info?.guardian_fname || ''} ${guardian_info?.guardian_lname || ''}`;
   firstPage.drawText(guardian_name, {
@@ -300,7 +300,7 @@ async function militaryRD1(data) {
     size: 12,
     font: thSarabunFont,
   });
-  
+
   // Guardian relation
   const guardian_relation = guardian_info?.guardian_relation || '';
   firstPage.drawText(guardian_relation, {
@@ -309,7 +309,7 @@ async function militaryRD1(data) {
     size: 12,
     font: thSarabunFont,
   });
-  
+
   // Mark consent checkboxes
   if (guardian_info?.consent1) {
     firstPage.drawText('X', {
@@ -319,7 +319,7 @@ async function militaryRD1(data) {
       font: thSarabunFont,
     });
   }
-  
+
   if (guardian_info?.consent2) {
     firstPage.drawText('X', {
       x: 72,
@@ -328,15 +328,15 @@ async function militaryRD1(data) {
       font: thSarabunFont,
     });
   }
-  
+
   // Guardian signature
-  // firstPage.drawText(guardian_name, {
-  //   x: 390,
-  //   y: height - 500,
-  //   size: 12,
-  //   font: thSarabunFont,
-  // });
-  
+  firstPage.drawText(guardian_name, {
+    x: 110,
+    y: height - 480,
+    size: 7,
+    font: thSarabunFont,
+  });
+
   // Mark student consent checkboxes based on rD_info
   if (rD_info?.registermyself) {
     firstPage.drawText('X', {
@@ -346,7 +346,7 @@ async function militaryRD1(data) {
       font: thSarabunFont,
     });
   }
-  
+
   if (rD_info?.notmilitary) {
     firstPage.drawText('X', {
       x: 72,
@@ -355,7 +355,7 @@ async function militaryRD1(data) {
       font: thSarabunFont,
     });
   }
-  
+
   if (rD_info?.man_right) {
     firstPage.drawText('X', {
       x: 300,
@@ -364,7 +364,7 @@ async function militaryRD1(data) {
       font: thSarabunFont,
     });
   }
-  
+
   if (rD_info?.women_right) {
     firstPage.drawText('X', {
       x: 300,
@@ -373,7 +373,7 @@ async function militaryRD1(data) {
       font: thSarabunFont,
     });
   }
-  
+
   if (rD_info?.ready_right) {
     firstPage.drawText('X', {
       x: 300,
@@ -382,7 +382,7 @@ async function militaryRD1(data) {
       font: thSarabunFont,
     });
   }
-  
+
   // School information section (placeholder since not in data)
   // Save the PDF
   const pdfBytes = await pdfDoc.save();

@@ -360,12 +360,12 @@ async function militaryRD2(data) {
   }
 
   // Student's signature
-  // firstPage.drawText(name, {
-  //   x: 370,
-  //   y: height - 390,
-  //   size: fontsize,
-  //   font: thSarabunFont,
-  // });
+  firstPage.drawText(name, {
+    x: 335,
+    y: height - 400,
+    size: 7,
+    font: thSarabunFont,
+  });
 
   // Guardian section
   if (guardian_info) {
@@ -397,12 +397,12 @@ async function militaryRD2(data) {
     }
 
     // Guardian signature
-    // firstPage.drawText(guardian_name, {
-    //   x: 390,
-    //   y: height - 488,
-    //   size: 12,
-    //   font: thSarabunFont,
-    // });
+    firstPage.drawText(guardian_name, {
+      x: 110,
+      y: height - 525,
+      size: 7,
+      font: thSarabunFont,
+    });
   }
 
   // Save the PDF
