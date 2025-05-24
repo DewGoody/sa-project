@@ -71,6 +71,17 @@ async function militaryRD1(data) {
   // Current date section
   const currentDate = new Date();
   const thaiDateNum = toThaiNumeral(currentDate.getDate());
+  const tickPath = path.join(process.cwd(), 'public', 'tick.png');
+  const tickImage = await pdfDoc.embedPng(fs.readFileSync(tickPath));
+  const tickDims = tickImage.scale(0.006); // ปรับขนาดภาพ (เล็กลงพอดีช่อง)
+  function drawTick(x, y) {
+    firstPage.drawImage(tickImage, {
+      x,
+      y,
+      width: tickDims.width,
+      height: tickDims.height,
+    });
+  }
   // console.log("birthDate",student.birthdate);
 
   // firstPage.drawText(thaiDateNum, {
@@ -267,28 +278,17 @@ async function militaryRD1(data) {
   // The student's gender isn't explicitly provided in the data, would need to infer from title
   // For demonstration, assuming 'นาย' means male
   if (student?.title === 'นาย') {
-    // Mark male checkbox (X at male checkbox coordinates)
-    firstPage.drawText('X', {
-      x: 142,
-      y: height - 131,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(142, height - 131)
   } else {
+    drawTick(183, height - 131)
     // Mark female checkbox (X at female checkbox coordinates)
-    firstPage.drawText('X', {
-      x: 183,
-      y: height - 131,
-      size: 12,
-      font: thSarabunFont,
-    });
   }
 
   // Student's signature section
   firstPage.drawText(name, {
     x: 335,
     y: height - 341,
-    size: 73,
+    size: 7,
     font: thSarabunFont,
   });
 
@@ -311,23 +311,13 @@ async function militaryRD1(data) {
   });
 
   // Mark consent checkboxes
-  if (guardian_info?.consent1) {
-    firstPage.drawText('X', {
-      x: 72,
-      y: height - 414,
-      size: 12,
-      font: thSarabunFont,
-    });
-  }
+  if (guardian_info?.consent1){
+    drawTick(72, height - 414);
+  } 
 
-  if (guardian_info?.consent2) {
-    firstPage.drawText('X', {
-      x: 72,
-      y: height - 428,
-      size: 12,
-      font: thSarabunFont,
-    });
-  }
+  if (guardian_info?.consent2){
+    drawTick(72, height - 428);
+  } 
 
   // Guardian signature
   firstPage.drawText(guardian_name, {
@@ -339,48 +329,22 @@ async function militaryRD1(data) {
 
   // Mark student consent checkboxes based on rD_info
   if (rD_info?.registermyself) {
-    firstPage.drawText('X', {
-      x: 72,
-      y: height - 273,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(72, height - 273);
   }
-
   if (rD_info?.notmilitary) {
-    firstPage.drawText('X', {
-      x: 72,
-      y: height - 288,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(72, height - 288);
   }
 
   if (rD_info?.man_right) {
-    firstPage.drawText('X', {
-      x: 300,
-      y: height - 273,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(300, height - 273);
   }
 
   if (rD_info?.women_right) {
-    firstPage.drawText('X', {
-      x: 300,
-      y: height - 288,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(300, height - 288);
   }
 
   if (rD_info?.ready_right) {
-    firstPage.drawText('X', {
-      x: 300,
-      y: height - 303,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(300, height - 303);
   }
 
   // School information section (placeholder since not in data)

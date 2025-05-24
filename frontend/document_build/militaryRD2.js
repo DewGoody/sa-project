@@ -53,6 +53,9 @@ function formatThaiDate(dateString) {
 }
 
 async function militaryRD2(data) {
+  // Load checkmark image
+
+
   const {
     student,
     father_mother_info,
@@ -84,6 +87,17 @@ async function militaryRD2(data) {
   // Current date section
   const currentDate = new Date();
   const thaiDateNum = toThaiNumeral(currentDate.getDate());
+  const tickPath = path.join(process.cwd(), 'public', 'tick.png');
+  const tickImage = await pdfDoc.embedPng(fs.readFileSync(tickPath));
+  const tickDims = tickImage.scale(0.006); // ปรับขนาดภาพ (เล็กลงพอดีช่อง)
+  function drawTick(x, y) {
+    firstPage.drawImage(tickImage, {
+      x,
+      y,
+      width: tickDims.width,
+      height: tickDims.height,
+    });
+  }
 
   // firstPage.drawText(thaiDateNum, {
   //   x: 220,
@@ -117,20 +131,10 @@ async function militaryRD2(data) {
 
   // Mark gender checkbox
   if (student?.title === 'นาย') {
-    firstPage.drawText('X', {
-      x: 148,
-      y: height - 132,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(148, height - 132); 
   } else {
+    drawTick(148, height - 132); //
     // Mark female checkbox (X at female checkbox coordinates)
-    firstPage.drawText('X', {
-      x: 190,
-      y: height - 132,
-      size: 12,
-      font: thSarabunFont,
-    });
   }
 
   // Student name
@@ -212,12 +216,7 @@ async function militaryRD2(data) {
   const checkboxPositions = [169, 220, 270, 321, 371]; // X positions for checkboxes
 
   if (yearGradeRD >= 1 && yearGradeRD <= 5) {
-    firstPage.drawText('X', {
-      x: checkboxPositions[yearGradeRD - 1],
-      y: height - 188,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(checkboxPositions[yearGradeRD - 1], height - 188);
   }
 
   // Mark registration type checkbox
@@ -225,12 +224,7 @@ async function militaryRD2(data) {
   const registerTypePositions = [111, 153, 197, 246, 326]; // X positions for register type checkboxes
 
   if (registerType >= 1 && registerType <= 5) {
-    firstPage.drawText('X', {
-      x: registerTypePositions[registerType - 1],
-      y: height - 203,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(registerTypePositions[registerType - 1], height - 203);
   }
 
   // If year level is 4 or 5, add branches and corps information
@@ -317,46 +311,20 @@ async function militaryRD2(data) {
   }
 
   // Mark student consent checkboxes
-  if (rD_info?.registermyself) {
-    firstPage.drawText('X', {
-      x: 72,
-      y: height - 302,
-      size: 12,
-      font: thSarabunFont,
-    });
-  }
-
-  if (rD_info?.notmilitary) {
-    firstPage.drawText('X', {
-      x: 72,
-      y: height - 317,
-      size: 12,
-      font: thSarabunFont,
-    });
-  }
-  if (rD_info?.readymilitary) {
-    firstPage.drawText('X', {
-      x: 72,
-      y: height - 347,
-      size: 12,
-      font: thSarabunFont,
-    });
-  }
   if (rD_info?.man_right) {
-    firstPage.drawText('X', {
-      x: 308,
-      y: height - 302,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(308, height - 302);
   }
   if (rD_info?.women_right) {
-    firstPage.drawText('X', {
-      x: 308,
-      y: height - 347,
-      size: 12,
-      font: thSarabunFont,
-    });
+    drawTick(308, height - 347);
+  }
+  if (rD_info?.registermyself) {
+    drawTick(72, height - 302);
+  }
+  if (rD_info?.notmilitary) {
+    drawTick(72, height - 317);
+  }
+  if (rD_info?.readymilitary) {
+    drawTick(72, height - 347);
   }
 
   // Student's signature
@@ -387,14 +355,9 @@ async function militaryRD2(data) {
     });
 
     // Mark consent checkbox
-    if (guardian_info?.consent21) {
-      firstPage.drawText('X', {
-        x: 72,
-        y: height - 472,
-        size: 12,
-        font: thSarabunFont,
-      });
-    }
+    if (guardian_info?.consent21){
+      drawTick(72, height - 472);
+    } 
 
     // Guardian signature
     firstPage.drawText(guardian_name, {
