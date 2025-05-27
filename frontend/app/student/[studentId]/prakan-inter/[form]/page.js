@@ -177,32 +177,50 @@ function page() {
     let dataUpdate = { ...alreadyData, formId: form, ...profileData };
     console.log("allData", allData);
     console.log("dataUpdate", dataUpdate);
+    if (studentId != '0') {
+      if (form === "0") {
+        axios
+          .post("/api/prakanInter/create", allData)
+          .then((response) => {
+            console.log("Form submitted successfully:", response.data);
+            router.push(
+              `/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/0`
+            );
+          })
+          .catch((error) => {
+            console.error("Error submitting form:", error);
+          });
+      } else {
+        axios
+          .post("/api/prakanInter/update", dataUpdate)
+          .then((response) => {
+            console.log("Form submitted successfully:", response.data);
+            const req_id = response.data.data.req_id
+            router.push(`/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/${req_id}`);
+          })
 
-    if (form === "0") {
-      axios
-        .post("/api/prakanInter/create", allData)
-        .then((response) => {
-          console.log("Form submitted successfully:", response.data);
-          router.push(
-            `/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/0`
-          );
-        })
-        .catch((error) => {
-          console.error("Error submitting form:", error);
-        });
-    } else {
+          .catch((error) => {
+            console.error("Error submitting form:", error);
+          });
+        console.log("dataUpdate", dataUpdate);
+      }
+    }
+    else {
       axios
         .post("/api/prakanInter/update", dataUpdate)
         .then((response) => {
           console.log("Form submitted successfully:", response.data);
-          router.push("/Admin/prakan-inter/0");
+          const req_id = response.data.data.req_id
+          router.push(`/Admin/prakan/0`);
         })
 
         .catch((error) => {
           console.error("Error submitting form:", error);
         });
       console.log("dataUpdate", dataUpdate);
+
     }
+
   };
 
   const fetchData = async () => {
