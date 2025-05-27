@@ -65,6 +65,18 @@ function Page() {
       alert("Identification number must be 13 digits");
       return;
     }
+    if (vendorData.bankAccountNumber.length !== 10) {
+      alert("Bank account number must be 10 digits");
+      return;
+    }
+    if (vendorData.amount <= 0) {
+      alert("Amount must be a positive number");
+      return;
+    }
+    if (vendorData.amount) {
+      vendorData.amount = parseFloat(vendorData.amount).toFixed(2);
+    }
+
 
     console.log(vendorData);
     if (studentId !== "0") {
