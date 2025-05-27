@@ -12,6 +12,7 @@ const Page = () => {
   const { studentId } = useParams();
   const { req_id } = useParams();
   const [profileData, setProfileData] = useState(null);
+  const [vendorForm, setVendorForm] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [createRequest, setCreateRequest] = useState(null);
@@ -41,9 +42,11 @@ const Page = () => {
     fetchData();
   }, []);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
+    const response = await axios.post('/api/vendor/createPdf', { form: form })
+    setVendorForm(response.data.data);
     const link = document.createElement("a");
-    link.href = "../../documents/prakan-inter/Health-claim-form-filled.pdf";
+    link.href = "../../documents/vendor/Vendor-filled.pdf";
     link.download = "Health-claim-form.pdf";
     document.body.appendChild(link);
     link.click();

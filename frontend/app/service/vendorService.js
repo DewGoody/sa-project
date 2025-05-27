@@ -5,20 +5,20 @@ const prisma = new PrismaClient();
 
 export async function getDataById(id) {
     const vendor = await prisma.vendor_info.findUnique({
-        where: {id: id},
+        where: { id: id },
         include: {
             Student: true
         }
     })
-    if(vendor){           
+    if (vendor) {
         return vendor
     }
-    else{
+    else {
         return "Not found"
     }
 }
 
-export async function createVendor(data) {    
+export async function createVendor(data) {
     // await vendor(data)
     const createRequest = await prisma.request.create({
         data: {
@@ -26,7 +26,7 @@ export async function createVendor(data) {
             status: "รอจองคิว",
             stu_id: data.stu_id,
         }
-    })    
+    })
 
     console.log("dataCreate :", data);
     const createVendor = await prisma.vendor_info.create({
@@ -38,7 +38,7 @@ export async function createVendor(data) {
             citizenIssueDate: new Date(data.citizenIssueDate),
             citizenExpireDate: new Date(data.citizenExpireDate),
             buildingVillage: data.buildingVillage,
-            soi:data.soi,
+            soi: data.soi,
             road: data.road,
             subDistrict: data.subDistrict,
             district: data.district,
@@ -71,7 +71,7 @@ export async function createVendor(data) {
 
 export async function createPdfVendor(formId) {
     const response = await getDataById(formId)
-    await vendor(response)
+    await vendorFormBuilder(response)
     return response
 }
 
@@ -80,16 +80,16 @@ export async function updateVendorForm(data) {
     //     await vendor(data)
     // }
     console.log("yayyay", data);
-    
+
     const vendorUpdated = await prisma.vendor_info.update({
-        where: {id: Number(data.id)},
-        data:{
+        where: { id: Number(data.id) },
+        data: {
             houseID: data.houseID,
             moo: data.moo,
             citizenIssueDate: new Date(data.citizenIssueDate),
             citizenExpireDate: new Date(data.citizenExpireDate),
             buildingVillage: data.buildingVillage,
-            soi:data.soi,
+            soi: data.soi,
             road: data.road,
             subDistrict: data.subDistrict,
             district: data.district,
@@ -106,12 +106,12 @@ export async function updateVendorForm(data) {
             bankAccountNumber: data.bankAccountNumber,
             claimOtherReason: data.claimOtherReason
         }
-    })    
-   
-    if(vendorUpdated){           
+    })
+
+    if (vendorUpdated) {
         return vendorUpdated
     }
-    else{
+    else {
         return "Not found"
     }
 }
