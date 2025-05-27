@@ -43,7 +43,7 @@ const Page = () => {
   }, []);
 
   const handleDownload = async () => {
-    const response = await axios.post('/api/vendor/createPdf', { form: form })
+    const response = await axios.post('/api/vendor/createPdf')
     setVendorForm(response.data.data);
     const link = document.createElement("a");
     link.href = "../../documents/vendor/Vendor-filled.pdf";
@@ -95,14 +95,21 @@ const Page = () => {
   // };
 
   const handleNavigation = async (event) => {
-    const response = await axios.post(`/api/request/changeStatusToWaitBook`, { req_id: req_id });
+    const response = await axios.post(`/api/request/create`, {
+      type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย",
+      status: "รอจองคิว",
+      stuId: profileData.id,
+      formId: form,
+    });
     console.log("response", response);
 
 
     router.push(`/student/${studentId}/appointment/${req_id}/0`);
 
   };
-
+  const handleBack = () => {
+    router.push(`/student/${studentId}/vendor/${req_id}`);
+  };
   return (
     <div className="min-h-screen bg-white">
       <Header
@@ -194,11 +201,14 @@ const Page = () => {
 
           {/* Navigation Buttons */}
           <div className="flex justify-between mt-8">
-            <a href="/vendor">
-              <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                Back
-              </button>
-            </a>
+
+            <button
+              className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+              onClick={handleBack}
+            >
+              Back
+            </button>
+
 
             <button
               onClick={handleDownload}

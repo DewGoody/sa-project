@@ -400,7 +400,7 @@ function Page() {
                       เลขบัตรประชาชน (Identification number)
                     </label>
                     <PatternFormat
-                      ype="text"
+                      type="text"
                       name="citizenId"
                       value={vendorData?.citizenId}
                       onChange={(event) => handleChange(event, "citizenId")}

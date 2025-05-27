@@ -32,6 +32,8 @@ export async function createVendor(data) {
     const createVendor = await prisma.vendor_info.create({
         data: {
             stu_id: Number(data.id),
+            nameTH: data.nameTH,
+            faculty: data.faculty,
             houseID: data.houseID,
             req_id: createRequest.id,
             moo: data.moo,
@@ -85,6 +87,8 @@ export async function updateVendorForm(data) {
         where: { id: Number(data.id) },
         data: {
             houseID: data.houseID,
+            nameTH: data.nameTH,
+            faculty: data.faculty,
             moo: data.moo,
             citizenIssueDate: new Date(data.citizenIssueDate),
             citizenExpireDate: new Date(data.citizenExpireDate),
