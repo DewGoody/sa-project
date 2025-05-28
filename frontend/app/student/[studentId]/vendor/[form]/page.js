@@ -85,7 +85,8 @@ function Page() {
           const response = await axios.post("/api/vendor/update", vendorData);
           console.log("update", response.data);
           const reqId = response.data.data.req_id;
-          router.push(`/student/${studentId}/vendor/checkVendor/${reqId}`);
+          const formId = response.data.data.id;
+          router.push(`/student/${studentId}/vendor/checkVendor/${formId}/${reqId}`);
         } catch (error) {
           console.error(error);
         }
@@ -94,12 +95,15 @@ function Page() {
           const response = await axios.post("/api/vendor/create", vendorData);
           console.log(response.data);
           const reqId = response.data.data.req_id;
-          router.push(`/student/${studentId}/vendor/checkVendor/${reqId}`);
+          const formId = response.data.data.id;
+          router.push(`/student/${studentId}/vendor/checkVendor/${formId}/${reqId}`);
         } catch (error) {
           console.error(error);
         }
       }
     }
+
+    //TODO admin edit from router push back
   };
   const handleChange = (event, field) => {
     console.log(field + " : " + event.target.value);

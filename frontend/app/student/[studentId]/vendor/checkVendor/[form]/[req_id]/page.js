@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { Header } from "../../../../../components/Header";
+import { Header } from "../../../../../../components/Header";
 import axios from "axios";
 import { useRouter, useParams } from 'next/navigation';
 import "react-toastify/dist/ReactToastify.css";
@@ -40,7 +40,9 @@ const Page = () => {
     };
 
     fetchData();
+    
   }, []);
+  console.log(profileData);
 
   const handleDownload = async () => {
     const response = await axios.post('/api/vendor/createPdf')
