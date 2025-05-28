@@ -46,10 +46,10 @@ const Page = () => {
   console.log(profileData);
 
   const handleDownload = async () => {
-    const response = await axios.post('/api/vendor/createPdf')
+    const response = await axios.post('/api/vendor/createPdf', { form: form });
     setVendorForm(response.data.data);
     const link = document.createElement("a");
-    link.href = "../../documents/vendor/Vendor-filled.pdf";
+    link.href = "../../../../../documents/vendor/Vendor-filled.pdf";
     link.download = "Health-claim-form.pdf";
     document.body.appendChild(link);
     link.click();
