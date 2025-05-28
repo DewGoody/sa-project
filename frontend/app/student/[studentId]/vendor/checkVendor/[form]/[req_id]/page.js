@@ -79,27 +79,6 @@ const Page = () => {
   };
 
 
-  //   const handleNavigation = async (event) => {
-  //     const response = await axios.post(`/api/request/create`, { type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย", status: "รอจองคิว", stuId: profileData.id, formId: form });
-  //     setCreateRequest(response.data);
-  //     console.log("createRequest", createRequest);
-  //     const param = response.data.data.id;
-  //     console.log("responseRequest", response.data);
-  //     console.log("param", param);
-  //     router.push(`/student/${studentId}/appointment/${param}/0`);
-
-  //     // if (!allChecked()) {
-  //     //     event.preventDefault();
-  //     //     alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
-  //     // } else {
-  //     //     const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
-  //     //     router.push(`/student/${studentId}/appointment/${param}/0`);
-  //     // }
-  // };
-
-
-
-
   // Function to handle navigation attempt
   const handleNavigation = async (event) => {
     console.log(profileData.id, form);
