@@ -97,19 +97,40 @@ const Page = () => {
   //     // }
   // };
 
+
+
+
+  // Function to handle navigation attempt
   const handleNavigation = async (event) => {
-    const response = await axios.post(`/api/request/create`, {
-      type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย",
-      status: "รอจองคิว",
-      stuId: profileData.id,
-      formId: form,
-    });
-    console.log("response", response);
+    console.log(profileData.id, form);
 
+    if (req_id !== "0") {
+      router.push(`/student/${studentId}/appointment/${req_id}/0`);
+    } else {
+      const response = await axios.post(`/api/request/create`, {
+        type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย",
+        status: "รอจองคิว",
+        stuId: profileData.id,
+        formId: form,
+      });
+      console.log("responseCreate:", response.data);
+      setCreateRequest(response.data);
+      const param = response.data.data.id;
+      if (!allChecked()) {
+        event.preventDefault();
+        alert(
+          "กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)"
+        );
+      } else {
+        console.log("dataaa", vendorForm, "-------------------------------");
 
-    router.push(`/student/${studentId}/appointment/${req_id}/0`);
-
+        //const response2 = await axios.post('/api/prakanInter/deletePdf', prakanData)
+        router.push(`/student/${studentId}/appointment/${param}/0`);
+      }
+    }
   };
+
+
   const handleBack = () => {
     router.push(`/student/${studentId}/vendor/${form}`);
   };
