@@ -74,6 +74,9 @@ async function vendorFormBuilder(data) {
   //todo accnum
   drawTextOnPage(firstPage, data.nameTH, 315, height - 627);
   const pdfBytes = await pdfDoc.save();
-  fs.writeFileSync("public/documents/vendor/Vendor-filled.pdf", pdfBytes);
+  fs.writeFileSync("public/documents/vendor/" + data.Student.id + "_vendor.pdf", pdfBytes);
+  return (
+    "public/documents/vendor/" + data.Student.id + "_vendor.pdf"
+  );
 }
 module.exports = { vendorFormBuilder };

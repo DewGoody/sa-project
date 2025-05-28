@@ -49,8 +49,8 @@ const Page = () => {
     const response = await axios.post('/api/vendor/createPdf', { form: form });
     setVendorForm(response.data.data);
     const link = document.createElement("a");
-    link.href = "../../../../../documents/vendor/Vendor-filled.pdf";
-    link.download = "Health-claim-form.pdf";
+    link.href = `../../../../../documents/vendor/${response.data.data.Student.id}_vendor.pdf`;
+    link.download = `${response.data.data.Student.id}_vendor.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
