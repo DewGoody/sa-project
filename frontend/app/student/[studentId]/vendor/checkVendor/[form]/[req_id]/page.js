@@ -11,6 +11,7 @@ const Page = () => {
   const router = useRouter();
   const { studentId } = useParams();
   const { req_id } = useParams();
+  const { form } = useParams();
   const [profileData, setProfileData] = useState(null);
   const [vendorForm, setVendorForm] = useState(null);
   const [error, setError] = useState(null);
@@ -40,7 +41,7 @@ const Page = () => {
     };
 
     fetchData();
-    
+
   }, []);
   console.log(profileData);
 
@@ -110,7 +111,7 @@ const Page = () => {
 
   };
   const handleBack = () => {
-    router.push(`/student/${studentId}/vendor/${req_id}`);
+    router.push(`/student/${studentId}/vendor/${form}`);
   };
   return (
     <div className="min-h-screen bg-white">
