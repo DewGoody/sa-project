@@ -37,6 +37,7 @@ export const Form = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [prakanDataLength, setPrakanDataLength] = useState(0);
   const [hasPonpan, setHasPonpan] = useState(false);
+  const [hasStudentloan, setHasStudentloan] = useState(false);
   const [formId, setFormId] = useState(0);
   const [notQueueLength, setNotQueueLength] = useState(0);
   const [notQueue, setNotQueue] = useState([]);
@@ -111,8 +112,8 @@ export const Form = () => {
   };
   const timeSlots =
     [
-      '8:00-8:30', '8:30-9:00', '9:00-9:30', '9:30-10:00', '10:00-10:30', '10:30-11:00', '11:00-11:30', '11.30-12.00',
-      '13:00-13:30', '13:30-14:00', '14:00-14:30', '14:30-15:00', '15:00-15:30', '15:30-16:00', '16:00-16:30', '16.30-17.00',
+      '8:00-8:30', '8:30-9:00', '9:00-9:30', '9:30-10:00', '10:00-10:30', '10:30-11:00', '11:00-11:30', '11:30-12:00',
+      '13:00-13:30', '13:30-14:00', '14:00-14:30', '14:30-15:00', '15:00-15:30', '15:30-16:00', '16:00-16:30', '16:30-17:00',
     ];
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
 
@@ -142,8 +143,12 @@ export const Form = () => {
       response.data.data.map((item) => {
         if (item.Request.type === "การผ่อนผันเข้ารับราชการทหาร") {
           setHasPonpan(true);
-        } if (item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
+        } 
+        if (item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
           SETRD(true);
+        } 
+        if (item.Request.type === "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)") {
+          setHasStudentloan(true);
         }
       })
       console.log("hasPonpan", hasPonpan);
@@ -394,7 +399,13 @@ export const Form = () => {
       {
         condition: requestType === 'Health insurance' && status === 'โอนเงินเรียบร้อย',
         message: "โอนเงินเรียบร้อย (Payment completed)"
-      }
+      },
+      {
+        condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'รอเข้ารับบริการ',
+        message: "รอเข้ารับบริการ (Waiting for service)"
+      },
+      
+
 
     ];
 
@@ -404,6 +415,42 @@ export const Form = () => {
     // Return the custom message if found, otherwise return the original status
     return matchedStatus ? matchedStatus.message : status;
   };
+
+  const renderButtons = (item) => {
+    if (item.Request.status === "รอเข้ารับบริการ" && item.Request.type !== "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)") {
+      return (
+        <div className="mb-3 flex mr-1">
+          <button onClick={() => showModalEditForm(item)} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">Edit form</button>
+          <button onClick={() => showModalBookQueue(item)} className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2">Schedule</button>
+          <button onClick={() => showModal(item)} className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2">Cancel</button>
+        </div>
+      );
+    }
+  
+    if (
+      item.Request.status === "ขอข้อมูลเพิ่มเติม" ||
+      item.Request.status === "โอนเงินเรียบร้อย" ||
+      item.Request.status === "ไม่อนุมัติ"
+    ) {
+      return (
+        <div className="ml-3 mb-3 flex">
+          <button onClick={() => showModalCheckInfo(item.Request.more_info)} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">view detail</button>
+        </div>
+      );
+    }
+  
+    if (item.Request.status === "รอเข้ารับบริการ" && item.Request.type === "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)") {
+      return (
+        <div className="ml-3 mb-3 flex">
+          <button onClick={() => showModalBookQueue(item)} className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2">Schedule</button>
+          <button onClick={() => showModal(item)} className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2">Cancel</button>
+        </div>
+      );
+    }
+  
+    return null;
+  };
+  
 
 
 
@@ -450,16 +497,15 @@ export const Form = () => {
               <div className=" justify-between items-center">
                 {prakanData.length > 0 ? (
                   prakanData.map((item, index) => (
+                    
                     <div key={index} className="flex justify-between items-center mt-5">
                       {((item.Request.status !== "คำขอถูกยกเลิก") && (item.status === "จองคิวสำเร็จ" || item.status === "เข้ารับบริการแล้ว")) && (
                         <div className="flex justify-between border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full">
-                          <div className="">
+                          <div>
                             {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " (" + timeSlots[item.period] + " น.)"}
                             <div className="ml-4 text-md">
                               {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
-                                <div className=" flex font-semibold text-base text-blue-500">
-                                  ตั้งแต่ 1 	มีนาคมเป็นต้นไป รับเอกสารได้ที่
-                                </div>
+                                <div className="flex font-semibold text-base text-blue-500">ตั้งแต่ 1 มีนาคมเป็นต้นไป รับเอกสารได้ที่</div>
                               )}
                               <p className="text-gray-500 font-semibold text-base">อาคารจุลจักรพงษ์ ชั้น 2</p>
                               <p className="text-gray-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
@@ -467,47 +513,12 @@ export const Form = () => {
                             <div className="ml-4 mt-1 font-semibold text-base text-blue-500">
                               {getStatusDisplay(item.Request.type, item.Request.status)}
                             </div>
-
                           </div>
-
-                          {item.Request.status === "รอเข้ารับบริการ" ? (
-                            <div className="mb-3 flex mr-1">
-                              <button
-                                className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10"
-                                onClick={() => { showModalEditForm(item) }}
-                              >
-                                Edit form
-                              </button>
-                              <button
-                                className="bg-pink-500 hover:bg-pink-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2"
-                                onClick={() => { showModalBookQueue(item) }}
-                              >
-                                Schedule
-                              </button>
-                              <button
-                                className="bg-red-500 hover:bg-red-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10 ml-2"
-                                onClick={() => { showModal(item) }}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          ) : (item.Request.status === "ขอข้อมูลเพิ่มเติม" || item.Request.status === "โอนเงินเรียบร้อย" || item.Request.status === "ไม่อนุมัติ") && (
-                            <div className="ml-3 mt- mb-3 flex">
-                              <button onClick={() => { showModalCheckInfo(item.Request.more_info) }} className="bg-blue-500 hover:bg-blue-400 text-white text-xs py-2 px-4 rounded mt-10 mb-10">
-                                view detail
-                              </button>
-
-                            </div>
-
-                          )
-                          }
-
-
-
+                          {renderButtons(item)}
                         </div>
                       )}
-
                     </div>
+
                   ))
                 ) : null}
                 {Array.isArray(notQueue) && notQueue.length > 0 && (
@@ -524,7 +535,7 @@ export const Form = () => {
                               </div>
                             )}
                             <div className="flex">
-                              <div className="mt-1 font-semibold text-base text-blue-500">{item.status}</div>
+                              <div className="mt-1 font-semibold text-base text-blue-500">{item.status+"(Waiting to book queue)"}</div>
                               {/* <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div> */}
                               {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && item.RD_info && Array.isArray(item.RD_info) && item.RD_info.length > 0 && (
                                 <div>
@@ -642,8 +653,9 @@ export const Form = () => {
                   title="5. Health Insurance for Foreigner Student"
                 />
               </a>
-              <a onClick={() => router.push(`/student/${studentId}/student-loan`)}
-                className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+              <a onClick={() => !hasStudentloan && router.push(`/student/${studentId}/student-loan`)}
+                className={`block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg 
+                  ${hasStudentloan ? "pointer-events-none opacity-50" : ""}`}
               >
                 <ServiceCard
                   title="6. กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) "
