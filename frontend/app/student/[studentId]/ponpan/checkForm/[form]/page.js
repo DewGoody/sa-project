@@ -134,7 +134,7 @@ const handleSubmit = async () => {
       const response = await axios.post("/api/ponpan/create", data);
       const reqId = response.data.data.req_id;
       console.log(response.data);
-      router.push(`/student/${studentId}/ponpan/checkPonpanData/${reqId}`);
+      router.push(`/student/${studentId}/ponpan/checkPonpanData/${reqId}/${form}`);
       console.log(data);
     } else {
       const data = {
@@ -163,7 +163,7 @@ const handleSubmit = async () => {
       const response = await axios.post("/api/ponpan/update", data);
       const reqId = response.data.data.req_id;
       console.log(response.data);
-      router.push(`/student/${studentId}/ponpan/checkPonpanData/${reqId}`);
+      router.push(`/student/${studentId}/ponpan/checkPonpanData/${reqId}/${form}`);
       console.log
     }
   }
@@ -211,112 +211,112 @@ const handleSubmit = async () => {
               ข้อมูลส่วนตัวนิสิต (Personal & contact information)
             </h3>
             <div>
-              <form className="grid grid-cols-2 gap-7 m-6 bg-white">
-                <div className="flex">
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname) :</label>
                   <div>
                     <input
                       type="text"
                       name="name"
                       disabled
-                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                       value={profileData?.fnameTH +" "+ profileData?.lnameTH}
                    
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1" >รหัสนิสิต (Student ID) :</label>
                   <div>
                     <input
                       type="text"
                       disabled
                       name="id"
-                       className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
+                       className="w-full px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                        value={profileData?.id}
                     />
                   </div>
                 </div>
 
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >คณะ (Faculty) :</label>
                   <div className="">
                     <input
                       type="text"
                       disabled
                       name="faculty"
-                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                       value={profileData?.facultyNameTH}
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >เลขบัตรประชาชน (Identification number) :</label>
                   <div className="">
                     <input
                       type="text"
                       disabled
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={prepareData?.Student?.thai_id || null}
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Academic year) :</label>
                   <div>
                     <input
                       type="text"
                       name="phone"
                       disabled
-                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.year}
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >ศึกษาในระดับ (Degree) :</label>
                   <div>
                     <input
                       name="degree"
                       disabled
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.degree}
                     />
                    
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >ปีเกิด (Birth year) :</label>
                   <div>
                     <input
                       type="text"
                       name="phone"
                       disabled
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                        value={ profileData !== null ? buddhistYear : alreadyBuddhistYear}
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Mobile number) :</label>
                   <div>
                     <input
                       type="text"
                       name="phone"
                       disabled
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.phone_num}
                     />
                   </div>
                 </div>
-                <div>
+                <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1" >
                     อีเมล (Email) :
                     <input
                       type="email"
                       name="email"
                       disabled
-                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className=" w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.email}
                     />
                   </label>
@@ -324,15 +324,15 @@ const handleSubmit = async () => {
                 <div>
 
                 </div>
-                <div>
-                  <div className="flex">
+                <div >
+                  <div className="flex flex-col">
                     <div className="block text-gray-700 mt-1" >ชื่อบิดา (Father's name) :</div>
                     <div>
                       <input
                         type="text"
                         name="phone"
                         disabled
-                         className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                         className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                             value={alreadyData?.father_name}
                       />
                     </div>
@@ -342,14 +342,14 @@ const handleSubmit = async () => {
                   </div>
                 </div>
                 <div>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     <div className="block text-gray-700 mt-1" >ชื่อมารดา (Mother's name) :</div>
                     <div>
                       <input
                         type="text"
                         name="phone"
                         disabled
-                         className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                         className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         value={alreadyData?.mother_name}
                       />
                     </div>
@@ -367,7 +367,7 @@ const handleSubmit = async () => {
                 <div>
                   
                 </div>
-                <div className="flex text-gray-700">
+                <div className="flex flex-col text-gray-700">
                   <label>บ้านเลขที่ (Address number) :</label>
                   <div>
                     <input
@@ -375,11 +375,11 @@ const handleSubmit = async () => {
                       name="name"
                       disabled
                       value={alreadyData.house_num}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
                 </div>
-                <div className="flex text-gray-700">
+                <div className="flex flex-col text-gray-700">
                   <label>หมู่ที่ (Moo) :</label>
                   <div>
                     <input
@@ -387,35 +387,35 @@ const handleSubmit = async () => {
                       name="name"
                       disabled
                       value={alreadyData.house_moo}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
                 </div>
-                <div>
+                <div className="flex flex-col">
                   <label className=" text-gray-700 mb-2">จังหวัด (Province) : </label>
                   <input
                       name="province"
                       disabled
                       value={alreadyData.province}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   />
                       
                </div>
-          <div>
+          <div className="flex flex-col">
               <label className=" text-gray-700 mb-2">เขต/อำเภอ (District) : </label>
               <input
                   name="amphure"
                   disabled
                   value={alreadyData.district}
-                   className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                   className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
 
           </div>
-          <div className="flex">
+          <div className="flex flex-col">
               <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict) : </label>
-              <Input 
+              <input 
               disabled
-                style={{width:170, marginLeft:20}} value={alreadyData.sub_district} />
+              className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" value={alreadyData.sub_district} />
           </div>
           <div>
 
@@ -431,7 +431,7 @@ const handleSubmit = async () => {
                 <div>
                   
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label>ใบสำคัญ สด.9 ที่ (Sor Dor 9 certificate) :</label>
                   <div className="flex">
                     <input
@@ -439,7 +439,7 @@ const handleSubmit = async () => {
                       name="name"
                       disabled
                       value={alreadyData.sdnine_id}
-                       className="ml-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                     <div className="mt-1">
                       <a
@@ -456,7 +456,7 @@ const handleSubmit = async () => {
                 <div>
 
                 </div>
-                <div className="flex text-gray-700">
+                <div className="flex flex-col text-gray-700">
                   <label>บ้านเลขที่ (Address number) :</label>
                   <div>
                     <input
@@ -464,11 +464,11 @@ const handleSubmit = async () => {
                       name="name"
                       disabled
                       value={alreadyData.house_num_sd}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
                 </div>
-                <div className="flex text-gray-700">
+                <div className="flex flex-col text-gray-700">
                   <label>หมู่ที่ (Moo) :</label>
                   <div>
                     <input
@@ -476,33 +476,33 @@ const handleSubmit = async () => {
                       name="name"
                       disabled
                       value={alreadyData.house_moo_sd}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </div>
                 </div>
-                <div>
+                <div className="flex flex-col">
                   <label className=" text-gray-700 mb-2">จังหวัด (Province)</label>
                   <input
                       name="province"
                       value={alreadyData.province_sd}
                       disabled
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   />
                </div>
-          <div>
+          <div className="flex flex-col">
               <label className=" text-gray-700 mb-2">เขต/อำเภอ (District)</label>
               <input
                   name="amphure"
                   value={alreadyData.district_sd}
                   disabled
-                   className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                   className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               />
           </div>
-          <div className="flex">
+          <div className="flex flex-col">
               <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict) : </label>
-              <Input 
+              <input 
               disabled
-              style={{width:170, marginLeft:20}} value={alreadyData.subdistrict_sd} />
+              className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" value={alreadyData.subdistrict_sd} />
           </div>
           <div>
 

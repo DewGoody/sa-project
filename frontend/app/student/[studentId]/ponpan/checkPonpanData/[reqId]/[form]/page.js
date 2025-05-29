@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { Header } from '../../../../../components/Header.js';
+import { Header } from '../../../../../../components/Header.js';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
@@ -27,6 +27,8 @@ const RD = () => {
     const [error, setError] = useState(null);
     const router = useRouter();
     const { reqId } = useParams();
+    const {form} = useParams();
+    console.log("form :", form);
     const { studentId } = useParams();
     console.log("reqId :", reqId);
 
@@ -51,7 +53,7 @@ const RD = () => {
 
 
     const handleBack = () => {
-        router.push(`/student/${studentId}/ponpan/${reqId}`);
+        router.push(`/student/${studentId}/ponpan/${form}`);
     };
 
     // Function to handle checkbox change
