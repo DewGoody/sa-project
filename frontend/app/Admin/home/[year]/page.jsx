@@ -230,11 +230,11 @@ const AppointmentManagement = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
-            
+            width: 180,
             render: (status, record) => (
                 <Select
                     defaultValue={record.status}
-                    style={{ width: 170 }}
+                    style={{ width: 140 }}
                     onChange={(value) => handleStatusChange({ ...record, status: value })}
                 >
                     <Select.Option value="จองคิวสำเร็จ" disabled={record.status === "ไม่มาเข้ารับบริการ"}>จองคิวสำเร็จ</Select.Option>
@@ -280,6 +280,7 @@ const AppointmentManagement = () => {
         {
             title: 'วันที่',
             dataIndex: 'date',
+            width: 110,
             sorter: (a, b) => {
                 const dateA = new Date(a.date.split('/').reverse().join('-'));
                 const dateB = new Date(b.date.split('/').reverse().join('-'));
@@ -294,6 +295,7 @@ const AppointmentManagement = () => {
         {
             title: 'เวลา',
             dataIndex: 'period',
+            width: 130,
             sorter: (a, b) => {
                 const timeA = timeSlots.indexOf(a.period.split(' ')[0]);
                 const timeB = timeSlots.indexOf(b.period.split(' ')[0]);
@@ -313,6 +315,7 @@ const AppointmentManagement = () => {
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
+            width: 130,
             ...getColumnSearchProps("student_ID"),
         },
     ];
