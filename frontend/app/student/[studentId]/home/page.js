@@ -338,6 +338,75 @@ export const Form = () => {
     return `${day}/${month}/${year}`;
   }
 
+  // Add this function at the top of your component, before the return statement
+  const getStatusDisplay = (requestType, status) => {
+    // Define your conditions and corresponding messages
+    const statusMappings = [
+      {
+        condition: requestType === "การผ่อนผันเข้ารับราชการทหาร" && status === "ส่งเอกสารแล้ว",
+        message: "ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว"
+      },
+      {
+        condition: requestType === 'Health insurance' && status === 'รอจองคิว ',
+        message: "รอจองคิว (Waiting for appointment booking)"
+      },
+      {
+        condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'รอเจ้าหน้าที่ดำเนินการ',
+        message: "รอเจ้าหน้าที่ดำเนินการ (Waiting for staff to process)"
+      },
+      {
+        condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'ส่งเอกสารแล้ว',
+        message: "ส่งเอกสารให้บริษัทประกันแล้ว (Documents sent to insurance company)"
+      },
+      {
+        condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'ขอข้อมูลเพิ่มเติม',
+        message: "ขอข้อมูลเพิ่มเติม (Request for additional information)"
+      },
+      {
+        condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'ไม่อนุมัติ',
+        message: "ไม่อนุมัติ (Not approved)"
+      },
+      {
+        condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'โอนเงินเรียบร้อย',
+        message: "โอนเงินเรียบร้อย (Payment completed)"
+      },
+
+      {
+        condition: requestType === 'Health insurance' && status === 'รอจองคิว ',
+        message: "รอจองคิว (Waiting for appointment booking)"
+      },
+      {
+        condition: requestType === 'Health insurance' && status === 'รอเจ้าหน้าที่ดำเนินการ',
+        message: "รอเจ้าหน้าที่ดำเนินการ (Waiting for staff to process)"
+      },
+      {
+        condition: requestType === 'Health insurance' && status === 'ส่งเอกสารแล้ว',
+        message: "ส่งเอกสารให้บริษัทประกันแล้ว (Documents sent to insurance company)"
+      },
+      {
+        condition: requestType === 'Health insurance' && status === 'ขอข้อมูลเพิ่มเติม',
+        message: "ขอข้อมูลเพิ่มเติม (Request for additional information)"
+      },
+      {
+        condition: requestType === 'Health insurance' && status === 'ไม่อนุมัติ',
+        message: "ไม่อนุมัติ (Not approved)"
+      },
+      {
+        condition: requestType === 'Health insurance' && status === 'โอนเงินเรียบร้อย',
+        message: "โอนเงินเรียบร้อย (Payment completed)"
+      }
+
+    ];
+
+    // Find the first matching condition
+    const matchedStatus = statusMappings.find(mapping => mapping.condition);
+
+    // Return the custom message if found, otherwise return the original status
+    return matchedStatus ? matchedStatus.message : status;
+  };
+
+
+
 
   return (
     <div className="min-h-screen" >
@@ -395,20 +464,9 @@ export const Form = () => {
                               <p className="text-gray-500 font-semibold text-base">อาคารจุลจักรพงษ์ ชั้น 2</p>
                               <p className="text-gray-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
                             </div>
-                            {(item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ส่งเอกสารแล้ว") ? (
-                              <div className="ml-4 mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว</div>
-                            ) : (
-                              <div className="ml-4 mt-1 font-semibold text-base text-blue-500">
-                                {
-                                  (item.Request.type === 'การเบิกจ่ายประกันอุบัติเหตุ' && item.Request.status === 'ส่งเอกสารแล้ว') ? (
-                                    <div className=" mt-1 font-semibold text-base text-blue-500">ส่งเอกสารให้บริษัทประกันแล้ว</div>
-                                  ) : (
-                                    <div className=" mt-1 font-semibold text-base text-blue-500">{item.Request.status}</div>
-                                  )
-                                }
-                              </div>
-                            )
-                            }
+                            <div className="ml-4 mt-1 font-semibold text-base text-blue-500">
+                              {getStatusDisplay(item.Request.type, item.Request.status)}
+                            </div>
 
                           </div>
 

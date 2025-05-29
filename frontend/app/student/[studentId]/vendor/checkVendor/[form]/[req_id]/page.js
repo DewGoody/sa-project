@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { Header } from "../../../../../components/Header";
+import { Header } from "../../../../../../components/Header";
 import axios from "axios";
 import { useRouter, useParams } from 'next/navigation';
 import "react-toastify/dist/ReactToastify.css";
@@ -11,7 +11,9 @@ const Page = () => {
   const router = useRouter();
   const { studentId } = useParams();
   const { req_id } = useParams();
+  const { form } = useParams();
   const [profileData, setProfileData] = useState(null);
+  const [vendorForm, setVendorForm] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [createRequest, setCreateRequest] = useState(null);
@@ -39,12 +41,16 @@ const Page = () => {
     };
 
     fetchData();
-  }, []);
 
-  const handleDownload = () => {
+  }, []);
+  console.log(profileData);
+
+  const handleDownload = async () => {
+    const response = await axios.post('/api/vendor/createPdf', { form: form });
+    setVendorForm(response.data.data);
     const link = document.createElement("a");
-    link.href = "../../documents/prakan-inter/Health-claim-form-filled.pdf";
-    link.download = "Health-claim-form.pdf";
+    link.href = `../../../../../documents/vendor/${response.data.data.Student.id}_vendor.pdf`;
+    link.download = `${response.data.data.Student.id}_vendor.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -73,33 +79,40 @@ const Page = () => {
   };
 
 
-  //   const handleNavigation = async (event) => {
-  //     const response = await axios.post(`/api/request/create`, { type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย", status: "รอจองคิว", stuId: profileData.id, formId: form });
-  //     setCreateRequest(response.data);
-  //     console.log("createRequest", createRequest);
-  //     const param = response.data.data.id;
-  //     console.log("responseRequest", response.data);
-  //     console.log("param", param);
-  //     router.push(`/student/${studentId}/appointment/${param}/0`);
-
-  //     // if (!allChecked()) {
-  //     //     event.preventDefault();
-  //     //     alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
-  //     // } else {
-  //     //     const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
-  //     //     router.push(`/student/${studentId}/appointment/${param}/0`);
-  //     // }
-  // };
-
+  // Function to handle navigation attempt
   const handleNavigation = async (event) => {
-    const response = await axios.post(`/api/request/changeStatusToWaitBook`, { req_id: req_id });
-    console.log("response", response);
+    console.log(profileData.id, form);
 
+    if (req_id !== "0") {
+      router.push(`/student/${studentId}/appointment/${req_id}/0`);
+    } else {
+      const response = await axios.post(`/api/request/create`, {
+        type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย",
+        status: "รอจองคิว",
+        stuId: profileData.id,
+        formId: form,
+      });
+      console.log("responseCreate:", response.data);
+      setCreateRequest(response.data);
+      const param = response.data.data.id;
+      if (!allChecked()) {
+        event.preventDefault();
+        alert(
+          "กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)"
+        );
+      } else {
+        console.log("dataaa", vendorForm, "-------------------------------");
 
-    router.push(`/student/${studentId}/appointment/${req_id}/0`);
-
+        //const response2 = await axios.post('/api/prakanInter/deletePdf', prakanData)
+        router.push(`/student/${studentId}/appointment/${param}/0`);
+      }
+    }
   };
 
+
+  const handleBack = () => {
+    router.push(`/student/${studentId}/vendor/${form}`);
+  };
   return (
     <div className="min-h-screen bg-white">
       <Header
@@ -191,11 +204,14 @@ const Page = () => {
 
           {/* Navigation Buttons */}
           <div className="flex justify-between mt-8">
-            <a href="/vendor">
-              <button className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                Back
-              </button>
-            </a>
+
+            <button
+              className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+              onClick={handleBack}
+            >
+              Back
+            </button>
+
 
             <button
               onClick={handleDownload}
