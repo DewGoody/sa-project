@@ -331,6 +331,7 @@ const App = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
+            width: 200,
             render: (status, record) => {
                 let options = [];
                 if (status === 'รอเข้ารับบริการ') {
@@ -386,7 +387,7 @@ const App = () => {
                 }
                 return (
                     <>
-                        <div style={{ display: 'inline-flex', alignItems: 'center' }}>
+                        <div className='flex'>
                             <Select
                                 defaultValue={record.status}
                                 style={{ width: 180 }}
@@ -411,7 +412,7 @@ const App = () => {
             ],
             filteredValue: filteredInfo?.status,
             onFilter: (value, record) => record?.status.includes(value),
-            ellipsis: true,
+            // ellipsis: true,
             filterIcon: (filtered) => (
                 <div>
                     <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
@@ -450,19 +451,23 @@ const App = () => {
         {
             title: 'อาการบาดเจ็บ',
             dataIndex: 'des_injury',
+            width: 320,
         },
         {
             title: 'การเกิดอุบัติเหตุ',
             dataIndex: 'acc_desc',
+            width: 320,
         },
         {
             title: 'สถานที่เกิดอุบัติเหตุ',
             dataIndex: 'accident_place',
+            width: 320,
         },
 
         {
             title: 'สถานที่รักษา 1',
             dataIndex: 'treatment_place',
+            width: 320,
         },
         {
             title: 'ประเภทสถานพยาบาล 1',
@@ -482,7 +487,7 @@ const App = () => {
         {
             title: 'สถานที่รักษา 2',
             dataIndex: 'treatment_place2',
-            align:'center',
+            width: 320,
             render: (text) => {
                 if(text===null || text===""){
                     return "-"

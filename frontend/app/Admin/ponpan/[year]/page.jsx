@@ -373,23 +373,23 @@ const AppointmentManagement = () => {
 
 
     const columns = [
-        {
-                    align: 'center',
-                    width: 100,
-                    title: 'แก้ไข',
-                    dataIndex: 'status',
-                    render: (status, record) => {
-                        if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ") {
-                            return (
-                                <Space size="middle">
-                                    <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
-                                </Space>)
-                        }
-                    },
-                },
+        {         
+            width: 75,
+            title: 'แก้ไข',
+            dataIndex: 'status',
+            render: (status, record) => {
+                if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ") {
+                    return (
+                        <Space >
+                            <Button style={{marginLeft:"-10px"}} onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
+                        </Space>)
+                }
+            },
+        },
         {
             title: 'สถานะ',
             dataIndex: 'status',
+            width: 200,
             render: (status, record) => {
                 console.log("status", record);
                 let options = [];
@@ -434,7 +434,7 @@ const AppointmentManagement = () => {
                 return (
                     <Select
                         defaultValue={record.status}
-                        style={{ width: "240px" }}
+                        style={{ width: "200px" }}
                         options={options}
                         onChange={(value) => handleChangeStatus({ ...record, status: value })}
                     />
@@ -449,7 +449,7 @@ const AppointmentManagement = () => {
             ],
             filteredValue: filteredInfo?.status,
             onFilter: (value, record) => record?.status.includes(value),
-            ellipsis: true,
+            // ellipsis: true,
             filterIcon: (filtered) => (
                 <div>
                     <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
@@ -459,132 +459,131 @@ const AppointmentManagement = () => {
         {
             title: 'พ.ศ. เกิด',
             dataIndex: 'bd',
-            align: 'center',
+            width: 100,
         },
         {
             title: 'รหัสนิสิต',
             dataIndex: 'stu_id',
-            align: 'center',
+            width: 100,
             ...getColumnSearchProps('stu_id'),
         },
         {
             title: 'เลขประจำตัวประชาชน',
             dataIndex: 'thai_id',
-            align: 'center',
             ...getColumnSearchProps('thai_id'),
         },
         {
             title: 'ศึกษาในระดับปริญญา',
             dataIndex: 'degree',
-            align: 'center',
+            width: 100,
         },
         {
             title: 'ชั้นปีที่',
             dataIndex: 'year',
-            align: 'center',
+            width: 95,
             ...getColumnSearchProps('year'),
         },
         {
             title: 'ชื่อ',
             dataIndex: 'fnameTH',
-            align: 'center',
+            width: 200,
             ...getColumnSearchProps('fnameTH'),
         },
         {
             title: 'นามสกุล',
             dataIndex: 'lnameTH',
-            align: 'center',
+            width: 220,
             ...getColumnSearchProps('lnameTH'),
         },
         {
             title: 'เบอร์โทรศัพท์',
             dataIndex: 'phone_num',
-            align: 'center',
+            width: 180,
             ...getColumnSearchProps('phone_num'),
         },
         {
             title: "อีเมล",
             dataIndex: "email",
-            align: 'center',
+            width: 200,
         },
         {
             title: 'ชื่อบิดา',
             dataIndex: 'father_name',
-            align: 'center',
+            width: 200,
             ...getColumnSearchProps('father_name'),
         },
         {
             title: 'ชื่อมารดา',
             dataIndex: 'mother_name',
-            align: 'center',
+            width: 200,
             ...getColumnSearchProps('mother_name'),
         },
         {
             title: 'ใบสำคัญ สด. 9 ที่',
             dataIndex: 'sdnine_id',
-            align: 'center',
+            width: 160,
             ...getColumnSearchProps('sdnine_id'),
         },
         
         {
             title: 'ที่อยู่ตาม สด.9',
-            align: 'center',
+            width: 100,
             children: [
                 {
                     title: 'บ้านเลขที่',
                     dataIndex: 'house_num_sd',
-                    align: 'center',
+                    width: 100,
                 },
                 {
                     title: 'หมู่ที่',
                     dataIndex: 'house_moo_sd',
-                    align: 'center',
+                    width: 100,
                 },
                 {
                     title: 'แขวง/ตำบล',
                     dataIndex: 'subdistrict_sd',
-                    align: 'center',
+                    width: 100,
                 },
                 {
                     title: 'อำเภอ',
                     dataIndex: 'district_sd',
-                    align: 'center',
+                    width: 100,
                 },
                 {
                     title: 'จังหวัด',
                     dataIndex: 'province_sd',
-                    align: 'center',
+                    width: 100,
                 },
             ]
         },
         {
             title: 'ที่อยู่ตามทะเบียนบ้าน',
-            align: 'center',
+            width: 100,
             children: [
                 {
                     title: 'บ้านเลขที่',
                     dataIndex: 'house_num',
-                    align: 'center',
+                    width: 100,
                 },
                 {
                     title: 'หมู่ที่',
                     dataIndex: 'house_moo',
-                    align: 'center',
+                    width: 100,
                 },
                 {
                     title: 'แขวง/ตำบล',
                     dataIndex: 'sub_district',
-                    align: 'center',
+                    width: 100,
                 },
                 {
                     title: 'อำเภอ',
                     dataIndex: 'district',
-                    align: 'center',
+                    width: 100,
                 },
                 {
                     title: 'จังหวัด',
                     dataIndex: 'province',
-                    align: 'center',
+                    width: 100,
                 },
             ]
         },
