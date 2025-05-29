@@ -459,23 +459,24 @@ function page() {
                     </div>
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        Total Medical Fees (Net)
+                        Total Medical Fees (Bath)
                       </label>
                       <input
                         type="number"
                         data-type="currency"
                         name="totalMedicalFees"
                         value={prakanData.totalMedicalFees}
-                        onChange={(event) => {
-                          const value = event.target.value;
-                          const formattedValue = parseFloat(value).toFixed(2); // Restrict to 2 decimal places
-                          handleChange(
-                            { target: { value: formattedValue } },
-                            "totalMedicalFees"
-                          );
-                        }}
+
+                        onChange={(event) =>
+                          handleChange(event, "totalMedicalFees")
+                        }
+
                         onBlur={(event) => {
                           event.target.value = prakanData.totalMedicalFees;
+                          setPrakanData({
+                            ...prakanData,
+                            totalMedicalFees: parseFloat(event.target.value).toFixed(2),
+                          });
                         }}
                         step="0.01"
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"

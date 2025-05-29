@@ -11,7 +11,6 @@ const RD = () => {
   const [checkboxes, setCheckboxes] = useState({
     Option1: false,
     Option2: false,
-    Option3: false,
   });
   const [profileData, setProfileData] = useState(null);
   const [prakanData, setPrakanData] = useState({});
@@ -46,16 +45,21 @@ const RD = () => {
   console.log(profileData);
 
   const handleDownload = async () => {
-    const response = await axios.post('/api/prakanInter/createPdf', { form: form })
-    setPrakanData(response.data.data)
-    const link = document.createElement("a");
-    link.href = "../../../../../documents/prakan-inter/" + response.data.data.Student.id + "_Health_claim.pdf";
-    link.download = response.data.data.Student.id + "_Health_claim.pdf";
+    const response = await axios.post('/api/prakanInter/createPdf', { form: form }, {
+      responseType: 'blob'
+    });
+
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = studentId + '_Health_claim.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     setIsDownload(true);
   };
+
 
   // Function to handle checkbox change
   const handleCheckboxChange = (event) => {
@@ -67,6 +71,7 @@ const RD = () => {
 
   // Function to check if all checkboxes are checked
   const allChecked = () => {
+    console.log("checkboxes:", checkboxes);
     return Object.values(checkboxes).every((isChecked) => isChecked);
   };
   const handleAllCheck = () => {
@@ -114,10 +119,7 @@ const RD = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header
-        req1="Health Insurance For Foreigner Student (Claim Injury/Illness)"
-        req2=""
-      />
+      <Header req1="Group Health Insurance Claim Form" />
       <main className="flex justify-center items-center">
         <div className="bg-white p-8 w-full max-w-4xl">
           {/* Personal & Contact Information Section */}
@@ -141,13 +143,15 @@ const RD = () => {
                       Download
                     </button>
                   </div>
+
                   <label
-                    htmlFor="Option1"
+                    htmlFor="Option2"
                     className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                   >
                     <div>
-                      <strong className="font-medium text-gray-900 ">
-                        2. Claim Form for Injury / Illness
+                      <strong className="font-medium text-gray-900">
+
+                        2. Medical certificate
                       </strong>
                     </div>
                   </label>
@@ -167,7 +171,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        4. Medical certificate
+                        4. List of medicines and medical expenses details
                       </strong>
                     </div>
                   </label>
@@ -177,17 +181,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        5. Copy of student card
-                      </strong>
-                    </div>
-                  </label>
-                  <label
-                    htmlFor="Option2"
-                    className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                  >
-                    <div>
-                      <strong className="font-medium text-gray-900">
-                        6. Copy of bank account passbook
+                        5. Copy of bank account passbook
                       </strong>
                     </div>
                   </label>
@@ -222,9 +216,9 @@ const RD = () => {
                     <input
                       type="checkbox"
                       className="size-4 rounded border-gray-300"
-                      id="allCheck"
-                      checked={allChecked()}
-                      onChange={handleAllCheck}
+                      id="Option2"
+                      checked={checkboxes.Option2}
+                      onChange={handleCheckboxChange}
                       disabled={!isDownload}
                     />
                   </div>
