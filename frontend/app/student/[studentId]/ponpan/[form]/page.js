@@ -247,7 +247,8 @@ const handleChangeSd9Num = (e) => {
   console.log("sd9Num : ", sd9Num);
 }
 
-const handleSubmit = async () => {
+const handleSubmit = async (e) => {
+  e.preventDefault();
   if(studentId !== '0'){
     if (form === '0') {
       const data = {
@@ -402,74 +403,75 @@ const handleDistrictSD9Change = (e) => {
               ข้อมูลส่วนตัวนิสิต (Personal & contact information)
             </h3>
             <div>
-              <form className="grid grid-cols-2 gap-7 m-6 bg-white">
-                <div className="flex">
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6" onSubmit={handleSubmit}>
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname) :</label>
                   <div>
                     <input
                       type="text"
                       name="name"
                       disabled
-                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                       value={profileData?.fnameTH +" "+ profileData?.lnameTH}
                    
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1" >รหัสนิสิต (Student ID) :</label>
                   <div>
                     <input
                       type="text"
                       disabled
                       name="id"
-                       className="ml-2  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
+                       className=" w-full  px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                        value={profileData?.id}
                     />
                   </div>
                 </div>
 
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >คณะ (Faculty) :</label>
                   <div className="">
                     <input
                       type="text"
                       disabled
                       name="faculty"
-                      className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
+                      className=" w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                       value={profileData?.facultyNameTH}
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >เลขบัตรประชาชน (Identification number) :</label>
                   <div className="">
                     <input
-                      type="text"
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      type="number"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={prepareData?.Student?.thai_id || null}
                       onChange={handleChangeCitizenId}
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Academic year) :</label>
                   <div>
                     <input
-                      type="text"
+                      type="number"
                       name="phone"
-                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.year}
                       onChange={handleChangeYearLevel}
+                      required
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >ศึกษาในระดับ (Degree) :</label>
                   <div>
                     <select
                       name="degree"
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.degree}
                       onChange={handleChangeDegree}
                     >
@@ -480,40 +482,42 @@ const handleDistrictSD9Change = (e) => {
                   </select>
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >ปีเกิด (Birth year) :</label>
                   <div>
                     <input
                       type="text"
                       name="phone"
                       disabled
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-500"
                        value={ profileData !== null ? buddhistYear : alreadyBuddhistYear}
                       onChange={handleChangeBdDate}
                     />
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Mobile number) :</label>
                   <div>
                     <input
-                      type="text"
+                      type="number"
                       name="phone"
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.phone_num}
                       onChange={handleChangePhoneNum}
+                      required
                     />
                   </div>
                 </div>
-                <div>
+                <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1" >
                     อีเมล (Email) :
                     <input
                       type="email"
                       name="email"
-                       className="ml-2 w-72 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className=" w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.email}
                       onChange={handleChangeEmail}
+                      required
                     />
                   </label>
                 </div>
@@ -521,13 +525,12 @@ const handleDistrictSD9Change = (e) => {
 
                 </div>
                 <div>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     <div className="block text-gray-700 mt-1" >ชื่อบิดา (Father's name) :</div>
                     <div>
                       <input
                         type="text"
-                        name="phone"
-                         className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                         className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         value={alreadyData?.father_name}
                         onChange={handleChangeFatherName}
                       />
@@ -538,13 +541,12 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div>
-                  <div className="flex">
+                  <div className="flex flex-col">
                     <div className="block text-gray-700 mt-1" >ชื่อมารดา (Mother's name) :</div>
                     <div>
                       <input
                         type="text"
-                        name="phone"
-                         className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                         className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         value={alreadyData?.mother_name}
                         onChange={handleChangeMotherName}
                       />
@@ -563,37 +565,40 @@ const handleDistrictSD9Change = (e) => {
                 <div>
                   
                 </div>
-                <div className="flex text-gray-700">
+                <div className="flex flex-col text-gray-700">
                   <label>บ้านเลขที่ (Address number) :</label>
                   <div>
                     <input
-                      type="text"
+                      type="number"
                       name="name"
                       value={alreadyData.house_num}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseNum}
+                      required
                     />
                   </div>
                 </div>
-                <div className="flex text-gray-700">
+                <div className="flex flex-col text-gray-700">
                   <label>หมู่ที่ (Moo) :</label>
                   <div>
                     <input
-                      type="text"
+                      type="number"
                       name="name"
                       value={alreadyData.house_moo}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseMoo}
+                      required
                     />
                   </div>
                 </div>
-                <div>
+                <div className="flex flex-col">
                   <label className=" text-gray-700 mb-2">จังหวัด (Province) : </label>
                   <select
                       name="province"
-                      value={provinceSelected}
+                      value={provinceSelected || alreadyData?.province}
                       onChange={handleProvinceChange}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      required
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
                       <option value="" >{alreadyData.province !== undefined ? alreadyData.province : 'เลือกจังหวัด (select province)'}</option>
                       
@@ -602,13 +607,14 @@ const handleDistrictSD9Change = (e) => {
                       ))}
                   </select>
                </div>
-          <div>
+          <div className="flex flex-col">
               <label className=" text-gray-700 mb-2">เขต/อำเภอ (District) : </label>
               <select
                   name="amphure"
-                  value={amphureSelected}
+                  value={amphureSelected || alreadyData?.district}
+                  required
                   onChange={handleAmphureChange}
-                   className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                  <option value="" >{alreadyData.district !== undefined ? alreadyData.district : 'เลือกอำเภอ (select district)'}</option>
                   {amphures.map((amphure, index) => (
@@ -616,9 +622,9 @@ const handleDistrictSD9Change = (e) => {
                   ))}
               </select>
           </div>
-          <div className="flex">
+          <div className="flex flex-col">
               <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict) : </label>
-              <Input onChange={handleDistrictChange} style={{width:170, marginLeft:20}} value={alreadyData.sub_district} />
+              <input onChange={handleDistrictChange}  className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" value={alreadyData.sub_district} required />
           </div>
           <div>
 
@@ -634,17 +640,18 @@ const handleDistrictSD9Change = (e) => {
                 <div>
                   
                 </div>
-                <div className="flex">
+                <div className="flex flex-col">
                   <label>ใบสำคัญ สด.9 ที่ (Sor Dor 9 certificate) :</label>
                   <div className="flex">
                     <input
-                      type="text"
+                      type="number"
                       name="name"
                       value={alreadyData.sdnine_id}
-                       className="ml-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeSd9Num}
+                      required
                     />
-                   <div className="mt-1">
+                   <div className="">
                       <a
                         href="/Sd9num-1.jpg"
                         target="_blank"
@@ -660,37 +667,40 @@ const handleDistrictSD9Change = (e) => {
                 <div>
 
                 </div>
-                <div className="flex text-gray-700">
+                <div className="flex flex-col text-gray-700">
                   <label>บ้านเลขที่ (Address number) :</label>
                   <div>
                     <input
-                      type="text"
+                      type="number"
                       name="name"
                       value={alreadyData.house_num_sd}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseNumSD9}
+                      required
                     />
                   </div>
                 </div>
-                <div className="flex text-gray-700">
+                <div className="flex flex-col text-gray-700">
                   <label>หมู่ที่ (Moo) :</label>
                   <div>
                     <input
-                      type="text"
+                      type="number"
                       name="name"
+                      required
                       value={alreadyData.house_moo_sd}
-                      className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseMooSD9}
                     />
                   </div>
                 </div>
-                <div>
+                <div className="flex flex-col">
                   <label className=" text-gray-700 mb-2">จังหวัด (Province)</label>
                   <select
                       name="province"
                       value={provinceSD9Selected}
+                      required
                       onChange={handleProvinceSD9Change}
-                       className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
                       <option value="" >{alreadyData.province_sd !== undefined ? alreadyData.province_sd : 'เลือกจังหวัด (select province)'}</option>
                       {provincesSD9.map((item, index) => (
@@ -698,13 +708,14 @@ const handleDistrictSD9Change = (e) => {
                       ))}
                   </select>
                </div>
-          <div>
+          <div className="flex flex-col">
               <label className=" text-gray-700 mb-2">เขต/อำเภอ (District)</label>
               <select
                   name="amphure"
+                  required
                   value={amphureSD9Selected}
                   onChange={handleAmphureSD9Change}
-                   className="ml-2 px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
                   <option value="" >{alreadyData.district_sd !== undefined ? alreadyData.district_sd : 'เลือกอำเภอ (select district)'}</option>
                   {amphuresSD9.map((amphure, index) => (
@@ -712,14 +723,38 @@ const handleDistrictSD9Change = (e) => {
                   ))}
               </select>
           </div>
-          <div className="flex">
+          <div className="flex flex-col">
               <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict) : </label>
-              <Input onChange={handleDistrictSD9Change} style={{width:170, marginLeft:20}} value={alreadyData.subdistrict_sd} />
+              <input onChange={handleDistrictSD9Change} required className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" value={alreadyData.subdistrict_sd} />
           </div>
           <div>
 
           </div>
+         <div>
+
+         </div>
+         <div className="flex justify-end">
           
+          {studentId !== '0' ? 
+          (   <button
+             
+             htmlType="submit"
+             
+             className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+           >
+             Check data
+           </button>):
+            <button
+           
+            htmlType="submit"
+            
+            className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+          >
+            เสร็จสิ้น
+          </button>
+         }
+ 
+         </div>
               </form>
             </div>
             
@@ -731,28 +766,7 @@ const handleDistrictSD9Change = (e) => {
         </main>
 
         
-        <div className="flex justify-end">
-          
-         {studentId !== '0' ? 
-         (   <button
-            onClick={handleSubmit}
-            htmlType="submit"
-            
-            className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
-          >
-            Check data
-          </button>):
-           <button
-           onClick={handleSubmit}
-           htmlType="submit"
-           
-           className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
-         >
-           เสร็จสิ้น
-         </button>
-        }
-
-        </div>
+        
       </div>
     </div>
   );

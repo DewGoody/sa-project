@@ -169,8 +169,8 @@ export default function Form() {
   };
   // console.log("timeLogKub", alreadyData?.time_acc?.split("T")[1]?.substring(0, 5))
 
-  const handleSubmit = async (event) => {
-    try {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
       if(studentId !== '0'){
         if(form !== '0'){
           if(isEditTime === false){
@@ -223,9 +223,6 @@ export default function Form() {
           router.push(`/Admin/prakan/0`);
         }   
       }
-    } catch (error) {
-      console.error("There was an error submitting the form!", error);
-    }
   };
 
 
@@ -245,9 +242,9 @@ export default function Form() {
               ข้อมูลส่วนตัว (Personal & contact information)
             </h3>
             <div>
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6">
+            <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6" onSubmit={handleSubmit}>
 
-                <div className="lex flex-col">
+                <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname) :</label>
                   <div>
                     <input
@@ -294,11 +291,12 @@ export default function Form() {
                   <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Phone number) :</label>
                   <div>
                     <input
-                      type="text"
+                      type="number"
                       name="phone"
                       onChange={handleChangePhone}
                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.phone_num}
+                      required
                     />
                   </div>
                 </div>
@@ -311,6 +309,7 @@ export default function Form() {
                       onChange={handleChangeEmail}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.personal_email}
+                      required
                     />
                   </label>
                 </div>
@@ -319,7 +318,8 @@ export default function Form() {
                   <div>
                     <select
                       name="degree"
-                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      required
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.degree}
                       onChange={handleChangeDegree}
                     >
@@ -333,11 +333,12 @@ export default function Form() {
                   <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Academic year) :</label>
                   <div>
                     <input
-                      type="text"
+                      type="number"
                       name="year"
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={profileData?.year}
                       onChange={handleChangeYearLevel}
+                      required
                     />
                   </div>
                 </div>
@@ -353,7 +354,7 @@ export default function Form() {
               ข้อมูลการเกิดอุบัติเหตุและการรักษาพาบาล (Accident & treatment details)
             </h3>
             <div>
-              <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6">
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6" onSubmit={handleSubmit}>
                 <div className="flex flex-col">
                   
                   <label className="">
@@ -364,6 +365,7 @@ export default function Form() {
                     <textarea 
                       className="w-full px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" cols="23" rows="2" 
                       onChange={handleChangeDesAcc}
+                      required
                       value={alreadyData.acc_desc}
                       >
                       </textarea>
@@ -380,6 +382,7 @@ export default function Form() {
                     <textarea 
                       className="w-full px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" cols="32" rows="2" 
                       onChange={handleChangeDesInj}
+                      required
                       value={alreadyData.des_injury}
                     >
 
@@ -397,6 +400,7 @@ export default function Form() {
                         type="date"
                         max={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
                         onChange={handleChangeDateAcc}
+                        required
                         value={alreadyData?.acc_date}
                         className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                       />
@@ -409,6 +413,7 @@ export default function Form() {
                     <input
                         type="time"
                         onChange={handleChangeTimeAcc}
+                        required
                         value={alreadyData?.time_acc?.split("T")[1]?.substring(0, 5)}
                         className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                       />
@@ -420,6 +425,7 @@ export default function Form() {
                   </label>
                   <select
                     onChange={handleChangePlaceAcc}
+                    required
                     className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     defaultValue="เลือกสถานที่เกิดอุบัติเหตุ"
                     value={alreadyData.in_university}
@@ -438,6 +444,7 @@ export default function Form() {
                   <input
                     type="text"
                     name="id"
+                    required
                     onChange={handleChangePlaceAccInfo}
                     value={alreadyData.accident_place}
                     className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -471,8 +478,8 @@ export default function Form() {
                     1. ชื่อสถานพยาบาลที่เข้ารับการรักษา (Name of Medical Institution) :
                     <input
                       type="text"
-                      name="phone"
                       onChange={handleChangePlaceTreat}
+                      required
                       value={alreadyData?.treatment_place}
                       className="w-full -ml-2 px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
@@ -491,7 +498,7 @@ export default function Form() {
                   <div className="ml-2">
                     <select
                       onChange={handleChangeTypeHos1}
-                      // style={{ width: 220 }}
+                      required
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.hospital_type ?? 3}
                       
@@ -511,7 +518,6 @@ export default function Form() {
                     2. ชื่อสถานพยาบาลที่เข้ารับการรักษา (Name of Medical Institution) :
                     <input
                       type="text"
-                      name="phone"
                       onChange={handleChangePlaceTreat2}
                       value={alreadyData?.treatment_place2}
                       className="w-full  px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -526,7 +532,6 @@ export default function Form() {
                   <div className="ml-2">
                     <select
                       onChange={handleChangeTypeHos2}
-                      // style={{ width: 220 }}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.hospital_type2 ?? 3}
                       
@@ -541,57 +546,61 @@ export default function Form() {
                     </select>
                   </div>
                 </div>
-                
-              </form>
-            </div>
-          </div>
-        </main>
-
-        <main className="flex justify-center bg-white w-full">
-          <div className="bg-white  w-full min-w-screen-6xl">
-            <h3 className="text-md font-semibold mt-8 ml-3">
+                <div className="bg-white  w-full min-w-screen-6xl">
+            <h3 className="text-md font-semibold mt-8 ">
               ค่ารักษาพยาบาลรวมสุทธิ (Net of medical fee total amount)
             </h3>
             <div>
-              <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6">
+            
                 <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >
                     ตัวเลข (in numbers) :
                     <input
-                      type="num"
+                      type="number"
                       onChange={handleChangeMedicalFeeNum}
                       name="medical_fee"
+                      required
                       value={alreadyData.medical_fee}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     />
                   </label>
                 </div>
+            </div>
+          </div>
+          <div>
+
+          </div>
+          <div>
+
+          </div>
+          <div className="flex justify-end">
+        
+                {studentId !== '0' ? 
+                  (   <button
+                    
+                    htmlType="submit"
+                    
+                    className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                  >
+                    Check data
+                  </button>):
+                    <button
+                  
+                    htmlType="submit"
+                    
+                    className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                  >
+                    เสร็จสิ้น
+                  </button>
+                }
+              
+                  </div>
+                
               </form>
             </div>
           </div>
         </main>
-        <div className="flex justify-end">
         
-        {studentId !== '0' ? 
-         (   <button
-            onClick={handleSubmit}
-            htmlType="submit"
-            
-            className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
-          >
-            Check data
-          </button>):
-           <button
-           onClick={handleSubmit}
-           htmlType="submit"
-           
-           className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
-         >
-           เสร็จสิ้น
-         </button>
-        }
-    
-        </div>
       </div>
     </div>
   );
