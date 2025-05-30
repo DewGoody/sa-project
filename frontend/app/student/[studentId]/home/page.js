@@ -500,7 +500,7 @@ export const Form = () => {
                 {prakanData.length > 0 ? (
                   prakanData.map((item, index) => {
                     // Safely transform the type for display without mutating the original object
-                    const displayType = item.Request.type === "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย" 
+                    const displayType = item.Request.type === "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย"
                       ? "แบบคำขอรับเงินผ่านธนาคาร (Vendor)"
                       : item.Request.type;
                     return (
@@ -671,7 +671,7 @@ export const Form = () => {
                 className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
               >
                 <ServiceCard
-                  title="7. แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย (Vendor)"
+                  title="7. แบบคำขอรับเงินผ่านธนาคาร (Vendor)"
                 />
               </a>
             </div>
