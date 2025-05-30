@@ -404,8 +404,10 @@ export const Form = () => {
         condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'รอเข้ารับบริการ',
         message: "รอเข้ารับบริการ (Waiting for service)"
       },
-      
-
+      {
+        condition: requestType === 'กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)' && status === 'รอเจ้าหน้าที่ดำเนินการ',
+        message: "เข้ารับบริการแล้ว"
+      },
 
     ];
 

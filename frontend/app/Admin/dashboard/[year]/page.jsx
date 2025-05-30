@@ -359,7 +359,7 @@ const AppointmentManagement = () => {
             setCountCancel5(filtered.filter(item => item.status === "คิวถูกยกเลิก").length);
         }
         else if (value === 6) {
-            const filtered = stuData.filter(item => item.Request.type === "กองทุนกู้ยืมเพื่อการศึกษา (กยศ)");
+            const filtered = stuData.filter(item => item.Request.type === "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)");
             const newData = filtered.map((item, index) => {
                 const date = new Date(item.Timeslot.date);
                 const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
@@ -503,12 +503,12 @@ const AppointmentManagement = () => {
                                 style={{ width: 240, marginLeft: 10 }}
                                 onChange={handleTypeChange}
                             >
-                                <Select.Option value={0}>จัดการการนัดหมาย</Select.Option>
+                                <Select.Option value={0}>การนัดหมายทั้งหมด</Select.Option>
                                 <Select.Option value={1}>การเบิกจ่ายประกันอุบัติเหตุ</Select.Option>
                                 <Select.Option value={2}>การผ่อนผันเข้ารับราชการทหาร</Select.Option>
                                 <Select.Option value={4}>การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร</Select.Option>
                                 <Select.Option value={5}>Health insurance</Select.Option>
-                                <Select.Option value={6}>กองทุนกู้ยืมเพื่อการศึกษา (กยศ)</Select.Option>
+                                <Select.Option value={6}>กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)</Select.Option>
                                
                             </Select>
                             
@@ -624,7 +624,7 @@ const AppointmentManagement = () => {
                     </div>
 
                     <Table
-                        className="mt-10"
+                        className="mt-4"
                         columns={columns}
                         dataSource={dataSource}
             
