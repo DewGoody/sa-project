@@ -6,9 +6,18 @@ const prisma = new PrismaClient();
 export async function createPrakanInter(data) {
   console.log("data", data);
 
+
+  const createRequest = await prisma.request.create({
+    data: {
+      type: "Health insurance",
+      status: "รอจองคิว",
+      stu_id: data.id,
+    }
+  })
   const createPrakan = await prisma.prakan_inter_info.create({
     data: {
       stu_id: data.id,
+      req_id: createRequest.id,
       phone_num: data.phone_num,
       treatmentType: data.treatmentType,
       hospitalName: data.hospitalName,

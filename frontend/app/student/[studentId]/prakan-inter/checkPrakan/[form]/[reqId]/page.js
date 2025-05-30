@@ -87,31 +87,20 @@ const RD = () => {
 
   // Function to handle navigation attempt
   const handleNavigation = async (event) => {
-    console.log(profileData.id, form);
+    // const response = await axios.post(`/api/request/create`, { type: "การเบิกจ่ายประกันอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id, formId: form });
+    // setCreateRequest(response.data);
+    // console.log("createRequest", createRequest);
+    // const param = response.data.data.id;
+    // console.log("responseRequest", response.data);
+    // console.log("param", param);
+    await axios.post(`/api/request/changeStatusToWaitBook`, { req_id: reqId });
 
-    if (reqId !== "0") {
-      router.push(`/student/${studentId}/appointment/${reqId}/0`);
+    if (!allChecked()) {
+      event.preventDefault();
+      alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
     } else {
-      const response = await axios.post(`/api/request/create`, {
-        type: "Health insurance",
-        status: "รอจองคิว",
-        stuId: profileData.id,
-        formId: form,
-      });
-      console.log("responseCreate:", response.data);
-      setCreateRequest(response.data);
-      const param = response.data.data.id;
-      if (!allChecked()) {
-        event.preventDefault();
-        alert(
-          "กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)"
-        );
-      } else {
-        console.log("dataaa", prakanData, "-------------------------------");
-
-        const response2 = await axios.post('/api/prakanInter/deletePdf', prakanData)
-        router.push(`/student/${studentId}/appointment/${param}/0`);
-      }
+      // const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
+      router.push(`/student/${studentId}/appointment/${reqId}/0`);
     }
   };
   const handleBack = () => {

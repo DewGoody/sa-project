@@ -184,7 +184,7 @@ function page() {
           .then((response) => {
             console.log("Form submitted successfully:", response.data);
             router.push(
-              `/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/0`
+              `/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/${response.data.data.req_id}`
             );
           })
           .catch((error) => {
@@ -195,8 +195,7 @@ function page() {
           .post("/api/prakanInter/update", dataUpdate)
           .then((response) => {
             console.log("Form submitted successfully:", response.data);
-            const req_id = response.data.data.req_id
-            router.push(`/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/${req_id}`);
+            router.push(`/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/${response.data.data.req_id}`);
           })
 
           .catch((error) => {
