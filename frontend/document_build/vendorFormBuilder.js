@@ -150,7 +150,13 @@ async function vendorFormBuilder(data) {
   drawTextOnPage(firstPage, amountText, 405, height - 446);
   drawTextOnPage(firstPage, data.bankCompany, 149, height - 468);
   drawTextOnPage(firstPage, data.bankBranch, 264, height - 468);
-  //todo bankacctype
+  //bankAccountType
+  if (data.bankAccountType === "ออมทรัพย์") {
+    drawCheckMark(firstPage, 429, height - 464);
+  }
+  else if (data.bankAccountType === "กระแสรายวัน") {
+    drawCheckMark(firstPage, 497, height - 464);
+  }
   drawTextOnPage(firstPage, data.bankAccountName, 91, height - 488);
   //todo accnum
   drawTextOnPage(firstPage, data.nameTH, 315, height - 627);
