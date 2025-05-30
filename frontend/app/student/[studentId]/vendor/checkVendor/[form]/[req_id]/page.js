@@ -45,15 +45,22 @@ const Page = () => {
   }, []);
   console.log(profileData);
 
+
+
   const handleDownload = async () => {
-    const response = await axios.post('/api/vendor/createPdf', { form: form });
-    setVendorForm(response.data.data);
-    const link = document.createElement("a");
-    link.href = `../../../../../documents/vendor/${response.data.data.Student.id}_vendor.pdf`;
-    link.download = `${response.data.data.Student.id}_vendor.pdf`;
+    const response = await axios.post('/api/vendor/createPdf', { form: form }, {
+      responseType: 'blob'
+    });
+
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = studentId + '_vendor.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setIsDownload(true);
   };
 
   // Function to handle checkbox change
