@@ -118,7 +118,7 @@ function page() {
       "phone_num", // Mobile phone number
       "email", // Email address
       "hospitalName", // Place of treatment
-      "totalMedicalFees", // Total Medical Fees (Net)
+      "totalMedicalFees", // Total Medical Fees (Bath)
       "treatmentType", // Type of treatment
       "illnessDescription", // Description of illness
     ];
@@ -473,8 +473,13 @@ function page() {
 
                         onBlur={(event) => {
                           event.target.value = prakanData.totalMedicalFees;
+                          console.log("totalMedicalFees", parseFloat(event.target.value).toFixed(2));
                           setPrakanData({
                             ...prakanData,
+                            totalMedicalFees: parseFloat(event.target.value).toFixed(2),
+                          });
+                          setAlreadyData({
+                            ...alreadyData,
                             totalMedicalFees: parseFloat(event.target.value).toFixed(2),
                           });
                         }}
