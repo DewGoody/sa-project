@@ -1,3 +1,4 @@
+import { bahttext } from "bahttext"
 const { PDFDocument, rgb, StandardFonts } = require("pdf-lib");
 const fs = require("fs");
 const path = require("path");
@@ -30,6 +31,18 @@ async function vendorFormBuilder(data) {
   const pages = pdfDoc.getPages();
   const firstPage = pages[0];
   const { width, height } = firstPage.getSize();
+  const zapfDingbatsFont = await pdfDoc.embedFont(StandardFonts.ZapfDingbats);
+
+  const drawCheckMark = (page, x, y) => {
+    page.drawText("✓", {
+      x,
+      y,
+      size: 14,
+      font: zapfDingbatsFont,
+      color: rgb(0, 0, 0),
+    });
+  }
+
   const drawTextOnPage = (
     page,
     text,
@@ -107,13 +120,34 @@ async function vendorFormBuilder(data) {
   drawTextOnPage(firstPage, thaiExpireDate, 513, height - 370);
 
 
+  if (data.claimType === "ค่าจ้างนิสิตทำงานพิเศษ") {
+    drawCheckMark(firstPage, 445, height - 403);
+  }
+  else if (data.claimType === "ค่าเล่าเรียน") {
+    drawCheckMark(firstPage, 45, height - 422);
+  }
+  else if (data.claimType === "ค่าธรรมเนียมการศึกษา") {
+    drawCheckMark(firstPage, 115, height - 422);
+  }
+  else if (data.claimType === "เงินสมทบค่ารักษาพยาบาล") {
+    drawCheckMark(firstPage, 234, height - 422);
+  }
+  else if (data.claimType === "เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ") {
+    drawCheckMark(firstPage, 367, height - 422);
+  }
+  else if (data.claimType === "อื่นๆ (ระบุ)") {
+    drawCheckMark(firstPage, 45, height - 446);
+  }
+
   drawTextOnPage(firstPage, data.claimOtherReason, 120, height - 446);
   drawTextOnPage(firstPage, new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     useGrouping: true, // Adds grouping separators (e.g., commas)
   }).format(data.amount), 272, height - 446);
-  //todo amout to thai
+  const amountText = bahttext(data.amount);
+  console.log(amountText);
+  drawTextOnPage(firstPage, amountText, 405, height - 446);
   drawTextOnPage(firstPage, data.bankCompany, 149, height - 468);
   drawTextOnPage(firstPage, data.bankBranch, 264, height - 468);
   //todo bankacctype
