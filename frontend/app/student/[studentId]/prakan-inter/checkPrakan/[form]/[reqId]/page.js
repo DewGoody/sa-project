@@ -51,6 +51,7 @@ const RD = () => {
 
     const blob = new Blob([response.data], { type: 'application/pdf' });
     const url = window.URL.createObjectURL(blob);
+    console.log("url:", url);
     const link = document.createElement('a');
     link.href = url;
     link.download = studentId + '_Health_claim.pdf';

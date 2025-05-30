@@ -52,13 +52,9 @@ export async function createPrakanInter(data) {
 }
 
 export async function createPdfPrakan(formId) {
-  console.log("formmmm", formId);
-
-  const response = await getPrakanDataById(formId);
-  console.log(response, "------------------------");
-
-  await prakanFormBuilder(response);
-  return response;
+  const response = await getPrakanDataById(formId);  // Fetch data
+  const pdfBuffer = await prakanFormBuilder(response);  // Generate PDF and get the buffer
+  return pdfBuffer;  // Return the actual PDF buffer
 }
 
 export async function getPrakanDataById(id) {

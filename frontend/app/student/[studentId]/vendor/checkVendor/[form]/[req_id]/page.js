@@ -17,6 +17,7 @@ const Page = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [createRequest, setCreateRequest] = useState(null);
+  const [isDownload, setIsDownload] = useState(false);
   console.log("reqId", req_id);
 
   const [checkboxes, setCheckboxes] = useState({
