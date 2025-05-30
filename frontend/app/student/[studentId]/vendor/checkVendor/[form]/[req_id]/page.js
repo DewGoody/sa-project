@@ -124,7 +124,7 @@ const Page = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header
-        req1="แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย (Vendor)"
+        req1="แบบคำขอรับเงินผ่านธนาคาร (Vendor)"
         req2="ผู้มีสิทธิ์รับเงินประเภทนิสิต ภายในจุฬาลงกรณ์มหาวิทยาลัย"
       />
       <main className="flex justify-center items-center">
@@ -142,13 +142,23 @@ const Page = () => {
                 <legend className="sr-only">Checkboxes</legend>
 
                 <div className="divide-y divide-gray-200">
+                  <div className="items-center py-4">
+                    <div className="font-medium text-gray-900 pr-4">1. Download เอกสารได้ที่นี่ </div>
+                    <button
+                      onClick={handleDownload}
+                      className="mt-3 ml-3 px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
+                      Download
+                    </button>
+                  </div>
+
                   <label
-                    htmlFor="Option1"
+                    htmlFor="Option2"
                     className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                   >
                     <div>
-                      <strong className="font-medium text-gray-900 ">
-                        1. สำเนาบัตรประจำตัวนิสิต
+                      <strong className="font-medium text-gray-900">
+
+                        2. สำเนาบัตรประชาชน
                       </strong>
                     </div>
                   </label>
@@ -158,11 +168,21 @@ const Page = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        2. สำเนาหน้าสมุดบัญชีธนาคาร
-                        (โปรดตรวจสอบบัญชีที่ระบุให้โอนเงินต้องสามารถใช้งานได้ตามปกติ)
+                        3. สำเนาบัตรนิสิต
                       </strong>
                     </div>
                   </label>
+                  <label
+                    htmlFor="Option2"
+                    className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                  >
+                    <div>
+                      <strong className="font-medium text-gray-900">
+                        4. สำเนาหน้าสมุดบัญชีเงินฝากธนาคาร 2 ชุด (โปรดตรวจสอบบัญชีที่ระบุให้โอนเงินต้องสามารถใช้งานได้ตามปกติ)
+                      </strong>
+                    </div>
+                  </label>
+
                 </div>
               </fieldset>
               <div className="flex space-x-4">
@@ -183,7 +203,7 @@ const Page = () => {
 
                   <div>
                     <strong className="font-medium text-gray-900">
-                      รับทราบรายการเอกสาร
+                      Prepare the above documents
                     </strong>
                   </div>
                 </label>
@@ -194,15 +214,16 @@ const Page = () => {
                     <input
                       type="checkbox"
                       className="size-4 rounded border-gray-300"
-                      id="allCheck"
-                      checked={allChecked()}
-                      onChange={handleAllCheck}
+                      id="Option2"
+                      checked={checkboxes.Option2}
+                      onChange={handleCheckboxChange}
+                      disabled={!isDownload}
                     />
                   </div>
 
                   <div>
                     <strong className="font-medium text-gray-900">
-                      ดาวน์โหลดไฟล์และตรวจสอบข้อมูลแล้ว
+                      Download the file and verify the information
                     </strong>
                   </div>
                 </label>
@@ -211,35 +232,26 @@ const Page = () => {
           </section>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8">
-
-            <button
-              className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
-              onClick={handleBack}
-            >
-              Back
-            </button>
-
-
-            <button
-              onClick={handleDownload}
-              className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300"
-            >
-              Download
-            </button>
-
-            <a
-              onClick={(event) => handleNavigation(event)}
-            >
+          {Object.values(checkboxes).filter(Boolean).length >= 2 && (
+            <div className="flex justify-end mt-8">
               <button
-                type="submit"
-                className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
+                onClick={handleBack}
               >
-                Book queue
-                <ToastContainer />
+                Back
               </button>
-            </a>
-          </div>
+
+              <a onClick={(event) => handleNavigation(event)}>
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                >
+                  Book queue
+                  <ToastContainer />
+                </button>
+              </a>
+            </div>
+          )}
         </div>
       </main>
     </div>
