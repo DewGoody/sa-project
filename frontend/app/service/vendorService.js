@@ -73,9 +73,11 @@ export async function createVendor(data) {
 
 export async function createPdfVendor(formId) {
     const response = await getDataById(formId)
-    await vendorFormBuilder(response)
-    return response
+    const pdfBuffer = await vendorFormBuilder(response)
+    return pdfBuffer
 }
+
+
 
 export async function updateVendorForm(data) {
     // if(data.StudentId !== "0"){
