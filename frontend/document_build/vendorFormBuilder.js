@@ -158,7 +158,18 @@ async function vendorFormBuilder(data) {
     drawCheckMark(firstPage, 497, height - 464);
   }
   drawTextOnPage(firstPage, data.bankAccountName, 91, height - 488);
-  //todo accnum
+  //accnum
+  drawTextOnPage(firstPage, data.bankAccountNumber[0], 358, height - 494);
+  drawTextOnPage(firstPage, data.bankAccountNumber[1], 373, height - 494);
+  drawTextOnPage(firstPage, data.bankAccountNumber[2], 387, height - 494);
+  drawTextOnPage(firstPage, data.bankAccountNumber[3], 419, height - 494);
+  drawTextOnPage(firstPage, data.bankAccountNumber[4], 450, height - 494);
+  drawTextOnPage(firstPage, data.bankAccountNumber[5], 465, height - 494);
+  drawTextOnPage(firstPage, data.bankAccountNumber[6], 479, height - 494);
+  drawTextOnPage(firstPage, data.bankAccountNumber[7], 494, height - 494);
+  drawTextOnPage(firstPage, data.bankAccountNumber[8], 507, height - 494);
+  drawTextOnPage(firstPage, data.bankAccountNumber[9], 540, height - 494);
+
   drawTextOnPage(firstPage, data.nameTH, 315, height - 627);
   const pdfBytes = await pdfDoc.save();
   /*
