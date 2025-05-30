@@ -1,21 +1,25 @@
-import { NextResponse } from "next/server"
-import { convertBigIntToString } from '../../../../utills/convertBigInt'
-import { createPdfVendor } from '../../../service/vendorService'
+import { createPdfVendor,getDataById } from '../../../service/vendorService';
 
-export async function POST(req, res) {
-    try {
-        let data = await req.json()
-        const vendorData = await createPdfVendor(data.form)
-        console.log(vendorData);
+export async function POST(req) {
+  try {
+    const { form } = await req.json();
+    const pdfBuffer = await createPdfVendor(form); // return a Buffer or Uint8Array
+    const data = await getDataById(form)
 
-        return NextResponse.json({ data: convertBigIntToString(vendorData) });
-    }
-    catch (error) {
-        console.log(error);
+    const filename = `${data.Student.id}_vendor.pdf`;
 
-        if (!error.code) {
-            return NextResponse.json({ error: "Server error" }, { status: 500 });
-        }
-        return NextResponse.json({ error: error.error?.message }, { status: error.code });
-    }
+    console.log("Buffer?", Buffer.isBuffer(pdfBuffer)); // Should log true
+    return new Response(pdfBuffer, {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `inline; filename="_vendor.pdf"`,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(
+      JSON.stringify({ error: 'Server error' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 }
