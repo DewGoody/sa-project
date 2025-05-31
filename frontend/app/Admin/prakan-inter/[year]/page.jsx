@@ -161,6 +161,7 @@ const App = () => {
                 { id: parseInt(record.prakanId), stu_id: record.stu_id || "-" },
                 { responseType: 'blob' }
             );
+            console.log("resDownload", res);
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = url;

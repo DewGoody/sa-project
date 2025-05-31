@@ -1,35 +1,28 @@
-import { PrismaClient } from '@prisma/client';
-import { downloadPrakanInterAdmin } from '../../../service/requestService'
-import { NextResponse } from "next/server"
-import { convertBigIntToString } from '../../../../utills/convertBigInt'
-import fs from 'fs';
-import path from 'path';
+import { NextResponse } from "next/server";
+import { downloadPrakanInterAdmin } from "../../../service/requestService";
 
-const prisma = new PrismaClient();
-
-export async function POST(req, res) {
+export async function POST(req) {
   try {
-    let data = await req.json()
-    console.log(data);
+    const data = await req.json();
+    console.log("Received data:", data);
 
-    const filePath = await downloadPrakanInterAdmin(data.id)
-    const fileBuffer = fs.readFileSync(filePath);
+    // This returns a PDF Buffer, not a file path
+    const pdfBuffer = await downloadPrakanInterAdmin(data.id);
 
-    // Set the response headers for file download
-    return new Response(fileBuffer, {
-      status: 200,
+    if (!pdfBuffer) {
+      return NextResponse.json({ error: "PDF not found" }, { status: 404 });
+    }
+
+    // Return the PDF buffer directly as a response
+    return new Response(pdfBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${data.stu_id}_Health_claim.pdf"`,
-      },
+        'Content-Disposition': `attachment; filename="${data.stu_id || 'student'}_Health_claim.pdf"`
+      }
     });
-  }
-  catch (error) {
-    console.log(error);
 
-    if (!error.code) {
-      return NextResponse.json({ error: "Server error" }, { status: 500 });
-    }
-    return NextResponse.json({ error: error.error?.message }, { status: error.code });
+  } catch (error) {
+    console.error("Error:", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
