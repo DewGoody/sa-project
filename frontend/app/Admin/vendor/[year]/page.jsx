@@ -650,12 +650,11 @@ const App = () => {
                         background: "white",
                         // borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
                         // borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
-
                     }}
                 >
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
-                            ประกันนิสิตต่างชาติ
+                            แบบคำขอรับเงินผ่านธนาคาร (Vendor)
                         </div>
                     </div>
                     <div className='flex mt-12'>
