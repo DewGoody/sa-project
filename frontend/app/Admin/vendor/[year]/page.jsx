@@ -129,7 +129,7 @@ const App = () => {
 
     const fetchStuData = async () => {
         try {
-            const res = await axios.post('/api/request/getPrakanInterAdmin', { year: parseInt(year) });
+            const res = await axios.post('/api/request/getVendorAdmin', { year: parseInt(year) });
             console.log("stuData", res.data.data);
             setStuData(res.data.data);
             setDataSource(...dataSource, res.data.data.map((data, index) => {
@@ -141,14 +141,7 @@ const App = () => {
                     const year = date.getFullYear();
                     return `${day}/${month}/${year}`;
                 };
-                // use to convert "inpatient" and "outpatient" to "IPD" and "OPD" below
-                const treatmentType = data.prakan_inter_info[0].treatmentType || "-"
-                let displayTreatmentType = "-";
-                if (treatmentType === "inpatient") {
-                    displayTreatmentType = "IPD"
-                } else if (treatmentType === "outpatient") {
-                    displayTreatmentType = "OPD"
-                }
+               
 
 
                 return {
@@ -235,12 +228,6 @@ const App = () => {
         }
     };
 
-    // Remove or comment out this useEffect that causes the reload
-    // useEffect(() => {
-    //     if (shouldReload) {
-    //         window.location.reload();
-    //     }
-    // }, [shouldReload]);
 
     const handleChangeStatus = async (record) => {
         setStatusRequest(record.status);
