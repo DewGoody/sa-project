@@ -906,7 +906,7 @@ export async function getRequestVendorAdmin(year) {
                 status: {
                     notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
                 },
-                type: "Health insurance",
+                type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย",
                 deleted_at: null
             },
             orderBy: {
@@ -925,6 +925,7 @@ export async function getRequestVendorAdmin(year) {
         })
     }
     if (requests) {
+        console.log('requests_vendor', requests);
         return requests
     }
     else {

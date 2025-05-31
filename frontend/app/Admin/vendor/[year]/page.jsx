@@ -141,7 +141,7 @@ const App = () => {
                     const year = date.getFullYear();
                     return `${day}/${month}/${year}`;
                 };
-               
+
 
 
                 return {
@@ -150,26 +150,32 @@ const App = () => {
                     reqId: data.reqId,
                     name: data.Student.fnameEN + " " + data.Student.lnameEN,
                     student_ID: data.Student.id,
-                    phone_num: data.prakan_inter_info[0].phone_num || "-",
-                    hospitalName: data.prakan_inter_info[0].hospitalName || "-",
-                    hospitalName2: data.prakan_inter_info[0].hospitalName2 || "-",
-                    title: data.prakan_inter_info[0].title || "-",
-                    stu_id: data.prakan_inter_info[0].stu_id || "-",
-                    email: data.prakan_inter_info[0].email || "-",
-                    displayedtreatmentType: displayTreatmentType || "-",
-                    totalMedicalFees: data.prakan_inter_info[0].totalMedicalFees ?? "-",
-                    IPDAmittedDate: data.prakan_inter_info[0].IPDAmittedDate ? formatDate(data.prakan_inter_info[0].IPDAmittedDate) : "-",
-                    IPDDischargedDate: data.prakan_inter_info[0].IPDDischargedDate ? formatDate(data.prakan_inter_info[0].IPDDischargedDate) : "-",
-                    OPDTreatmentDateCount: data.prakan_inter_info[0].OPDTreatmentDateCount ?? "-",
-                    OPDTreatmentDate1: data.prakan_inter_info[0].OPDTreatmentDate1 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate1) : "-",
-                    OPDTreatmentDate2: data.prakan_inter_info[0].OPDTreatmentDate2 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate2) : "-",
-                    OPDTreatmentDate3: data.prakan_inter_info[0].OPDTreatmentDate3 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate3) : "-",
-                    OPDTreatmentDate4: data.prakan_inter_info[0].OPDTreatmentDate4 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate4) : "-",
-                    OPDTreatmentDate5: data.prakan_inter_info[0].OPDTreatmentDate5 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate5) : "-",
-                    illnessDescription: data.prakan_inter_info[0].illnessDescription || "-",
-                    reqId: data.prakan_inter_info[0].req_id,
+                    nameTH: data.vendor_info[0].nameTH || "-",
+                    faculty: data.vendor_info[0].faculty || "-",
+                    houseID: data.vendor_info[0].houseID || "-",
+                    moo: data.vendor_info[0].moo || "-",
+                    buildingVillage: data.vendor_info[0].buildingVillage || "-",
+                    soi: data.vendor_info[0].soi || "-",
+                    road: data.vendor_info[0].road || "-",
+                    subDistrict: data.vendor_info[0].subDistrict || "-",
+                    district: data.vendor_info[0].district || "-",
+                    province: data.vendor_info[0].province || "-",
+                    postalCode: data.vendor_info[0].postalCode || "-",
+                    tel: data.vendor_info[0].tel || "-",
+                    citizenId: data.vendor_info[0].citizenId || "-",
+                    citizenIssueDate: data.vendor_info[0].citizenIssueDate ? formatDate(data.vendor_info[0].citizenIssueDate) : "-",
+                    citizenExpireDate: data.vendor_info[0].citizenExpireDate ? formatDate(data.vendor_info[0].citizenExpireDate) : "-",
+                    claimType: data.vendor_info[0].claimType || "-",
+                    claimOtherReason: data.vendor_info[0].claimOtherReason || "-",
+                    amount: data.vendor_info[0].amount || "-",
+                    bankCompany: data.vendor_info[0].bankCompany || "-",
+                    bankBranch: data.vendor_info[0].bankBranch || "-",
+                    bankAccountType: data.vendor_info[0].bankAccountType || "-",
+                    bankAccountName: data.vendor_info[0].bankAccountName || "-",
+                    bankAccountNumber: data.vendor_info[0].bankAccountNumber || "-",
+                    stu_id: data.vendor_info[0].stu_id || "-",
                     status: data.status || "-",
-                    prakanId: data.prakan_inter_info[0].id
+                    vendorId: data.vendor_info[0].id
                 }
             }
             ));
