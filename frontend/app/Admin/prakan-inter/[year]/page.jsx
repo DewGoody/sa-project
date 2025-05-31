@@ -10,6 +10,8 @@ import { Button, Layout, Menu, theme, Input, Table, Space, Select, Modal } from 
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
 import Menubar from '../../component/menu';
+import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
+import { saveAs } from 'file-saver'; // เพิ่ม FileSaver สำหรับบันทึกไฟล์
 
 
 const { Header, Sider, Content } = Layout;
@@ -33,17 +35,15 @@ const App = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [reqMoreInfo, setReqMoreInfo] = useState('');
     const [moreInfoValue, setMoreInfoValue] = useState('');
+    const [selectedRowReqid, setSelectedRowReqid] = useState([]);
+    const [selectedRowReqidapi, setSelectedRowReqidapi] = useState([]);
     const router = useRouter();
     const { year } = useParams();
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
     console.log("selectedKey", selectedKey);
 
-    useEffect(() => {
-        if (shouldReload) {
-            window.location.reload();
-        }
-    }, [shouldReload]);
+
 
     const handleEditForm = async (id) => {
         console.log("editFormReqId : ", id);
@@ -65,6 +65,66 @@ const App = () => {
 
     const handleCancel = () => {
         setIsModalOpen(false);
+    };
+    const exportToExcel = (number) => {
+        // กำหนดชื่อ Columns ที่ต้องการ
+        const columnHeaders = [
+            { header: "ลำดับ", key: "index" },
+            { header: "ชื่อ-นามสกุล", key: "name" },
+            { header: "รหัสนิสิต", key: "student_ID" },
+            { header: "ประเภท", key: "displayedtreatmentType" },
+            { header: "รายละเอียดของอาการป่วย", key: "illnessDescription" },
+            { header: "ชื่อสถานพยาบาลที่ 1", key: "hospitalName" },
+            { header: "ชื่อสถานพยาบาลที่ 2", key: "hospitalName2" },
+            { header: "ค่ารักษาพยาบาล", key: "totalMedicalFees" },
+            { header: "ผู้ป่วยใน (IPD) : วันที่เข้ารักษา", key: "IPDAmittedDate" },
+            { header: "ผู้ป่วยใน (IPD) : วันที่ออกจากการรักษา", key: "IPDDischargedDate" },
+            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 1", key: "OPDTreatmentDate1" },
+            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 2", key: "OPDTreatmentDate2" },
+            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 3", key: "OPDTreatmentDate3" },
+            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 4", key: "OPDTreatmentDate4" },
+            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 5", key: "OPDTreatmentDate5" },
+            { header: "เบอร์โทรนิสิต", key: "phone_num" },
+            { header: "อีเมลนิสิต", key: "email" },
+            { header: "สถานะ", key: "status" },
+
+
+        ];
+
+        // เพิ่มชื่อ Columns เข้าไปเป็น Row แรก
+        let dataWithHeaders = []
+        if (number == 0) {
+            dataWithHeaders = [
+                columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+                ...dataSource.map((item, index) =>
+                    columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                )
+            ];
+        }
+        else {
+            dataWithHeaders = [
+                columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+                ...selectedRowReqid.map((item, index) =>
+                    columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                )
+            ];
+        }
+
+
+        // สร้าง Worksheet ด้วยข้อมูลที่มี Header
+        const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+        worksheet['!cols'] = columnHeaders.map(col => {
+            return { wch: col.header.length + 8 }; // ปรับขนาดตามความยาว header + padding
+        });
+
+        // สร้าง Workbook และเพิ่ม Worksheet
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+        // เขียนไฟล์ Excel และดาวน์โหลด
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(data, "exported_data.xlsx");
     };
 
     const fetchStuData = async () => {
@@ -175,69 +235,53 @@ const App = () => {
         }
     };
 
+    // Remove or comment out this useEffect that causes the reload
+    // useEffect(() => {
+    //     if (shouldReload) {
+    //         window.location.reload();
+    //     }
+    // }, [shouldReload]);
+
     const handleChangeStatus = async (record) => {
         setStatusRequest(record.status);
         console.log("record", record);
-        if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
-        }
-        else if (record.status === "ส่งเอกสารแล้ว") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
-            }
-        }
 
-        else if (record.status === "ขอข้อมูลเพิ่มเติม") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("resPerm", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
+        try {
+            setLoading(true);
+            let res;
+
+            if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
+                res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
             }
-        }
-        else if (record.status === "ไม่อนุมัติ") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("res", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
+            else if (record.status === "ส่งเอกสารแล้ว") {
+                res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
             }
-        }
-        else if (record.status === "โอนเงินเรียบร้อย") {
-            try {
-                setLoading(true);
-                setShouldReload(true);
-                const res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
-                setLoading(false);
-                setShouldReload(false);
-                console.log("resOwn", res);
-            } catch (error) {
-                console.error('Error fetching status:', error);
+            else if (record.status === "ขอข้อมูลเพิ่มเติม") {
+                res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
             }
+            else if (record.status === "ไม่อนุมัติ") {
+                res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
+            }
+            else if (record.status === "โอนเงินเรียบร้อย") {
+                res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
+            }
+
+            console.log("Status change response:", res);
+
+            // Update the dataSource state instead of reloading
+            setDataSource(prevDataSource =>
+                prevDataSource.map(item =>
+                    item.reqId === record.reqId
+                        ? { ...item, status: record.status }
+                        : item
+                )
+            );
+
+            setLoading(false);
+
+        } catch (error) {
+            console.error('Error fetching status:', error);
+            setLoading(false);
         }
     }
     const handleSearch = (value, dataIndex) => {
@@ -320,7 +364,7 @@ const App = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
-            width: 360,
+            width: 200,
 
             render: (status, record) => {
                 let options = [];
@@ -616,9 +660,9 @@ const App = () => {
                     </div>
                     <div className='flex mt-12'>
                         <div className='mt-2 ml-3 font-normal text-base'>
-                            เลือกปี
+                            เลือกปีการศึกษา
                         </div>
-                        <div className='mt-1 mb-6'>
+                        <div className='mt-1 mb-6 px-4'>
                             <Select
                                 defaultValue={year}
                                 value={year === '0' ? 'ทั้งหมด' : year}
@@ -631,6 +675,22 @@ const App = () => {
                                 ))}
                             </Select>
                         </div>
+
+                        {selectedRowReqid.length > 0 ? (
+                            <>
+                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
+                                    Export Excel ที่เลือกไว้
+                                </Button>
+                                {dropdown()}
+                            </>
+                        ) : (
+                            <>
+                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
+                                    Export Excel ทั้งหมด
+                                </Button>
+                            </>
+                        )}
+
 
                     </div>
 
