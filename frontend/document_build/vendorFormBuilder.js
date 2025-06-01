@@ -32,7 +32,7 @@ async function vendorFormBuilder(data) {
   const firstPage = pages[0];
   const { width, height } = firstPage.getSize();
   const zapfDingbatsFont = await pdfDoc.embedFont(StandardFonts.ZapfDingbats);
-
+  console.log("data to Vendor form builder", data);
   const drawCheckMark = (page, x, y) => {
     page.drawText("✓", {
       x,

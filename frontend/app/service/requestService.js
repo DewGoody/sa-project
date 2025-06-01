@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { prakan } from '../../document_build/prakan'
 import { prakanFormBuilder } from '../../document_build/prakanFormBuilder'
+import { vendorFormBuilder } from '../../document_build/vendorFormBuilder'
 
 const prisma = new PrismaClient();
 
@@ -845,6 +846,26 @@ export async function downloadPrakanInterAdmin(id) {
     }
 }
 
+export async function downloadVendorAdmin(id) {
+    if (id) {
+        const thisVendor = await prisma.vendor_info.findUnique({
+            where: { id: id },
+            include: {
+                Student: true,
+            }
+        })
+
+        console.log('mergedData', thisVendor);
+        const filePath = await vendorFormBuilder(thisVendor)
+        console.log('fileeee', filePath);
+
+        return filePath
+    }
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
+    }
+}
+
 export async function createMoreInfo(data) {
     const existingRequest = await prisma.request.findFirst({
         where: {
@@ -933,25 +954,5 @@ export async function getRequestVendorAdmin(year) {
     }
 }
 
-export async function downloadVendorAdmin(id) {
-    if (id) {
-        const thisPrakan = await prisma.prakan_inter_info.findUnique({
-            where: { id: id },
-            include: {
-                Student: true,
-            }
-        })
-        const mergedData = {
-            ...thisPrakan,
-            ...thisPrakan.Student,
-        };
-        const filePath = await prakanFormBuilder(mergedData)
-        console.log('fileeee', filePath);
 
-        return filePath
-    }
-    else {
-        throw { code: 400, error: new Error("Bad Request") }
-    }
-}
 

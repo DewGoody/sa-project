@@ -232,15 +232,15 @@ const App = () => {
     const handleDownload = async (record) => {
         try {
             const res = await axios.post(
-                '/api/request/downloadPrakanInter',
-                { id: parseInt(record.prakanId), stu_id: record.stu_id || "-" },
+                '/api/request/downloadVendor',
+                { id: parseInt(record.vendorId), stu_id: record.stu_id || "-" },
                 { responseType: 'blob' }
             );
             console.log("resDownload", res);
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `${record.stu_id || "-"}_Health_claim.pdf`);
+            link.setAttribute('download', `${record.stu_id || "-"}_vendor.pdf`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
