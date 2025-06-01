@@ -169,7 +169,7 @@ function Page() {
     <>
       <div className=" bg-white min-h-screen">
         <Header
-          req1="แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย (Vendor)"
+          req1="แบบคำขอรับเงินผ่านธนาคาร (Vendor)"
           req2="ผู้มีสิทธิ์รับเงินประเภทนิสิต ภายในจุฬาลงกรณ์มหาวิทยาลัย"
         />
         <div className=" mx-24 ">

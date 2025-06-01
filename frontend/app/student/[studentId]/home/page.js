@@ -143,10 +143,10 @@ export const Form = () => {
       response.data.data.map((item) => {
         if (item.Request.type === "การผ่อนผันเข้ารับราชการทหาร") {
           setHasPonpan(true);
-        } 
+        }
         if (item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
           SETRD(true);
-        } 
+        }
         if (item.Request.type === "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)") {
           setHasStudentloan(true);
         }
@@ -428,7 +428,7 @@ export const Form = () => {
         </div>
       );
     }
-  
+
     if (
       item.Request.status === "ขอข้อมูลเพิ่มเติม" ||
       item.Request.status === "โอนเงินเรียบร้อย" ||
@@ -440,7 +440,7 @@ export const Form = () => {
         </div>
       );
     }
-  
+
     if (item.Request.status === "รอเข้ารับบริการ" && item.Request.type === "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)") {
       return (
         <div className="ml-3 mb-3 flex">
@@ -449,10 +449,10 @@ export const Form = () => {
         </div>
       );
     }
-  
+
     return null;
   };
-  
+
 
 
 
@@ -498,30 +498,34 @@ export const Form = () => {
 
               <div className=" justify-between items-center">
                 {prakanData.length > 0 ? (
-                  prakanData.map((item, index) => (
-                    
-                    <div key={index} className="flex justify-between items-center mt-5">
-                      {((item.Request.status !== "คำขอถูกยกเลิก") && (item.status === "จองคิวสำเร็จ" || item.status === "เข้ารับบริการแล้ว")) && (
-                        <div className="flex justify-between border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full">
-                          <div>
-                            {count++ + ". " + item.Request.type + "  " + formatDate(item.Timeslot.date) + " (" + timeSlots[item.period] + " น.)"}
-                            <div className="ml-4 text-md">
-                              {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
-                                <div className="flex font-semibold text-base text-blue-500">ตั้งแต่ 1 มีนาคมเป็นต้นไป รับเอกสารได้ที่</div>
-                              )}
-                              <p className="text-gray-500 font-semibold text-base">อาคารจุลจักรพงษ์ ชั้น 2</p>
-                              <p className="text-gray-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
+                  prakanData.map((item, index) => {
+                    // Safely transform the type for display without mutating the original object
+                    const displayType = item.Request.type === "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย"
+                      ? "แบบคำขอรับเงินผ่านธนาคาร (Vendor)"
+                      : item.Request.type;
+                    return (
+                      <div key={index} className="flex justify-between items-center mt-5">
+                        {((item.Request.status !== "คำขอถูกยกเลิก") && (item.status === "จองคิวสำเร็จ" || item.status === "เข้ารับบริการแล้ว")) && (
+                          <div className="flex justify-between border border-gray-200 bg-white shadow-md rounded-xl p-6 w-full">
+                            <div>
+                              {count++ + ". " + displayType + "  " + formatDate(item.Timeslot.date) + " (" + timeSlots[item.period] + " น.)"}
+                              <div className="ml-4 text-md">
+                                {item.Request.type === "การผ่อนผันเข้ารับราชการทหาร" && item.Request.status === "ติดต่อรับเอกสาร" && (
+                                  <div className="flex font-semibold text-base text-blue-500">ตั้งแต่ 1 มีนาคมเป็นต้นไป รับเอกสารได้ที่</div>
+                                )}
+                                <p className="text-gray-500 font-semibold text-base">อาคารจุลจักรพงษ์ ชั้น 2</p>
+                                <p className="text-gray-500 font-semibold text-base">(CHULACHAKRAPONG BUILDING, 2nd Floor)</p>
+                              </div>
+                              <div className="ml-4 mt-1 font-semibold text-base text-blue-500">
+                                {getStatusDisplay(item.Request.type, item.Request.status)}
+                              </div>
                             </div>
-                            <div className="ml-4 mt-1 font-semibold text-base text-blue-500">
-                              {getStatusDisplay(item.Request.type, item.Request.status)}
-                            </div>
+                            {renderButtons(item)}
                           </div>
-                          {renderButtons(item)}
-                        </div>
-                      )}
-                    </div>
-
-                  ))
+                        )}
+                      </div>
+                    );
+                  })
                 ) : null}
                 {Array.isArray(notQueue) && notQueue.length > 0 && (
                   notQueue.map((item, index) => (
@@ -537,7 +541,7 @@ export const Form = () => {
                               </div>
                             )}
                             <div className="flex">
-                              <div className="mt-1 font-semibold text-base text-blue-500">{item.status+"(Waiting to book queue)"}</div>
+                              <div className="mt-1 font-semibold text-base text-blue-500">{item.status + "(Waiting to book queue)"}</div>
                               {/* <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div> */}
                               {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && item.RD_info && Array.isArray(item.RD_info) && item.RD_info.length > 0 && (
                                 <div>
@@ -667,7 +671,7 @@ export const Form = () => {
                 className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
               >
                 <ServiceCard
-                  title="7. แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย (Vendor)"
+                  title="7. แบบคำขอรับเงินผ่านธนาคาร (Vendor)"
                 />
               </a>
             </div>

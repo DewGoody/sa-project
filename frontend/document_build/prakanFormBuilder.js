@@ -220,6 +220,7 @@ async function prakanFormBuilder(data) {
   );
 
   const pdfBytes = await pdfDoc.save();
+  /*
   fs.writeFileSync(
     "public/documents/prakan-inter/" + data.Student.id + "_Health_claim.pdf",
     pdfBytes
@@ -227,5 +228,9 @@ async function prakanFormBuilder(data) {
   return (
     "public/documents/prakan-inter/" + data.Student.id + "_Health_claim.pdf"
   );
+  */
+  return Buffer.from(pdfBytes);
+
+
 }
 module.exports = { prakanFormBuilder };

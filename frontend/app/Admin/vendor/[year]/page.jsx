@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import {
     SearchOutlined,
     DownloadOutlined,
@@ -72,22 +72,29 @@ const App = () => {
             { header: "ลำดับ", key: "index" },
             { header: "ชื่อ-นามสกุล", key: "name" },
             { header: "รหัสนิสิต", key: "student_ID" },
-            { header: "ประเภท", key: "displayedtreatmentType" },
-            { header: "รายละเอียดของอาการป่วย", key: "illnessDescription" },
-            { header: "ชื่อสถานพยาบาลที่ 1", key: "hospitalName" },
-            { header: "ชื่อสถานพยาบาลที่ 2", key: "hospitalName2" },
-            { header: "ค่ารักษาพยาบาล", key: "totalMedicalFees" },
-            { header: "ผู้ป่วยใน (IPD) : วันที่เข้ารักษา", key: "IPDAmittedDate" },
-            { header: "ผู้ป่วยใน (IPD) : วันที่ออกจากการรักษา", key: "IPDDischargedDate" },
-            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 1", key: "OPDTreatmentDate1" },
-            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 2", key: "OPDTreatmentDate2" },
-            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 3", key: "OPDTreatmentDate3" },
-            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 4", key: "OPDTreatmentDate4" },
-            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 5", key: "OPDTreatmentDate5" },
-            { header: "เบอร์โทรนิสิต", key: "phone_num" },
-            { header: "อีเมลนิสิต", key: "email" },
+            { header: "เบอร์โทรนิสิต", key: "tel" },
+            { header: "ประเภทการเบิกเงิน", key: "claimType" },
+            { header: "สาเหตุการเบิกเงิน (กรณีเลือกอื่นๆ)", key: "claimOtherReason" },
+            { header: "จำนวนเงิน", key: "amount" },
+            { header: "บัญชีของธนาคาร", key: "bankCompany" },
+            { header: "สาขา", key: "bankBranch" },
+            { header: "ชื่อบัญชี", key: "bankAccountName" },
+            { header: "ประเภทบัญชี", key: "bankAccountType" },
+            { header: "เลขที่บัญชี", key: "bankAccountNumber" },
+            { header: "บ้านเลขที่", key: "houseID" },
+            { header: "หมู่", key: "moo" },
+            { header: "อาคาร/หมู่บ้าน", key: "buildingVillage" },
+            { header: "ซอย", key: "soi" },
+            { header: "ถนน", key: "road" },
+            { header: "แขวง/ตำบล", key: "subDistrict" },
+            { header: "เขต/อำเภอ", key: "district" },
+            { header: "จังหวัด", key: "province" },
+            { header: "รหัสไปรษณีย์", key: "postalCode" },
+            { header: "โทรศัพท์", key: "tel" },
+            { header: "เลขบัตรประชาชน", key: "citizenId" },
+            { header: "วันที่ออกบัตร", key: "citizenIssueDate" },
+            { header: "วันหมดอายุบัตร", key: "citizenExpireDate" },
             { header: "สถานะ", key: "status" },
-
 
         ];
 
@@ -129,57 +136,61 @@ const App = () => {
 
     const fetchStuData = async () => {
         try {
-            const res = await axios.post('/api/request/getPrakanInterAdmin', { year: parseInt(year) });
+            const res = await axios.post('/api/request/getVendorAdmin', { year: parseInt(year) });
             console.log("stuData", res.data.data);
             setStuData(res.data.data);
-            setDataSource(...dataSource, res.data.data.map((data, index) => {
+            if (!Array.isArray(res.data.data)) {
+                console.warn("Expected array but got:", res.data.data);
+            }
+
+            const formatted = res.data.data.map((data, index) => {
                 const formatDate = (dateString) => {
-                    if (!dateString) return "-";
                     const date = new Date(dateString);
+                    if (isNaN(date)) return "-";
                     const day = String(date.getDate()).padStart(2, '0');
                     const month = String(date.getMonth() + 1).padStart(2, '0');
                     const year = date.getFullYear();
                     return `${day}/${month}/${year}`;
                 };
-                // use to convert "inpatient" and "outpatient" to "IPD" and "OPD" below
-                const treatmentType = data.prakan_inter_info[0].treatmentType || "-"
-                let displayTreatmentType = "-";
-                if (treatmentType === "inpatient") {
-                    displayTreatmentType = "IPD"
-                } else if (treatmentType === "outpatient") {
-                    displayTreatmentType = "OPD"
-                }
 
+                const vendor = data.vendor_info?.[0] || {};
 
                 return {
                     key: index,
-                    id: data.id,
+                    id: data.id || "-",
                     reqId: data.reqId,
-                    name: data.Student.fnameEN + " " + data.Student.lnameEN,
-                    student_ID: data.Student.id,
-                    phone_num: data.prakan_inter_info[0].phone_num || "-",
-                    hospitalName: data.prakan_inter_info[0].hospitalName || "-",
-                    hospitalName2: data.prakan_inter_info[0].hospitalName2 || "-",
-                    title: data.prakan_inter_info[0].title || "-",
-                    stu_id: data.prakan_inter_info[0].stu_id || "-",
-                    email: data.prakan_inter_info[0].email || "-",
-                    displayedtreatmentType: displayTreatmentType || "-",
-                    totalMedicalFees: data.prakan_inter_info[0].totalMedicalFees ?? "-",
-                    IPDAmittedDate: data.prakan_inter_info[0].IPDAmittedDate ? formatDate(data.prakan_inter_info[0].IPDAmittedDate) : "-",
-                    IPDDischargedDate: data.prakan_inter_info[0].IPDDischargedDate ? formatDate(data.prakan_inter_info[0].IPDDischargedDate) : "-",
-                    OPDTreatmentDateCount: data.prakan_inter_info[0].OPDTreatmentDateCount ?? "-",
-                    OPDTreatmentDate1: data.prakan_inter_info[0].OPDTreatmentDate1 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate1) : "-",
-                    OPDTreatmentDate2: data.prakan_inter_info[0].OPDTreatmentDate2 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate2) : "-",
-                    OPDTreatmentDate3: data.prakan_inter_info[0].OPDTreatmentDate3 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate3) : "-",
-                    OPDTreatmentDate4: data.prakan_inter_info[0].OPDTreatmentDate4 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate4) : "-",
-                    OPDTreatmentDate5: data.prakan_inter_info[0].OPDTreatmentDate5 ? formatDate(data.prakan_inter_info[0].OPDTreatmentDate5) : "-",
-                    illnessDescription: data.prakan_inter_info[0].illnessDescription || "-",
-                    reqId: data.prakan_inter_info[0].req_id,
+                    name: (data.Student?.fnameTH || "") + " " + (data.Student?.lnameTH || "-"),
+                    student_ID: data.Student?.id || "-",
+                    nameTH: vendor.nameTH || "-",
+                    faculty: vendor.faculty || "-",
+                    houseID: vendor.houseID || "-",
+                    moo: vendor.moo || "-",
+                    buildingVillage: vendor.buildingVillage || "-",
+                    soi: vendor.soi || "-",
+                    road: vendor.road || "-",
+                    subDistrict: vendor.subDistrict || "-",
+                    district: vendor.district || "-",
+                    province: vendor.province || "-",
+                    postalCode: vendor.postalCode || "-",
+                    tel: vendor.tel || "-",
+                    citizenId: vendor.citizenId || "-",
+                    citizenIssueDate: vendor.citizenIssueDate ? formatDate(vendor.citizenIssueDate) : "-",
+                    citizenExpireDate: vendor.citizenExpireDate ? formatDate(vendor.citizenExpireDate) : "-",
+                    claimType: vendor.claimType || "-",
+                    claimOtherReason: vendor.claimOtherReason || "-",
+                    amount: vendor.amount || "-",
+                    bankCompany: vendor.bankCompany || "-",
+                    bankBranch: vendor.bankBranch || "-",
+                    bankAccountType: vendor.bankAccountType || "-",
+                    bankAccountName: vendor.bankAccountName || "-",
+                    bankAccountNumber: vendor.bankAccountNumber || "-",
+                    stu_id: vendor.stu_id || "-",
                     status: data.status || "-",
-                    prakanId: data.prakan_inter_info[0].id
-                }
-            }
-            ));
+                    vendorId: vendor.id
+                };
+            });
+
+            setDataSource(formatted);
         } catch (error) {
             console.error('Error fetching student data:', error);
         }
@@ -203,6 +214,10 @@ const App = () => {
         fetchUniqueYear()
     }, [])
 
+    useEffect(() => {
+        console.log("Data Source", dataSource)
+    }, [dataSource])
+
 
     console.log("statusRequest", statusRequest);
 
@@ -217,15 +232,15 @@ const App = () => {
     const handleDownload = async (record) => {
         try {
             const res = await axios.post(
-                '/api/request/downloadPrakanInter',
-                { id: parseInt(record.prakanId), stu_id: record.stu_id || "-" },
+                '/api/request/downloadVendor',
+                { id: parseInt(record.vendorId), stu_id: record.stu_id || "-" },
                 { responseType: 'blob' }
             );
             console.log("resDownload", res);
             const url = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `${record.stu_id || "-"}_Health_claim.pdf`);
+            link.setAttribute('download', `${record.stu_id || "-"}_vendor.pdf`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -235,12 +250,6 @@ const App = () => {
         }
     };
 
-    // Remove or comment out this useEffect that causes the reload
-    // useEffect(() => {
-    //     if (shouldReload) {
-    //         window.location.reload();
-    //     }
-    // }, [shouldReload]);
 
     const handleChangeStatus = async (record) => {
         setStatusRequest(record.status);
@@ -248,23 +257,11 @@ const App = () => {
 
         try {
             setLoading(true);
-            let res;
 
-            if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
-                res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
-            }
-            else if (record.status === "ส่งเอกสารแล้ว") {
-                res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
-            }
-            else if (record.status === "ขอข้อมูลเพิ่มเติม") {
-                res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
-            }
-            else if (record.status === "ไม่อนุมัติ") {
-                res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
-            }
-            else if (record.status === "โอนเงินเรียบร้อย") {
-                res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
-            }
+            const res = await axios.post('/api/request/changeStatusVendor', {
+                id: parseInt(record.id),
+                newStatus: record.status
+            });
 
             console.log("Status change response:", res);
 
@@ -325,20 +322,7 @@ const App = () => {
 
 
     const columns = [
-        {
-            align: 'center',
-            width: 100,
-            title: 'แก้ไข',
-            dataIndex: 'status',
-            render: (status, record) => {
-                if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ") {
-                    return (
-                        <Space size="middle">
-                            <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
-                        </Space>)
-                }
-            },
-        },
+
         {
             align: 'right', // เพิ่ม align ขวา
             title: 'ดาวน์โหลด',
@@ -370,53 +354,53 @@ const App = () => {
                 let options = [];
                 if (status === 'รอเข้ารับบริการ') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'black' }, },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' }, disabled: true },
+                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'black' }, },
+                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
                     ];
-                } else if (status === 'รอเจ้าหน้าที่ดำเนินการ') {
+                } else if (status === 'รอนิสิตส่งเอกสาร') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'black' } },
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' }, disabled: true },
+                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
+                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'black' } },
+                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
                     ];
-                } else if (status === 'ส่งเอกสารแล้ว') {
+                } else if (status === 'รับเอกสารแล้ว') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'black' } },
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
-                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'black' } },
+                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
+                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'black' } },
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
                     ];
                 }
-                else if (status === 'ขอข้อมูลเพิ่มเติม') {
+                else if (status === 'เจ้าหน้าที่จัดทำข้อมูล') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'black' }, disabled: true },
+                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
+                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'black' }, disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
-                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'black' } },
+                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'black' } },
                     ];
                 } else if (status === 'ไม่อนุมัติ') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' }, disabled: true },
+                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
+                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
                     ];
                 }
-                else if (status === 'โอนเงินเรียบร้อย') {
+                else if (status === 'ส่งเอกสารให้การเงินแล้ว') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' }, disabled: true },
+                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
+                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                        { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
                     ];
                 }
                 return (
@@ -439,11 +423,11 @@ const App = () => {
             },
             filters: [
                 { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
-                { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
-                { text: "ส่งเอกสารแล้ว", value: "ส่งเอกสารแล้ว" },
-                { text: "ขอข้อมูลเพิ่มเติม", value: "ขอข้อมูลเพิ่มเติม" },
+                { text: "รอนิสิตส่งเอกสาร", value: "รอนิสิตส่งเอกสาร" },
+                { text: "รับเอกสารแล้ว", value: "รับเอกสารแล้ว" },
+                { text: "เจ้าหน้าที่จัดทำข้อมูล", value: "เจ้าหน้าที่จัดทำข้อมูล" },
                 { text: "ไม่อนุมัติ", value: "ไม่อนุมัติ" },
-                { text: "โอนเงินเรียบร้อย", value: "โอนเงินเรียบร้อย" },
+                { text: "ส่งเอกสารให้การเงินแล้ว", value: "ส่งเอกสารให้การเงินแล้ว" },
             ],
             filteredValue: filteredInfo?.status,
             onFilter: (value, record) => record?.status.includes(value),
@@ -453,25 +437,6 @@ const App = () => {
                     <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
                 </div>
             ),
-        },
-        {
-            title: 'ประเภท',
-            dataIndex: 'displayedtreatmentType',
-            width: 150,
-
-            filters: [
-                { text: "IPD", value: "IPD" },
-                { text: "OPD", value: "OPD" },
-            ],
-            filteredValue: filteredInfo?.displayedtreatmentType,
-            onFilter: (value, record) => record?.displayedtreatmentType.includes(value),
-            ellipsis: true,
-            filterIcon: (filtered) => (
-                <div>
-                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-
         },
         {
             title: 'ชื่อ-นามสกุล',
@@ -486,151 +451,178 @@ const App = () => {
             width: 125,
         },
         {
-            title: 'รายละเอียดของอาการป่วย',
-            dataIndex: 'illnessDescription',
-            width: 250,
+            title: 'เบอร์โทรนิสิต',
+            dataIndex: 'tel',
+            width: 150,
         },
+        {
+            title: 'ประเภทการเบิกเงิน',
+            dataIndex: 'claimType',
+            width: 200,
 
-        {
-            title: 'ชื่อสถานพยาบาลที่ 1',
-            dataIndex: 'hospitalName',
-            width: 180,
+            filters: [
+                { text: "ค่าจ้างนิสิตทำงานพิเศษ", value: "ค่าจ้างนิสิตทำงานพิเศษ" },
+                { text: "ค่าเล่าเรียน", value: "ค่าเล่าเรียน" },
+                { text: "ค่าธรรมเนียมการศึกษา", value: "ค่าธรรมเนียมการศึกษา" },
+                { text: "เงินสมทบค่ารักษาพยาบาล", value: "เงินสมทบค่ารักษาพยาบาล" },
+                { text: "เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ", value: "เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ" },
+                { text: "อื่นๆ (ระบุ)", value: "อื่นๆ (ระบุ)" },
+            ],
+            filteredValue: filteredInfo?.claimType,
+            onFilter: (value, record) => record?.claimType.includes(value),
+            ellipsis: true,
+            filterIcon: (filtered) => (
+                <div>
+                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
+                </div>
+            ),
+
         },
         {
-            title: 'ชื่อสถานพยาบาลที่ 2',
-            dataIndex: 'hospitalName2',
-            width: 180,
+            title: 'สาเหตุการเบิกเงิน (กรณีเลือกอื่นๆ)',
+            dataIndex: 'claimOtherReason',
+            width: 250,
+
         },
         {
-            title: 'ค่ารักษาพยาบาล',
-            dataIndex: 'totalMedicalFees',
+            title: 'จำนวนเงิน',
+            dataIndex: 'amount',
             render: (text) => {
                 const number = parseFloat(text.replace(/[^\d.-]/g, ''));
                 return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';
             },
-            width: 125,
+            width: 135,
         },
         {
-            title: 'ผู้ป่วยใน (IPD) : วันที่เข้ารักษา',
-            dataIndex: 'IPDAmittedDate',
+            title: 'บัญชีของธนาคาร',
+            dataIndex: 'bankCompany',
             width: 150,
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
+
         },
         {
-            title: 'ผู้ป่วยใน (IPD) : วันที่ออกจากการรักษา',
-            dataIndex: 'IPDDischargedDate',
+            title: 'สาขา',
+            dataIndex: 'bankBranch',
             width: 150,
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-        {
-            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 1',
-            dataIndex: 'OPDTreatmentDate1',
-            width: 155,
 
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
         },
         {
-            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 2',
-            dataIndex: 'OPDTreatmentDate2',
-            width: 155,
-
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-        {
-            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 3',
-            dataIndex: 'OPDTreatmentDate3',
-            width: 155,
-
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-        {
-            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 4',
-            dataIndex: 'OPDTreatmentDate4',
-            width: 155,
-
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-        {
-            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 5',
-            dataIndex: 'OPDTreatmentDate5',
-            width: 155,
-
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-
-        {
-            title: 'เบอร์โทรนิสิต',
-            dataIndex: 'phone_num',
-            width: 150,
-        },
-        {
-            title: 'อีเมลนิสิต',
-            dataIndex: 'email',
+            title: 'ชื่อบัญชี',
+            dataIndex: 'bankAccountName',
             width: 200,
+
         },
+        {
+            title: 'ประเภทบัญชี',
+            dataIndex: 'bankAccountType',
+            width: 150,
+
+        },
+        {
+            title: 'เลขที่บัญชี',
+            dataIndex: 'bankAccountNumber',
+            width: 150,
+
+        },
+        {
+            title: 'บ้านเลขที่',
+            dataIndex: 'houseID',
+            width: 120,
+
+        },
+        {
+            title: 'หมู่',
+            dataIndex: 'moo',
+            width: 80,
+
+        },
+        {
+            title: 'อาคาร/หมู่บ้าน',
+            dataIndex: 'buildingVillage',
+            width: 150,
+
+        },
+        {
+            title: 'ซอย',
+            dataIndex: 'soi',
+            width: 120,
+
+        },
+        {
+            title: 'ถนน',
+            dataIndex: 'road',
+            width: 120,
+
+        },
+        {
+            title: 'แขวง/ตำบล',
+            dataIndex: 'subDistrict',
+            width: 150,
+
+        },
+        {
+            title: 'เขต/อำเภอ',
+            dataIndex: 'district',
+            width: 150,
+
+        },
+        {
+            title: 'จังหวัด',
+            dataIndex: 'province',
+            width: 120,
+
+        },
+        {
+            title: 'รหัสไปรษณีย์',
+            dataIndex: 'postalCode',
+            width: 130,
+
+        },
+        {
+            title: 'โทรศัพท์',
+            dataIndex: 'tel',
+            width: 120,
+
+        },
+        {
+            title: 'เลขบัตรประชาชน',
+            dataIndex: 'citizenId',
+            width: 160,
+
+        },
+
+
+        {
+            title: 'วันที่ออกบัตร',
+            dataIndex: 'citizenIssueDate',
+            width: 150,
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
+            sortIcon: (sorted) => (
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
+                </div>
+            ),
+        },
+        {
+            title: 'วันหมดอายุบัตร',
+            dataIndex: 'citizenExpireDate',
+            width: 150,
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
+            sortIcon: (sorted) => (
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
+                </div>
+            ),
+        },
+
+
 
 
     ];
@@ -650,12 +642,11 @@ const App = () => {
                         background: "white",
                         // borderTopLeftRadius: '20px',  // โค้งเฉพาะมุมบนซ้าย
                         // borderBottomLeftRadius: '20px', // โค้งเฉพาะมุมล่างซ้าย
-
                     }}
                 >
                     <div className='flex mb-5 justify-between'>
                         <div className='font-extrabold text-3xl'>
-                            ประกันนิสิตต่างชาติ
+                            แบบคำขอรับเงินผ่านธนาคาร (Vendor)
                         </div>
                     </div>
                     <div className='flex mt-12'>

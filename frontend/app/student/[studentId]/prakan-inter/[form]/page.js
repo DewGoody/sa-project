@@ -118,7 +118,7 @@ function page() {
       "phone_num", // Mobile phone number
       "email", // Email address
       "hospitalName", // Place of treatment
-      "totalMedicalFees", // Total Medical Fees (Net)
+      "totalMedicalFees", // Total Medical Fees (Bath)
       "treatmentType", // Type of treatment
       "illnessDescription", // Description of illness
     ];
@@ -184,7 +184,7 @@ function page() {
           .then((response) => {
             console.log("Form submitted successfully:", response.data);
             router.push(
-              `/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/0`
+              `/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/${response.data.data.req_id}`
             );
           })
           .catch((error) => {
@@ -195,8 +195,7 @@ function page() {
           .post("/api/prakanInter/update", dataUpdate)
           .then((response) => {
             console.log("Form submitted successfully:", response.data);
-            const req_id = response.data.data.req_id
-            router.push(`/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/${req_id}`);
+            router.push(`/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/${response.data.data.req_id}`);
           })
 
           .catch((error) => {
@@ -473,14 +472,19 @@ function page() {
 
                         onBlur={(event) => {
                           event.target.value = prakanData.totalMedicalFees;
+                          console.log("totalMedicalFees", parseFloat(event.target.value).toFixed(2));
                           setPrakanData({
                             ...prakanData,
+                            totalMedicalFees: parseFloat(event.target.value).toFixed(2),
+                          });
+                          setAlreadyData({
+                            ...alreadyData,
                             totalMedicalFees: parseFloat(event.target.value).toFixed(2),
                           });
                         }}
                         step="0.01"
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Total Medical Fees (Net)"
+                        placeholder="Total Medical Fees (Bath)"
                         min={0}
                       />
                     </div>
