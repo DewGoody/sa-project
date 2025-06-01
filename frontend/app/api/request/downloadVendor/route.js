@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { downloadPrakanInterAdmin } from "../../../service/requestService";
+import { downloadVendorAdmin } from "../../../service/requestService";
 
 export async function POST(req) {
   try {
@@ -7,7 +7,7 @@ export async function POST(req) {
     console.log("Received data:", data);
 
     // This returns a PDF Buffer, not a file path
-    const pdfBuffer = await downloadPrakanInterAdmin(data.id);
+    const pdfBuffer = await downloadVendorAdmin(data.id);
 
     if (!pdfBuffer) {
       return NextResponse.json({ error: "PDF not found" }, { status: 404 });

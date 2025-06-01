@@ -5,40 +5,43 @@ const prisma = new PrismaClient();
 
 export async function getDataById(id) {
     const vendor = await prisma.vendor_info.findUnique({
-        where: {id: id},
+        where: { id: id },
         include: {
             Student: true
         }
     })
-    if(vendor){           
+    if (vendor) {
         return vendor
     }
-    else{
+    else {
         return "Not found"
     }
 }
 
-export async function createVendor(data) {    
+export async function createVendor(data) {
     // await vendor(data)
+    console.log("createVendor-data :", data);
     const createRequest = await prisma.request.create({
         data: {
             type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย",
             status: "รอจองคิว",
-            stu_id: data.stu_id,
+            stu_id: data.id,
         }
-    })    
+    })
 
     console.log("dataCreate :", data);
     const createVendor = await prisma.vendor_info.create({
         data: {
             stu_id: Number(data.id),
+            nameTH: data.nameTH,
+            faculty: data.faculty,
             houseID: data.houseID,
             req_id: createRequest.id,
             moo: data.moo,
             citizenIssueDate: new Date(data.citizenIssueDate),
             citizenExpireDate: new Date(data.citizenExpireDate),
             buildingVillage: data.buildingVillage,
-            soi:data.soi,
+            soi: data.soi,
             road: data.road,
             subDistrict: data.subDistrict,
             district: data.district,
@@ -71,25 +74,29 @@ export async function createVendor(data) {
 
 export async function createPdfVendor(formId) {
     const response = await getDataById(formId)
-    await vendor(response)
-    return response
+    const pdfBuffer = await vendorFormBuilder(response)
+    return pdfBuffer
 }
+
+
 
 export async function updateVendorForm(data) {
     // if(data.StudentId !== "0"){
     //     await vendor(data)
     // }
     console.log("yayyay", data);
-    
+
     const vendorUpdated = await prisma.vendor_info.update({
-        where: {id: Number(data.id)},
-        data:{
+        where: { id: Number(data.id) },
+        data: {
             houseID: data.houseID,
+            nameTH: data.nameTH,
+            faculty: data.faculty,
             moo: data.moo,
             citizenIssueDate: new Date(data.citizenIssueDate),
             citizenExpireDate: new Date(data.citizenExpireDate),
             buildingVillage: data.buildingVillage,
-            soi:data.soi,
+            soi: data.soi,
             road: data.road,
             subDistrict: data.subDistrict,
             district: data.district,
@@ -106,12 +113,12 @@ export async function updateVendorForm(data) {
             bankAccountNumber: data.bankAccountNumber,
             claimOtherReason: data.claimOtherReason
         }
-    })    
-   
-    if(vendorUpdated){           
+    })
+
+    if (vendorUpdated) {
         return vendorUpdated
     }
-    else{
+    else {
         return "Not found"
     }
 }

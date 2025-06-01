@@ -118,7 +118,7 @@ function page() {
       "phone_num", // Mobile phone number
       "email", // Email address
       "hospitalName", // Place of treatment
-      "totalMedicalFees", // Total Medical Fees (Net)
+      "totalMedicalFees", // Total Medical Fees (Bath)
       "treatmentType", // Type of treatment
       "illnessDescription", // Description of illness
     ];
@@ -177,32 +177,49 @@ function page() {
     let dataUpdate = { ...alreadyData, formId: form, ...profileData };
     console.log("allData", allData);
     console.log("dataUpdate", dataUpdate);
+    if (studentId != '0') {
+      if (form === "0") {
+        axios
+          .post("/api/prakanInter/create", allData)
+          .then((response) => {
+            console.log("Form submitted successfully:", response.data);
+            router.push(
+              `/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/${response.data.data.req_id}`
+            );
+          })
+          .catch((error) => {
+            console.error("Error submitting form:", error);
+          });
+      } else {
+        axios
+          .post("/api/prakanInter/update", dataUpdate)
+          .then((response) => {
+            console.log("Form submitted successfully:", response.data);
+            router.push(`/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/${response.data.data.req_id}`);
+          })
 
-    if (form === "0") {
-      axios
-        .post("/api/prakanInter/create", allData)
-        .then((response) => {
-          console.log("Form submitted successfully:", response.data);
-          router.push(
-            `/student/${studentId}/prakan-inter/checkPrakan/${response.data.data.id}/0`
-          );
-        })
-        .catch((error) => {
-          console.error("Error submitting form:", error);
-        });
-    } else {
+          .catch((error) => {
+            console.error("Error submitting form:", error);
+          });
+        console.log("dataUpdate", dataUpdate);
+      }
+    }
+    else {
       axios
         .post("/api/prakanInter/update", dataUpdate)
         .then((response) => {
           console.log("Form submitted successfully:", response.data);
-          router.push("/Admin/prakan-inter/0");
+          const req_id = response.data.data.req_id
+          router.push(`/Admin/prakan/0`);
         })
 
         .catch((error) => {
           console.error("Error submitting form:", error);
         });
       console.log("dataUpdate", dataUpdate);
+
     }
+
   };
 
   const fetchData = async () => {
@@ -441,27 +458,33 @@ function page() {
                     </div>
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        Total Medical Fees (Net)
+                        Total Medical Fees (Bath)
                       </label>
                       <input
                         type="number"
                         data-type="currency"
                         name="totalMedicalFees"
                         value={prakanData.totalMedicalFees}
-                        onChange={(event) => {
-                          const value = event.target.value;
-                          const formattedValue = parseFloat(value).toFixed(2); // Restrict to 2 decimal places
-                          handleChange(
-                            { target: { value: formattedValue } },
-                            "totalMedicalFees"
-                          );
-                        }}
+
+                        onChange={(event) =>
+                          handleChange(event, "totalMedicalFees")
+                        }
+
                         onBlur={(event) => {
                           event.target.value = prakanData.totalMedicalFees;
+                          console.log("totalMedicalFees", parseFloat(event.target.value).toFixed(2));
+                          setPrakanData({
+                            ...prakanData,
+                            totalMedicalFees: parseFloat(event.target.value).toFixed(2),
+                          });
+                          setAlreadyData({
+                            ...alreadyData,
+                            totalMedicalFees: parseFloat(event.target.value).toFixed(2),
+                          });
                         }}
                         step="0.01"
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Total Medical Fees (Net)"
+                        placeholder="Total Medical Fees (Bath)"
                         min={0}
                       />
                     </div>

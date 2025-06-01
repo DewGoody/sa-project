@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { Button, Layout, Menu, theme, Input, Table, Space,Select, Form, message, Modal} from 'antd';
+import { Button, Layout, Menu, theme, Input, Table, Space, Select, Form, message, Modal } from 'antd';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
@@ -10,29 +10,28 @@ import Image from "next/image";
 const login = () => {
     const [dataSource, setDataSource] = useState([]);
     const router = useRouter();
-   
+
 
     const onFinish = async (values) => {
         console.log("Received values:", values);
         try {
             const response = await axios.post("/api/user/login", values);
             console.log("Login response:", response);
-    
+
             if (response.data.data) {
-               const res = await axios.get("/callback-admin",{
-                params: {
-                    username: values.username,
-                }
-               });
-               console.log("Login res:", res);
-               message.success("Login successful");
+                const res = await axios.get("/callback-admin", {
+                    params: {
+                        username: values.username,
+                    }
+                });
+                console.log("Login res:", res);
+                message.success("Login successful");
                 router.push("/Admin/home/0");
             } else {
                 message.error("Login failed. Please check your username and password.");
             }
         } catch (error) {
             console.error("Login error:", error);
-            console.log.error("Login error:", error);
             message.error("An error occurred during login. Please try again.");
         }
     };

@@ -100,7 +100,7 @@ export async function updatePrakanForm(data) {
             hospital_type2: data.hospital_type2 == null ? null : Number(data.hospital_type2),
             medical_fee: Number(data.medical_fee),
             // medical_fee_text: data.medical_fee_text,
-            req_id: createRequest.id,
+            req_id: Number(data.req_id),
             time_acc: timeAsDate,
             in_university: Boolean(data.in_university),
         }

@@ -11,7 +11,6 @@ const RD = () => {
   const [checkboxes, setCheckboxes] = useState({
     Option1: false,
     Option2: false,
-    Option3: false,
   });
   const [profileData, setProfileData] = useState(null);
   const [prakanData, setPrakanData] = useState({});
@@ -46,16 +45,22 @@ const RD = () => {
   console.log(profileData);
 
   const handleDownload = async () => {
-    const response = await axios.post('/api/prakanInter/createPdf', { form: form })
-    setPrakanData(response.data.data)
-    const link = document.createElement("a");
-    link.href = "../../../../../documents/prakan-inter/" + response.data.data.Student.id + "_Health_claim.pdf";
-    link.download = response.data.data.Student.id + "_Health_claim.pdf";
+    const response = await axios.post('/api/prakanInter/createPdf', { form: form }, {
+      responseType: 'blob'
+    });
+
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    console.log("url:", url);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = studentId + '_Health_claim.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     setIsDownload(true);
   };
+
 
   // Function to handle checkbox change
   const handleCheckboxChange = (event) => {
@@ -67,6 +72,7 @@ const RD = () => {
 
   // Function to check if all checkboxes are checked
   const allChecked = () => {
+    console.log("checkboxes:", checkboxes);
     return Object.values(checkboxes).every((isChecked) => isChecked);
   };
   const handleAllCheck = () => {
@@ -81,31 +87,20 @@ const RD = () => {
 
   // Function to handle navigation attempt
   const handleNavigation = async (event) => {
-    console.log(profileData.id, form);
+    // const response = await axios.post(`/api/request/create`, { type: "การเบิกจ่ายประกันอุบัติเหตุ", status: "รอจองคิว", stuId: profileData.id, formId: form });
+    // setCreateRequest(response.data);
+    // console.log("createRequest", createRequest);
+    // const param = response.data.data.id;
+    // console.log("responseRequest", response.data);
+    // console.log("param", param);
+    await axios.post(`/api/request/changeStatusToWaitBook`, { req_id: reqId });
 
-    if (reqId !== "0") {
-      router.push(`/student/${studentId}/appointment/${reqId}/0`);
+    if (!allChecked()) {
+      event.preventDefault();
+      alert("กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)");
     } else {
-      const response = await axios.post(`/api/request/create`, {
-        type: "Health insurance",
-        status: "รอจองคิว",
-        stuId: profileData.id,
-        formId: form,
-      });
-      console.log("responseCreate:", response.data);
-      setCreateRequest(response.data);
-      const param = response.data.data.id;
-      if (!allChecked()) {
-        event.preventDefault();
-        alert(
-          "กรุณาทำเครื่องหมายในช่องทั้งหมดก่อนดำเนินการต่อ (Please check all the boxes before proceeding)"
-        );
-      } else {
-        console.log("dataaa", prakanData, "-------------------------------");
-
-        const response2 = await axios.post('/api/prakanInter/deletePdf', prakanData)
-        router.push(`/student/${studentId}/appointment/${param}/0`);
-      }
+      // const response2 = await axios.post('/api/prakan/deletePdf', prakanData)
+      router.push(`/student/${studentId}/appointment/${reqId}/0`);
     }
   };
   const handleBack = () => {
@@ -114,10 +109,7 @@ const RD = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header
-        req1="Health Insurance For Foreigner Student (Claim Injury/Illness)"
-        req2=""
-      />
+      <Header req1="Group Health Insurance Claim Form" />
       <main className="flex justify-center items-center">
         <div className="bg-white p-8 w-full max-w-4xl">
           {/* Personal & Contact Information Section */}
@@ -141,13 +133,15 @@ const RD = () => {
                       Download
                     </button>
                   </div>
+
                   <label
-                    htmlFor="Option1"
+                    htmlFor="Option2"
                     className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                   >
                     <div>
-                      <strong className="font-medium text-gray-900 ">
-                        2. Claim Form for Injury / Illness
+                      <strong className="font-medium text-gray-900">
+
+                        2. Medical certificate
                       </strong>
                     </div>
                   </label>
@@ -167,7 +161,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        4. Medical certificate
+                        4. List of medicines and medical expenses details
                       </strong>
                     </div>
                   </label>
@@ -177,17 +171,7 @@ const RD = () => {
                   >
                     <div>
                       <strong className="font-medium text-gray-900">
-                        5. Copy of student card
-                      </strong>
-                    </div>
-                  </label>
-                  <label
-                    htmlFor="Option2"
-                    className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                  >
-                    <div>
-                      <strong className="font-medium text-gray-900">
-                        6. Copy of bank account passbook
+                        5. Copy of bank account passbook
                       </strong>
                     </div>
                   </label>
@@ -222,9 +206,9 @@ const RD = () => {
                     <input
                       type="checkbox"
                       className="size-4 rounded border-gray-300"
-                      id="allCheck"
-                      checked={allChecked()}
-                      onChange={handleAllCheck}
+                      id="Option2"
+                      checked={checkboxes.Option2}
+                      onChange={handleCheckboxChange}
                       disabled={!isDownload}
                     />
                   </div>

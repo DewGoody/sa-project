@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { prakan } from '../../document_build/prakan'
 import { prakanFormBuilder } from '../../document_build/prakanFormBuilder'
+import { vendorFormBuilder } from '../../document_build/vendorFormBuilder'
 
 const prisma = new PrismaClient();
 
@@ -845,6 +846,26 @@ export async function downloadPrakanInterAdmin(id) {
     }
 }
 
+export async function downloadVendorAdmin(id) {
+    if (id) {
+        const thisVendor = await prisma.vendor_info.findUnique({
+            where: { id: id },
+            include: {
+                Student: true,
+            }
+        })
+
+        console.log('mergedData', thisVendor);
+        const filePath = await vendorFormBuilder(thisVendor)
+        console.log('fileeee', filePath);
+
+        return filePath
+    }
+    else {
+        throw { code: 400, error: new Error("Bad Request") }
+    }
+}
+
 export async function createMoreInfo(data) {
     const existingRequest = await prisma.request.findFirst({
         where: {
@@ -867,3 +888,113 @@ export async function createMoreInfo(data) {
         throw { code: 404, error: new Error("Request not found") }
     }
 }
+
+export async function getRequestVendorAdmin(year) {
+    const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
+    const endOfYear = new Date(year + 1, 0, 1);
+    let requests = null
+    if (year !== 0) {
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                },
+                type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย",
+                deleted_at: null,
+                created_at: {
+                    gte: startOfYear, // Greater than or equal to start of year
+                    lt: endOfYear, // Less than start of the next year
+                },
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameEN: true,
+                        lnameEN: true
+                    },
+                },
+                prakan_inter_info: true
+            }
+        })
+    }
+    else {
+        requests = await prisma.request.findMany({
+            where: {
+                status: {
+                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+                },
+                type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย",
+                deleted_at: null
+            },
+            orderBy: {
+                created_at: 'desc', // or 'asc' for ascending order
+            },
+            include: {
+                Student: {
+                    select: {
+                        id: true,
+                        fnameTH: true,
+                        lnameTH: true
+                    },
+                },
+                vendor_info: true
+            }
+        })
+    }
+    if (requests) {
+        console.log('requests_vendor', requests);
+        return requests
+    }
+    else {
+        return "Not found"
+    }
+}
+
+
+export async function changeStatusVendor(id, newStatus) {
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        console.log('request_vendor', id, newStatus, request);
+        if (!request || request === "Not found") {
+            throw { code: 404, error: new Error("Request not found") }
+        }
+
+        // Define valid status transitions for vendor requests
+        const validTransitions = {
+            'รอจองคิว': ['รอนิสิตส่งเอกสาร'],
+            'รอเข้ารับบริการ': ['รอนิสิตส่งเอกสาร'],
+            'รอนิสิตส่งเอกสาร': ['รับเอกสารแล้ว'],
+            'รับเอกสารแล้ว': ['เจ้าหน้าที่จัดทำข้อมูล'],
+            'เจ้าหน้าที่จัดทำข้อมูล': ['ไม่อนุมัติ', 'ส่งเอกสารให้การเงินแล้ว'],
+            'ไม่อนุมัติ': [], // Terminal status
+            'ส่งเอกสารให้การเงินแล้ว': [] // Terminal status
+        };
+
+        // Check if current status exists in valid transitions
+        if (!validTransitions.hasOwnProperty(request.status)) {
+            throw { code: 400, error: new Error(`Invalid current status: ${request.status}`) }
+        }
+
+        // Check if the new status is a valid transition from current status
+        if (!validTransitions[request.status].includes(newStatus)) {
+            throw { code: 400, error: new Error(`Invalid status transition from '${request.status}' to '${newStatus}'`) }
+        }
+
+        const changeStatusRequest = await prisma.request.update({
+            where: { id: request.id },
+            data: { status: newStatus }
+        })
+
+        return changeStatusRequest
+    }
+    else {
+        throw { code: 400, error: new Error("Bad Request: ID is required") }
+    }
+}
+
+
+

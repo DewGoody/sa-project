@@ -6,9 +6,18 @@ const prisma = new PrismaClient();
 export async function createPrakanInter(data) {
   console.log("data", data);
 
+
+  const createRequest = await prisma.request.create({
+    data: {
+      type: "Health insurance",
+      status: "รอจองคิว",
+      stu_id: data.id,
+    }
+  })
   const createPrakan = await prisma.prakan_inter_info.create({
     data: {
       stu_id: data.id,
+      req_id: createRequest.id,
       phone_num: data.phone_num,
       treatmentType: data.treatmentType,
       hospitalName: data.hospitalName,
@@ -52,13 +61,9 @@ export async function createPrakanInter(data) {
 }
 
 export async function createPdfPrakan(formId) {
-  console.log("formmmm", formId);
-
-  const response = await getPrakanDataById(formId);
-  console.log(response, "------------------------");
-
-  await prakanFormBuilder(response);
-  return response;
+  const response = await getPrakanDataById(formId);  // Fetch data
+  const pdfBuffer = await prakanFormBuilder(response);  // Generate PDF and get the buffer
+  return pdfBuffer;  // Return the actual PDF buffer
 }
 
 export async function getPrakanDataById(id) {

@@ -359,7 +359,7 @@ const AppointmentManagement = () => {
             setCountCancel5(filtered.filter(item => item.status === "คิวถูกยกเลิก").length);
         }
         else if (value === 6) {
-            const filtered = stuData.filter(item => item.Request.type === "กองทุนกู้ยืมเพื่อการศึกษา (กยศ)");
+            const filtered = stuData.filter(item => item.Request.type === "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)");
             const newData = filtered.map((item, index) => {
                 const date = new Date(item.Timeslot.date);
                 const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
@@ -495,21 +495,20 @@ const AppointmentManagement = () => {
                     </div>
                     <div className='flex mt-12'>
                         <div className='mt-2 ml-3 font-normal text-base'>
-                            เลือกประเภทการให้บริการ
+                            เลือกการนัดหมาย
                         </div>
                         <div className='mt-1 mb-6 '>
                             <Select
                                 value={tableType}
-                                style={{ width: 180, marginLeft: 10 }}
+                                style={{ width: 240, marginLeft: 10 }}
                                 onChange={handleTypeChange}
                             >
-                                <Select.Option value={0}>จัดการการนัดหมาย</Select.Option>
+                                <Select.Option value={0}>การนัดหมายทั้งหมด</Select.Option>
                                 <Select.Option value={1}>การเบิกจ่ายประกันอุบัติเหตุ</Select.Option>
                                 <Select.Option value={2}>การผ่อนผันเข้ารับราชการทหาร</Select.Option>
-                                <Select.Option value={3}>โครงการหลักประกันสุขภาพถ้วนหน้า</Select.Option>
                                 <Select.Option value={4}>การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร</Select.Option>
                                 <Select.Option value={5}>Health insurance</Select.Option>
-                                <Select.Option value={6}>กองทุนกู้ยืมเพื่อการศึกษา (กยศ)</Select.Option>
+                                <Select.Option value={6}>กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)</Select.Option>
                                
                             </Select>
                             
@@ -519,10 +518,11 @@ const AppointmentManagement = () => {
                     </div>
                     </div>
                     <div className='mt-2'>
-                           <Row gutter={16} style={{ marginTop: '16px' }}>
-                            <Col xs={24} sm={8}>
-                            <Card style={{ width: 300}}>
-                                <Statistic title="นิสิตทั้งหมด" 
+                           <Row gutter={16} wrap={false} style={{ marginTop: '16px',overflowX: 'auto', whiteSpace: 'nowrap' }}>
+                            <Col style={{ flex: '0 0 auto' }}>
+                            <Card style={{ width: 200}}>
+                                <Statistic 
+                                title={<span style={{ fontWeight: 'semi-bold', fontSize: '22px', color: 'black' }}>นัดหมายทั้งหมด</span>}
                                 value={
                                     tableType === 0
                                       ? countStudent?.studentCount ?? 0
@@ -543,10 +543,10 @@ const AppointmentManagement = () => {
                                 />
                             </Card>
                             </Col>
-                            <Col xs={24} sm={8}>
-                            <Card style={{ width: 300 }}>
-                                <Statistic title="นิสิตที่มาเข้ารับบริการ" 
-                                // value={countStudent?.finishQueueCount} 
+                            <Col style={{ flex: '0 0 auto' }}>
+                            <Card style={{ width: 220 }}>
+                                <Statistic 
+                                title={<span style={{ fontWeight: 'semi-bold', fontSize: '22px', color: 'black' }}>เข้ารับบริการแล้ว</span>}
                                 value={
                                     tableType === 0
                                       ? countStudent?.finishQueueCount ?? 0
@@ -567,10 +567,10 @@ const AppointmentManagement = () => {
                                 />
                             </Card>
                             </Col>
-                            <Col xs={24} sm={8}>
-                            <Card style={{ width: 300 }}>
-                                <Statistic title="นิสิตที่ไม่มาเข้ารับบริการ" 
-                                // value={countStudent?.notFinishQueueCount} 
+                            <Col style={{ flex: '0 0 auto' }}>
+                            <Card style={{ width: 220 }}>
+                                <Statistic 
+                                title={<span style={{ fontWeight: 'semi-bold', fontSize: '22px', color: 'black' }}>ไม่มาเข้ารับบริการ</span>}
                                 value={
                                     tableType === 0
                                       ? countStudent?.notFinishQueueCount ?? 0
@@ -591,10 +591,10 @@ const AppointmentManagement = () => {
                                 />
                             </Card>
                             </Col>
-                            <Col className='mt-3' xs={24} sm={8}>
-                            <Card style={{ width: 300 }}>
-                                <Statistic title="นิสิตที่ยกเลิกคิว" 
-                                // value={countStudent?.cancleQueueCount} 
+                            <Col style={{ flex: '0 0 auto' }}>
+                            <Card style={{ width: 200 }}>
+                                <Statistic 
+                                title={<span style={{ fontWeight: 'semi-bold', fontSize: '22px', color: 'black' }}>ยกเลิกคิว</span>} 
                                 value={
                                     tableType === 0
                                       ? countStudent?.cancleQueueCount ?? 0
@@ -617,14 +617,14 @@ const AppointmentManagement = () => {
                             </Col>
                         </Row>
                     </div>
-                    <div className="flex justify-end mb-4">
+                    <div className="flex justify-end">
                         <Button type="primary" onClick={handleExportExcel}>
                             Export to Excel
                         </Button>
                     </div>
 
                     <Table
-                        className="mt-10"
+                        className="mt-4"
                         columns={columns}
                         dataSource={dataSource}
             

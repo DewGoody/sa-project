@@ -294,7 +294,6 @@ const App = () => {
 
     const columns = [
         {
-            align: 'center',
             width: 100,
             title: 'แก้ไข',
             dataIndex: 'status',
@@ -308,8 +307,8 @@ const App = () => {
             },
         },
         {
-            align: 'right', // เพิ่ม align ขวา
             title: 'ดาวน์โหลด',
+            width: 100,
             render: (_, record) => (
                 <div
                     style={{
@@ -332,7 +331,6 @@ const App = () => {
         {
             title: 'สถานะ',
             dataIndex: 'status',
-            align: 'left',
             width: 200,
             render: (status, record) => {
                 let options = [];
@@ -389,15 +387,17 @@ const App = () => {
                 }
                 return (
                     <>
-                        <Select
-                            defaultValue={record.status}
-                            style={{ width: "220px" }}
-                            options={options}
-                            onChange={(value) => handleChangeStatus({ ...record, status: value })}
-                        />
-                        {record.status === "ขอข้อมูลเพิ่มเติม" || record.status === "โอนเงินเรียบร้อย" || record.status === "ไม่อนุมัติ" ?
-                            <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
-                            : null}
+                        <div className='flex'>
+                            <Select
+                                defaultValue={record.status}
+                                style={{ width: 180 }}
+                                options={options}
+                                onChange={(value) => handleChangeStatus({ ...record, status: value })}
+                            />
+                            {record.status === "ขอข้อมูลเพิ่มเติม" || record.status === "โอนเงินเรียบร้อย" || record.status === "ไม่อนุมัติ" ?
+                                <Button type="primary" style={{ marginLeft: 10, whiteSpace: 'nowrap' }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
+                                : null}
+                        </div>
                     </>
 
                 );
@@ -412,7 +412,7 @@ const App = () => {
             ],
             filteredValue: filteredInfo?.status,
             onFilter: (value, record) => record?.status.includes(value),
-            ellipsis: true,
+            // ellipsis: true,
             filterIcon: (filtered) => (
                 <div>
                     <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
@@ -422,36 +422,26 @@ const App = () => {
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'name',
-            align: 'center',
+            width: 250,
             ...getColumnSearchProps('name'),
         },
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
-            align: 'center',
+            
             ...getColumnSearchProps('student_ID'),
         },
         {
             title: 'วันที่เกิดอุบัติเหตุ',
             dataIndex: 'acc_date',
             width: 160,
-            align: 'center',
-            // sorter: (a, b) => {
-            //     const dateA = new Date(a.acc_date.split('/').reverse().join('-'));
-            //     const dateB = new Date(b.acc_date.split('/').reverse().join('-'));
-            //     return dateA - dateB;
-            // },
-            // sortIcon: (sorted) => (
-            //     <div>
-            //         <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-            //     </div>
-            // ),
+            
         },
         {
             title: 'เวลาเกิดอุบัติเหตุ',
             dataIndex: 'time_acc',
             width: 160,
-            align: 'center',
+            
             render: (text) => {
                 const time = new Date(text);
                 const formattedTime = time.toISOString().split('T')[1].slice(0, 5);
@@ -461,28 +451,27 @@ const App = () => {
         {
             title: 'อาการบาดเจ็บ',
             dataIndex: 'des_injury',
-            align: 'center',
+            width: 320,
         },
         {
             title: 'การเกิดอุบัติเหตุ',
             dataIndex: 'acc_desc',
-            align: 'center',
+            width: 320,
         },
         {
             title: 'สถานที่เกิดอุบัติเหตุ',
             dataIndex: 'accident_place',
-            align: 'center',
+            width: 320,
         },
 
         {
             title: 'สถานที่รักษา 1',
             dataIndex: 'treatment_place',
-            align: 'center',
+            width: 320,
         },
         {
             title: 'ประเภทสถานพยาบาล 1',
             dataIndex: 'hospital_type',
-            align: 'center',
             render: (text) => {
                 if (text === 0) {
                     return 'โรงพยาบาลรัฐ';
@@ -498,7 +487,7 @@ const App = () => {
         {
             title: 'สถานที่รักษา 2',
             dataIndex: 'treatment_place2',
-            align:'center',
+            width: 320,
             render: (text) => {
                 if(text===null || text===""){
                     return "-"
@@ -510,7 +499,6 @@ const App = () => {
         {
             title: 'ประเภทสถานพยาบาล 2',
             dataIndex: 'hospital_type2',
-            align: 'center',
             render: (text) => {
                 if (text === 0) {
                     return 'โรงพยาบาลรัฐ';
@@ -526,7 +514,6 @@ const App = () => {
         {
             title: 'ค่ารักษาพบาบาล',
             dataIndex: 'medical_fee',
-            align: 'center',
             render: (text) => {
                 const number = parseFloat(text.replace(/[^\d.-]/g, ''));
                 return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';

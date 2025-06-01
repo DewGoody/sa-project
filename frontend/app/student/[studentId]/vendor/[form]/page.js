@@ -41,7 +41,10 @@ function Page() {
       "bankAccountName",
       "bankAccountNumber",
     ];
-    vendorData.citizenId = vendorData.citizenId.replace(/-/g, "");
+    if (vendorData.citizenId) {
+      vendorData.citizenId = vendorData.citizenId.replace(/-/g, "");
+    }
+
     for (let field of requiredFields) {
       if (!vendorData[field] || vendorData[field].trim() === "") {
         alert(`Please fill in the "${field}" field.`);
@@ -62,6 +65,18 @@ function Page() {
       alert("Identification number must be 13 digits");
       return;
     }
+    if (vendorData.bankAccountNumber.length !== 10) {
+      alert("Bank account number must be 10 digits");
+      return;
+    }
+    if (vendorData.amount <= 0) {
+      alert("Amount must be a positive number");
+      return;
+    }
+    if (vendorData.amount) {
+      vendorData.amount = parseFloat(vendorData.amount).toFixed(2);
+    }
+
 
     console.log(vendorData);
     if (studentId !== "0") {
@@ -70,7 +85,8 @@ function Page() {
           const response = await axios.post("/api/vendor/update", vendorData);
           console.log("update", response.data);
           const reqId = response.data.data.req_id;
-          router.push(`/student/${studentId}/vendor/checkVendor/${reqId}`);
+          const formId = response.data.data.id;
+          router.push(`/student/${studentId}/vendor/checkVendor/${formId}/${reqId}`);
         } catch (error) {
           console.error(error);
         }
@@ -79,12 +95,15 @@ function Page() {
           const response = await axios.post("/api/vendor/create", vendorData);
           console.log(response.data);
           const reqId = response.data.data.req_id;
-          router.push(`/student/${studentId}/vendor/checkVendor/${reqId}`);
+          const formId = response.data.data.id;
+          router.push(`/student/${studentId}/vendor/checkVendor/${formId}/${reqId}`);
         } catch (error) {
           console.error(error);
         }
       }
     }
+
+    //TODO admin edit from router push back
   };
   const handleChange = (event, field) => {
     console.log(field + " : " + event.target.value);
@@ -150,7 +169,7 @@ function Page() {
     <>
       <div className=" bg-white min-h-screen">
         <Header
-          req1="แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย (Vendor)"
+          req1="แบบคำขอรับเงินผ่านธนาคาร (Vendor)"
           req2="ผู้มีสิทธิ์รับเงินประเภทนิสิต ภายในจุฬาลงกรณ์มหาวิทยาลัย"
         />
         <div className=" mx-24 ">
@@ -259,6 +278,9 @@ function Page() {
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="หมู่ที่ (Moo)"
                       />
+                      <span className="text text-xs text-red-600 mt-2">
+                        * หากไม่มีโปรดใส่ขีด (-) / If none, please enter a dash (-)
+                      </span>
                     </div>
                   </div>
 
@@ -276,6 +298,9 @@ function Page() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="อาคาร/หมู่บ้าน (Building/Village)"
                     />
+                    <span className="text text-xs text-red-600 mt-2">
+                      * หากไม่มีโปรดใส่ขีด (-) / If none, please enter a dash (-)
+                    </span>
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
@@ -289,6 +314,9 @@ function Page() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="ตรอก/ซอย (Soi)"
                     />
+                    <span className="text text-xs text-red-600 mt-2">
+                      * หากไม่มีโปรดใส่ขีด (-) / If none, please enter a dash (-)
+                    </span>
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
@@ -302,6 +330,9 @@ function Page() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="ถนน (Road)"
                     />
+                    <span className="text text-xs text-red-600 mt-2">
+                      * หากไม่มีโปรดใส่ขีด (-) / If none, please enter a dash (-)
+                    </span>
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
@@ -373,7 +404,7 @@ function Page() {
                       เลขบัตรประชาชน (Identification number)
                     </label>
                     <PatternFormat
-                      ype="text"
+                      type="text"
                       name="citizenId"
                       value={vendorData?.citizenId}
                       onChange={(event) => handleChange(event, "citizenId")}
@@ -486,11 +517,43 @@ function Page() {
                     <input
                       type="text"
                       name="amount"
-                      value={vendorData?.amount}
-                      onChange={(event) => handleChange(event, "amount")}
+                      value={vendorData?.amount || ""} // Ensure value is not undefined
+                      onChange={(event) => {
+                        let value = event.target.value;
+                        // Allow only numbers and a single decimal point
+                        value = value.replace(/[^0-9.]/g, "");
+                        // Ensure only one decimal point
+                        const parts = value.split('.');
+                        if (parts.length > 2) {
+                          value = parts[0] + '.' + parts.slice(1).join('');
+                        }
+                        // Limit to 2 decimal places during input
+                        if (parts[1] && parts[1].length > 2) {
+                          value = parts[0] + '.' + parts[1].substring(0, 2);
+                        }
+                        handleChange({ target: { name: "amount", value: value } }, "amount");
+                      }}
+                      onBlur={(event) => {
+                        let value = event.target.value;
+                        if (value) {
+                          const num = parseFloat(value);
+                          if (!isNaN(num)) {
+                            handleChange({ target: { name: "amount", value: num.toFixed(2) } }, "amount");
+                          } else {
+                            // Handle invalid number if necessary, e.g., clear it or set to "0.00"
+                            handleChange({ target: { name: "amount", value: "" } }, "amount");
+                          }
+                        } else {
+                          handleChange({ target: { name: "amount", value: "" } }, "amount");
+                        }
+                      }}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="จำนวนเงิน (Amount)"
                     />
+                    <span className="text text-xs text-red-600 mt-2">
+                      * โปรดใส่จำนวนเงินโดยไม่มีเครื่องหมาย comma (,) /
+                      Please enter the amount without comma (,)
+                    </span>
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
@@ -557,32 +620,47 @@ function Page() {
                       เลขที่บัญชี (Account number)
                     </label>
                     <input
-                      type="text"
+                      type="text" // Changed from "text" to allow for custom filtering
                       name="bankAccountNumber"
-                      value={vendorData?.bankAccountNumber}
-                      onChange={(event) =>
-                        handleChange(event, "bankAccountNumber")
-                      }
+                      value={vendorData?.bankAccountNumber || ""} // Ensure value is not undefined
+                      onChange={(event) => {
+                        const numericValue = event.target.value.replace(/[^0-9]/g, ""); // Allow only numbers
+                        handleChange({ target: { name: "bankAccountNumber", value: numericValue } }, "bankAccountNumber");
+                      }}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="เลขที่บัญชี (Account number)"
+                      maxLength={10} // Limit to 10 digits
                     />
+                    <span className="text text-xs text-red-600 mt-2">
+                      * โปรดใส่เลขที่บัญชีโดยไม่มีเครื่องหมายขีด (-) / Please enter the account number without dashes (-)
+                    </span>
+                    <br></br>
+                    <span className="text text-xs text-red-600 mt-2">
+                      ** ระบบรับเลขที่บัญชีที่มี 10 หลักเท่านั้น หากบัญชีของท่านมีเลขที่บัญชีมากกว่า 10 หลัก โปรดติดต่อเจ้าหน้าที่
+                    </span>
+                    <br></br>
+                    <span className="text text-xs text-red-600 mt-2">
+                      The system accepts account numbers with only 10 digits.
+                      If your account has more than 10 digits, please contact the staff
+                    </span>
+
                   </div>
                 </div>
               </section>
             </div>
             <div>
               <div className="flex justify-between mt-8">
-                
-                  <button 
-                    className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
-                    onClick={() => {
-                      router.push(`/student/${studentId}/home`);
-                    }
-                    }
-                  >
-                    Back
-                  </button>
-                
+
+                <button
+                  className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                  onClick={() => {
+                    router.push(`/student/${studentId}/home`);
+                  }
+                  }
+                >
+                  Back
+                </button>
+
 
                 <button
                   onClick={handleSubmit}

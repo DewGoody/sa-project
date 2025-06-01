@@ -240,7 +240,7 @@ const AppointmentManagement = () => {
                             className='bg-blue-500 text-white rounded-lg px-4 py-2'
                             onClick={() => setIsModalDefaultVisible(true)}
                         >
-                            แก้ไขค่าเริ่มต้นจำนวนผู้เข้ารับบริการ
+                        กำหนดค่าเริ่มต้น
                         </button>
                     </div>
                     <div className='mt-4'>
@@ -300,7 +300,7 @@ const AppointmentManagement = () => {
                         />
                     </div>
                     <div className="mt-4 w-3/12">
-                        <p>เลือกจำนวนนิสิตสูงสุดที่รองรับได้</p>
+                        <p>เลือกจำนวนนิสิตต่อรอบการให้บริการ</p>
                         <Input
                             placeholder="จำนวนนิสิต"
                             type="number"
@@ -313,7 +313,7 @@ const AppointmentManagement = () => {
                         <Button type="primary" onClick={handleOk}>ยืนยัน</Button>
                     </div>
                     <Modal
-                        title="แก้ไขวันปิดให้บริการ"
+                        title="แก้ไขจำนวนนิสิตต่อรอบการให้บริการ"
                         visible={isModalVisible}
                         onCancel={handleCancel}
                         footer={[
@@ -321,7 +321,7 @@ const AppointmentManagement = () => {
                                 ปิดหน้าต่าง
                             </Button>,
                             <Button key="save" type="primary" loading={loading} onClick={handleSave}>
-                                แก้ไข
+                                บันทึก    
                             </Button>,
                         ]}
                     >
@@ -335,7 +335,7 @@ const AppointmentManagement = () => {
                                     onChange={handleInputChange}
                                 />
                             </Form.Item>
-                            <Form.Item label="เลือกจำนวนนิสิตสูงสุดที่รองรับได้">
+                            <Form.Item label="จำนวนนิสิต">
                                 <Input
                                     type='number'
                                     name="max_stu"
@@ -373,12 +373,12 @@ const AppointmentManagement = () => {
                                 ปิดหน้าต่าง
                             </Button>,
                             <Button key="save" type="primary" loading={loading} onClick={handleDefaultMaxStuOk}>
-                                แก้ไข
+                                บันทึก
                             </Button>,
                         ]}
                     >
                         <div>
-                            <p>ค่าเริ่มต้นจำนวนผู้เข้ารับบริการสูงสุด</p>
+                            <p>ค่าเริ่มต้นเดิม</p>
                             <Input
                                 type='number'
                                 name="max_stu"
@@ -387,7 +387,7 @@ const AppointmentManagement = () => {
                             />
                         </div>
                         <Form form={form} layout="vertical">
-                            <Form.Item label="แก้ไขจำนวนผู้เข้ารับบริการสูงสุด">
+                            <Form.Item label="กำหนดค่าเริ่มต้นใหม่">
                                 <Input
                                     type='number'
                                     name="max_stu"
