@@ -81,7 +81,7 @@ const RD = () => {
     const [checkboxes, setCheckboxes] = useState({
         Option1: false,
         Option2: false,
-        Option3: false,
+     
 
     });
 
@@ -158,7 +158,7 @@ const RD = () => {
                                             </button>
                                         </div>
                                         <label
-                                            htmlFor="Option1"
+                           
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
@@ -167,7 +167,7 @@ const RD = () => {
                                         </label>
 
                                         <label
-                                            htmlFor="Option2"
+                      
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
 
@@ -178,19 +178,14 @@ const RD = () => {
                                         </label>
 
                                         <label
-                                            htmlFor="Option3"
+                                   
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
-
-
                                             <div>
                                                 <strong className="font-medium text-gray-900">4. ใบสำเร็จนักศึกษาวิชาทหารล่าสุด (กรณีโอนย้าย)</strong>
                                             </div>
                                         </label>
                                     </div>
-
-
-
                                 </fieldset>
                                 {/* <button
                                     onClick={handleDownload}
@@ -199,7 +194,7 @@ const RD = () => {
                                 </button> */}
                                 <div className="">
                                     <label
-                                        htmlFor="Option9"
+                                        htmlFor="Option1"
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
                                         <div className="flex items-center">
@@ -207,21 +202,18 @@ const RD = () => {
                                             <input
                                                 type="checkbox"
                                                 className="size-4 rounded border-gray-300"
-                                                id="Option9"
-                                                checked={checkboxes.Option9}
+                                                id="Option1"
+                                                checked={checkboxes.Option1}
                                                 onChange={handleCheckboxChange}
 
                                             />
                                         </div>
-
                                         <div>
                                             <strong className="font-medium text-gray-900">จัดเตรียมเอกสารตามข้อมูลข้างต้น (Prepare the documents as per the information above)</strong>
                                         </div>
                                     </label>
-
-
                                     <label
-
+                                        htmlFor="Option2"
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
                                         <div className="flex items-center">
@@ -229,13 +221,14 @@ const RD = () => {
                                             <input
                                                 type="checkbox"
                                                 className="size-4 rounded border-gray-300"
-                                                id="allCheck"
-                                                checked={allChecked()}
-                                                onChange={handleAllCheck}
+                                                id="Option2"
+                                                checked={checkboxes.Option2}
+                                                onChange={handleCheckboxChange}
                                                 disabled={!isDownload}
+
+
                                             />
                                         </div>
-
                                         <div>
                                             <strong className="font-medium text-gray-900">ดาวน์โหลดไฟล์และตรวจสอบข้อมูลแล้ว (Download the file and verify the information)</strong>
                                         </div>
@@ -253,10 +246,6 @@ const RD = () => {
                                 >
                                     Back
                                 </button>
-
-
-
-
                                 <a
                                     onClick={(event) => handleNavigation(event)}
                                 >
@@ -270,7 +259,6 @@ const RD = () => {
                                 </a>
                             </div>
                         )}
-
                     </div>
                 </main>
             </div>

@@ -13,22 +13,22 @@ const { Dragger } = Upload;
 
 const gold = () => {
     const { form } = useParams()
-    const {studentId} = useParams()
+    const { studentId } = useParams()
     const [isDownload, setIsDownload] = useState(false);
     const router = useRouter();
     const int_req_id = parseInt(form)
     const filepdf = async () => {
-    try {
-        const response = await axios.get(`/api/export/UHC_Reg?id=${int_req_id}`, { responseType: 'blob' });
+        try {
+            const response = await axios.get(`/api/export/UHC_Reg?id=${int_req_id}`, { responseType: 'blob' });
 
-        // ดึง student_id จาก headers โดยตรง
-        const studentId = response.headers['x-student-id'];
+            // ดึง student_id จาก headers โดยตรง
+            const studentId = response.headers['x-student-id'];
 
-        return { pdfBlob: response.data, studentId }; // ส่งทั้ง PDF และ Student ID กลับไป
-    } catch (error) {
-        console.log(error);
-    }
-};
+            return { pdfBlob: response.data, studentId }; // ส่งทั้ง PDF และ Student ID กลับไป
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [selectedFilescitizen, setSelectedFilescitizen] = useState([]);
@@ -141,7 +141,7 @@ const gold = () => {
 
 
             // console.log(response.data);
-           router.push(`/student/${studentId}/home`)
+            router.push(`/student/${studentId}/home`)
         } catch (error) {
             console.error("Upload failed:", error);
             toast.error("การอัปโหลดล้มเหลว");
@@ -292,9 +292,9 @@ const gold = () => {
 
     const handleDownload = async () => {
         const { pdfBlob, studentId } = await filepdf();
-        if (pdfBlob && studentId){
+        if (pdfBlob && studentId) {
 
-            
+
             const link = document.createElement('a');
             link.href = URL.createObjectURL(pdfBlob);
             link.download = `${studentId}_บัตรทอง.pdf`;
@@ -304,9 +304,9 @@ const gold = () => {
             document.body.removeChild(link);
             setIsDownload(true);
         }
-        else{
+        else {
             console.log("download แตกไอเหี้ย");
-            
+
         }
     };
 
@@ -315,7 +315,6 @@ const gold = () => {
     const [checkboxes, setCheckboxes] = useState({
         Option1: false,
         Option2: false,
-        Option3: false,
     });
 
     // Function to handle checkbox change
@@ -407,7 +406,7 @@ const gold = () => {
                                         </div>
                                         <div className=" py-4">
                                             <Dragger {...student}>
-                                               
+
                                                 <p className="ant-upload-text">สำเนาบัตรประจำตัวนิสิต (เซ็นรับรองสำเนาถูกต้องพร้อมลงชื่อกำกับ)</p>
                                             </Dragger>
                                         </div>
@@ -420,7 +419,7 @@ const gold = () => {
                                 </fieldset>
                                 <div className="flex space-x-4">
                                     <label
-                                        htmlFor="Option9"
+                                        htmlFor="Option1"
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
                                         <div className="flex items-center">
@@ -428,8 +427,8 @@ const gold = () => {
                                             <input
                                                 type="checkbox"
                                                 className="size-4 rounded border-gray-300"
-                                                id="Option9"
-                                                checked={checkboxes.Option9}
+                                                id="Option1"
+                                                checked={checkboxes.Option1}
                                                 onChange={handleCheckboxChange}
                                             />
                                         </div>
@@ -438,10 +437,8 @@ const gold = () => {
                                             <strong className="font-medium text-gray-900">เซ็นเอกสารแล้ว</strong>
                                         </div>
                                     </label>
-
-
                                     <label
-
+                                        htmlFor="Option2"
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
                                         <div className="flex items-center">
@@ -449,9 +446,9 @@ const gold = () => {
                                             <input
                                                 type="checkbox"
                                                 className="size-4 rounded border-gray-300"
-                                                id="allCheck"
-                                                checked={allChecked()}
-                                                onChange={handleAllCheck}
+                                                id="Option2"
+                                                checked={checkboxes.Option2}
+                                                onChange={handleCheckboxChange}
                                                 disabled={!isDownload}
                                             />
                                         </div>
@@ -473,7 +470,7 @@ const gold = () => {
                                     Back
                                 </button>
                                 <a
-                                    
+
                                     onClick={handleConfirm}>
                                     <button
                                         type="submit"
