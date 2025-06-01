@@ -1,12 +1,11 @@
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model Address {
@@ -196,76 +195,88 @@ model Queue {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model RD_info {
-  id           BigInt    @id @default(autoincrement())
-  created_at   DateTime  @default(now()) @db.Timestamptz(6)
-  RD_type      Decimal?  @db.Decimal
-  student_id   Decimal?  @db.Decimal
-  json_history Json?     @db.Json
-  req_id       BigInt?
-  date         DateTime? @db.Date
-  money        String?
-  Request      Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student      Student?  @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  id             BigInt    @id @default(autoincrement())
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  RD_type        Decimal?  @db.Decimal
+  student_id     Decimal?  @unique @db.Decimal
+  req_id         BigInt?
+  date           DateTime? @db.Date
+  money          String?
+  citizenRD      BigInt?
+  YearGradeRD    Int?      @db.SmallInt
+  Branches       String?
+  corps          String?
+  registermyself Boolean?
+  notmilitary    Boolean?
+  readymilitary  Boolean?
+  man_right      Boolean?
+  women_right    Boolean?
+  ready_right    Boolean?
+  register_type  Int?      @db.SmallInt
+  Request        Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student        Student?  @relation(fields: [student_id], references: [id], onDelete: Cascade)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Request {
-  id                BigInt              @id @default(autoincrement())
-  created_at        DateTime            @default(now()) @db.Timestamptz(6)
-  type              String?
-  status            String?
-  stu_id            Decimal?            @db.Decimal
-  deleted_at        DateTime?           @db.Timestamptz(6)
-  more_info         String?
-  Ponpan            Ponpan[]
-  Queue             Queue[]
-  RD_info           RD_info[]
-  Student           Student?            @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  UHC_request       UHC_request[]
-  accident_info     accident_info[]
-  prakan_inter_info prakan_inter_info[]
-  vendor_info       vendor_info[]
+  id                    BigInt                  @id @default(autoincrement())
+  created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  type                  String?
+  status                String?
+  stu_id                Decimal?                @db.Decimal
+  deleted_at            DateTime?               @db.Timestamptz(6)
+  more_info             String?
+  Ponpan                Ponpan[]
+  Queue                 Queue[]
+  RD_info               RD_info[]
+  Student               Student?                @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  UHC_request           UHC_request[]
+  accident_info         accident_info[]
+  prakan_inter_info     prakan_inter_info[]
+  prakan_inter_info_old prakan_inter_info_old[]
+  vendor_info           vendor_info[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model Student {
-  id                   Decimal              @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
-  lnameTH              String
-  fnameTH              String
-  lnameEN              String?
-  fnameEN              String?
-  fac_id               String
-  facultyNameTH        String?
-  dept                 String
-  year                 String
-  bd                   DateTime             @db.Date
-  tel_num              String?
-  title                String?
-  major                String?              @default("")
-  nationality          String?
-  race                 String?
-  religion             String?              @db.VarChar
-  thai_id              String?
-  facultyNameEN        String?
-  contactable_tel      String?
-  thai_id_card_issured DateTime?            @db.Date
-  thai_id_card_expired DateTime?            @db.Date
-  personal_email       String?
-  phone_num            String?
-  degree               String?
-  Address              Address[]
-  Military_info        Military_info?
-  Ponpan               Ponpan[]
-  Queue                Queue[]
-  RD_info              RD_info[]
-  Request              Request[]
-  UHC_reg_info         UHC_reg_info?
-  UHC_request          UHC_request[]
-  accident_info        accident_info[]
-  father_mother_info   father_mother_info[]
-  guardian_info        guardian_info?
-  prakan_inter_info    prakan_inter_info[]
-  vendor_info          vendor_info[]
+  id                    Decimal                 @id(map: "User_pkey") @unique(map: "User_id_key") @db.Decimal
+  lnameTH               String
+  fnameTH               String
+  lnameEN               String?
+  fnameEN               String?
+  fac_id                String
+  facultyNameTH         String?
+  dept                  String
+  year                  String
+  bd                    DateTime                @db.Date
+  tel_num               String?
+  title                 String?
+  major                 String?                 @default("")
+  nationality           String?
+  race                  String?
+  religion              String?                 @db.VarChar
+  thai_id               String?
+  facultyNameEN         String?
+  contactable_tel       String?
+  thai_id_card_issured  DateTime?               @db.Date
+  thai_id_card_expired  DateTime?               @db.Date
+  personal_email        String?
+  phone_num             String?
+  degree                String?
+  Address               Address[]
+  Military_info         Military_info?
+  Ponpan                Ponpan[]
+  Queue                 Queue[]
+  RD_info               RD_info?
+  Request               Request[]
+  UHC_reg_info          UHC_reg_info?
+  UHC_request           UHC_request[]
+  accident_info         accident_info[]
+  father_mother_info    father_mother_info[]
+  guardian_info         guardian_info?
+  prakan_inter_info     prakan_inter_info[]
+  prakan_inter_info_old prakan_inter_info_old[]
+  vendor_info           vendor_info[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -354,11 +365,15 @@ model accident_info {
   acc_date         DateTime? @db.Date
   accident_place   String?
   treatment_place  String?
-  hospital_type    String?
+  hospital_type    Int?      @db.SmallInt
   medical_fee      Float?
   req_id           BigInt?
   des_injury       String?
   medical_fee_text String?
+  in_university    Boolean?
+  treatment_place2 String?
+  hospital_type2   Int?      @db.SmallInt
+  time_acc         DateTime? @db.Time(6)
   Request          Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student          Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -387,11 +402,15 @@ model guardian_info {
   guardian_occupation  String?
   guardian_age         Int?
   guardian_relation    String?
-  id                   Decimal @id(map: "parent_info_pkey") @db.Decimal
+  id                   Decimal  @id(map: "parent_info_pkey") @db.Decimal
   guardian_title       String?
   guardian_address     String?
-  guardian_nationality String? @default("")
-  Student              Student @relation(fields: [id], references: [id], onDelete: Cascade, map: "parent_info_id_fkey")
+  guardian_nationality String?  @default("")
+  phone_num            BigInt?
+  consent1             Boolean?
+  consent2             Boolean?
+  consent21            Boolean?
+  Student              Student  @relation(fields: [id], references: [id], onDelete: Cascade, map: "parent_info_id_fkey")
 }
 
 model pdffile {
@@ -403,24 +422,28 @@ model pdffile {
 }
 
 model prakan_inter_info {
-  id                     BigInt   @id @default(autoincrement())
-  created_at             DateTime @default(now()) @db.Timestamptz(6)
-  phone_num              String?
-  claimType              String?
-  accidentDate           String?
-  accidentTime           String?
-  accidentCause          String?
-  hospitalName           String?
-  hospitalProvince       String?
-  hospitalPhoneNumber    String?
-  hospitalAmittedDate    String?
-  hospitalDischargedDate String?
-  presentAddress         String?
-  title                  String?
-  stu_id                 Decimal? @db.Decimal
-  req_id                 BigInt?
-  Request                Request? @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  Student                Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                    BigInt    @id @default(autoincrement())
+  created_at            DateTime  @default(now()) @db.Timestamptz(6)
+  phone_num             String?
+  hospitalName          String?
+  title                 String?
+  stu_id                Decimal?  @db.Decimal
+  req_id                BigInt?
+  email                 String?
+  totalMedicalFees      Decimal?  @db.Decimal
+  treatmentType         String?
+  IPDAmittedDate        DateTime? @db.Date
+  IPDDischargedDate     DateTime? @db.Date
+  OPDTreatmentDateCount Decimal?  @db.Decimal
+  OPDTreatmentDate1     DateTime? @db.Date
+  OPDTreatmentDate2     DateTime? @db.Date
+  OPDTreatmentDate3     DateTime? @db.Date
+  OPDTreatmentDate4     DateTime? @db.Date
+  OPDTreatmentDate5     DateTime? @db.Date
+  hospitalName2         String?
+  illnessDescription    String?
+  Request               Request?  @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student               Student?  @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model vendor_info {
@@ -465,4 +488,33 @@ model User {
   deleted_at DateTime? @db.Timestamptz(6)
   first_name String?
   last_name  String?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model prakan_inter_info_old {
+  id                     BigInt   @id @default(autoincrement())
+  created_at             DateTime @default(now()) @db.Timestamptz(6)
+  phone_num              String?
+  claimType              String?
+  accidentDate           String?
+  accidentTime           String?
+  accidentCause          String?
+  hospitalName           String?
+  hospitalProvince       String?
+  hospitalPhoneNumber    String?
+  hospitalAmittedDate    String?
+  hospitalDischargedDate String?
+  presentAddress         String?
+  title                  String?
+  stu_id                 Decimal? @db.Decimal
+  req_id                 BigInt?
+  Request                Request? @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Student                Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Default_max_student {
+  id         BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  max_stu    BigInt?
 }

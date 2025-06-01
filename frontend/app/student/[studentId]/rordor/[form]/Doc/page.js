@@ -74,7 +74,6 @@ const RD = () => {
     const [checkboxes, setCheckboxes] = useState({
         Option1: false,
         Option2: false,
-        Option3: false,
     });
 
     // Function to handle checkbox change
@@ -167,7 +166,6 @@ const RD = () => {
                                         </div>
 
                                         <label
-                                            htmlFor="Option1"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
@@ -176,7 +174,6 @@ const RD = () => {
                                         </label>
 
                                         <label
-                                            htmlFor="Option2"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
 
@@ -187,7 +184,6 @@ const RD = () => {
                                         </label>
 
                                         <label
-                                            htmlFor="Option3"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
@@ -208,7 +204,6 @@ const RD = () => {
 
 
                                         <label
-                                            htmlFor="Option4"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
                                             <div>
@@ -217,7 +212,6 @@ const RD = () => {
                                         </label>
 
                                         <label
-                                            htmlFor="Option5"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
 
@@ -228,7 +222,6 @@ const RD = () => {
                                         </label>
 
                                         <label
-                                            htmlFor="Option6"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
 
@@ -239,7 +232,6 @@ const RD = () => {
                                         </label>
 
                                         <label
-                                            htmlFor="Option7"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
 
@@ -250,7 +242,6 @@ const RD = () => {
                                         </label>
 
                                         <label
-                                            htmlFor="Option8"
                                             className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                         >
 
@@ -268,7 +259,7 @@ const RD = () => {
                                 </button> */}
                                 <div className="">
                                     <label
-                                        htmlFor="Option9"
+                                        htmlFor="Option1"
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
                                         <div className="flex items-center">
@@ -276,8 +267,8 @@ const RD = () => {
                                             <input
                                                 type="checkbox"
                                                 className="size-4 rounded border-gray-300"
-                                                id="Option9"
-                                                checked={checkboxes.Option9}
+                                                id="Option1"
+                                                checked={checkboxes.Option1}
                                                 onChange={handleCheckboxChange}
 
                                             />
@@ -290,7 +281,7 @@ const RD = () => {
 
 
                                     <label
-
+                                        htmlFor="Option2"
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
                                         <div className="flex items-center">
@@ -298,10 +289,12 @@ const RD = () => {
                                             <input
                                                 type="checkbox"
                                                 className="size-4 rounded border-gray-300"
-                                                id="allCheck"
-                                                checked={allChecked()}
-                                                onChange={handleAllCheck}
+                                                id="Option2"
+                                                checked={checkboxes.Option2}
+                                                onChange={handleCheckboxChange}
                                                 disabled={!isDownload}
+
+
                                             />
                                         </div>
 
