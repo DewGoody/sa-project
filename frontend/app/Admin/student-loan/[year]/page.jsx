@@ -48,6 +48,7 @@ const AppointmentManagement = () => {
                         stu_id: item.Student.id,
                         fnameTH: item.Student.fnameTH,
                         lnameTH: item.Student.lnameTH,
+                        status: item.status,
                     }))
             );
             console.log("dataSource :", dataSource);
@@ -125,6 +126,22 @@ const AppointmentManagement = () => {
 
 
     const columns = [
+        {
+            title: 'สถานะ',
+            dataIndex: 'status',
+            render: (text) => {
+                if (text === "รอเจ้าหน้าที่ดำเนินการ") {
+                    return <span>{"เข้ารับบริการแล้ว"}</span>;
+                } 
+                // else if (text === "อนุมัติ") {
+                //     return <span style={{ color: 'green' }}>{text}</span>;
+                // } 
+                else {
+                    return text;
+                }
+            },
+        },
+
     
         {
             title: 'รหัสนิสิต',
