@@ -12,7 +12,7 @@ const RD = () => {
     const [checkboxes, setCheckboxes] = useState({
         Option1: false,
         Option2: false,
-        Option3: false,
+  
     });
     const [createRequest, setCreateRequest] = useState([]);
     const [prakanData, setPrakanData] = useState({});
@@ -64,7 +64,7 @@ const RD = () => {
 
     const handleDownload = async () => {
         const response = await axios.post('/api/prakan/createPdf', { form: form }, {
-          responseType: 'blob'
+            responseType: 'blob'
         });
 
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -76,7 +76,7 @@ const RD = () => {
         link.click();
         document.body.removeChild(link);
         setIsDownload(true);
-      };
+    };
 
     const handleBack = () => {
         router.push(`/student/${studentId}/prakan/${form}`);
@@ -110,7 +110,7 @@ const RD = () => {
         // const param = response.data.data.id;
         // console.log("responseRequest", response.data);
         // console.log("param", param);
-        await axios.post(`/api/request/changeStatusToWaitBook`, {req_id:reqId});
+        await axios.post(`/api/request/changeStatusToWaitBook`, { req_id: reqId });
 
         if (!allChecked()) {
             event.preventDefault();
@@ -131,7 +131,7 @@ const RD = () => {
                             โปรดเตรียมเอกสารดังต่อไปนี้
                         </h3>
                         <h3 className="text-lg font-normal mb-4 text-center">
-                            Please prepare the following documents 
+                            Please prepare the following documents
                         </h3>
                         <div className="grid grid-cols-1 gap-6">
                             <fieldset>
@@ -146,7 +146,7 @@ const RD = () => {
                                 </div>
                                 <div className="divide-y divide-gray-200">
                                     <label
-                                        htmlFor="Option1"
+                        
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
                                         <div>
@@ -155,7 +155,7 @@ const RD = () => {
                                     </label>
 
                                     <label
-                                        htmlFor="Option2"
+                        
                                         className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                     >
 
@@ -188,7 +188,7 @@ const RD = () => {
                             </fieldset>
                             <div className="">
                                 <label
-                                    htmlFor="Option9"
+                                    htmlFor="Option1"
                                     className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                 >
                                     <div className="flex items-center">
@@ -196,13 +196,11 @@ const RD = () => {
                                         <input
                                             type="checkbox"
                                             className="size-4 rounded border-gray-300"
-                                            id="Option9"
-                                            checked={checkboxes.Option9}
+                                            id="Option1"
+                                            checked={checkboxes.Option1}
                                             onChange={handleCheckboxChange}
-
                                         />
                                     </div>
-
                                     <div>
                                         <strong className="font-medium text-gray-900">จัดเตรียมเอกสารตามข้อมูลข้างต้น (Prepare the above documents)</strong>
                                     </div>
@@ -210,7 +208,7 @@ const RD = () => {
 
 
                                 <label
-
+                                    htmlFor="Option2"
                                     className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                                 >
                                     <div className="flex items-center">
@@ -218,9 +216,9 @@ const RD = () => {
                                         <input
                                             type="checkbox"
                                             className="size-4 rounded border-gray-300"
-                                            id="allCheck"
-                                            checked={allChecked()}
-                                            onChange={handleAllCheck}
+                                            id="Option2"
+                                            checked={checkboxes.Option2}
+                                            onChange={handleCheckboxChange}
                                             disabled={!isDownload}
                                         />
                                     </div>
@@ -235,17 +233,12 @@ const RD = () => {
 
                     {Object.values(checkboxes).filter(Boolean).length >= 2 && (
                         <div className="flex justify-end mt-8">
-
                             <button
                                 className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300"
                                 onClick={handleBack}
                             >
                                 Back
                             </button>
-
-
-
-
                             <a
                                 onClick={(event) => handleNavigation(event)}
                             >
