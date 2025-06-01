@@ -955,4 +955,46 @@ export async function getRequestVendorAdmin(year) {
 }
 
 
+export async function changeStatusVendor(id, newStatus) {
+    if (id) {
+        const request = await getRequestByIdFast({ id: id })
+        console.log('request_vendor', id, newStatus, request);
+        if (!request || request === "Not found") {
+            throw { code: 404, error: new Error("Request not found") }
+        }
+
+        // Define valid status transitions for vendor requests
+        const validTransitions = {
+            'รอจองคิว': ['รอนิสิตส่งเอกสาร'],
+            'รอเข้ารับบริการ': ['รอนิสิตส่งเอกสาร'],
+            'รอนิสิตส่งเอกสาร': ['รับเอกสารแล้ว'],
+            'รับเอกสารแล้ว': ['เจ้าหน้าที่จัดทำข้อมูล'],
+            'เจ้าหน้าที่จัดทำข้อมูล': ['ไม่อนุมัติ', 'ส่งเอกสารให้การเงินแล้ว'],
+            'ไม่อนุมัติ': [], // Terminal status
+            'ส่งเอกสารให้การเงินแล้ว': [] // Terminal status
+        };
+
+        // Check if current status exists in valid transitions
+        if (!validTransitions.hasOwnProperty(request.status)) {
+            throw { code: 400, error: new Error(`Invalid current status: ${request.status}`) }
+        }
+
+        // Check if the new status is a valid transition from current status
+        if (!validTransitions[request.status].includes(newStatus)) {
+            throw { code: 400, error: new Error(`Invalid status transition from '${request.status}' to '${newStatus}'`) }
+        }
+
+        const changeStatusRequest = await prisma.request.update({
+            where: { id: request.id },
+            data: { status: newStatus }
+        })
+
+        return changeStatusRequest
+    }
+    else {
+        throw { code: 400, error: new Error("Bad Request: ID is required") }
+    }
+}
+
+
 

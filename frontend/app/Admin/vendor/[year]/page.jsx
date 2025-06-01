@@ -257,23 +257,11 @@ const App = () => {
 
         try {
             setLoading(true);
-            let res;
 
-            if (record.status === "รอนิสิตส่งเอกสาร") {
-                res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
-            }
-            else if (record.status === "รับเอกสารแล้ว") {
-                res = await axios.post('/api/request/changeStatusToSended', { id: parseInt(record.reqId) });
-            }
-            else if (record.status === "เจ้าหน้าที่จัดทำข้อมูล") {
-                res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
-            }
-            else if (record.status === "ไม่อนุมัติ") {
-                res = await axios.post('/api/request/changeStatusToNotApprove', { id: parseInt(record.reqId) });
-            }
-            else if (record.status === "ส่งเอกสารให้การเงินแล้ว") {
-                res = await axios.post('/api/request/changeStatusToFinish', { id: parseInt(record.reqId) });
-            }
+            const res = await axios.post('/api/request/changeStatusVendor', {
+                id: parseInt(record.id),
+                newStatus: record.status
+            });
 
             console.log("Status change response:", res);
 
@@ -334,20 +322,7 @@ const App = () => {
 
 
     const columns = [
-        {
-            align: 'center',
-            width: 100,
-            title: 'แก้ไข',
-            dataIndex: 'status',
-            render: (status, record) => {
-                if (status !== "ประวัติการแก้ไข" && status !== "ส่งเอกสารให้การเงินแล้ว" && status !== "ไม่อนุมัติ") {
-                    return (
-                        <Space size="middle">
-                            <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
-                        </Space>)
-                }
-            },
-        },
+
         {
             align: 'right', // เพิ่ม align ขวา
             title: 'ดาวน์โหลด',
@@ -398,8 +373,8 @@ const App = () => {
                         { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
                         { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
                         { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'black' } },
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
-                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'black' } },
+                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
                     ];
                 }
                 else if (status === 'เจ้าหน้าที่จัดทำข้อมูล') {
