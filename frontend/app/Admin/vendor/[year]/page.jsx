@@ -72,22 +72,29 @@ const App = () => {
             { header: "ลำดับ", key: "index" },
             { header: "ชื่อ-นามสกุล", key: "name" },
             { header: "รหัสนิสิต", key: "student_ID" },
-            { header: "ประเภท", key: "displayedtreatmentType" },
-            { header: "รายละเอียดของอาการป่วย", key: "illnessDescription" },
-            { header: "ชื่อสถานพยาบาลที่ 1", key: "hospitalName" },
-            { header: "ชื่อสถานพยาบาลที่ 2", key: "hospitalName2" },
-            { header: "ค่ารักษาพยาบาล", key: "totalMedicalFees" },
-            { header: "ผู้ป่วยใน (IPD) : วันที่เข้ารักษา", key: "IPDAmittedDate" },
-            { header: "ผู้ป่วยใน (IPD) : วันที่ออกจากการรักษา", key: "IPDDischargedDate" },
-            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 1", key: "OPDTreatmentDate1" },
-            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 2", key: "OPDTreatmentDate2" },
-            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 3", key: "OPDTreatmentDate3" },
-            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 4", key: "OPDTreatmentDate4" },
-            { header: "ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 5", key: "OPDTreatmentDate5" },
-            { header: "เบอร์โทรนิสิต", key: "phone_num" },
-            { header: "อีเมลนิสิต", key: "email" },
+            { header: "เบอร์โทรนิสิต", key: "tel" },
+            { header: "ประเภทการเบิกเงิน", key: "claimType" },
+            { header: "สาเหตุการเบิกเงิน (กรณีเลือกอื่นๆ)", key: "claimOtherReason" },
+            { header: "จำนวนเงิน", key: "amount" },
+            { header: "บัญชีของธนาคาร", key: "bankCompany" },
+            { header: "สาขา", key: "bankBranch" },
+            { header: "ชื่อบัญชี", key: "bankAccountName" },
+            { header: "ประเภทบัญชี", key: "bankAccountType" },
+            { header: "เลขที่บัญชี", key: "bankAccountNumber" },
+            { header: "บ้านเลขที่", key: "houseID" },
+            { header: "หมู่", key: "moo" },
+            { header: "อาคาร/หมู่บ้าน", key: "buildingVillage" },
+            { header: "ซอย", key: "soi" },
+            { header: "ถนน", key: "road" },
+            { header: "แขวง/ตำบล", key: "subDistrict" },
+            { header: "เขต/อำเภอ", key: "district" },
+            { header: "จังหวัด", key: "province" },
+            { header: "รหัสไปรษณีย์", key: "postalCode" },
+            { header: "โทรศัพท์", key: "tel" },
+            { header: "เลขบัตรประชาชน", key: "citizenId" },
+            { header: "วันที่ออกบัตร", key: "citizenIssueDate" },
+            { header: "วันหมดอายุบัตร", key: "citizenExpireDate" },
             { header: "สถานะ", key: "status" },
-
 
         ];
 
@@ -132,53 +139,58 @@ const App = () => {
             const res = await axios.post('/api/request/getVendorAdmin', { year: parseInt(year) });
             console.log("stuData", res.data.data);
             setStuData(res.data.data);
-            setDataSource(res.data.data.map((data, index) => {
+            if (!Array.isArray(res.data.data)) {
+                console.warn("Expected array but got:", res.data.data);
+            }
+
+            const formatted = res.data.data.map((data, index) => {
                 const formatDate = (dateString) => {
-                    if (!dateString) return "-";
                     const date = new Date(dateString);
+                    if (isNaN(date)) return "-";
                     const day = String(date.getDate()).padStart(2, '0');
                     const month = String(date.getMonth() + 1).padStart(2, '0');
                     const year = date.getFullYear();
                     return `${day}/${month}/${year}`;
                 };
 
-
+                const vendor = data.vendor_info?.[0] || {};
 
                 return {
                     key: index,
-                    id: data.id,
+                    id: data.id || "-",
                     reqId: data.reqId,
-                    name: data.Student.nameTH || "-",
-                    student_ID: data.Student.id,
-                    nameTH: data.vendor_info[0].nameTH || "-",
-                    faculty: data.vendor_info[0].faculty || "-",
-                    houseID: data.vendor_info[0].houseID || "-",
-                    moo: data.vendor_info[0].moo || "-",
-                    buildingVillage: data.vendor_info[0].buildingVillage || "-",
-                    soi: data.vendor_info[0].soi || "-",
-                    road: data.vendor_info[0].road || "-",
-                    subDistrict: data.vendor_info[0].subDistrict || "-",
-                    district: data.vendor_info[0].district || "-",
-                    province: data.vendor_info[0].province || "-",
-                    postalCode: data.vendor_info[0].postalCode || "-",
-                    tel: data.vendor_info[0].tel || "-",
-                    citizenId: data.vendor_info[0].citizenId || "-",
-                    citizenIssueDate: data.vendor_info[0].citizenIssueDate ? formatDate(data.vendor_info[0].citizenIssueDate) : "-",
-                    citizenExpireDate: data.vendor_info[0].citizenExpireDate ? formatDate(data.vendor_info[0].citizenExpireDate) : "-",
-                    claimType: data.vendor_info[0].claimType || "-",
-                    claimOtherReason: data.vendor_info[0].claimOtherReason || "-",
-                    amount: data.vendor_info[0].amount || "-",
-                    bankCompany: data.vendor_info[0].bankCompany || "-",
-                    bankBranch: data.vendor_info[0].bankBranch || "-",
-                    bankAccountType: data.vendor_info[0].bankAccountType || "-",
-                    bankAccountName: data.vendor_info[0].bankAccountName || "-",
-                    bankAccountNumber: data.vendor_info[0].bankAccountNumber || "-",
-                    stu_id: data.vendor_info[0].stu_id || "-",
+                    name: (data.Student?.fnameTH || "") + " " + (data.Student?.lnameTH || "-"),
+                    student_ID: data.Student?.id || "-",
+                    nameTH: vendor.nameTH || "-",
+                    faculty: vendor.faculty || "-",
+                    houseID: vendor.houseID || "-",
+                    moo: vendor.moo || "-",
+                    buildingVillage: vendor.buildingVillage || "-",
+                    soi: vendor.soi || "-",
+                    road: vendor.road || "-",
+                    subDistrict: vendor.subDistrict || "-",
+                    district: vendor.district || "-",
+                    province: vendor.province || "-",
+                    postalCode: vendor.postalCode || "-",
+                    tel: vendor.tel || "-",
+                    citizenId: vendor.citizenId || "-",
+                    citizenIssueDate: vendor.citizenIssueDate ? formatDate(vendor.citizenIssueDate) : "-",
+                    citizenExpireDate: vendor.citizenExpireDate ? formatDate(vendor.citizenExpireDate) : "-",
+                    claimType: vendor.claimType || "-",
+                    claimOtherReason: vendor.claimOtherReason || "-",
+                    amount: vendor.amount || "-",
+                    bankCompany: vendor.bankCompany || "-",
+                    bankBranch: vendor.bankBranch || "-",
+                    bankAccountType: vendor.bankAccountType || "-",
+                    bankAccountName: vendor.bankAccountName || "-",
+                    bankAccountNumber: vendor.bankAccountNumber || "-",
+                    stu_id: vendor.stu_id || "-",
                     status: data.status || "-",
-                    vendorId: data.vendor_info[0].id
-                }
-            }
-            ));
+                    vendorId: vendor.id
+                };
+            });
+
+            setDataSource(formatted);
         } catch (error) {
             console.error('Error fetching student data:', error);
         }
@@ -452,25 +464,6 @@ const App = () => {
             ),
         },
         {
-            title: 'ประเภท',
-            dataIndex: 'displayedtreatmentType',
-            width: 150,
-
-            filters: [
-                { text: "IPD", value: "IPD" },
-                { text: "OPD", value: "OPD" },
-            ],
-            filteredValue: filteredInfo?.displayedtreatmentType,
-            onFilter: (value, record) => record?.displayedtreatmentType.includes(value),
-            ellipsis: true,
-            filterIcon: (filtered) => (
-                <div>
-                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-
-        },
-        {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'name',
             width: 200,
@@ -483,151 +476,178 @@ const App = () => {
             width: 125,
         },
         {
-            title: 'รายละเอียดของอาการป่วย',
-            dataIndex: 'illnessDescription',
-            width: 250,
+            title: 'เบอร์โทรนิสิต',
+            dataIndex: 'tel',
+            width: 150,
         },
+        {
+            title: 'ประเภทการเบิกเงิน',
+            dataIndex: 'claimType',
+            width: 200,
 
-        {
-            title: 'ชื่อสถานพยาบาลที่ 1',
-            dataIndex: 'hospitalName',
-            width: 180,
+            filters: [
+                { text: "ค่าจ้างนิสิตทำงานพิเศษ", value: "ค่าจ้างนิสิตทำงานพิเศษ" },
+                { text: "ค่าเล่าเรียน", value: "ค่าเล่าเรียน" },
+                { text: "ค่าธรรมเนียมการศึกษา", value: "ค่าธรรมเนียมการศึกษา" },
+                { text: "เงินสมทบค่ารักษาพยาบาล", value: "เงินสมทบค่ารักษาพยาบาล" },
+                { text: "เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ", value: "เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ" },
+                { text: "อื่นๆ (ระบุ)", value: "อื่นๆ (ระบุ)" },
+            ],
+            filteredValue: filteredInfo?.claimType,
+            onFilter: (value, record) => record?.claimType.includes(value),
+            ellipsis: true,
+            filterIcon: (filtered) => (
+                <div>
+                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
+                </div>
+            ),
+
         },
         {
-            title: 'ชื่อสถานพยาบาลที่ 2',
-            dataIndex: 'hospitalName2',
-            width: 180,
+            title: 'สาเหตุการเบิกเงิน (กรณีเลือกอื่นๆ)',
+            dataIndex: 'claimOtherReason',
+            width: 250,
+
         },
         {
-            title: 'ค่ารักษาพยาบาล',
-            dataIndex: 'totalMedicalFees',
+            title: 'จำนวนเงิน',
+            dataIndex: 'amount',
             render: (text) => {
                 const number = parseFloat(text.replace(/[^\d.-]/g, ''));
                 return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';
             },
-            width: 125,
+            width: 135,
         },
         {
-            title: 'ผู้ป่วยใน (IPD) : วันที่เข้ารักษา',
-            dataIndex: 'IPDAmittedDate',
+            title: 'บัญชีของธนาคาร',
+            dataIndex: 'bankCompany',
             width: 150,
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
+
         },
         {
-            title: 'ผู้ป่วยใน (IPD) : วันที่ออกจากการรักษา',
-            dataIndex: 'IPDDischargedDate',
+            title: 'สาขา',
+            dataIndex: 'bankBranch',
             width: 150,
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-        {
-            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 1',
-            dataIndex: 'OPDTreatmentDate1',
-            width: 155,
 
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
         },
         {
-            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 2',
-            dataIndex: 'OPDTreatmentDate2',
-            width: 155,
-
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-        {
-            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 3',
-            dataIndex: 'OPDTreatmentDate3',
-            width: 155,
-
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-        {
-            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 4',
-            dataIndex: 'OPDTreatmentDate4',
-            width: 155,
-
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-        {
-            title: 'ผู้ป่วยนอก (OPD) : วันที่เข้ารักษา 5',
-            dataIndex: 'OPDTreatmentDate5',
-            width: 155,
-
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
-
-        {
-            title: 'เบอร์โทรนิสิต',
-            dataIndex: 'phone_num',
-            width: 150,
-        },
-        {
-            title: 'อีเมลนิสิต',
-            dataIndex: 'email',
+            title: 'ชื่อบัญชี',
+            dataIndex: 'bankAccountName',
             width: 200,
+
         },
+        {
+            title: 'ประเภทบัญชี',
+            dataIndex: 'bankAccountType',
+            width: 150,
+
+        },
+        {
+            title: 'เลขที่บัญชี',
+            dataIndex: 'bankAccountNumber',
+            width: 150,
+
+        },
+        {
+            title: 'บ้านเลขที่',
+            dataIndex: 'houseID',
+            width: 120,
+
+        },
+        {
+            title: 'หมู่',
+            dataIndex: 'moo',
+            width: 80,
+
+        },
+        {
+            title: 'อาคาร/หมู่บ้าน',
+            dataIndex: 'buildingVillage',
+            width: 150,
+
+        },
+        {
+            title: 'ซอย',
+            dataIndex: 'soi',
+            width: 120,
+
+        },
+        {
+            title: 'ถนน',
+            dataIndex: 'road',
+            width: 120,
+
+        },
+        {
+            title: 'แขวง/ตำบล',
+            dataIndex: 'subDistrict',
+            width: 150,
+
+        },
+        {
+            title: 'เขต/อำเภอ',
+            dataIndex: 'district',
+            width: 150,
+
+        },
+        {
+            title: 'จังหวัด',
+            dataIndex: 'province',
+            width: 120,
+
+        },
+        {
+            title: 'รหัสไปรษณีย์',
+            dataIndex: 'postalCode',
+            width: 130,
+
+        },
+        {
+            title: 'โทรศัพท์',
+            dataIndex: 'tel',
+            width: 120,
+
+        },
+        {
+            title: 'เลขบัตรประชาชน',
+            dataIndex: 'citizenId',
+            width: 160,
+
+        },
+
+
+        {
+            title: 'วันที่ออกบัตร',
+            dataIndex: 'citizenIssueDate',
+            width: 150,
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
+            sortIcon: (sorted) => (
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
+                </div>
+            ),
+        },
+        {
+            title: 'วันหมดอายุบัตร',
+            dataIndex: 'citizenExpireDate',
+            width: 150,
+            sorter: (a, b) => {
+                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+                return dateA - dateB;
+            },
+            sortIcon: (sorted) => (
+                <div>
+                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
+                </div>
+            ),
+        },
+
+
 
 
     ];
