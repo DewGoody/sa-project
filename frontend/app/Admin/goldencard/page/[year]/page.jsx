@@ -123,13 +123,13 @@ const App = () => {
 
     function getStudentEntryYear(currentStudentYear) {
     const now = new Date();
-    const currentBEYear = now.getFullYear() + 543;
+    const signBEYear = now.getFullYear() + 543 - currentStudentYear;
 
     // ถ้าเดือน > สิงหาคม (เดือน 8) แปลว่าขึ้นปีใหม่การศึกษาแล้ว
-    const adjustedYear = now.getMonth() > 8 ? currentStudentYear - 1 : currentStudentYear;
+    const adjustedYear = now.getMonth() > 8 ? currentStudentYear   : currentStudentYear -1 ;
 
     // ปีที่เข้าเรียน = ปีปัจจุบัน - adjustedYear + 1
-    return currentBEYear - adjustedYear + 1;
+    return signBEYear + adjustedYear ;
 }
 
 
