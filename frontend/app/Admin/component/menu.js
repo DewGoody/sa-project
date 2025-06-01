@@ -24,6 +24,7 @@ const Menubar = () => {
         { key: "/Admin/rd/0", label: "การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร" },
         { key: "/Admin/goldencard/page/0", label: "บัตรทอง" },
         { key: "/Admin/prakan-inter/0", label: "Health Insurance For Foreigner Student" },
+        { key: "/Admin/vendor/0", label: "แบบคำขอรับเงินผ่านธนาคาร (Vendor)" },
         { key: "/Admin/editMaxStudent", label: "จัดการจำนวนผู้เข้ารับบริการ" },
         { key: "/Admin/user", label: "จัดการผู้ใช้งาน" },
         { key: "/Admin/editServiceDate", label: "เปิด-ปิดวันให้บริการ" },
