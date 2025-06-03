@@ -731,7 +731,16 @@ const handleDistrictSD9Change = (e) => {
 
           </div>
          <div>
-
+              {studentId === '0' && (
+                <div className="flex justify-start">
+                  <button
+                    onClick={() => router.push('/Admin/ponpan/0')}
+                    className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                  >
+                    Back
+                  </button>
+                </div>
+              )}
          </div>
          <div className="flex justify-end">
           
@@ -744,13 +753,14 @@ const handleDistrictSD9Change = (e) => {
            >
              Check data
            </button>):
+           
             <button
            
             htmlType="submit"
             
             className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
           >
-            เสร็จสิ้น
+            Save
           </button>
          }
  
