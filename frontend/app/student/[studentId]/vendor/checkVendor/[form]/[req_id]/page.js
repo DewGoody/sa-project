@@ -187,7 +187,7 @@ const Page = () => {
               </fieldset>
               <div className="flex space-x-4">
                 <label
-                  htmlFor="Option9"
+                  htmlFor="Option1"
                   className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                 >
                   <div className="flex items-center">
@@ -208,7 +208,7 @@ const Page = () => {
                   </div>
                 </label>
 
-                <label className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50">
+                <label htmlFor="Option2" className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50">
                   <div className="flex items-center">
                     &#8203;
                     <input
