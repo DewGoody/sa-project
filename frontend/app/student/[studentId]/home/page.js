@@ -352,7 +352,7 @@ export const Form = () => {
         message: "ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว"
       },
       {
-        condition: requestType === 'Health insurance' && status === 'รอจองคิว ',
+        condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'รอจองคิว',
         message: "รอจองคิว (Waiting for appointment booking)"
       },
       {
@@ -377,7 +377,7 @@ export const Form = () => {
       },
 
       {
-        condition: requestType === 'Health insurance' && status === 'รอจองคิว ',
+        condition: requestType === 'Health insurance' && status === 'รอจองคิว',
         message: "รอจองคิว (Waiting for appointment booking)"
       },
       {
