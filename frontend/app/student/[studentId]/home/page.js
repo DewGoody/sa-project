@@ -353,56 +353,60 @@ export const Form = () => {
       },
       {
         condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'รอจองคิว',
-        message: "รอจองคิว (Waiting for appointment booking)"
+        message: "รอจองคิว (waiting to book)"
       },
       {
         condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'รอเจ้าหน้าที่ดำเนินการ',
-        message: "รอเจ้าหน้าที่ดำเนินการ (Waiting for staff to process)"
+        message: "รอเจ้าหน้าที่ดำเนินการ (pending)"
       },
       {
         condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'ส่งเอกสารแล้ว',
-        message: "ส่งเอกสารให้บริษัทประกันแล้ว (Documents sent to insurance company)"
+        message: "ส่งเอกสารให้บริษัทประกันแล้ว (submitted)"
       },
       {
         condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'ขอข้อมูลเพิ่มเติม',
-        message: "ขอข้อมูลเพิ่มเติม (Request for additional information)"
+        message: "ขอข้อมูลเพิ่มเติม (information requested)"
       },
       {
         condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'ไม่อนุมัติ',
-        message: "ไม่อนุมัติ (Not approved)"
+        message: "ไม่อนุมัติ (denied)"
       },
       {
         condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'โอนเงินเรียบร้อย',
-        message: "โอนเงินเรียบร้อย (Payment completed)"
+        message: "โอนเงินเรียบร้อย (paid)"
       },
 
       {
         condition: requestType === 'Health insurance' && status === 'รอจองคิว',
-        message: "รอจองคิว (Waiting for appointment booking)"
+        message: "รอจองคิว (waiting to book)"
       },
       {
         condition: requestType === 'Health insurance' && status === 'รอเจ้าหน้าที่ดำเนินการ',
-        message: "รอเจ้าหน้าที่ดำเนินการ (Waiting for staff to process)"
+        message: "รอเจ้าหน้าที่ดำเนินการ (pending)"
       },
       {
         condition: requestType === 'Health insurance' && status === 'ส่งเอกสารแล้ว',
-        message: "ส่งเอกสารให้บริษัทประกันแล้ว (Documents sent to insurance company)"
+        message: "ส่งเอกสารให้บริษัทประกันแล้ว (submitted)"
       },
       {
         condition: requestType === 'Health insurance' && status === 'ขอข้อมูลเพิ่มเติม',
-        message: "ขอข้อมูลเพิ่มเติม (Request for additional information)"
+        message: "ขอข้อมูลเพิ่มเติม (information requested)"
       },
       {
         condition: requestType === 'Health insurance' && status === 'ไม่อนุมัติ',
-        message: "ไม่อนุมัติ (Not approved)"
+        message: "ไม่อนุมัติ (denied)"
       },
       {
         condition: requestType === 'Health insurance' && status === 'โอนเงินเรียบร้อย',
-        message: "โอนเงินเรียบร้อย (Payment completed)"
+        message: "โอนเงินเรียบร้อย (paid)"
       },
       {
         condition: requestType === 'การเบิกจ่ายประกันอุบัติเหตุ' && status === 'รอเข้ารับบริการ',
-        message: "รอเข้ารับบริการ (Waiting for service)"
+        message: "รอเข้ารับบริการ (waiting for service)"
+      },
+      {
+        condition: requestType === 'Health insurance' && status === 'รอเข้ารับบริการ',
+        message: "รอเข้ารับบริการ (waiting for service)"
       },
       {
         condition: requestType === 'กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)' && status === 'รอเจ้าหน้าที่ดำเนินการ',
@@ -541,7 +545,8 @@ export const Form = () => {
                               </div>
                             )}
                             <div className="flex">
-                              <div className="mt-1 font-semibold text-base text-blue-500">{item.status + "(Waiting to book queue)"}</div>
+                              
+                              <div className="mt-1 font-semibold text-base text-blue-500">{item.type == "การเบิกจ่ายประกันอุบัติเหตุ" || item.type == "Health insurance" ? item.status + " (waiting to book)" : item.status}</div>
                               {/* <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div> */}
                               {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && item.RD_info && Array.isArray(item.RD_info) && item.RD_info.length > 0 && (
                                 <div>
