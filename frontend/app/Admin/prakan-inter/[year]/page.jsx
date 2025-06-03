@@ -326,7 +326,6 @@ const App = () => {
 
     const columns = [
         {
-            align: 'center',
             width: 100,
             title: 'แก้ไข',
             dataIndex: 'status',
@@ -340,7 +339,6 @@ const App = () => {
             },
         },
         {
-            align: 'right', // เพิ่ม align ขวา
             title: 'ดาวน์โหลด',
             render: (_, record) => (
                 <div
