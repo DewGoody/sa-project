@@ -146,19 +146,19 @@ const AppointmentManagement = () => {
         {
             title: 'รหัสนิสิต',
             dataIndex: 'stu_id',
-            align: 'center',
+           
             ...getColumnSearchProps('stu_id'),
         },
         {
             title: 'ชื่อ',
             dataIndex: 'fnameTH',
-            align: 'center',
+           
             ...getColumnSearchProps('fnameTH'),
         },
         {
             title: 'นามสกุล',
             dataIndex: 'lnameTH',
-            align: 'center',
+           
             ...getColumnSearchProps('lnameTH'),
         },
 
