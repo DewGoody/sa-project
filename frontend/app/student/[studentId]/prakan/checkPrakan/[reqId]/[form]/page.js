@@ -5,6 +5,7 @@ import { Header } from '../../../../../../components/Header.js';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
+import RedirectOnBack from './RedirectOnBack';
 
 
 const RD = () => {
@@ -122,6 +123,8 @@ const RD = () => {
     };
 
     return (
+        <>
+        <RedirectOnBack />
         <div className="min-h-screen bg-white">
             <Header req1="การเบิกจ่ายประกันอุบัติเหตุ" req2="Accident insurance claim" />
             <main className="flex justify-center items-center">
@@ -256,7 +259,7 @@ const RD = () => {
                 </div>
 
             </main>
-        </div>
+        </div></>
     );
 };
 
