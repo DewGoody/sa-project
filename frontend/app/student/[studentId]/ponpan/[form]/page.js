@@ -393,6 +393,7 @@ const handleDistrictSD9Change = (e) => {
   setAlreadyData({ ...alreadyData, subdistrict_sd: e.target.value });
 }
   return (
+    <>
     <div className=" bg-white min-h-screen">
        <Header req1="การขอผ่อนผันการเข้ารับราชการทหาร" req2="Request for deferral of military service" />
       <div className=" mx-24 ">
@@ -779,5 +780,6 @@ const handleDistrictSD9Change = (e) => {
         
       </div>
     </div>
+    </>
   );
 }

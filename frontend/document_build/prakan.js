@@ -59,10 +59,10 @@ async function prakan(data){
 
     const isoTime = data.time_acc; // ได้แบบนี้จาก time input (05:42)
     console.log("isoTime", isoTime); 
-    const [hours, minutes] = isoTime.toString().split(':');
-    const hours1 = hours.split(' ')[4]-7;
-    const myDate = `${hours1}:${minutes}`;
-    console.log("myDate", myDate); // "05:42"
+    const hour = String(isoTime.getUTCHours()).padStart(2, '0');
+    const minute = String(isoTime.getUTCMinutes()).padStart(2, '0');
+    const myDate = `${hour}:${minute}`;
+    console.log("myDate:", myDate); // "05:42"
 
       
 

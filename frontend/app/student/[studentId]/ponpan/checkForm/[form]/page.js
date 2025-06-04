@@ -6,7 +6,7 @@ import { Header } from '../../../../../components/Header.js';
 import { Input } from 'antd';
 import { useRouter, useParams } from 'next/navigation';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-
+import RedirectOnBack from './RedirectOnBack';
 
 export default function Form() {
   const [profileData, setProfileData] = useState(null);
@@ -201,6 +201,8 @@ export default function Form() {
 
 
   return (
+    <>
+    <RedirectOnBack />
     <div className=" bg-white min-h-screen">
       <Header req1="การขอผ่อนผันการเข้ารับราชการทหาร" req2="Request for deferral of military service" />
       <div className=" mx-24 ">
@@ -542,6 +544,6 @@ export default function Form() {
 
         </div>
       </div>
-    </div>
+    </div></>
   );
 }
