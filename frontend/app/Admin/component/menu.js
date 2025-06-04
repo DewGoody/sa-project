@@ -20,16 +20,17 @@ const Menubar = () => {
     const menuItems = [
         { key: "/Admin/home/0", label: "จัดการการนัดหมาย" },
         { key: "/Admin/prakan/0", label: "ประกันอุบัติเหตุ" },
-        { key: "/Admin/ponpan/0", label: "การขอผ่อนผันการเข้ารับราชการทหาร" },
         { key: "/Admin/rd/0", label: "การรับสมัครและรายงานตัวนักศึกษาวิชาทหาร" },
+        { key: "/Admin/ponpan/0", label: "การขอผ่อนผันการเข้ารับราชการทหาร" },
         { key: "/Admin/goldencard/page/0", label: "บัตรทอง" },
         { key: "/Admin/prakan-inter/0", label: "Health Insurance For Foreigner Student" },
-        { key: "/Admin/vendor/0", label: "แบบคำขอรับเงินผ่านธนาคาร (Vendor)" },
-        { key: "/Admin/editMaxStudent", label: "จัดการจำนวนผู้เข้ารับบริการ" },
-        { key: "/Admin/user", label: "จัดการผู้ใช้งาน" },
-        { key: "/Admin/editServiceDate", label: "เปิด-ปิดวันให้บริการ" },
         { key: "/Admin/student-loan/0", label: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ)" },
+        { key: "/Admin/vendor/0", label: "แบบคำขอรับเงินผ่านธนาคาร (Vendor)" },
         { key: "/Admin/dashboard/0", label: "สรุปการนัดหมาย" },
+        { key: "/Admin/editMaxStudent", label: "จัดการจำนวนผู้เข้ารับบริการ" },
+        { key: "/Admin/editServiceDate", label: "เปิด-ปิดวันให้บริการ" },
+        { key: "/Admin/user", label: "จัดการผู้ใช้งาน" },
+        
     ];
 
     return (

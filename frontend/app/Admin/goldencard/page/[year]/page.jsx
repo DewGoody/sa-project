@@ -303,7 +303,7 @@ const App = () => {
     const columns = [
 
         {
-            align: 'center',
+        
             width: 100,
             title: 'แก้ไข',
             dataIndex: 'status',
@@ -317,8 +317,6 @@ const App = () => {
             },
         },
         {
-            align: 'center', // เพิ่ม align ขวา
-            width: 150,
             title: 'ดาวน์โหลด',
             render: (_, record) => (
                 <div
@@ -341,7 +339,7 @@ const App = () => {
         },
         {
             title: 'สถานะ',
-            align: 'center',
+        
             dataIndex: 'status',
             width: 200,
             render: (status, record) => {
@@ -440,7 +438,7 @@ const App = () => {
             title: 'วันที่อัปโหลดเอกสาร',
             dataIndex: 'updateat',
             width: 200,
-            align: 'center',
+        
             sorter: (a, b) => new Date(a.updateat) - new Date(b.updateat),
             sortIcon: (sorted) => (
                 <div>
@@ -452,28 +450,28 @@ const App = () => {
             title: 'ชั้นปี',
             dataIndex: 'year',
             width: 140,
-            align: 'center',
+        
             ...getColumnSearchProps('year'),
         },
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
             width: 180,
-            align: 'center',
+        
             ...getColumnSearchProps('student_ID'),
         },
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'fullname',
-            width: 180,
-            align: 'center',
+            width: 200,
+        
             ...getColumnSearchProps('fullname'),
         },
         {
             title: 'คณะ',
             dataIndex: 'facultyNameTH',
             width: 180,
-            align: 'center',
+        
             ...getColumnSearchProps('facultyNameTH'),
         },
 
@@ -482,48 +480,48 @@ const App = () => {
             title: 'เลขบัตรประชาชน',
             dataIndex: 'citizen_ID',
             width: 180,
-            align: 'center',
+        
             ...getColumnSearchProps('citizen_ID'),
         },
         {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
             width: 180,
-            align: 'center',
+        
         },
         {
             title: 'อำเภอ/เขต',
             dataIndex: 'district',
             width: 150,
-            align: 'center',
+        
             ...getColumnSearchProps('district'),
         },
         {
             title: 'จังหวัด',
             dataIndex: 'province',
             width: 150,
-            align: 'center',
+        
             ...getColumnSearchProps('province'),
         },
         {
             title: 'เบอร์มือถือ',
             dataIndex: 'phone',
             width: 150,
-            align: 'center',
+        
             ...getColumnSearchProps('phone'),
         },
         {
             title: 'Email',
             dataIndex: 'email',
             width: 180,
-            align: 'center',
+        
             ...getColumnSearchProps('email'),
         },
         {
             title: 'ชื่อสถานพยาบาลก่อนลงทะเบียน',
             dataIndex: 'hospital',
-            width: 180,
-            align: 'center',
+            width: 250,
+        
             ...getColumnSearchProps('hospital'),
         },
     ];
@@ -730,6 +728,7 @@ const App = () => {
                     <Table
                         rowSelection={rowSelection} columns={columns} dataSource={Data} loading={loading} key={refreshKey}
                         bordered
+                        scroll={{ x: 'max-content' }}
                     />
                     <Modal
                         title="กรุณาเขียนรายละเอียด"

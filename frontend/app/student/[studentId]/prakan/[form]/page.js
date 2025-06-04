@@ -20,6 +20,7 @@ export default function Form() {
   const [date, setDate] = useState("");
   const [yearLevel, setYearLevel] = useState('');
   const [isEditTime, setIsEditTime] = useState(false);
+  const [isTypeHos2, setIsTypeHos2] = useState(false);
 
   const router = useRouter();
   const {form} = useParams();
@@ -130,6 +131,12 @@ export default function Form() {
   };
   const handleChangePlaceTreat2 = (event) => {
     console.log(event.target.value);
+    if(event.target.value === "" || event.target.value === null){
+      setIsTypeHos2(false);
+    }else{
+      setIsTypeHos2(true);
+    }
+    console.log("isTypeHos2",isTypeHos2);
     setPrakanData({ ...prakanData, treatment_place2: event.target.value });
     setAlreadyData({ ...alreadyData, treatment_place2: event.target.value });
   };
@@ -534,6 +541,7 @@ export default function Form() {
                       onChange={handleChangeTypeHos2}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.hospital_type2 ?? 3}
+                      disabled={alreadyData?.treatment_place2 === null || alreadyData?.treatment_place2 === "" || isTypeHos2 === false }
                       
                       
                     >
@@ -571,7 +579,16 @@ export default function Form() {
 
           </div>
           <div>
-
+          {studentId === '0' && (
+                <div className="flex justify-start">
+                  <button
+                    onClick={() => router.push('/Admin/ponpan/0')}
+                    className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                  >
+                    Back
+                  </button>
+                </div>
+              )}
           </div>
           <div className="flex justify-end">
         
@@ -590,7 +607,7 @@ export default function Form() {
                     
                     className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
                   >
-                    เสร็จสิ้น
+                    Save
                   </button>
                 }
               

@@ -36,6 +36,11 @@ const AppointmentManagement = () => {
     const [filteredInfo, setFilteredInfo] = useState({});
     const [countStudent, setCountStudent] = useState([]);
     const [tableType, setTableType] = useState(0);
+    const [countAll0, setCountAll0] = useState(0);
+    const [countFinish0, setCountFinish0] = useState(0);
+    const [countNotFinish0, setCountNotFinish0] = useState(0);
+    const [countCancel0, setCountCancel0] = useState(0);
+
     const [countAll1, setCountAll1] = useState(0);
     const [countFinish1, setCountFinish1] = useState(0);
     const [countNotFinish1, setCountNotFinish1] = useState(0);
@@ -61,6 +66,9 @@ const AppointmentManagement = () => {
     const [countNotFinish6, setCountNotFinish6] = useState(0);
     const [countCancel6, setCountCancel6] = useState(0);
     const [countAll7, setCountAll7] = useState(0);
+    const [countFinish7, setCountFinish7] = useState(0);
+    const [countNotFinish7, setCountNotFinish7] = useState(0);
+    const [countCancel7, setCountCancel7] = useState(0);
     
 
 
@@ -166,6 +174,11 @@ const AppointmentManagement = () => {
             const res = await axios.post('/api/queue/getAll', { year: 0 });
             console.log("stuData", res.data.data);
             setStuData(res.data.data);
+            setCountAll0(res.data.data.length);
+            setCountFinish0(res.data.data.filter(item => item.status === "เข้ารับบริการแล้ว").length);
+            setCountNotFinish0(res.data.data.filter(item => item.status === "ไม่มาเข้ารับบริการ").length);
+            setCountCancel0(res.data.data.filter(item => item.status === "คิวถูกยกเลิก").length);
+            
             setDataSource(...dataSource, res.data.data.map((item, index) => {
                 const date = new Date(item.Timeslot.date);
                 const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
@@ -198,6 +211,7 @@ const AppointmentManagement = () => {
                 }
             }));
             console.log("dataSource :", dataSource);
+            
         } catch (error) {
             console.error('Error fetching student data:', error);
         }
@@ -215,12 +229,13 @@ const AppointmentManagement = () => {
 
     useEffect(() => {
         fetchStuData()
-        fetchCountStudent()
+        // fetchCountStudent()
     }, []);
 
     useEffect(() => {
         fetchUniqueYear()
     }, [])
+
 
 
     console.log("statusRequest", statusRequest);
@@ -235,7 +250,31 @@ const AppointmentManagement = () => {
 
     const handleTypeChange = (value) => {
         setTableType(value);
-        if (value === 1) {
+        if (value === 0) {
+            const newData = stuData.map((item, index) => {
+                const date = new Date(item.Timeslot.date);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    
+                return {
+                    key: index,
+                    name: `${item.Student.fnameTH} ${item.Student.lnameTH}`,
+                    student_ID: item.Student.id,
+                    status: item.status,
+                    id: item.id,
+                    reqId: item.Request.id,
+                    type: item.Request.type,
+                    date: formattedDate,
+                    period: timeSlots[item.period] + " น.",
+                };
+                
+            });
+            setDataSource(newData);
+            setCountAll0(newData.length);
+            setCountFinish0(newData.filter(item => item.status === "เข้ารับบริการแล้ว").length);
+            setCountNotFinish0(newData.filter(item => item.status === "ไม่มาเข้ารับบริการ").length);
+            setCountCancel0(newData.filter(item => item.status === "คิวถูกยกเลิก").length);
+        } 
+        else if (value === 1) {
             const filtered = stuData.filter(item => item.Request.type === "การเบิกจ่ายประกันอุบัติเหตุ");
             const newData = filtered.map((item, index) => {
                 const date = new Date(item.Timeslot.date);
@@ -382,8 +421,9 @@ const AppointmentManagement = () => {
             setCountNotFinish6(filtered.filter(item => item.status === "ไม่มาเข้ารับบริการ").length);
             setCountCancel6(filtered.filter(item => item.status === "คิวถูกยกเลิก").length);
         }
-        else if (value === 0) {
-            const newData = stuData.map((item, index) => {
+        else if (value === 7) {
+            const filtered = stuData.filter(item => item.Request.type === "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย");
+            const newData = filtered.map((item, index) => {
                 const date = new Date(item.Timeslot.date);
                 const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
     
@@ -400,6 +440,10 @@ const AppointmentManagement = () => {
                 };
             });
             setDataSource(newData);
+            setCountAll7(filtered.length);
+            setCountFinish7(filtered.filter(item => item.status === "เข้ารับบริการแล้ว").length);
+            setCountNotFinish7(filtered.filter(item => item.status === "ไม่มาเข้ารับบริการ").length);
+            setCountCancel7(filtered.filter(item => item.status === "คิวถูกยกเลิก").length);
         }
     };
     
@@ -500,15 +544,16 @@ const AppointmentManagement = () => {
                         <div className='mt-1 mb-6 '>
                             <Select
                                 value={tableType}
-                                style={{ width: 240, marginLeft: 10 }}
+                                style={{ width: 260, marginLeft: 10 }}
                                 onChange={handleTypeChange}
                             >
                                 <Select.Option value={0}>การนัดหมายทั้งหมด</Select.Option>
                                 <Select.Option value={1}>การเบิกจ่ายประกันอุบัติเหตุ</Select.Option>
-                                <Select.Option value={2}>การผ่อนผันเข้ารับราชการทหาร</Select.Option>
                                 <Select.Option value={4}>การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร</Select.Option>
+                                <Select.Option value={2}>การผ่อนผันเข้ารับราชการทหาร</Select.Option>
                                 <Select.Option value={5}>Health insurance</Select.Option>
                                 <Select.Option value={6}>กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)</Select.Option>
+                                <Select.Option value={7}>แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย</Select.Option>
                                
                             </Select>
                             
@@ -525,7 +570,7 @@ const AppointmentManagement = () => {
                                 title={<span style={{ fontWeight: 'semi-bold', fontSize: '22px', color: 'black' }}>นัดหมายทั้งหมด</span>}
                                 value={
                                     tableType === 0
-                                      ? countStudent?.studentCount ?? 0
+                                      ? countAll0
                                       : tableType === 1
                                       ? countAll1
                                       : tableType === 2
@@ -538,6 +583,8 @@ const AppointmentManagement = () => {
                                         ? countAll5
                                         : tableType === 6
                                         ? countAll6
+                                        : tableType === 7
+                                        ? countAll7
                                       : countStudent?.studentCount ?? 0
                                   }
                                 />
@@ -546,22 +593,24 @@ const AppointmentManagement = () => {
                             <Col style={{ flex: '0 0 auto' }}>
                             <Card style={{ width: 220 }}>
                                 <Statistic 
-                                title={<span style={{ fontWeight: 'semi-bold', fontSize: '22px', color: 'black' }}>เข้ารับบริการแล้ว</span>}
+                                title={<span style={{ fontWeight: 'semi-bold', fontSize: '22px', color: 'black' }}>มาเข้ารับบริการ</span>}
                                 value={
                                     tableType === 0
-                                      ? countStudent?.finishQueueCount ?? 0
-                                      : tableType === 1
-                                      ? countFinish1
-                                      : tableType === 2
-                                      ? countFinish2
-                                      : tableType === 3
-                                      ? countFinish3
-                                      : tableType === 4
-                                        ? countFinish4
-                                        : tableType === 5
-                                        ? countFinish5
-                                        : tableType === 6
-                                        ? countFinish6
+                                    ? countFinish0
+                                    : tableType === 1
+                                    ? countFinish1
+                                    : tableType === 2
+                                    ? countFinish2
+                                    : tableType === 3
+                                    ? countFinish3
+                                    : tableType === 4
+                                    ? countFinish4
+                                    : tableType === 5
+                                    ? countFinish5
+                                    : tableType === 6
+                                    ? countFinish6
+                                    : tableType === 7
+                                    ? countFinish7
                                       : countStudent?.finishQueueCount ?? 0
                                   } 
                                 />
@@ -573,7 +622,7 @@ const AppointmentManagement = () => {
                                 title={<span style={{ fontWeight: 'semi-bold', fontSize: '22px', color: 'black' }}>ไม่มาเข้ารับบริการ</span>}
                                 value={
                                     tableType === 0
-                                      ? countStudent?.notFinishQueueCount ?? 0
+                                      ? countNotFinish0
                                       : tableType === 1
                                       ? countNotFinish1
                                       : tableType === 2
@@ -586,6 +635,8 @@ const AppointmentManagement = () => {
                                         ? countNotFinish5
                                         : tableType === 6
                                         ? countNotFinish6
+                                        : tableType === 7
+                                        ? countNotFinish7
                                       : countStudent?.notFinishQueueCount ?? 0
                                   } 
                                 />
@@ -597,7 +648,7 @@ const AppointmentManagement = () => {
                                 title={<span style={{ fontWeight: 'semi-bold', fontSize: '22px', color: 'black' }}>ยกเลิกคิว</span>} 
                                 value={
                                     tableType === 0
-                                      ? countStudent?.cancleQueueCount ?? 0
+                                      ? countCancel0
                                       : tableType === 1
                                       ? countCancel1
                                       : tableType === 2
@@ -610,6 +661,8 @@ const AppointmentManagement = () => {
                                         ? countCancel5
                                         : tableType === 6
                                         ? countCancel6
+                                        : tableType === 7
+                                        ? countCancel7
                                       : countStudent?.cancleQueueCount ?? 0
                                   }
                                 />

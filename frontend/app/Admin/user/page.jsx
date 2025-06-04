@@ -369,7 +369,7 @@ const App = () => {
     </Modal>
 
     <Modal
-      title="Delete User"
+      title="ลบผู้ใช้งาน"
       visible={isDeleteModalVisible}
       onCancel={handleDeleteCancel}
       footer={[

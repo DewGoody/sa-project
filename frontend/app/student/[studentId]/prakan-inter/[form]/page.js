@@ -313,7 +313,7 @@ function page() {
                         onChange={(event) => handleChange(event, "title")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Mr. / Mrs. / Miss"
-                        value={profileData?.title || alreadyData?.title || ""}
+                        value={alreadyData?.title}
                       />
                     </div>
 
@@ -326,7 +326,7 @@ function page() {
                         onChange={(event) => handleChange(event, "fnameEN")}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="Name"
-                        defaultValue={profileData?.fnameEN || alreadyData?.Student.fnameEN}
+                        defaultValue={profileData?.fnameEN || alreadyData?.Student?.fnameEN}
 
                         disabled
                       />
@@ -341,7 +341,7 @@ function page() {
                       onChange={(event) => handleChange(event, "lnameEN")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2  focus:ring-blue-600"
                       placeholder="Surname"
-                      defaultValue={profileData?.lnameEN || alreadyData?.Student.lnameEN}
+                      defaultValue={profileData?.lnameEN || alreadyData?.Student?.lnameEN}
                       disabled
                     />
                   </div>
@@ -355,7 +355,7 @@ function page() {
                       onChange={(event) => handleChange(event, "id")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Student ID"
-                      defaultValue={profileData?.id || alreadyData?.Student.id}
+                      defaultValue={profileData?.id || alreadyData?.Student?.id}
                       disabled
                     />
                   </div>
@@ -511,7 +511,10 @@ function page() {
               <div className="flex justify-between mt-8">
                 <a
                   onClick={() => {
-                    router.push(`/student/${studentId}/home`);
+                    if (studentId != '0') {
+                      router.push(`/student/${studentId}/home`);
+                    } else
+                      router.push(`/Admin/prakan-inter/0`);
                   }}
                 >
                   <button className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11">
@@ -523,7 +526,8 @@ function page() {
                   onClick={handleSubmit}
                   className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
                 >
-                  Next
+                  {studentId != '0' ? "Next" : "Save"}
+
                 </button>
               </div>
             </div>

@@ -273,7 +273,6 @@ const App = () => {
     };
     const columns = [
         {
-            align: 'center',
             title: 'แก้ไข',
             dataIndex: 'status',
             render: (status, record) => {
@@ -285,8 +284,7 @@ const App = () => {
                 }
             },
         },
-        {
-            align: 'center', // เพิ่ม align ขวา
+        { 
             title: 'ดาวน์โหลด',
             render: (_, record) => (
                 <div
@@ -355,6 +353,7 @@ const App = () => {
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'fullname',
+            width: 250,
             ...getColumnSearchProps('fullname'),
         }, {
             title: 'ชั้นปี นศท',
@@ -369,11 +368,13 @@ const App = () => {
         {
             title: 'รหัสนักศึกษาวิชาทหาร',
             dataIndex: 'rd_ID',
+            width: 200,
             ...getColumnSearchProps('rd_ID'),
         },
         {
             title: 'เลขบัตรประชาชน',
             dataIndex: 'citizen_ID',
+            width: 200,
             ...getColumnSearchProps('citizen_ID'),
         },
         {
@@ -582,6 +583,7 @@ const App = () => {
                     <Table
                         rowSelection={rowSelection} columns={columns} dataSource={Data} loading={loading} key={refreshKey}
                         bordered
+                        scroll={{ x: 'max-content' }}
                     />
                 </Content>
             </Layout>

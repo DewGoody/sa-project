@@ -597,7 +597,7 @@ const handleDistrictSD9Change = (e) => {
                       name="province"
                       value={provinceSelected || alreadyData?.province}
                       onChange={handleProvinceChange}
-                      required
+                      // required
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
                       <option value="" >{alreadyData.province !== undefined ? alreadyData.province : 'เลือกจังหวัด (select province)'}</option>
@@ -612,7 +612,7 @@ const handleDistrictSD9Change = (e) => {
               <select
                   name="amphure"
                   value={amphureSelected || alreadyData?.district}
-                  required
+                  // required
                   onChange={handleAmphureChange}
                   className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               >
@@ -698,7 +698,7 @@ const handleDistrictSD9Change = (e) => {
                   <select
                       name="province"
                       value={provinceSD9Selected}
-                      required
+                      // required
                       onChange={handleProvinceSD9Change}
                        className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   >
@@ -712,7 +712,7 @@ const handleDistrictSD9Change = (e) => {
               <label className=" text-gray-700 mb-2">เขต/อำเภอ (District)</label>
               <select
                   name="amphure"
-                  required
+                  // required
                   value={amphureSD9Selected}
                   onChange={handleAmphureSD9Change}
                   className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -731,7 +731,16 @@ const handleDistrictSD9Change = (e) => {
 
           </div>
          <div>
-
+              {studentId === '0' && (
+                <div className="flex justify-start">
+                  <button
+                    onClick={() => router.push('/Admin/ponpan/0')}
+                    className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                  >
+                    Back
+                  </button>
+                </div>
+              )}
          </div>
          <div className="flex justify-end">
           
@@ -744,13 +753,14 @@ const handleDistrictSD9Change = (e) => {
            >
              Check data
            </button>):
+           
             <button
            
             htmlType="submit"
             
             className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
           >
-            เสร็จสิ้น
+            Save
           </button>
          }
  

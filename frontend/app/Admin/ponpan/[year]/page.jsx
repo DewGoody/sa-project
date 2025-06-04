@@ -475,7 +475,7 @@ const AppointmentManagement = () => {
         {
             title: 'ศึกษาในระดับปริญญา',
             dataIndex: 'degree',
-            width: 100,
+            width: 195,
         },
         {
             title: 'ชั้นปีที่',

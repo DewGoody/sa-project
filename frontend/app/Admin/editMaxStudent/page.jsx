@@ -277,7 +277,7 @@ const AppointmentManagement = () => {
                                             </Button>
                                             <Button
                                                 type="primary"
-                                                // danger
+                                                danger
                                                 onClick={() => {
                                                     handleDelete(record);
                                                 }}
@@ -313,7 +313,7 @@ const AppointmentManagement = () => {
                         <Button type="primary" onClick={handleOk}>ยืนยัน</Button>
                     </div>
                     <Modal
-                        title="แก้ไขจำนวนนิสิตต่อรอบการให้บริการ"
+                        title="แก้ไขจำนวนนิสิต"
                         visible={isModalVisible}
                         onCancel={handleCancel}
                         footer={[
@@ -349,7 +349,7 @@ const AppointmentManagement = () => {
                     </Modal>
 
                     <Modal
-                        title="ต้องการเปิดวันให้บริการใช่ไหม"
+                        title="ต้องการลบจำนวนนิสิตที่รองรับได้ต่อรอบการให้บริการในวันนี้ใช่ไหม"
                         visible={isDeleteModalVisible}
                         onCancel={handleDeleteCancel}
                         footer={[
@@ -357,15 +357,15 @@ const AppointmentManagement = () => {
                                 ปิดหน้าต่าง
                             </Button>,
                             <Button key="delete" type="primary" loading={loading} onClick={handleDeleteConfirm}>
-                                เปิดกลับมาให้บริการอีกครั้ง
+                                ลบ
                             </Button>,
                         ]}
                     >
-                        <p>คุณต้องการจะเปิดวันนี้ให้กลับมาให้บริการได้อีกครั้งใช่ไหม</p>
+                        {/* <p>คุณต้องการจะเปิดวันนี้ให้กลับมาให้บริการได้อีกครั้งใช่ไหม</p> */}
                     </Modal>
 
                     <Modal
-                        title="แก้ไขค่าเริ่มต้นจำนวนผู้เข้ารับบริการ"
+                        title="กำหนดค่าเริ่มต้น"
                         visible={isModalDefaultVisible}
                         onCancel={() => setIsModalDefaultVisible(false)}
                         footer={[
