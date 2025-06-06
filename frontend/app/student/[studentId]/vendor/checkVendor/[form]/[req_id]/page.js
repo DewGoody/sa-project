@@ -185,10 +185,10 @@ const Page = () => {
 
                 </div>
               </fieldset>
-              <div className="flex space-x-4">
+              <div className="flex flex-col">
                 <label
                   htmlFor="Option1"
-                  className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                  className=" flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
                 >
                   <div className="flex items-center">
                     &#8203;
@@ -203,12 +203,12 @@ const Page = () => {
 
                   <div>
                     <strong className="font-medium text-gray-900">
-                      Prepare the above documents
+                      จัดเตรียมเอกสารตามข้อมูลข้างต้น (Prepare the  above documents)
                     </strong>
                   </div>
                 </label>
 
-                <label htmlFor="Option2" className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50">
+                <label htmlFor="Option2" className="flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50">
                   <div className="flex items-center">
                     &#8203;
                     <input
@@ -223,7 +223,7 @@ const Page = () => {
 
                   <div>
                     <strong className="font-medium text-gray-900">
-                      Download the file and verify the information
+                      ดาวน์โหลดไฟล์และตรวจสอบข้อมูลแล้ว (Download the file and verify the information)
                     </strong>
                   </div>
                 </label>
