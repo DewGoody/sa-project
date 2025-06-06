@@ -96,19 +96,19 @@ async function vendorFormBuilder(data) {
   drawTextOnPage(firstPage, "-", 160, height - 350);
   drawTextOnPage(firstPage, data.tel, 364, height - 350);
   //Thai ID
-  drawTextOnPage(firstPage, data.citizenId[0], 145, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[1], 167, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[2], 180, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[3], 193, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[4], 206, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[5], 228, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[6], 241, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[7], 254, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[8], 267, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[9], 280, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[10], 301, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[11], 314, height - 375);
-  drawTextOnPage(firstPage, data.citizenId[12], 336, height - 375);
+  drawTextOnPage(firstPage, data.citizenId[0], 145, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[1], 167, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[2], 180, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[3], 193, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[4], 206, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[5], 228, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[6], 241, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[7], 254, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[8], 267, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[9], 280, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[10], 301, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[11], 314, height - 372);
+  drawTextOnPage(firstPage, data.citizenId[12], 336, height - 372);
 
   // Convert and draw Thai dates
   const thaiIssueDate = convertToThaiDate(data.citizenIssueDate);
@@ -159,16 +159,16 @@ async function vendorFormBuilder(data) {
   }
   drawTextOnPage(firstPage, data.bankAccountName, 91, height - 488);
   //accnum
-  drawTextOnPage(firstPage, data.bankAccountNumber[0], 358, height - 494);
-  drawTextOnPage(firstPage, data.bankAccountNumber[1], 373, height - 494);
-  drawTextOnPage(firstPage, data.bankAccountNumber[2], 387, height - 494);
-  drawTextOnPage(firstPage, data.bankAccountNumber[3], 419, height - 494);
-  drawTextOnPage(firstPage, data.bankAccountNumber[4], 450, height - 494);
-  drawTextOnPage(firstPage, data.bankAccountNumber[5], 465, height - 494);
-  drawTextOnPage(firstPage, data.bankAccountNumber[6], 479, height - 494);
-  drawTextOnPage(firstPage, data.bankAccountNumber[7], 494, height - 494);
-  drawTextOnPage(firstPage, data.bankAccountNumber[8], 507, height - 494);
-  drawTextOnPage(firstPage, data.bankAccountNumber[9], 540, height - 494);
+  drawTextOnPage(firstPage, data.bankAccountNumber[0], 358, height - 490);
+  drawTextOnPage(firstPage, data.bankAccountNumber[1], 373, height - 490);
+  drawTextOnPage(firstPage, data.bankAccountNumber[2], 387, height - 490);
+  drawTextOnPage(firstPage, data.bankAccountNumber[3], 419, height - 490);
+  drawTextOnPage(firstPage, data.bankAccountNumber[4], 450, height - 490);
+  drawTextOnPage(firstPage, data.bankAccountNumber[5], 465, height - 490);
+  drawTextOnPage(firstPage, data.bankAccountNumber[6], 479, height - 490);
+  drawTextOnPage(firstPage, data.bankAccountNumber[7], 494, height - 490);
+  drawTextOnPage(firstPage, data.bankAccountNumber[8], 507, height - 490);
+  drawTextOnPage(firstPage, data.bankAccountNumber[9], 540, height - 490);
 
   drawTextOnPage(firstPage, data.nameTH, 315, height - 627);
   const pdfBytes = await pdfDoc.save();
