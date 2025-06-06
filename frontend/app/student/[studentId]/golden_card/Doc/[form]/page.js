@@ -42,8 +42,10 @@ const gold = () => {
         const { status } = info.file;
         if (status === 'done') {
             const fileList = info.fileList.map(file => file.originFileObj); // ดึงไฟล์ออกมาเป็น Array
-            setSelectedFiles(fileList); // เก็บไฟล์ลง state
+            setSelectedFiles(fileList); // เก็บไฟล์ลง state            
         } else if (status === 'error') {
+            setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+        }else if (status === 'removed') {
             setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
@@ -53,7 +55,9 @@ const gold = () => {
             const fileList = info.fileList.map(file => file.originFileObj); // ดึงไฟล์ออกมาเป็น Array
             setSelectedFilescitizen(fileList); // เก็บไฟล์ลง state
         } else if (status === 'error') {
-            setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+            setSelectedFilescitizen([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+        }else if (status === 'removed') {
+            setSelectedFilescitizen([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
     const handleFilehouse = (info) => {
@@ -62,7 +66,9 @@ const gold = () => {
             const fileList = info.fileList.map(file => file.originFileObj); // ดึงไฟล์ออกมาเป็น Array
             setSelectedFileshouse(fileList); // เก็บไฟล์ลง state
         } else if (status === 'error') {
-            setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+            setSelectedFileshouse([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+        }else if (status === 'removed') {
+            setSelectedFileshouse([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
     const handleFilestudent = (info) => {
@@ -71,7 +77,9 @@ const gold = () => {
             const fileList = info.fileList.map(file => file.originFileObj); // ดึงไฟล์ออกมาเป็น Array
             setSelectedFilesstudent(fileList); // เก็บไฟล์ลง state
         } else if (status === 'error') {
-            setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+            setSelectedFilesstudent([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+        }else if (status === 'removed') {
+            setSelectedFilesstudent([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
     const handleFilefast = (info) => {
@@ -80,7 +88,9 @@ const gold = () => {
             const fileList = info.fileList.map(file => file.originFileObj); // ดึงไฟล์ออกมาเป็น Array
             setSelectedFilesfast(fileList); // เก็บไฟล์ลง state
         } else if (status === 'error') {
-            setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+            setSelectedFilesfast([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
+        }else if (status === 'removed') {
+            setSelectedFilesfast([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
 
