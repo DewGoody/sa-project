@@ -302,8 +302,6 @@ export const Form = () => {
     try {
       setLoading(true);
       const response = await axios.post('/api/request/delete', { id: deleteNotQueueId });
-
-      // เก็บรายการที่จะลบไว้ก่อน
       const deletedItem = notQueue.find(item => item.id === deleteNotQueueId);
 
       setNotQueue(prevNotQueue => {

@@ -34,6 +34,8 @@ export const FormDataProvider = ({ children }) => {
 
   const fetchdataapi = async (form) => {
     try {
+      console.log("Fetching data for form ID:", form);
+      
       const response = await axios.get(`/api/militaryapi/student?id=${form}`);
       setdatafromapiprofile(response.data);
       const responsemilitary = await axios.get(`/api/military?id=${form}`)

@@ -192,8 +192,8 @@ const RD = () => {
                                                 </strong>
                                                 <br />
                                                 <a
-                                                    href="/ใบรับรองแพทย์.pdf"  // 📝 ใส่ path ของไฟล์
-                                                    target="_blank"  // 🔗 เปิดในแท็บใหม่
+                                                    href="/ใบรับรองแพทย์.pdf" 
+                                                    target="_blank" 
                                                     rel="noopener noreferrer"
                                                     className="text-red-500 hover:underline"
                                                 >

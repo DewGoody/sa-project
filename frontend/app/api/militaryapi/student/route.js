@@ -20,8 +20,10 @@ export async function GET(req) {
         } else if(formId !== NaN){
             console.log("in else");
             const idbefore = await prisma.rD_info.findFirst({
-                where: { id: parseInt(formId) }
+                where: { req_id: parseInt(formId) }
             })
+            console.log("idbefore", idbefore);
+            
             id = idbefore.student_id
         }
 
@@ -109,7 +111,7 @@ export async function PUT(req) {
         } else if(formId !== NaN){
             console.log("in else");
             const idbefore = await prisma.rD_info.findFirst({
-                where: { id: parseInt(formId) }
+                where: { req_id: parseInt(formId) }
             })
             id = idbefore.student_id
         } // Ensure this function returns an ID
