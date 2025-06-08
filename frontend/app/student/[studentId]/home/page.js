@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { use } from "react";
 import { useRouter, useParams } from 'next/navigation';
 
 import {
@@ -50,17 +50,17 @@ export const Form = () => {
   const [GC_time, SETGC_time] = useState({ id: "", created_at: "", status: "" });
   const router = useRouter();
   const showModal = (item) => {
-    console.log("item :", item);
+    // console.log("item :", item);
     setDeleteQueueId(item.id);
     setPrakanDataLength(prakanData.length);
     setReqIdEdit(item.Request.id)
-    console.log("comfirm", confirmDelete);
-    console.log("prakanDataLength", prakanDataLength);
+    // console.log("comfirm", confirmDelete);
+    // console.log("prakanDataLength", prakanDataLength);
     setIsModalOpen(true);
   };
 
   const showModalEditForm = (item) => {
-    console.log("item:", item);
+    // console.log("item:", item);
     setReqIdEdit(item.Request.id)
     setDeleteQueueId(item.id);
     setPrakanDataLength(prakanData.length);
@@ -68,7 +68,7 @@ export const Form = () => {
   };
 
   const showModalEditFormNotQueue = (item) => {
-    console.log("item:", item);
+    // console.log("item:", item);
     setReqIdNotQueue(item.id)
     // setReqIdEdit(item.id)
     // setDeleteNotQueueId(item.id);
@@ -77,12 +77,12 @@ export const Form = () => {
   };
 
   const showModalNotQueue = (id) => {
-    console.log("deleteIdNotQueue :", id);
+    // console.log("deleteIdNotQueue :", id);
     setNotQueueLength(notQueue.length);
     setDeleteNotQueueId(id);
     setNotQueueLength(notQueue.length);
-    console.log("comfirm", confirmDelete);
-    console.log("prakanDataLength", prakanDataLength);
+    // console.log("comfirm", confirmDelete);
+    // console.log("prakanDataLength", prakanDataLength);
     setIsModalOpen(true);
   }
 
@@ -92,7 +92,7 @@ export const Form = () => {
   };
 
   const showModalBookQueue = (item) => {
-    console.log("itemBookQueue", item);
+    // console.log("itemBookQueue", item);
     setReqBookQueue(item.req_id);
     setItemBookQueue(item.id);
     setIsModalScheduleOpen(true);
@@ -106,7 +106,7 @@ export const Form = () => {
   };
 
   const showModalCheckInfo = (item) => {
-    console.log("info :", item);
+    // console.log("info :", item);
     setMoreInfo(item);
     setIsModalCheckInfoOpen(true);
   };
@@ -120,15 +120,14 @@ export const Form = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('/api/profile'); // Example API
-      console.log(response.data);
-
+      setLoading(true); // เพิ่มบรรทัดนี้
+      const response = await axios.get('/api/profile');
+      // console.log(response.data);
       setProfileData(response.data);
-      setLoading(false);
-      console.log(response.data);
+      setLoading(false); // เพิ่มบรรทัดนี้
     } catch (error) {
       setError(error.message);
-      setLoading(false);
+      setLoading(false); // เพิ่มบรรทัดนี้
     }
   };
 
@@ -138,8 +137,9 @@ export const Form = () => {
 
   const fetchQueue = async () => {
     try {
+      setLoading(true);
       const response = await axios.post('/api/queue/getByStuId', { studentId: profileData.id }); // Example API
-      console.log("fetchQueue :", response.data.data);
+      // console.log("fetchQueue :", response.data.data);
       response.data.data.map((item) => {
         if (item.Request.type === "การผ่อนผันเข้ารับราชการทหาร") {
           setHasPonpan(true);
@@ -151,7 +151,7 @@ export const Form = () => {
           setHasStudentloan(true);
         }
       })
-      console.log("hasPonpan", hasPonpan);
+      // console.log("hasPonpan", hasPonpan);
       setPrakanData(response.data.data);
       setPrakanDone(true);
       setPeriod(response.data.data[0].Timeslot.period);
@@ -165,10 +165,11 @@ export const Form = () => {
 
   const fetchNotQueue = async () => {
     try {
+      setLoading(true);
       const response = await axios.post('/api/request/getNotQueue', { id: profileData.id }); // Example API
-      console.log("getNotQueue", response.data.data);
+      // console.log("getNotQueue", response.data.data);
       response.data.data.map((item) => {
-        console.log("item", item);
+        // console.log("item", item);
 
         if (item.type === "โครงการหลักประกันสุขภาพถ้วนหน้า") {
           SETGC(true);
@@ -182,9 +183,11 @@ export const Form = () => {
           SETRD(true);
         }
       })
-      console.log("formId", response.data.data[0].id);
+      // console.log("formId", response.data.data[0].id);
       setFormId(response.data.data[0].id);
       setNotQueue(response.data.data);
+      console.log("FormId", formId);
+
       setLoading(false);
 
     } catch (error) {
@@ -194,10 +197,13 @@ export const Form = () => {
   }
   const fetchGolden = async () => {
     try {
+      setLoading(true);
       const response = await axios.post('/api/request/getNotQueueGoldencard', { id: profileData.id }); // Example API
-      console.log("getNotQueue", response.data.data);
+      // console.log("getNotQueue", response.data.data);
+      const goldenData = response.data.data;
+      const goldenItem = goldenData.find(item => item.type === "โครงการหลักประกันสุขภาพถ้วนหน้า");
       response.data.data.map((item) => {
-        console.log("item", item);
+        // console.log("item", item);
 
         if (item.type === "โครงการหลักประกันสุขภาพถ้วนหน้า") {
           SETGC(true);
@@ -208,9 +214,19 @@ export const Form = () => {
           });
         }
       })
-      console.log("formId", response.data.data[0].id);
+      // console.log("formId", response.data.data[0].id);
       setFormId(prevFormId => Array.isArray(prevFormId) ? [...prevFormId, response.data.data[0].id] : [response.data.data[0].id]);
-      setNotQueue(prevNotQueue => Array.isArray(prevNotQueue) ? [...prevNotQueue, ...response.data.data] : [...response.data.data]);
+      setNotQueue(prevNotQueue => {
+        // ตรวจสอบว่าข้อมูลนี้มีอยู่แล้วใน state หรือไม่
+        const exists = prevNotQueue.some(item => item.id === goldenItem.id);
+
+        // ถ้ายังไม่มี ให้เพิ่มเข้าไป
+        if (!exists) {
+          return [...prevNotQueue, goldenItem];
+        }
+        // ถ้ามีอยู่แล้ว คืนค่าเดิม
+        return prevNotQueue;
+      });
       setLoading(false);
 
     } catch (error) {
@@ -220,39 +236,26 @@ export const Form = () => {
   }
 
   const fetchAllData = async () => {
-    await fetchNotQueue();
-    await fetchQueue();
-    await fetchGolden();
+    setLoading(true);
+    try {
+      await fetchNotQueue();
+      await fetchQueue();
+      await fetchGolden();
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    console.log("notQueue useffect", notQueue);
+  }, [notQueue]);
+
 
   useEffect(() => {
     fetchAllData();
   }, [profileData, deleteQueueId, deleteNotQueueId]);
-
-  // useEffect(() => {
-  //   const checkGCStatus = async () => {
-  //     console.log("GC_time changed:", GC_time);
-  //     if (GC_time.status === "ย้ายสิทธิ์ไม่สำเร็จ") {
-  //       if (GC_time.created_at) {
-  //         const createdAt = new Date(GC_time.created_at);
-  //         const currentDate = new Date();
-  //         const timeDiff = Math.abs(currentDate - createdAt);
-  //         const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-  //         console.log("diffDays", diffDays);
-  //         if (diffDays > 30) {
-  //           try {
-  //             await axios.post('/api/request/delete', { id: GC_time.id }); 
-  //             window.location.reload();
-  //           } catch (error) {
-  //             console.error("Error deleting request:", error);
-  //           }
-  //         }
-  //       }
-  //     }
-  //   };
-
-  //   checkGCStatus();
-  // }, [GC_time]);
 
   const formatDate = (dateString) => {
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -278,13 +281,16 @@ export const Form = () => {
 
   const handleDeleteQueue = async () => {
     try {
+      setLoading(true);
       const response = await axios.post('/api/queue/delete', { id: deleteQueueId }); // Example API
       const res = await axios.post('/api/request/delete', { id: reqIdEdit }); // Example API
       setConfirmDelete(true);
       setPrakanDone(false);
       setDeleteQueueId(0);
       setIsModalOpen(false);
-      console.log(response.data);
+      // console.log(response.data);
+      fetchAllData();
+      setLoading(false);
 
     } catch (error) {
       setError(error.message);
@@ -294,27 +300,51 @@ export const Form = () => {
 
   const handleDeleteNotQueue = async () => {
     try {
-      const response = await axios.post('/api/request/delete', { id: deleteNotQueueId }); // Example API
+      setLoading(true);
+      const response = await axios.post('/api/request/delete', { id: deleteNotQueueId });
+
+      // เก็บรายการที่จะลบไว้ก่อน
+      const deletedItem = notQueue.find(item => item.id === deleteNotQueueId);
+
+      setNotQueue(prevNotQueue => {
+        const newNotQueue = prevNotQueue.filter(item => item.id !== deleteNotQueueId);
+        return newNotQueue;
+      });
+
+      // ตรวจสอบประเภทของรายการที่ลบ และอัพเดท state ตามเงื่อนไข
+      if (deletedItem) {
+        if (deletedItem.type === "โครงการหลักประกันสุขภาพถ้วนหน้า") {
+          SETGC(false);
+          SETGC_time({
+            id: "",
+            created_at: "",
+            status: ""
+          });
+        }
+        if (deletedItem.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
+          SETRD(false);
+        }
+      }
+
       setConfirmDelete(true);
       setDeleteNotQueueId(0);
       setIsModalOpen(false);
-      console.log("responseDeleteNotQueue", response.data);
     } catch (error) {
       setError(error.message);
-      console.log("errorNotqueue", error);
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   const handleEditForm = async () => {
     // console.log("sfjkfhksjdfnsmd,nfsdm,nfds,mnfsd,",id);
     const response = await axios.post('/api/request/getById', { id: reqIdEditNotQueue }); // Example API
-    console.log("editFormResponse :", response.data.data);
+    // console.log("editFormResponse :", response.data.data);
     router.push(`/student/${studentId}/${response.data.data.path}/${response.data.data.form}`);
   }
 
   const handleEditFormDeleteQueue = async (id) => {
-    console.log("editFormReqId : ", id);
+    // console.log("editFormReqId : ", id);
     const res = await axios.post('/api/queue/delete', { id: deleteQueueId }); // Example API
 
     setConfirmDelete(true);
@@ -322,7 +352,7 @@ export const Form = () => {
     setDeleteQueueId(0);
     const response = await axios.post('/api/request/getById', { id: reqIdEdit }); // Example API
     // const resDelete = await axios.post('/api/request/delete',{id: reqIdEdit}); // Example API
-    console.log("editFormResponse :", response.data.data);
+    // console.log("editFormResponse :", response.data.data);
     router.push(`/student/${studentId}/${response.data.data.path}/${response.data.data.form}`);
     setIsModalEditFormOpen(false);
 
@@ -463,12 +493,17 @@ export const Form = () => {
 
   return (
     <div className="min-h-screen" >
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <Spin size="large" />
+        </div>
+      )}
       <div className="absolute -top-2/4 -left-3/4 w-11/12 h-4/6 bg-pink-200 rounded-full"></div>
       <div className="flex justify-center items-center">
         <div className="mt-8">
           <img src="https://www.car.chula.ac.th/carweb2/images/chula_logo.png" alt="profile"
             className=" h-32 w-20 mx-auto "
-
           />
         </div>
         <div className="mt-8 ml-4 items-center">
@@ -482,10 +517,7 @@ export const Form = () => {
       </div>
       <div className="min-h-screen  relative overflow-hidden">
         {/* <div className="absolute right-0  w-1/4 h-full rounded-tl-2xl bg-pink-300 z-0"></div> */}
-
         <main className="flex justify-center items-center  ">
-
-
           <div className=" p-8  w-full mx-72 z-10">
             <div>
               <ServiceCard
@@ -494,7 +526,6 @@ export const Form = () => {
                 stu={true}
               />
             </div>
-
             <div className=" py-8">
               <div className="flex justify-between items-center mt-7">
                 <p className="text-xl font-bold">รายการขอรับบริการ (Service request list)</p>
@@ -545,7 +576,7 @@ export const Form = () => {
                               </div>
                             )}
                             <div className="flex">
-                              
+
                               <div className="mt-1 font-semibold text-base text-blue-500">{item.type == "การเบิกจ่ายประกันอุบัติเหตุ" || item.type == "Health insurance" ? item.status + " (waiting to book)" : item.status}</div>
                               {/* <div className=" ml-1 mt-1 font-semibold text-base text-pink-500"> {item.more_info}</div> */}
                               {item.type == "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร" && item.RD_info && Array.isArray(item.RD_info) && item.RD_info.length > 0 && (
