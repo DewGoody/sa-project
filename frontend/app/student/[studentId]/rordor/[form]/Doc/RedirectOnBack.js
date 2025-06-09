@@ -7,8 +7,8 @@ const RedirectOnBack = () => {
     const router = useRouter();
     const params = useParams();
     const studentId = params?.studentId;
-    const id = params?.id;
-    const queueId = params?.queueId;
+    const reqId = params?.reqId;
+    const form = params?.form;
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ const RedirectOnBack = () => {
 
         const handlePopState = (event) => {
             setLoading(true);
-            router.replace(`/student/${studentId}/home`);
+            router.replace(`/student/${studentId}/rordor/${form}/0/checkData`);
         };
 
         window.addEventListener("popstate", handlePopState);

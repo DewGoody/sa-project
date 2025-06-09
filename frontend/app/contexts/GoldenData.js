@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useDebugValue } from 'react';
 import axios from 'axios';
 const Golden = createContext();
 export const useGoldenContext = () => useContext(Golden);
@@ -19,11 +19,13 @@ export const GoldenDataProvider = ({ children }) => {
     try {
       const response = await axios.get(`/api/UHC?id=${form}`); //form คือเลข formid
       setdatafromapi(response.data);
+
+
     } catch (err) {
       console.log(err);
     }
   };
-  
+
   const formatDate = (dateString) => {
     if (!dateString) return ''; // Handle null or undefined dates
     const date = new Date(dateString);
@@ -32,6 +34,10 @@ export const GoldenDataProvider = ({ children }) => {
     const year = date.getFullYear();
     return `${year}-${month}-${day}`;
   };
+  useEffect(() => {
+    // console.log(datafromapi, "datafromapi.Student.tel_num");
+
+  }, [datafromapi]);
   useEffect(() => {
     if (Object.keys(datafromapi).length > 0) {
       const formattedBirthDate = formatDate(datafromapi.Student.bd);

@@ -528,6 +528,7 @@ const page = () => {
                                     สถานะก่อนลงทะเบียน (Pre-registration status)
                                 </h3>
                                 <div>
+
                                     <div className="flex items-center space-x-4 py-2">
                                         <input
                                             type="radio"
@@ -548,7 +549,17 @@ const page = () => {
                                                 placeholder="ชื่อโรงพยาบาล"
                                                 disabled={Data.benefitStatus !== "existing"}
                                             />
+                                            <br />
+                                            <a
+                                                href="/Goldencard.JPG"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-red-500 hover:underline"
+                                            >
+                                                สามารถเช็กสิทธิ์เดิมได้ที่เว็บไซต์ของ สปสช.
+                                            </a>
                                         </label>
+
                                     </div>
 
 

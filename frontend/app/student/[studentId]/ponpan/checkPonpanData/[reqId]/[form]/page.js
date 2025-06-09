@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
 import { QuestionOutlined } from '@ant-design/icons';
 import { Color } from 'antd/es/color-picker/index.js';
-
+import RedirectOnBack from './RedirectOnBack';
 
 const RD = () => {
     // State to manage checkbox status
@@ -86,6 +86,8 @@ const RD = () => {
     };
 
     return (
+        <>
+        <RedirectOnBack />
         <div className="min-h-screen bg-white">
             <Header req1="การขอผ่อนผันการเข้ารับราชการทหาร" req2="Request for deferral of military service" />
             <main className="flex justify-center items-center">
@@ -223,6 +225,7 @@ const RD = () => {
                 </div>
             </main>
         </div>
+        </>
     );
 };
 
