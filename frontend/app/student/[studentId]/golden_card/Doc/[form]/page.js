@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import { useRouter, useParams } from 'next/navigation';
+import RedirectOnBack from './RedirectOnBack';
 const { Dragger } = Upload;
 
 
@@ -45,7 +46,7 @@ const gold = () => {
             setSelectedFiles(fileList); // เก็บไฟล์ลง state            
         } else if (status === 'error') {
             setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
-        }else if (status === 'removed') {
+        } else if (status === 'removed') {
             setSelectedFiles([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
@@ -56,7 +57,7 @@ const gold = () => {
             setSelectedFilescitizen(fileList); // เก็บไฟล์ลง state
         } else if (status === 'error') {
             setSelectedFilescitizen([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
-        }else if (status === 'removed') {
+        } else if (status === 'removed') {
             setSelectedFilescitizen([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
@@ -67,7 +68,7 @@ const gold = () => {
             setSelectedFileshouse(fileList); // เก็บไฟล์ลง state
         } else if (status === 'error') {
             setSelectedFileshouse([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
-        }else if (status === 'removed') {
+        } else if (status === 'removed') {
             setSelectedFileshouse([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
@@ -78,7 +79,7 @@ const gold = () => {
             setSelectedFilesstudent(fileList); // เก็บไฟล์ลง state
         } else if (status === 'error') {
             setSelectedFilesstudent([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
-        }else if (status === 'removed') {
+        } else if (status === 'removed') {
             setSelectedFilesstudent([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
@@ -89,7 +90,7 @@ const gold = () => {
             setSelectedFilesfast(fileList); // เก็บไฟล์ลง state
         } else if (status === 'error') {
             setSelectedFilesfast([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
-        }else if (status === 'removed') {
+        } else if (status === 'removed') {
             setSelectedFilesfast([]); // ล้าง state เมื่อเกิดข้อผิดพลาด
         }
     };
@@ -374,128 +375,131 @@ const gold = () => {
 
 
     return (
-        <div>
-            <Header req1="แบบคำขอรับรองคุณสมบัติในการเข้าร่วมโครงการประกันสุขภาพถ้วนหน้า (กรุงเทพมหานคร) สำหรับนิสิตจุฬาลงกรณ์มหาวิทยาลัย และ หนังสือข้อตกลงขอขึ้นทะเบียนบัตรประกันสุขภาพถ้วนหน้า โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย" req2="" />
-            <div className="min-h-screen bg-white">
-                <main className="flex justify-center items-center">
-                    <div className="bg-white p-8 w-full max-w-4xl">
+        <>
+        <RedirectOnBack />
+            <div>
+                <Header req1="แบบคำขอรับรองคุณสมบัติในการเข้าร่วมโครงการประกันสุขภาพถ้วนหน้า (กรุงเทพมหานคร) สำหรับนิสิตจุฬาลงกรณ์มหาวิทยาลัย และ หนังสือข้อตกลงขอขึ้นทะเบียนบัตรประกันสุขภาพถ้วนหน้า โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย" req2="" />
+                <div className="min-h-screen bg-white">
+                    <main className="flex justify-center items-center">
+                        <div className="bg-white p-8 w-full max-w-4xl">
 
-                        <h1 className="text-lg font-bold text-center mb-4 text-gray-800" >
-                            Download เอกสารสำหรับเซ็นรับรอง
-                        </h1>
-                        <button
-                            onClick={handleDownload}
-                            className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300 w-full h-16">
-                            Download
-                        </button>
+                            <h1 className="text-lg font-bold text-center mb-4 text-gray-800" >
+                                Download เอกสารสำหรับเซ็นรับรอง
+                            </h1>
+                            <button
+                                onClick={handleDownload}
+                                className="px-6 py-3 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-500 transition duration-300 w-full h-16">
+                                Download
+                            </button>
 
 
-                        <h2 className="pt-5 text-lg font-bold text-center mb-4 text-gray-800">
-                            อัปโหลดเอกสารต่อไปนี้ (Upload the followering)
-                        </h2>
-                        <section>
+                            <h2 className="pt-5 text-lg font-bold text-center mb-4 text-gray-800">
+                                อัปโหลดเอกสารต่อไปนี้ (Upload the followering)
+                            </h2>
+                            <section>
 
-                            <div className="grid grid-cols-1 gap-6">
-                                <fieldset>
-                                    <h1 className=" text-red-500">* อัปโหลดได้เฉพาะไฟล์ PDF ขนาดไฟล์ละไม่เกิน 5 MB *</h1>
-                                    <div >
-                                        <div className=" py-4">
-                                            <Dragger {...props}>
-                                                <p className="ant-upload-text">เอกสารที่เซ็นรับรอง</p>
-                                            </Dragger>
-                                        </div>
-                                        <div className=" py-4" >
-                                            <Dragger {...citizen}>
-                                                <p className="ant-upload-text">สำเนาบัตรประชาชน (เซ็นรับรองสำเนาถูกต้องพร้อมลงชื่อกำกับ)</p>
-                                            </Dragger>
-                                        </div>
-                                        <div className=" py-4">
-                                            <Dragger {...house}>
-                                                <p className="ant-upload-text">สำเนาทะเบียนบ้านที่ผู้ขอมีชื่ออยู่ (เซ็นรับรองสำเนาถูกต้องพร้อมลงชื่อกำกับ)</p>
-                                            </Dragger>
-                                        </div>
-                                        <div className=" py-4">
-                                            <Dragger {...student}>
+                                <div className="grid grid-cols-1 gap-6">
+                                    <fieldset>
+                                        <h1 className=" text-red-500">* อัปโหลดได้เฉพาะไฟล์ PDF ขนาดไฟล์ละไม่เกิน 5 MB *</h1>
+                                        <div >
+                                            <div className=" py-4">
+                                                <Dragger {...props}>
+                                                    <p className="ant-upload-text">เอกสารที่เซ็นรับรอง</p>
+                                                </Dragger>
+                                            </div>
+                                            <div className=" py-4" >
+                                                <Dragger {...citizen}>
+                                                    <p className="ant-upload-text">สำเนาบัตรประชาชน (เซ็นรับรองสำเนาถูกต้องพร้อมลงชื่อกำกับ)</p>
+                                                </Dragger>
+                                            </div>
+                                            <div className=" py-4">
+                                                <Dragger {...house}>
+                                                    <p className="ant-upload-text">สำเนาทะเบียนบ้านที่ผู้ขอมีชื่ออยู่ (เซ็นรับรองสำเนาถูกต้องพร้อมลงชื่อกำกับ)</p>
+                                                </Dragger>
+                                            </div>
+                                            <div className=" py-4">
+                                                <Dragger {...student}>
 
-                                                <p className="ant-upload-text">สำเนาบัตรประจำตัวนิสิต (เซ็นรับรองสำเนาถูกต้องพร้อมลงชื่อกำกับ)</p>
-                                            </Dragger>
+                                                    <p className="ant-upload-text">สำเนาบัตรประจำตัวนิสิต (เซ็นรับรองสำเนาถูกต้องพร้อมลงชื่อกำกับ)</p>
+                                                </Dragger>
+                                            </div>
+                                            <div className=" py-4">
+                                                <Dragger {...fast}>
+                                                    <p className="ant-upload-text">ใบนัดโรงพยาบาลจุฬาเท่านั้น (ถ้ามี)</p>
+                                                </Dragger>
+                                            </div>
                                         </div>
-                                        <div className=" py-4">
-                                            <Dragger {...fast}>
-                                                <p className="ant-upload-text">ใบนัดโรงพยาบาลจุฬาเท่านั้น (ถ้ามี)</p>
-                                            </Dragger>
-                                        </div>
+                                    </fieldset>
+                                    <div className="flex space-x-4">
+                                        <label
+                                            htmlFor="Option1"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+                                            <div className="flex items-center">
+                                                &#8203;
+                                                <input
+                                                    type="checkbox"
+                                                    className="size-4 rounded border-gray-300"
+                                                    id="Option1"
+                                                    checked={checkboxes.Option1}
+                                                    onChange={handleCheckboxChange}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">เซ็นเอกสารแล้ว</strong>
+                                            </div>
+                                        </label>
+                                        <label
+                                            htmlFor="Option2"
+                                            className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
+                                        >
+                                            <div className="flex items-center">
+                                                &#8203;
+                                                <input
+                                                    type="checkbox"
+                                                    className="size-4 rounded border-gray-300"
+                                                    id="Option2"
+                                                    checked={checkboxes.Option2}
+                                                    onChange={handleCheckboxChange}
+                                                    disabled={!isDownload}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <strong className="font-medium text-gray-900">อัปโหลดไฟล์แล้ว</strong>
+                                            </div>
+                                        </label>
                                     </div>
-                                </fieldset>
-                                <div className="flex space-x-4">
-                                    <label
-                                        htmlFor="Option1"
-                                        className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                    >
-                                        <div className="flex items-center">
-                                            &#8203;
-                                            <input
-                                                type="checkbox"
-                                                className="size-4 rounded border-gray-300"
-                                                id="Option1"
-                                                checked={checkboxes.Option1}
-                                                onChange={handleCheckboxChange}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <strong className="font-medium text-gray-900">เซ็นเอกสารแล้ว</strong>
-                                        </div>
-                                    </label>
-                                    <label
-                                        htmlFor="Option2"
-                                        className="-mx-4 flex cursor-pointer items-start gap-4 p-4 has-[:checked]:bg-blue-50"
-                                    >
-                                        <div className="flex items-center">
-                                            &#8203;
-                                            <input
-                                                type="checkbox"
-                                                className="size-4 rounded border-gray-300"
-                                                id="Option2"
-                                                checked={checkboxes.Option2}
-                                                onChange={handleCheckboxChange}
-                                                disabled={!isDownload}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <strong className="font-medium text-gray-900">อัปโหลดไฟล์แล้ว</strong>
-                                        </div>
-                                    </label>
                                 </div>
-                            </div>
 
 
-                        </section>
-                        {Object.values(checkboxes).filter(Boolean).length >= 2 && (
-                            <div className="flex justify-between mt-8">
-                                <button
-                                    onClick={handleback}
-                                    className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
-                                    Back
-                                </button>
-                                <a
-
-                                    onClick={handleConfirm}>
+                            </section>
+                            {Object.values(checkboxes).filter(Boolean).length >= 2 && (
+                                <div className="flex justify-between mt-8">
                                     <button
-                                        type="submit"
-                                        className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
-                                    >
-                                        Confirm
-                                        <ToastContainer />
+                                        onClick={handleback}
+                                        className="px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-300">
+                                        Back
                                     </button>
-                                </a>
-                            </div>
-                        )}
-                    </div>
-                </main>
+                                    <a
+
+                                        onClick={handleConfirm}>
+                                        <button
+                                            type="submit"
+                                            className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
+                                        >
+                                            Confirm
+                                            <ToastContainer />
+                                        </button>
+                                    </a>
+                                </div>
+                            )}
+                        </div>
+                    </main>
+                </div >
             </div >
-        </div >
+        </>
     );
 };
 

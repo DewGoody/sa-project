@@ -169,8 +169,13 @@ export const Form = () => {
       const response = await axios.post('/api/request/getNotQueue', { id: profileData.id }); // Example API
       // console.log("getNotQueue", response.data.data);
       response.data.data.map((item) => {
-        // console.log("item", item);
-
+        console.log("item", item);
+        if (item.type === "การผ่อนผันเข้ารับราชการทหาร") {
+          setHasPonpan(true);
+        }
+        if (item.type === "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)") {
+          setHasStudentloan(true);
+        }
         if (item.type === "โครงการหลักประกันสุขภาพถ้วนหน้า") {
           SETGC(true);
           SETGC_time({

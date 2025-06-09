@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx'; // เพิ่ม XLSX สำหรับ export
 import { saveAs } from 'file-saver';
@@ -99,15 +99,16 @@ const App = () => {
         setSearchedColumn(dataIndex);
     };
     const handleEditForm = async (id, year) => {
-        const response = await axios.post('/api/request/getById', { id: id }); // Example API
+        // const response = await axios.post('/api/request/getById', { id: id }); // Example API
+        console.log("asffdsfasfdsfsdafsdafs", id, year);
 
         if (year == 1) {
-            router.push(`/student/0/rordor/${response.data.data.form}/1/checkData`);
+            router.push(`/student/0/rordor/${id}/1/checkData`);
 
         }
         else {
 
-            router.push(`/student/0/rordor/${response.data.data.form}/1/checkData2`);
+            router.push(`/student/0/rordor/${id}/1/checkData2`);
 
         }
 
@@ -187,7 +188,7 @@ const App = () => {
                 rd_ID: item.RD_info?.[0]?.citizenRD || '-',
                 yearRD: item.RD_info?.[0]?.RD_type || '-',
             })))
-            console.log(Data.student_ID)
+            console.log(Data.reqId);
         } catch (error) {
             console.log(error)
         }
@@ -195,8 +196,12 @@ const App = () => {
     useEffect(() => {
         fetchUniqueYear()
         fetchData()
-        // console.log(Data.fullname)
+
     }, [])
+    useEffect(() => {
+        console.log("reqId", Data);
+
+    }, [Data])
     const [collapsed, setCollapsed] = useState(false);
 
 
@@ -276,7 +281,7 @@ const App = () => {
             title: 'แก้ไข',
             dataIndex: 'status',
             render: (status, record) => {
-                if (status !== "ประวัติการแก้ไข" && status !== "เสร็จสิ้น") {
+                if (status !== "ประวัติการแก้ไข" && status !== "เสร็จสิ้น" && status !== "คำขอถูกยกเลิก") {
                     return (
                         <Space size="middle">
                             <Button onClick={() => handleEditForm(record.reqId, record.yearRD)}>แก้ไข</Button>
@@ -284,7 +289,7 @@ const App = () => {
                 }
             },
         },
-        { 
+        {
             title: 'ดาวน์โหลด',
             render: (_, record) => (
                 <div
