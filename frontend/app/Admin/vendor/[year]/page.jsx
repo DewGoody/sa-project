@@ -49,7 +49,7 @@ const App = () => {
         console.log("editFormReqId : ", id);
         const response = await axios.post('/api/request/getById', { id: id }); // Example API
         console.log("editFormResponse :", response.data.data.path);
-        router.push(`/student/0/prakan-inter/${response.data.data.form}`);
+        router.push(`/student/0/vendor/${response.data.data.form}`);
     }
     const showModal = (record) => {
         setReqMoreInfo(record);
@@ -321,306 +321,322 @@ const App = () => {
     });
 
 
-    const columns = [
-
-        {
-            align: 'right', // เพิ่ม align ขวา
-            title: 'ดาวน์โหลด',
-            render: (_, record) => (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100%', // Optional: ensures full height centering within the parent
-                    }}
-                >
-                    <DownloadOutlined
-                        style={{
-                            fontSize: '21px', // Increase the size (e.g., 24px)
-                            cursor: 'pointer', // Optional: changes the cursor to a pointer
-                        }}
-                        onClick={() => handleDownload(record)}
-                    />
-                </div>
-            ),
-        },
-        {
-            title: 'สถานะ',
-            dataIndex: 'status',
-            width: 200,
-
-            render: (status, record) => {
-                let options = [];
-                if (status === 'รอเข้ารับบริการ') {
-                    options = [
-                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'black' }, },
-                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
-                    ];
-                } else if (status === 'รอนิสิตส่งเอกสาร') {
-                    options = [
-                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
-                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'black' } },
-                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
-                    ];
-                } else if (status === 'รับเอกสารแล้ว') {
-                    options = [
-                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
-                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'black' } },
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
-                    ];
-                }
-                else if (status === 'เจ้าหน้าที่จัดทำข้อมูล') {
-                    options = [
-                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
-                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'black' }, disabled: true },
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
-                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'black' } },
-                    ];
-                } else if (status === 'ไม่อนุมัติ') {
-                    options = [
-                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
-                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
-                    ];
-                }
-                else if (status === 'ส่งเอกสารให้การเงินแล้ว') {
-                    options = [
-                        { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
-                        { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                        { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
-                        { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
-                    ];
-                }
+    const columns = [{
+        align: 'center',
+        width: 100,
+        title: 'แก้ไข',
+        dataIndex: 'status',
+        render: (status, record) => {
+            if (status !== "ส่งเอกสารให้การเงินแล้ว" && status !== "ไม่อนุมัติ") {
                 return (
-                    <>
-                        <Select
-                            defaultValue={record.status}
-                            style={{ width: "180px" }}
-                            options={options}
-                            onChange={(value) => handleChangeStatus({ ...record, status: value })}
-                        />
-
-                        {record.status === "ขอข้อมูลเพิ่มเติม" ?
-                            <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
-                            : null}
-
-                    </>
-
-
-                );
-            },
-            filters: [
-                { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
-                { text: "รอนิสิตส่งเอกสาร", value: "รอนิสิตส่งเอกสาร" },
-                { text: "รับเอกสารแล้ว", value: "รับเอกสารแล้ว" },
-                { text: "เจ้าหน้าที่จัดทำข้อมูล", value: "เจ้าหน้าที่จัดทำข้อมูล" },
-                { text: "ไม่อนุมัติ", value: "ไม่อนุมัติ" },
-                { text: "ส่งเอกสารให้การเงินแล้ว", value: "ส่งเอกสารให้การเงินแล้ว" },
-            ],
-            filteredValue: filteredInfo?.status,
-            onFilter: (value, record) => record?.status.includes(value),
-            ellipsis: true,
-            filterIcon: (filtered) => (
-                <div>
-                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
+                    <Space size="middle">
+                        <Button onClick={() => {
+                            console.log("record", record);
+                            handleEditForm(record.id)
+                        }}>แก้ไข</Button>
+                    </Space>)
+            }
         },
-        {
-            title: 'ชื่อ-นามสกุล',
-            dataIndex: 'name',
-            width: 200,
-            ...getColumnSearchProps('name'),
-        },
-        {
-            title: 'รหัสนิสิต',
-            dataIndex: 'student_ID',
-            ...getColumnSearchProps('student_ID'),
-            width: 125,
-        },
-        {
-            title: 'เบอร์โทรนิสิต',
-            dataIndex: 'tel',
-            width: 150,
-        },
-        {
-            title: 'ประเภทการเบิกเงิน',
-            dataIndex: 'claimType',
-            width: 200,
+    },
 
-            filters: [
-                { text: "ค่าจ้างนิสิตทำงานพิเศษ", value: "ค่าจ้างนิสิตทำงานพิเศษ" },
-                { text: "ค่าเล่าเรียน", value: "ค่าเล่าเรียน" },
-                { text: "ค่าธรรมเนียมการศึกษา", value: "ค่าธรรมเนียมการศึกษา" },
-                { text: "เงินสมทบค่ารักษาพยาบาล", value: "เงินสมทบค่ารักษาพยาบาล" },
-                { text: "เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ", value: "เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ" },
-                { text: "อื่นๆ (ระบุ)", value: "อื่นๆ (ระบุ)" },
-            ],
-            filteredValue: filteredInfo?.claimType,
-            onFilter: (value, record) => record?.claimType.includes(value),
-            ellipsis: true,
-            filterIcon: (filtered) => (
-                <div>
-                    <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
+    {
 
-        },
-        {
-            title: 'สาเหตุการเบิกเงิน (กรณีเลือกอื่นๆ)',
-            dataIndex: 'claimOtherReason',
-            width: 250,
+        title: 'ดาวน์โหลด',
+        render: (_, record) => (
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100%', // Optional: ensures full height centering within the parent
+                }}
+            >
+                <DownloadOutlined
+                    style={{
+                        fontSize: '21px', // Increase the size (e.g., 24px)
+                        cursor: 'pointer', // Optional: changes the cursor to a pointer
+                    }}
+                    onClick={() => handleDownload(record)}
+                />
+            </div>
+        ),
+    },
+    {
+        title: 'สถานะ',
+        dataIndex: 'status',
+        width: 200,
 
-        },
-        {
-            title: 'จำนวนเงิน',
-            dataIndex: 'amount',
-            render: (text) => {
-                const number = parseFloat(text.replace(/[^\d.-]/g, ''));
-                return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';
-            },
-            width: 135,
-        },
-        {
-            title: 'บัญชีของธนาคาร',
-            dataIndex: 'bankCompany',
-            width: 150,
+        render: (status, record) => {
+            let options = [];
+            if (status === 'รอเข้ารับบริการ') {
+                options = [
+                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'black' }, },
+                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
+                    { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
+                    { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
+                ];
+            } else if (status === 'รอนิสิตส่งเอกสาร') {
+                options = [
+                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
+                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'black' } },
+                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
+                    { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
+                    { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
+                ];
+            } else if (status === 'รับเอกสารแล้ว') {
+                options = [
+                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
+                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'black' } },
+                    { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
+                    { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
+                ];
+            }
+            else if (status === 'เจ้าหน้าที่จัดทำข้อมูล') {
+                options = [
+                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
+                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'black' }, disabled: true },
+                    { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
+                    { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'black' } },
+                ];
+            } else if (status === 'ไม่อนุมัติ') {
+                options = [
+                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
+                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
+                    { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
+                    { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
+                ];
+            }
+            else if (status === 'ส่งเอกสารให้การเงินแล้ว') {
+                options = [
+                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
+                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
+                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
+                    { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
+                    { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
+                ];
+            }
+            return (
+                <>
+                    <Select
+                        defaultValue={record.status}
+                        style={{ width: "180px" }}
+                        options={options}
+                        onChange={(value) => handleChangeStatus({ ...record, status: value })}
+                    />
 
-        },
-        {
-            title: 'สาขา',
-            dataIndex: 'bankBranch',
-            width: 150,
+                    {record.status === "ขอข้อมูลเพิ่มเติม" ?
+                        <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
+                        : null}
 
-        },
-        {
-            title: 'ชื่อบัญชี',
-            dataIndex: 'bankAccountName',
-            width: 200,
-
-        },
-        {
-            title: 'ประเภทบัญชี',
-            dataIndex: 'bankAccountType',
-            width: 150,
-
-        },
-        {
-            title: 'เลขที่บัญชี',
-            dataIndex: 'bankAccountNumber',
-            width: 150,
-
-        },
-        {
-            title: 'บ้านเลขที่',
-            dataIndex: 'houseID',
-            width: 120,
-
-        },
-        {
-            title: 'หมู่',
-            dataIndex: 'moo',
-            width: 80,
-
-        },
-        {
-            title: 'อาคาร/หมู่บ้าน',
-            dataIndex: 'buildingVillage',
-            width: 150,
-
-        },
-        {
-            title: 'ซอย',
-            dataIndex: 'soi',
-            width: 120,
-
-        },
-        {
-            title: 'ถนน',
-            dataIndex: 'road',
-            width: 120,
-
-        },
-        {
-            title: 'แขวง/ตำบล',
-            dataIndex: 'subDistrict',
-            width: 150,
-
-        },
-        {
-            title: 'เขต/อำเภอ',
-            dataIndex: 'district',
-            width: 150,
-
-        },
-        {
-            title: 'จังหวัด',
-            dataIndex: 'province',
-            width: 120,
-
-        },
-        {
-            title: 'รหัสไปรษณีย์',
-            dataIndex: 'postalCode',
-            width: 130,
-
-        },
-        {
-            title: 'โทรศัพท์',
-            dataIndex: 'tel',
-            width: 120,
-
-        },
-        {
-            title: 'เลขบัตรประชาชน',
-            dataIndex: 'citizenId',
-            width: 160,
-
-        },
+                </>
 
 
-        {
-            title: 'วันที่ออกบัตร',
-            dataIndex: 'citizenIssueDate',
-            width: 150,
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
+            );
         },
-        {
-            title: 'วันหมดอายุบัตร',
-            dataIndex: 'citizenExpireDate',
-            width: 150,
-            sorter: (a, b) => {
-                const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
-                const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
-                return dateA - dateB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
+        filters: [
+            { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
+            { text: "รอนิสิตส่งเอกสาร", value: "รอนิสิตส่งเอกสาร" },
+            { text: "รับเอกสารแล้ว", value: "รับเอกสารแล้ว" },
+            { text: "เจ้าหน้าที่จัดทำข้อมูล", value: "เจ้าหน้าที่จัดทำข้อมูล" },
+            { text: "ไม่อนุมัติ", value: "ไม่อนุมัติ" },
+            { text: "ส่งเอกสารให้การเงินแล้ว", value: "ส่งเอกสารให้การเงินแล้ว" },
+        ],
+        filteredValue: filteredInfo?.status,
+        onFilter: (value, record) => record?.status.includes(value),
+        ellipsis: true,
+        filterIcon: (filtered) => (
+            <div>
+                <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
+            </div>
+        ),
+    },
+    {
+        title: 'ชื่อ-นามสกุล',
+        dataIndex: 'name',
+        width: 200,
+        ...getColumnSearchProps('name'),
+    },
+    {
+        title: 'รหัสนิสิต',
+        dataIndex: 'student_ID',
+        ...getColumnSearchProps('student_ID'),
+        width: 125,
+    },
+    {
+        title: 'เบอร์โทรนิสิต',
+        dataIndex: 'tel',
+        width: 150,
+    },
+    {
+        title: 'ประเภทการเบิกเงิน',
+        dataIndex: 'claimType',
+        width: 200,
+
+        filters: [
+            { text: "ค่าจ้างนิสิตทำงานพิเศษ", value: "ค่าจ้างนิสิตทำงานพิเศษ" },
+            { text: "ค่าเล่าเรียน", value: "ค่าเล่าเรียน" },
+            { text: "ค่าธรรมเนียมการศึกษา", value: "ค่าธรรมเนียมการศึกษา" },
+            { text: "เงินสมทบค่ารักษาพยาบาล", value: "เงินสมทบค่ารักษาพยาบาล" },
+            { text: "เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ", value: "เงินช่วยเหลือนิสิตรักษาต่อเนื่อง/ทุพพลภาพ" },
+            { text: "อื่นๆ (ระบุ)", value: "อื่นๆ (ระบุ)" },
+        ],
+        filteredValue: filteredInfo?.claimType,
+        onFilter: (value, record) => record?.claimType.includes(value),
+        ellipsis: true,
+        filterIcon: (filtered) => (
+            <div>
+                <FilterOutlined style={{ color: "white", fontSize: "18px" }} />
+            </div>
+        ),
+
+    },
+    {
+        title: 'สาเหตุการเบิกเงิน (กรณีเลือกอื่นๆ)',
+        dataIndex: 'claimOtherReason',
+        width: 250,
+
+    },
+    {
+        title: 'จำนวนเงิน',
+        dataIndex: 'amount',
+        render: (text) => {
+            const number = parseFloat(text.replace(/[^\d.-]/g, ''));
+            return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' บาท';
         },
+        width: 135,
+    },
+    {
+        title: 'บัญชีของธนาคาร',
+        dataIndex: 'bankCompany',
+        width: 150,
+
+    },
+    {
+        title: 'สาขา',
+        dataIndex: 'bankBranch',
+        width: 150,
+
+    },
+    {
+        title: 'ชื่อบัญชี',
+        dataIndex: 'bankAccountName',
+        width: 200,
+
+    },
+    {
+        title: 'ประเภทบัญชี',
+        dataIndex: 'bankAccountType',
+        width: 150,
+
+    },
+    {
+        title: 'เลขที่บัญชี',
+        dataIndex: 'bankAccountNumber',
+        width: 150,
+
+    },
+    {
+        title: 'บ้านเลขที่',
+        dataIndex: 'houseID',
+        width: 120,
+
+    },
+    {
+        title: 'หมู่',
+        dataIndex: 'moo',
+        width: 80,
+
+    },
+    {
+        title: 'อาคาร/หมู่บ้าน',
+        dataIndex: 'buildingVillage',
+        width: 150,
+
+    },
+    {
+        title: 'ซอย',
+        dataIndex: 'soi',
+        width: 120,
+
+    },
+    {
+        title: 'ถนน',
+        dataIndex: 'road',
+        width: 120,
+
+    },
+    {
+        title: 'แขวง/ตำบล',
+        dataIndex: 'subDistrict',
+        width: 150,
+
+    },
+    {
+        title: 'เขต/อำเภอ',
+        dataIndex: 'district',
+        width: 150,
+
+    },
+    {
+        title: 'จังหวัด',
+        dataIndex: 'province',
+        width: 120,
+
+    },
+    {
+        title: 'รหัสไปรษณีย์',
+        dataIndex: 'postalCode',
+        width: 130,
+
+    },
+    {
+        title: 'โทรศัพท์',
+        dataIndex: 'tel',
+        width: 120,
+
+    },
+    {
+        title: 'เลขบัตรประชาชน',
+        dataIndex: 'citizenId',
+        width: 160,
+
+    },
+
+
+    {
+        title: 'วันที่ออกบัตร',
+        dataIndex: 'citizenIssueDate',
+        width: 150,
+        sorter: (a, b) => {
+            const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+            const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+            return dateA - dateB;
+        },
+        sortIcon: (sorted) => (
+            <div>
+                <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
+            </div>
+        ),
+    },
+    {
+        title: 'วันหมดอายุบัตร',
+        dataIndex: 'citizenExpireDate',
+        width: 150,
+        sorter: (a, b) => {
+            const dateA = new Date(a.accidentDate.split('/').reverse().join('-'));
+            const dateB = new Date(b.accidentDate.split('/').reverse().join('-'));
+            return dateA - dateB;
+        },
+        sortIcon: (sorted) => (
+            <div>
+                <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
+            </div>
+        ),
+    },
 
 
 

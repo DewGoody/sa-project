@@ -105,6 +105,17 @@ function Page() {
         }
       }
     }
+    else {
+      try {
+        const response = await axios.post("/api/vendor/update", vendorData);
+        console.log("update", response.data);
+        const reqId = response.data.data.req_id;
+        const formId = response.data.data.id;
+        router.push(`/Admin/vendor/0`);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
     //TODO admin edit from router push back
   };
@@ -238,7 +249,7 @@ function Page() {
                         disabled
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="ชื่อและนามสกุล (NameSurname)"
-                        value={profileData?.fnameTH + " " + profileData?.lnameTH}
+                        value={profileData?.fnameTH + " " + profileData?.lnameTH || vendorData?.fnameTH + " " + vendorData?.lnameTH}
                       />
                     </div>
                   </div>
@@ -250,9 +261,9 @@ function Page() {
                       id="faculty"
                       disabled
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-[#f3f4f6]"
-                      value={vendorData.facultyNameTH}
+                      value={vendorData.faculty}
                     >
-                      <option defaultValue value="null">
+                      <option value="null">
                         เลือกคณะ (Choose faculty)
                       </option>
                       <option value="คณะครุศาสตร์">คณะครุศาสตร์</option>
@@ -619,7 +630,7 @@ function Page() {
                       onChange={(event) => handleChange(event, "bankCompany")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
-                      <option defaultValue value="null"> 
+                      <option defaultValue value="null">
                         เลือกธนาคาร (Choose Bank)
                       </option>
                       <option value="กรุงเทพ">กรุงเทพ</option>
@@ -724,23 +735,25 @@ function Page() {
             </div>
             <div>
               <div className="flex justify-between mt-8">
-
-                <button
-                  className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                <a
                   onClick={() => {
-                    router.push(`/student/${studentId}/home`);
-                  }
-                  }
+                    if (studentId != '0') {
+                      router.push(`/student/${studentId}/home`);
+                    } else
+                      router.push(`/Admin/vendor/0`);
+                  }}
                 >
-                  Back
-                </button>
-
+                  <button className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11">
+                    Back
+                  </button>
+                </a>
 
                 <button
                   onClick={handleSubmit}
                   className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
                 >
-                  Next
+                  {studentId != '0' ? "Next" : "Save"}
+
                 </button>
               </div>
             </div>
