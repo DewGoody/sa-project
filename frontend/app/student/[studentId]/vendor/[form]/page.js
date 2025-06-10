@@ -22,6 +22,7 @@ function Page() {
     event.preventDefault();
 
     const requiredFields = [
+      "titleTH",
       "houseID",
       "moo",
       "buildingVillage",
@@ -143,6 +144,7 @@ function Page() {
       console.log(response.data);
       response.data.phone_num = response.data.tel_num;
       setProfileData(response.data);
+      console.log("profileData", response.data);
       setLoading(false);
 
       const updatedData = {};
@@ -153,6 +155,7 @@ function Page() {
       setVendorData(updatedData);
       setVendorData((vendorData) => ({
         ...vendorData,
+        titleTH: response.data.title,
         nameTH: response.data.fnameTH + " " + response.data.lnameTH,
         faculty: response.data.facultyNameTH,
       }));
@@ -211,18 +214,33 @@ function Page() {
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                  <div className="pt-4 md:pt-0">
-                    <label className="block text-gray-700 mb-2">
-                      ชื่อและนามสกุล (Name-Surname)
-                    </label>
-                    <input
-                      type="text"
-                      name="nameTH"
-                      disabled
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="ชื่อและนามสกุล (Name-Surname)"
-                      value={profileData?.fnameTH + " " + profileData?.lnameTH}
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+                    <div className="pt-4 md:pt-0">
+                      <label className="block text-gray-700 mb-2">
+                        คำนำหน้า (Title)
+                      </label>
+                      <input
+                        type="text"
+                        name="titleTH"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="คำนำหน้า (Title)"
+                        onChange={(event) => handleChange(event, "titleTH")}
+                        value={profileData?.title || ""}
+                      />
+                    </div>
+                    <div className="pt-4 md:pt-0 col-span-2">
+                      <label className="block text-gray-700 mb-2 break-words">
+                        ชื่อและนามสกุล (Name-Surname)
+                      </label>
+                      <input
+                        type="text"
+                        name="nameTH"
+                        disabled
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="ชื่อและนามสกุล (NameSurname)"
+                        value={profileData?.fnameTH + " " + profileData?.lnameTH}
+                      />
+                    </div>
                   </div>
                   <div className="pt-4 md:pt-0">
                     <label className="block text-gray-700 mb-2">
