@@ -225,7 +225,7 @@ function Page() {
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="คำนำหน้า (Title)"
                         onChange={(event) => handleChange(event, "titleTH")}
-                        value={profileData?.title || ""}
+                        value={vendorData?.titleTH || ""}
                       />
                     </div>
                     <div className="pt-4 md:pt-0 col-span-2">
