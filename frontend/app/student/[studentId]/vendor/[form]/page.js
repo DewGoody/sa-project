@@ -613,14 +613,34 @@ function Page() {
                     <label className="block text-gray-700 mb-2">
                       บัญชีของธนาคาร (Bank)
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="bankCompany"
                       value={vendorData?.bankCompany}
                       onChange={(event) => handleChange(event, "bankCompany")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="บัญชีของธนาคาร (Bank)"
-                    />
+                    >
+                      <option defaultValue value="null"> 
+                        เลือกธนาคาร (Choose Bank)
+                      </option>
+                      <option value="กรุงเทพ">กรุงเทพ</option>
+                      <option value="กสิกรไทย">กสิกรไทย</option>
+                      <option value="กรุงไทย">กรุงไทย</option>
+                      <option value="ทหารไทย">ทหารไทย</option>
+                      <option value="ไทยพาณิชย์">ไทยพาณิชย์</option>
+                      <option value="ซิตี้แบงก์">ซิตี้แบงก์</option>
+                      <option value="สแตนดาร์ดชาร์เตอร์ด">สแตนดาร์ดชาร์เตอร์ด</option>
+                      <option value="ซีไอเอ็มบี ไทย">ซีไอเอ็มบี ไทย</option>
+                      <option value="ยูโอบี">ยูโอบี</option>
+                      <option value="กรุงศรีอยุธยา">กรุงศรีอยุธยา</option>
+                      <option value="ธนชาต">ธนชาต</option>
+                      <option value="เกียรตินาคินภัทร">เกียรตินาคินภัทร</option>
+                      <option value="อิสลามแห่งประเทศไทย">อิสลามแห่งประเทศไทย</option>
+                      <option value="แลนด์ แอนด์ เฮ้าส์">แลนด์ แอนด์ เฮ้าส์</option>
+                    </select>
+                    <span className="text text-xs text-red-600 mt-2">
+                      * หากไม่มีธนาคารที่ท่านใช้โปรดติดต่อเจ้าหน้าที่ / If your bank is not listed, please contact the staff
+                    </span>
+
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">

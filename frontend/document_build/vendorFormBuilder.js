@@ -81,7 +81,7 @@ async function vendorFormBuilder(data) {
     return `${day} ${month} ${shortenedyear}`;
   }
 
-  drawTextOnPage(firstPage, data.nameTH, 140, height - 265);
+  drawTextOnPage(firstPage, data.titleTH + data.nameTH, 140, height - 265);
   drawTextOnPage(firstPage, "นิสิต", 475, height - 265);
   drawTextOnPage(firstPage, data.faculty, 100, height - 286);
   drawTextOnPage(firstPage, data.houseID, 276, height - 286);
