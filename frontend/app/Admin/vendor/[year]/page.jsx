@@ -159,7 +159,7 @@ const App = () => {
                     key: index,
                     id: data.id || "-",
                     reqId: data.reqId,
-                    name: (data.Student?.fnameTH || "") + " " + (data.Student?.lnameTH || "-"),
+                    name: (vendor.titleTH) + (data.Student?.fnameTH || "") + " " + (data.Student?.lnameTH || "-"),
                     student_ID: data.Student?.id || "-",
                     nameTH: vendor.nameTH || "-",
                     faculty: vendor.faculty || "-",
@@ -666,7 +666,7 @@ const App = () => {
                                 ))}
                             </Select>
                         </div>
-
+                        {/*}
                         {selectedRowReqid.length > 0 ? (
                             <>
                                 <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
@@ -681,6 +681,7 @@ const App = () => {
                                 </Button>
                             </>
                         )}
+                        */}
 
 
                     </div>
