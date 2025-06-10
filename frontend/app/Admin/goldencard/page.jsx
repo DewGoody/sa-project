@@ -435,7 +435,7 @@ const App = () => {
                     </div>
                     <div className='ml-3 mt-3'>
                         <p className='font-mono font-semibold text-white'>
-                            Department of Scholarships & Student
+                        Division of Scholarships & Student
                         </p>
                         <p className='font-mono font-semibold text-white'>
                             Services, Office of the Student Affairs,

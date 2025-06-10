@@ -476,7 +476,7 @@ export const Form = () => {
             ฝ่ายทุนการศึกษาและบริการนิสิต สำนักบริหารกิจการนิสิต จุฬาลงกรณ์มหาวิทยาลัย
           </div>
           <div className="text-xs font-medium ml-9">
-            Department of Scholarships & Student Services, Office of the Student Affairs, Chulalongkorn University
+          Division of Scholarships & Student Services, Office of the Student Affairs, Chulalongkorn University
           </div>
         </div>
       </div>
