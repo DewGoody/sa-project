@@ -188,104 +188,109 @@ const AppointmentManagement = () => {
     }));
 
     const exportToExcel = (number) => {
-            // กำหนดชื่อ Columns ที่ต้องการ
-            const columnHeaders = [
-                { header: "ปี", key: "year" },
-                { header: "รหัสนิสิต", key: "stu_id" },
-                { header: "เลขประจำตัวประชาชน", key: "thai_id" },
-                { header: "ศึกษาในระดับปริญญา", key: "degree" },
-                { header: "ชั้นปีที่", key: "year" },
-                { header: "ชื่อ", key: "fnameTH" },
-                { header: "นามสกุล", key: "lnameTH" },
-                { header: "เบอร์โทรศัพท์", key: "phone_num" },
-                { header: "อีเมล", key: "email" },
-                { header: "ชื่อบิดา", key: "father_name" },
-                { header: "ชื่อมารดา", key: "mother_name" },
-                { header: "ใบสำคัญ สด. 9", key: "sdnine_id" },
-                { header: "ที่อยู่ตาม สด.9 บ้านเลขที่", key: "house_num_sd" },
-                { header: "ที่อยู่ตาม สด.9 หมู่", key: "house_moo_sd" },
-                { header: "ที่อยู่ตาม สด.9 แขวง/ตำบล", key: "subdistrict_sd" },
-                { header: "ที่อยู่ตาม สด.9 อำเภอ", key: "district_sd" },
-                { header: "ที่อยู่ตาม สด.9 จังหวัด", key: "province_sd" },
-                { header: "ที่อยู่ตามทะเบียนบ้าน บ้านเลขที่", key: "house_num" },
-                { header: "ที่อยู่ตามทะเบียนบ้าน หมู่", key: "house_moo" },
-                { header: "ที่อยู่ตามทะเบียนบ้าน แขวง/ตำบล", key: "sub_district" },
-                { header: "ที่อยู่ตามทะเบียนบ้าน อำเภอ", key: "district" },
-                { header: "ที่อยู่ตามทะเบียนบ้าน จังหวัด", key: "province" },
-               
+        // กำหนดชื่อ Columns ที่ต้องการ
+        const columnHeaders = [
+            { header: "ปี", key: "year" },
+            { header: "รหัสนิสิต", key: "stu_id" },
+            { header: "เลขประจำตัวประชาชน", key: "thai_id" },
+            { header: "ศึกษาในระดับปริญญา", key: "degree" },
+            { header: "ชั้นปีที่", key: "year" },
+            { header: "ชื่อ", key: "fnameTH" },
+            { header: "นามสกุล", key: "lnameTH" },
+            { header: "เบอร์โทรศัพท์", key: "phone_num" },
+            { header: "อีเมล", key: "email" },
+            { header: "ชื่อบิดา", key: "father_name" },
+            { header: "ชื่อมารดา", key: "mother_name" },
+            { header: "ใบสำคัญ สด. 9", key: "sdnine_id" },
+            { header: "ที่อยู่ตาม สด.9 บ้านเลขที่", key: "house_num_sd" },
+            { header: "ที่อยู่ตาม สด.9 หมู่", key: "house_moo_sd" },
+            { header: "ที่อยู่ตาม สด.9 แขวง/ตำบล", key: "subdistrict_sd" },
+            { header: "ที่อยู่ตาม สด.9 อำเภอ", key: "district_sd" },
+            { header: "ที่อยู่ตาม สด.9 จังหวัด", key: "province_sd" },
+            { header: "ที่อยู่ตามทะเบียนบ้าน บ้านเลขที่", key: "house_num" },
+            { header: "ที่อยู่ตามทะเบียนบ้าน หมู่", key: "house_moo" },
+            { header: "ที่อยู่ตามทะเบียนบ้าน แขวง/ตำบล", key: "sub_district" },
+            { header: "ที่อยู่ตามทะเบียนบ้าน อำเภอ", key: "district" },
+            { header: "ที่อยู่ตามทะเบียนบ้าน จังหวัด", key: "province" },
+           
+        ];
+
+        // เพิ่มชื่อ Columns เข้าไปเป็น Row แรก
+        let dataWithHeaders = []
+        if (number == 0) {
+            dataWithHeaders = [
+                columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+                ...dataSource.map((item, index) =>
+                    columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                )
             ];
-    
-            // เพิ่มชื่อ Columns เข้าไปเป็น Row แรก
-            let dataWithHeaders = []
-            if (number == 0) {
-                dataWithHeaders = [
-                    columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
-                    ...dataSource.map((item, index) =>
-                       item.status === "รับเอกสารเรียบร้อย" 
-                       ? columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') 
-                       : []
-                    )
-                ];
-            }
-            
+        }
+        else {
+            dataWithHeaders = [
+                columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
+                ...selectedRowReqid.map((item, index) =>
+                    columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                )
+            ];
+        }
 
-    
-            // สร้าง Worksheet ด้วยข้อมูลที่มี Header
-            const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
-            worksheet['!cols'] = columnHeaders.map(col => {
-                return { wch: col.header.length + 8 }; // ปรับขนาดตามความยาว header + padding
-            });
-    
-            // สร้าง Workbook และเพิ่ม Worksheet
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
-    
-            // เขียนไฟล์ Excel และดาวน์โหลด
-            const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-            const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-            saveAs(data, "exported_data.xlsx");
-        };
 
-        const dropdown = () => {
-            const handleSelect = async (value) => {
-                try {
-                setLoading(true);
-                await handleChangeStatusAll(selectedRowReqidapi, value);
-                const updatedDataSource = dataSource.map((item) => {
-                    if (selectedRowReqidapi.includes(item.reqId)) {
-                    return { ...item, status: value };
-                    }
-                    return item;
-                });
-                setDataSource(updatedDataSource);
-                setSelectedRowKeys([]);
-                setSelectedRowReqid([]);
-                setSelectedRowReqidapi([]);
-                setLoading(false);
-                } catch (error) {
-                console.error("Error:", error);
-                setLoading(false);
+        // สร้าง Worksheet ด้วยข้อมูลที่มี Header
+        const worksheet = XLSX.utils.aoa_to_sheet(dataWithHeaders);
+        worksheet['!cols'] = columnHeaders.map(col => {
+            return { wch: col.header.length + 8 }; // ปรับขนาดตามความยาว header + padding
+        });
+
+        // สร้าง Workbook และเพิ่ม Worksheet
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+        // เขียนไฟล์ Excel และดาวน์โหลด
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(data, "exported_data.xlsx");
+    };
+
+    const dropdown = () => {
+        const handleSelect = async (value) => {
+            try {
+            setLoading(true);
+            await handleChangeStatusAll(selectedRowReqidapi, value);
+            const updatedDataSource = dataSource.map((item) => {
+                if (selectedRowReqidapi.includes(item.reqId)) {
+                return { ...item, status: value };
                 }
-            };
-        
-                return (
-                    <Select
-                        className="w-60 mt-1 mb-6 ml-3 "
-                        // showSearch
-                        placeholder="เลือกสถานะ"
-                        filterOption={(input, option) =>
-                            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                        }
-                        options={[
-                            { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ' },
-                            { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว' },
-                            { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันที่ตึกจุล' },
-                            { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย' },
-                        ]}
-                        onSelect={handleSelect} // ใช้ฟังก์ชัน handleSelect
-                    />
-                );
-            };
+                return item;
+            });
+            setDataSource(updatedDataSource);
+            setSelectedRowKeys([]);
+            setSelectedRowReqid([]);
+            setSelectedRowReqidapi([]);
+            setLoading(false);
+            } catch (error) {
+            console.error("Error:", error);
+            setLoading(false);
+            }
+        };
+    
+            return (
+                <Select
+                    className="w-60 mt-1 mb-6 ml-3 "
+                    // showSearch
+                    placeholder="เลือกสถานะ"
+                    filterOption={(input, option) =>
+                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                    }
+                    options={[
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ' },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารให้ผู้ว่าราชการจังหวัดแล้ว' },
+                        { value: 'ติดต่อรับเอกสาร', label: 'มารับเอกสารรับรองผ่อนผันที่ตึกจุล' },
+                        { value: 'รับเอกสารเรียบร้อย', label: 'รับเอกสารเรียบร้อย' },
+                    ]}
+                    onSelect={handleSelect} // ใช้ฟังก์ชัน handleSelect
+                />
+            );
+        };
 
 
     console.log("statusRequest", statusRequest);
@@ -630,20 +635,20 @@ const AppointmentManagement = () => {
                         </div>
                         <div className='ml-3'>
                         {selectedRowReqid.length > 0 ? (
-                            <>
-                                <div className='flex'>
-                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
-                                    Export Excel
-                                </Button>
-                                {dropdown()}
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
-                                Export Excel
-                                </Button>
-                            </>
+                             <>
+                             <div className='flex'>
+                             <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
+                                 Export Excel ที่เลือกไว้
+                             </Button>
+                             {dropdown()}
+                             </div>
+                         </>
+                     ) : (
+                         <>
+                             <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
+                             Export Excel ทั้งหมด
+                             </Button>
+                         </>
                         )}
                     </div>
 
