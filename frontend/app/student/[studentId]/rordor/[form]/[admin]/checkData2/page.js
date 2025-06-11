@@ -146,8 +146,8 @@ const CheckData = () => {
                     RD_type: parseInt(formData.YearGradeRD),
                     Branches: formData.Branches,
                     corps: formData.corps || "",
-                    man_right: formData.man_right || "",
-                    women_right: formData.women_right,
+                    man_right: formData.man_right ,
+                    women_right: formData.women_right ,
                 },
                 guardian_info: {
                     id: id,
