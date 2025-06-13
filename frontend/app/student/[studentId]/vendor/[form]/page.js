@@ -12,6 +12,8 @@ function Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [profileData, setProfileData] = useState(null);
+  const [provinces, setProvinces] = useState([]);
+  const [amphures, setAmphures] = useState([]);
   const { studentId } = useParams();
   const { form } = useParams();
   const router = useRouter();
@@ -20,6 +22,7 @@ function Page() {
     event.preventDefault();
 
     const requiredFields = [
+      "titleTH",
       "houseID",
       "moo",
       "buildingVillage",
@@ -102,20 +105,57 @@ function Page() {
         }
       }
     }
+    else {
+      try {
+        const response = await axios.post("/api/vendor/update", vendorData);
+        console.log("update", response.data);
+        const reqId = response.data.data.req_id;
+        const formId = response.data.data.id;
+        router.push(`/Admin/vendor/0`);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
     //TODO admin edit from router push back
   };
   const handleChange = (event, field) => {
     console.log(field + " : " + event.target.value);
     setVendorData({ ...vendorData, [field]: event.target.value });
+    if (field === "province") {
+      const id = event.target.selectedOptions[0]?.dataset.id;
+      fetchAmphuresById(id);
+    }
+  };
+  const fetchProvinces = async () => {
+    try {
+      const response = await axios.get("/api/Province");
+
+      setProvinces(response.data);
+    } catch (err) {
+      console.log("Error fetching provinces: " + err);
+    }
   };
 
+  const fetchAmphuresById = async (id) => {
+    try {
+      const response = await axios.get(`/api/Amphure/${id}`);
+      setAmphures(response.data);
+    } catch (err) {
+      console.log("Error fetching amphures: " + err);
+    }
+  };
+  useEffect(() => {
+    fetchProvinces();
+
+  }, []);
   const fetchProfile = async () => {
     try {
       const response = await axios.get("/api/profile"); // Example API
       console.log(response.data);
       response.data.phone_num = response.data.tel_num;
       setProfileData(response.data);
+      console.log("profileData", response.data);
       setLoading(false);
 
       const updatedData = {};
@@ -126,6 +166,7 @@ function Page() {
       setVendorData(updatedData);
       setVendorData((vendorData) => ({
         ...vendorData,
+        titleTH: response.data.title,
         nameTH: response.data.fnameTH + " " + response.data.lnameTH,
         faculty: response.data.facultyNameTH,
       }));
@@ -184,18 +225,33 @@ function Page() {
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                  <div className="pt-4 md:pt-0">
-                    <label className="block text-gray-700 mb-2">
-                      ชื่อและนามสกุล (Name-Surname)
-                    </label>
-                    <input
-                      type="text"
-                      name="nameTH"
-                      disabled
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="ชื่อและนามสกุล (Name-Surname)"
-                      value={profileData?.fnameTH + " " + profileData?.lnameTH}
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+                    <div className="pt-4 md:pt-0">
+                      <label className="block text-gray-700 mb-2">
+                        คำนำหน้า (Title)
+                      </label>
+                      <input
+                        type="text"
+                        name="titleTH"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="คำนำหน้า (Title)"
+                        onChange={(event) => handleChange(event, "titleTH")}
+                        value={vendorData?.titleTH || ""}
+                      />
+                    </div>
+                    <div className="pt-4 md:pt-0 col-span-2">
+                      <label className="block text-gray-700 mb-2 break-words">
+                        ชื่อและนามสกุล (Name-Surname)
+                      </label>
+                      <input
+                        type="text"
+                        name="nameTH"
+                        disabled
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        placeholder="ชื่อและนามสกุล (NameSurname)"
+                        value={profileData?.fnameTH + " " + profileData?.lnameTH || vendorData?.fnameTH + " " + vendorData?.lnameTH}
+                      />
+                    </div>
                   </div>
                   <div className="pt-4 md:pt-0">
                     <label className="block text-gray-700 mb-2">
@@ -205,9 +261,9 @@ function Page() {
                       id="faculty"
                       disabled
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-[#f3f4f6]"
-                      value={vendorData.facultyNameTH}
+                      value={vendorData.faculty}
                     >
-                      <option defaultValue value="null">
+                      <option value="null">
                         เลือกคณะ (Choose faculty)
                       </option>
                       <option value="คณะครุศาสตร์">คณะครุศาสตร์</option>
@@ -336,6 +392,39 @@ function Page() {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
+                      จังหวัด (Province)
+                    </label>
+                    <select
+                      name="province"
+                      value={vendorData?.province}
+                      onChange={(event) => handleChange(event, "province")}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                      <option value={vendorData?.province}>{vendorData?.province}</option>
+                      {provinces.map((item, index) => (
+                        <option key={index} data-id={item.id} value={item.name_th}>{item.name_th}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      เขต/อำเภอ (District)
+                    </label>
+                    <select
+                      name="district"
+                      value={vendorData?.district}
+                      onChange={(event) => handleChange(event, "district")}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                      <option value={vendorData?.district}>{vendorData?.district}</option>
+                      {amphures.map((amphure, index) => (
+                        <option key={index} data-id={amphure.id} value={amphure.name_th}>{amphure.name_th}</option>
+                      ))}
+                    </select>
+
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">
                       แขวง/ตำบล (Sub-district)
                     </label>
                     <input
@@ -347,32 +436,8 @@ function Page() {
                       placeholder="แขวง/ตำบล (Sub-district)"
                     />
                   </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      เขต/อำเภอ (District)
-                    </label>
-                    <input
-                      type="text"
-                      name="district"
-                      value={vendorData?.district}
-                      onChange={(event) => handleChange(event, "district")}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="เขต/อำเภอ (District)"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 mb-2">
-                      จังหวัด (Province)
-                    </label>
-                    <input
-                      type="text"
-                      name="province"
-                      value={vendorData?.province}
-                      onChange={(event) => handleChange(event, "province")}
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="จังหวัด (Province)"
-                    />
-                  </div>
+
+
                   <div>
                     <label className="block text-gray-700 mb-2">
                       รหัสไปรษณีย์ (Postal code)
@@ -559,14 +624,34 @@ function Page() {
                     <label className="block text-gray-700 mb-2">
                       บัญชีของธนาคาร (Bank)
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="bankCompany"
                       value={vendorData?.bankCompany}
                       onChange={(event) => handleChange(event, "bankCompany")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      placeholder="บัญชีของธนาคาร (Bank)"
-                    />
+                    >
+                      <option defaultValue value="null">
+                        เลือกธนาคาร (Choose Bank)
+                      </option>
+                      <option value="กรุงเทพ">กรุงเทพ</option>
+                      <option value="กสิกรไทย">กสิกรไทย</option>
+                      <option value="กรุงไทย">กรุงไทย</option>
+                      <option value="ทหารไทย">ทหารไทย</option>
+                      <option value="ไทยพาณิชย์">ไทยพาณิชย์</option>
+                      <option value="ซิตี้แบงก์">ซิตี้แบงก์</option>
+                      <option value="สแตนดาร์ดชาร์เตอร์ด">สแตนดาร์ดชาร์เตอร์ด</option>
+                      <option value="ซีไอเอ็มบี ไทย">ซีไอเอ็มบี ไทย</option>
+                      <option value="ยูโอบี">ยูโอบี</option>
+                      <option value="กรุงศรีอยุธยา">กรุงศรีอยุธยา</option>
+                      <option value="ธนชาต">ธนชาต</option>
+                      <option value="เกียรตินาคินภัทร">เกียรตินาคินภัทร</option>
+                      <option value="อิสลามแห่งประเทศไทย">อิสลามแห่งประเทศไทย</option>
+                      <option value="แลนด์ แอนด์ เฮ้าส์">แลนด์ แอนด์ เฮ้าส์</option>
+                    </select>
+                    <span className="text text-xs text-red-600 mt-2">
+                      * หากไม่มีธนาคารที่ท่านใช้โปรดติดต่อเจ้าหน้าที่ / If your bank is not listed, please contact the staff
+                    </span>
+
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
@@ -650,23 +735,25 @@ function Page() {
             </div>
             <div>
               <div className="flex justify-between mt-8">
-
-                <button
-                  className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                <a
                   onClick={() => {
-                    router.push(`/student/${studentId}/home`);
-                  }
-                  }
+                    if (studentId != '0') {
+                      router.push(`/student/${studentId}/home`);
+                    } else
+                      router.push(`/Admin/vendor/0`);
+                  }}
                 >
-                  Back
-                </button>
-
+                  <button className="bg-gray-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11">
+                    Back
+                  </button>
+                </a>
 
                 <button
                   onClick={handleSubmit}
                   className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
                 >
-                  Next
+                  {studentId != '0' ? "Next" : "Save"}
+
                 </button>
               </div>
             </div>
