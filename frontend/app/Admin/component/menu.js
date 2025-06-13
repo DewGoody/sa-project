@@ -49,7 +49,7 @@ const Menubar = () => {
             </div>
             <div className="text-center mt-4 ml-3 mr-3">
                 <p className="font-mono font-semibold text-white">
-                    Department of Scholarships & Student
+                Division of Scholarships & Student
                 </p>
                 <p className="font-mono font-semibold text-white">
                     Services, Office of the Student Affairs,

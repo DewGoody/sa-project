@@ -38,6 +38,7 @@ const login = () => {
                     <div className="w-3/4 h-14">
 
                         {/* SSO */}
+
                         <a href="https://cunex-auth.azurewebsites.net/?partnerid=cuserv" className="mt-8 w-full h-full p-8 bg-pink-400  flex flex-col items-center justify-center space-y-4 rounded-2xl font-semibold text-white">
                         {/* <a href="https://cunex-auth-uat.azurewebsites.net/?partnerid=cuserv" className="mt-8 w-full h-full p-8 bg-pink-400  flex flex-col items-center justify-center space-y-4 rounded-2xl font-semibold text-white"> */}
 

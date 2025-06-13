@@ -56,7 +56,8 @@ export async function createVendor(data) {
             bankAccountName: data.bankAccountName,
             bankBranch: data.bankBranch,
             bankAccountNumber: data.bankAccountNumber,
-            claimOtherReason: data.claimOtherReason
+            claimOtherReason: data.claimOtherReason,
+            titleTH: data.titleTH,
 
         }
     })
@@ -111,7 +112,8 @@ export async function updateVendorForm(data) {
             bankAccountName: data.bankAccountName,
             bankBranch: data.bankBranch,
             bankAccountNumber: data.bankAccountNumber,
-            claimOtherReason: data.claimOtherReason
+            claimOtherReason: data.claimOtherReason,
+            titleTH: data.titleTH,
         }
     })
 
