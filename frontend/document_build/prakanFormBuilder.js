@@ -134,7 +134,7 @@ async function prakanFormBuilder(data) {
     firstPage,
     data.treatmentType === "outpatient" ? "/" : "",
     55,
-    height - 290,
+    height - 294,
     thSarabunFont,
     24
   );
