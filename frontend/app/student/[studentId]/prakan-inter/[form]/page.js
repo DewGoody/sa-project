@@ -80,6 +80,7 @@ function page() {
         ...alreadyData,
         [field]: event.target.value,
         OPDTreatmentDateCount: event.target.value === "outpatient" ? 1 : null, // Reset the count when treatment type changes
+        IPDAdmittedDate: null,
         IPDDischargedDate: null,
         OPDTreatmentDate1: null,
         OPDTreatmentDate2: null,
