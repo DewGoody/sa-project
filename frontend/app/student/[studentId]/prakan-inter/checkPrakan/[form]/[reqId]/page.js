@@ -126,7 +126,7 @@ const RD = () => {
 
                 <div className="divide-y divide-gray-200">
                   <div className="items-center py-4">
-                    <div className="font-medium text-gray-900 pr-4">1. Download เอกสารได้ที่นี่ </div>
+                    <div className="font-medium text-gray-900 pr-4">1. Download the claim form </div>
                     <button
                       onClick={handleDownload}
                       className="mt-3 ml-3 px-3 py-2 bg-green-500 text-white text-base font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-300 w-32">
