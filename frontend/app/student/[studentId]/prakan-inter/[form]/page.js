@@ -91,13 +91,6 @@ function page() {
     }
   };
 
-  useEffect(() => {
-    console.log("title :", prakanData.title)
-  }, [prakanData.title]);
-
-
-
-
   const handleSubmit = async (event) => {
     // event.preventDefault(); // Prevent the default form submission behavior
 
