@@ -68,7 +68,7 @@ function page() {
         ...prakanData,
         [field]: event.target.value,
         OPDTreatmentDateCount: event.target.value === "outpatient" ? 1 : null, // Reset the count when treatment type changes
-        IPDAdmittedDate: null,
+        IPDAmittedDate: null,
         IPDDischargedDate: null,
         OPDTreatmentDate1: null,
         OPDTreatmentDate2: null,
@@ -80,7 +80,7 @@ function page() {
         ...alreadyData,
         [field]: event.target.value,
         OPDTreatmentDateCount: event.target.value === "outpatient" ? 1 : null, // Reset the count when treatment type changes
-        IPDAdmittedDate: null,
+        IPDAmittedDate: null,
         IPDDischargedDate: null,
         OPDTreatmentDate1: null,
         OPDTreatmentDate2: null,
@@ -162,6 +162,15 @@ function page() {
         if (!date) {
           alert(`Please fill in the treatment date ${i}`);
           return;
+        }
+        
+        // Validate that each subsequent date is greater than or equal to the previous one
+        if (i > 1) {
+          const previousDate = dataToCheck[`OPDTreatmentDate${i - 1}`];
+          if (previousDate && new Date(date) < new Date(previousDate)) {
+            alert(`Treatment date ${i} cannot be earlier than treatment date ${i - 1}`);
+            return;
+          }
         }
       }
     }
