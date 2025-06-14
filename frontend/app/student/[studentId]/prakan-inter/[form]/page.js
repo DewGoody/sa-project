@@ -210,7 +210,7 @@ function page() {
         .then((response) => {
           console.log("Form submitted successfully:", response.data);
           const req_id = response.data.data.req_id
-          router.push(`/Admin/prakan/0`);
+          router.push(`/Admin/prakan-inter/0`);
         })
 
         .catch((error) => {
