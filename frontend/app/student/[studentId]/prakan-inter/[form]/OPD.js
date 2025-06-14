@@ -1,12 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import { parseISO, format } from "date-fns";
-function OPD({ handleChange }) {
+function OPD({ handleChange, prakanData, alreadyData }) {
   const [datePickers, setDatePickers] = useState([{}]); // Initialize with one date picker
+
+  // Initialize date pickers based on existing data
+  useEffect(() => {
+    if (alreadyData?.OPDTreatmentDateCount) {
+      const count = parseInt(alreadyData.OPDTreatmentDateCount);
+      if (count > 1) {
+        setDatePickers(Array(count).fill({}));
+      }
+    } else if (prakanData?.OPDTreatmentDateCount) {
+      const count = parseInt(prakanData.OPDTreatmentDateCount);
+      if (count > 1) {
+        setDatePickers(Array(count).fill({}));
+      }
+    }
+  }, [alreadyData, prakanData]);
 
   const addDatePicker = () => {
     if (datePickers.length >= 5) return; // Limit to 5 date pickers
+    
+    // Check if all current date pickers are filled before adding a new one
+    const isAllFilled = datePickers.every((_, index) => {
+      const fieldName = `OPDTreatmentDate${index + 1}`;
+      return (prakanData && prakanData[fieldName]) || (alreadyData && alreadyData[fieldName]);
+    });
+
+    if (!isAllFilled) {
+      alert("Please fill all current treatment dates before adding a new one.");
+      return;
+    }
+
     setDatePickers([...datePickers, {}]); // Add a new date picker
     handleChange(
       {
@@ -52,12 +79,17 @@ function OPD({ handleChange }) {
             <DatePicker
               format="DD/MM/YYYY"
               name={`OPDTreatmentDate${i + 1}`}
+              value={
+                (prakanData?.[`OPDTreatmentDate${i + 1}`] && dayjs(prakanData[`OPDTreatmentDate${i + 1}`])) ||
+                (alreadyData?.[`OPDTreatmentDate${i + 1}`] && dayjs(alreadyData[`OPDTreatmentDate${i + 1}`])) ||
+                null
+              }
               onChange={(date) => {
                 handleChange(
                   {
                     target: {
                       name: `OPDTreatmentDate${i + 1}`,
-                      value: format(date, "yyyy-MM-dd"),
+                      value: date ? format(date, "yyyy-MM-dd") : "",
                     },
                   },
                   `OPDTreatmentDate${i + 1}`
