@@ -68,7 +68,7 @@ function OPD({ handleChange }) {
             />
           </div>
           <div className="hidden md:flex gap-4 mt-8">
-            {i < 4 ? (
+            {datePickers.length < 5 && i === datePickers.length - 1 ? (
               <button
                 type="button"
                 onClick={addDatePicker}
@@ -85,7 +85,7 @@ function OPD({ handleChange }) {
                 +
               </button>
             )}
-            {datePickers.length > 1 && i > 0 ? (
+            {datePickers.length > 1 && i === datePickers.length - 1 ? (
               <button
                 type="button"
                 onClick={removeDatePicker}
