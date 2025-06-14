@@ -163,7 +163,7 @@ function page() {
           alert(`Please fill in the treatment date ${i}`);
           return;
         }
-        
+
         // Validate that each subsequent date is greater than or equal to the previous one
         if (i > 1) {
           const previousDate = dataToCheck[`OPDTreatmentDate${i - 1}`];
