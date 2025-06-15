@@ -491,7 +491,6 @@ model User {
   first_name String?
   last_name  String?
 }
-
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model prakan_inter_info_old {
   id                     BigInt   @id @default(autoincrement())
@@ -512,11 +511,4 @@ model prakan_inter_info_old {
   req_id                 BigInt?
   Request                Request? @relation(fields: [req_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Student                Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Default_max_student {
-  id         BigInt   @id @default(autoincrement())
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  max_stu    BigInt?
 }
