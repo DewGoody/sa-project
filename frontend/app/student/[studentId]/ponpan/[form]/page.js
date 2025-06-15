@@ -406,7 +406,7 @@ const handleDistrictSD9Change = (e) => {
             <div>
               <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6" onSubmit={handleSubmit}>
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname) :</label>
+                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname)</label>
                   <div>
                     <input
                       type="text"
@@ -419,7 +419,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                <label className="block text-gray-700 mt-1" >รหัสนิสิต (Student ID) :</label>
+                <label className="block text-gray-700 mt-1" >รหัสนิสิต (Student ID)</label>
                   <div>
                     <input
                       type="text"
@@ -432,7 +432,7 @@ const handleDistrictSD9Change = (e) => {
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >คณะ (Faculty) :</label>
+                  <label className="block text-gray-700 mt-1" >คณะ (Faculty)</label>
                   <div className="">
                     <input
                       type="text"
@@ -444,7 +444,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >เลขบัตรประชาชน (Identification number) :</label>
+                  <label className="block text-gray-700 mt-1" >เลขบัตรประชาชน (Identification number)</label>
                   <div className="">
                     <input
                       type="number"
@@ -455,7 +455,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Academic year) :</label>
+                  <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Academic year)</label>
                   <div>
                     <input
                       type="number"
@@ -468,7 +468,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >ศึกษาในระดับ (Degree) :</label>
+                  <label className="block text-gray-700 mt-1" >ศึกษาในระดับ (Degree)</label>
                   <div>
                     <select
                       name="degree"
@@ -484,7 +484,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >ปีเกิด (Birth year) :</label>
+                  <label className="block text-gray-700 mt-1" >ปีเกิด (Birth year)</label>
                   <div>
                     <input
                       type="text"
@@ -497,7 +497,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Mobile number) :</label>
+                  <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Mobile number)</label>
                   <div>
                     <input
                       type="number"
@@ -511,7 +511,7 @@ const handleDistrictSD9Change = (e) => {
                 </div>
                 <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1" >
-                    อีเมล (Email) :
+                    อีเมล (Email)
                     <input
                       type="email"
                       name="email"
@@ -527,7 +527,7 @@ const handleDistrictSD9Change = (e) => {
                 </div>
                 <div>
                   <div className="flex flex-col">
-                    <div className="block text-gray-700 mt-1" >ชื่อบิดา (Father's name) :</div>
+                    <div className="block text-gray-700 mt-1" >ชื่อบิดา (Father's name)</div>
                     <div>
                       <input
                         type="text"
@@ -543,7 +543,7 @@ const handleDistrictSD9Change = (e) => {
                 </div>
                 <div>
                   <div className="flex flex-col">
-                    <div className="block text-gray-700 mt-1" >ชื่อมารดา (Mother's name) :</div>
+                    <div className="block text-gray-700 mt-1" >ชื่อมารดา (Mother's name)</div>
                     <div>
                       <input
                         type="text"
@@ -567,7 +567,7 @@ const handleDistrictSD9Change = (e) => {
                   
                 </div>
                 <div className="flex flex-col text-gray-700">
-                  <label>บ้านเลขที่ (Address number) :</label>
+                  <label>บ้านเลขที่ (Address number)</label>
                   <div>
                     <input
                       type="number"
@@ -580,7 +580,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex flex-col text-gray-700">
-                  <label>หมู่ที่ (Moo) :</label>
+                  <label>หมู่ที่ (Moo)</label>
                   <div>
                     <input
                       type="number"
@@ -593,7 +593,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <label className=" text-gray-700 mb-2">จังหวัด (Province) : </label>
+                  <label className=" text-gray-700 mb-2">จังหวัด (Province)</label>
                   <select
                       name="province"
                       value={provinceSelected || alreadyData?.province}
@@ -609,7 +609,7 @@ const handleDistrictSD9Change = (e) => {
                   </select>
                </div>
           <div className="flex flex-col">
-              <label className=" text-gray-700 mb-2">เขต/อำเภอ (District) : </label>
+              <label className=" text-gray-700 mb-2">เขต/อำเภอ (District)</label>
               <select
                   name="amphure"
                   value={amphureSelected || alreadyData?.district}
@@ -624,7 +624,7 @@ const handleDistrictSD9Change = (e) => {
               </select>
           </div>
           <div className="flex flex-col">
-              <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict) : </label>
+              <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
               <input onChange={handleDistrictChange}  className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" value={alreadyData.sub_district} required />
           </div>
           <div>
@@ -642,7 +642,7 @@ const handleDistrictSD9Change = (e) => {
                   
                 </div>
                 <div className="flex flex-col">
-                  <label>ใบสำคัญ สด.9 ที่ (Sor Dor 9 certificate) :</label>
+                  <label>ใบสำคัญ สด.9 ที่ (Sor Dor 9 certificate)</label>
                   <div className="flex">
                     <input
                       type="number"
@@ -669,7 +669,7 @@ const handleDistrictSD9Change = (e) => {
 
                 </div>
                 <div className="flex flex-col text-gray-700">
-                  <label>บ้านเลขที่ (Address number) :</label>
+                  <label>บ้านเลขที่ (Address number)</label>
                   <div>
                     <input
                       type="number"
@@ -682,7 +682,7 @@ const handleDistrictSD9Change = (e) => {
                   </div>
                 </div>
                 <div className="flex flex-col text-gray-700">
-                  <label>หมู่ที่ (Moo) :</label>
+                  <label>หมู่ที่ (Moo)</label>
                   <div>
                     <input
                       type="number"
@@ -725,7 +725,7 @@ const handleDistrictSD9Change = (e) => {
               </select>
           </div>
           <div className="flex flex-col">
-              <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict) : </label>
+              <label className=" text-gray-700 mb-2">แขวง/ตำบล (Subdistrict)</label>
               <input onChange={handleDistrictSD9Change} required className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" value={alreadyData.subdistrict_sd} />
           </div>
           <div>
