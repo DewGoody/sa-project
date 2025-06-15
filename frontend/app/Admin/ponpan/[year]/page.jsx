@@ -277,7 +277,7 @@ const AppointmentManagement = () => {
                 <Select
                     className="w-60 mt-1 mb-6 ml-3 "
                     // showSearch
-                    placeholder="เลือกสถานะ"
+                    placeholder="เปลี่ยนสถานะคำร้องที่เลือก"
                     filterOption={(input, option) =>
                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                     }
