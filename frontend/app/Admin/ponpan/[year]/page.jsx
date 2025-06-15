@@ -638,15 +638,15 @@ const AppointmentManagement = () => {
                              <>
                              <div className='flex'>
                              <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
-                                 Export Excel ที่เลือกไว้
+                                 Export Excel ที่เลือก
                              </Button>
                              {dropdown()}
                              </div>
                          </>
                      ) : (
                          <>
-                             <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
-                             Export Excel ทั้งหมด
+                             <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }} disabled>
+                             Export Excel ที่เลือก
                              </Button>
                          </>
                         )}
