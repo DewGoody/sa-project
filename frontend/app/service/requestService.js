@@ -313,7 +313,7 @@ export async function changeStatusToProcess(id) {
         const request = await getRequestByIdFast({ id: id })
         console.log('request', request);
 
-        if (request.status !== "รอเข้ารับบริการ") {
+        if (request.status !== "รอเข้ารับบริการ" && request.status !== "ขอข้อมูลเพิ่มเติม") {
             throw { code: 400, error: new Error("Bad Request") }
         }
         const changeStatusRequest = await prisma.request.update({

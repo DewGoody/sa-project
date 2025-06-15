@@ -67,6 +67,7 @@ const App = () => {
         setIsModalOpen(false);
     };
     const exportToExcel = (number) => {
+        console.log("exportToExcel", number);
         // กำหนดชื่อ Columns ที่ต้องการ
         const columnHeaders = [
             { header: "ลำดับ", key: "index" },
@@ -132,7 +133,7 @@ const App = () => {
             const res = await axios.post('/api/request/getPrakanInterAdmin', { year: parseInt(year) });
             console.log("stuData", res.data.data);
             setStuData(res.data.data);
-            setDataSource(...dataSource, res.data.data.map((data, index) => {
+            setDataSource(res.data.data.map((data, index) => {
                 const formatDate = (dateString) => {
                     if (!dateString) return "-";
                     const date = new Date(dateString);
@@ -632,6 +633,25 @@ const App = () => {
 
 
     ];
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+    const onSelectChange = (newSelectedRowKeys, selectedRows) => {
+        console.log('selectedRowKeys changed:', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+        setSelectedRowReqid(selectedRows.map(row => row)); // อัปเดตรายการที่เลือก
+        setSelectedRowReqidapi(selectedRows.map(row => row.reqId)); // อัปเดตรายการที่เลือก
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+
+        selections: [
+            Table.SELECTION_ALL,
+            Table.SELECTION_INVERT,
+            Table.SELECTION_NONE,
+        ],
+    };
 
 
 
@@ -677,14 +697,13 @@ const App = () => {
                         {selectedRowReqid.length > 0 ? (
                             <>
                                 <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
-                                    Export Excel ที่เลือกไว้
+                                    Export Excel ที่เลือก
                                 </Button>
-                                {dropdown()}
                             </>
                         ) : (
                             <>
-                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
-                                    Export Excel ทั้งหมด
+                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }} disabled>
+                                    Export Excel ที่เลือก
                                 </Button>
                             </>
                         )}
@@ -693,6 +712,7 @@ const App = () => {
                     </div>
 
                     <Table
+                        rowSelection={rowSelection}
                         dataSource={dataSource}
                         columns={columns}
                         style={{ borderRadius: borderRadiusLG }}
