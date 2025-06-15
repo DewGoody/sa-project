@@ -22,6 +22,8 @@ export default function Form() {
   const [isEditTime, setIsEditTime] = useState(false);
   const [isTypeHos2, setIsTypeHos2] = useState(false);
 
+
+
   const router = useRouter();
   const {form} = useParams();
 
@@ -130,26 +132,43 @@ export default function Form() {
     setAlreadyData({ ...alreadyData, treatment_place: event.target.value });
   };
   const handleChangePlaceTreat2 = (event) => {
-    console.log(event.target.value);
-    if(event.target.value === "" || event.target.value === null){
-      setIsTypeHos2(false);
-    }else{
-      setIsTypeHos2(true);
-    }
-    console.log("isTypeHos2",isTypeHos2);
-    setPrakanData({ ...prakanData, treatment_place2: event.target.value });
-    setAlreadyData({ ...alreadyData, treatment_place2: event.target.value });
-  };
+  const value = event.target.value;
+  console.log(value);
+
+  const isEmpty = value === "" || value === null;
+  setIsTypeHos2(!isEmpty);
+
+  // ถ้า input ว่าง → ตั้งค่า hospital_type2 = 3
+  if (isEmpty) {
+    setAlreadyData({ ...alreadyData, treatment_place2: "", hospital_type2: 3 });
+    setPrakanData({ ...prakanData, treatment_place2: "", hospital_type2: 3 });
+  } else {
+    setAlreadyData({ ...alreadyData, treatment_place2: value });
+    setPrakanData({ ...prakanData, treatment_place2: value });
+  }
+};
+
   const handleChangeTypeHos1 = (event) => {
     console.log("event",event.target.value);
     setPrakanData({ ...prakanData, hospital_type: event.target.value });
     setAlreadyData({ ...alreadyData, hospital_type: event.target.value });
   };
   const handleChangeTypeHos2 = (event) => {
-    console.log("event",event.target.value);
-    setPrakanData({ ...prakanData, hospital_type2: event.target.value });
-    setAlreadyData({ ...alreadyData, hospital_type2: event.target.value });
+    const value = parseInt(event.target.value); // แปลงเป็น number
+    console.log("event", value);
+  
+    // ถ้าเลือก 3 → เคลียร์ input
+    if (value === 3) {
+      setAlreadyData({ ...alreadyData, hospital_type2: 3, treatment_place2: "" });
+      setPrakanData({ ...prakanData, hospital_type2: 3, treatment_place2: "" });
+      setIsTypeHos2(false);
+    } else {
+      setAlreadyData({ ...alreadyData, hospital_type2: value });
+      setPrakanData({ ...prakanData, hospital_type2: value });
+      setIsTypeHos2(true);
+    }
   };
+  
   const handleChangeMedicalFeeNum = (event) => {
     console.log("medicalFee",event.target.value);
     setPrakanData({ ...prakanData, medical_fee: (event.target.value)});
@@ -252,7 +271,7 @@ export default function Form() {
             <form className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-7 m-4 md:m-6" onSubmit={handleSubmit}>
 
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname) :</label>
+                  <label className="block text-gray-700 mt-1" >ชื่อและนามสกุล (Fullname)</label>
                   <div>
                     <input
                       type="text"
@@ -266,7 +285,7 @@ export default function Form() {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                <label className="block text-gray-700 mt-1">รหัสนิสิต (Student ID) :</label>
+                <label className="block text-gray-700 mt-1">รหัสนิสิต (Student ID)</label>
                   <div>
                     <input
                       type="text"
@@ -280,7 +299,7 @@ export default function Form() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1">คณะ (Faculty) :</label>
+                  <label className="block text-gray-700 mt-1">คณะ (Faculty)</label>
                   <div className="">
                     <input
                       type="text"
@@ -295,7 +314,7 @@ export default function Form() {
                   
                 </div>
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Phone number) :</label>
+                  <label className="block text-gray-700 mt-1" >หมายเลขโทรศัพท์ (Phone number)</label>
                   <div>
                     <input
                       type="number"
@@ -321,7 +340,7 @@ export default function Form() {
                   </label>
                 </div>
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >ศึกษาในระดับ (Degree) :</label>
+                  <label className="block text-gray-700 mt-1" >ศึกษาในระดับ (Degree)</label>
                   <div>
                     <select
                       name="degree"
@@ -337,7 +356,7 @@ export default function Form() {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Academic year) :</label>
+                  <label className="block text-gray-700 mt-1" >ชั้นปีที่ (Academic year)</label>
                   <div>
                     <input
                       type="number"
@@ -367,7 +386,7 @@ export default function Form() {
                   <label className="">
                     
                     <div className="block text-gray-700 mt-1" >
-                    เหตุการณ์ขณะเกิดอุบัติเหตุ (Cause of accident) :
+                    เหตุการณ์ขณะเกิดอุบัติเหตุ (Cause of accident)
                     </div>
                     <textarea 
                       className="w-full px-4 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" cols="23" rows="2" 
@@ -384,7 +403,7 @@ export default function Form() {
                 <div className="flex flex-col">
                 <label className="">
                     <div className="block text-gray-700 mt-1" >
-                    อาการบาดเจ็บ (Description of injury) :
+                    อาการบาดเจ็บ (Description of injury)
                     </div>
                     <textarea 
                       className="w-full px-1 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" cols="32" rows="2" 
@@ -402,7 +421,7 @@ export default function Form() {
                 
                 <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1" >
-                    วันที่เกิดอุบัติเหตุ (Date of accident) :
+                    วันที่เกิดอุบัติเหตุ (Date of accident)
                     <input
                         type="date"
                         max={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
@@ -416,7 +435,7 @@ export default function Form() {
                 
                 <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1" >
-                    เวลาเกิดอุบัติเหตุ (Time of accident) :
+                    เวลาเกิดอุบัติเหตุ (Time of accident)
                     <input
                         type="time"
                         onChange={handleChangeTimeAcc}
@@ -428,7 +447,7 @@ export default function Form() {
                 </div>
                 <div className="flex flex-col">
                   <label className="text-gray-700" >
-                    สถานที่เกิดอุบัติเหตุ (Place of accident) :
+                    สถานที่เกิดอุบัติเหตุ (Place of accident)
                   </label>
                   <select
                     onChange={handleChangePlaceAcc}
@@ -446,7 +465,7 @@ export default function Form() {
                 </div>
                 <div className="flex flex-col">
                 <label className=" text-gray-700" >
-                    ระบุสถานที่เกิดอุบัติเหตุ (Specify the place of accident) :
+                    ระบุสถานที่เกิดอุบัติเหตุ (Specify the place of accident)
                     </label>
                   <input
                     type="text"
@@ -482,7 +501,7 @@ export default function Form() {
                       *&nbsp;
                   </div>
                   <label className="block text-gray-700" >
-                    1. ชื่อสถานพยาบาลที่เข้ารับการรักษา (Name of Medical Institution) :
+                    1. ชื่อสถานพยาบาลที่เข้ารับการรักษา (Name of Medical Institution)
                     <input
                       type="text"
                       onChange={handleChangePlaceTreat}
@@ -499,7 +518,7 @@ export default function Form() {
                     *
                 </div>
                 <label className="block text-gray-700 ml-2" >
-                    ประเภทสถานพยาบาล (Type of hospital) :
+                    ประเภทสถานพยาบาล (Type of hospital)
                 </label>
                 </div>
                   <div className="ml-2">
@@ -522,7 +541,7 @@ export default function Form() {
                 </div>
                 <div className="flex flex-col">
                 <label className="block text-gray-700" >
-                    2. ชื่อสถานพยาบาลที่เข้ารับการรักษา (Name of Medical Institution) :
+                    2. ชื่อสถานพยาบาลที่เข้ารับการรักษา (Name of Medical Institution)
                     <input
                       type="text"
                       onChange={handleChangePlaceTreat2}
@@ -534,7 +553,7 @@ export default function Form() {
                 
                 <div className="flex flex-col">
                 <label className="block text-gray-700" >
-                    ประเภทสถานพยาบาล (Type of hospital) :
+                    ประเภทสถานพยาบาล (Type of hospital)
                   </label>
                   <div className="ml-2">
                     <select
@@ -562,7 +581,7 @@ export default function Form() {
             
                 <div className="flex flex-col">
                   <label className="block text-gray-700 mt-1" >
-                    ตัวเลข (in numbers) :
+                    ตัวเลข (in numbers)
                     <input
                       type="number"
                       onChange={handleChangeMedicalFeeNum}
