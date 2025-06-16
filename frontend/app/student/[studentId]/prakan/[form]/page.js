@@ -21,6 +21,7 @@ export default function Form() {
   const [yearLevel, setYearLevel] = useState('');
   const [isEditTime, setIsEditTime] = useState(false);
   const [isTypeHos2, setIsTypeHos2] = useState(false);
+  const [isPlace2, setIsPlace2] = useState(false);
 
 
 
@@ -36,6 +37,12 @@ export default function Form() {
       const response = await axios.post(`/api/prakan/getDataById`, { id: parseInt(form) });
       console.log("fetchData",response.data.data);
       console.log("typeHospital_type2", response.data.data.hospital_type2)
+      if(response.data.data.treatment_place2 === ''){
+        setIsTypeHos2(false);
+      }
+      else{
+        setIsTypeHos2(true);
+      }
       const isoDate = response.data.data.acc_date;
       const formattedDate = isoDate.split("T")[0];
       setDate(formattedDate); 
@@ -560,7 +567,7 @@ export default function Form() {
                       onChange={handleChangeTypeHos2}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.hospital_type2 ?? 3}
-                      disabled={alreadyData?.treatment_place2 === null || alreadyData?.treatment_place2 === "" || isTypeHos2 === false }
+                      disabled={alreadyData?.treatment_place2 === null || alreadyData?.treatment_place2 === "" || isTypeHos2 === false  }
                       
                       
                     >
