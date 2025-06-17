@@ -327,7 +327,7 @@ const App = () => {
         title: 'แก้ไข',
         dataIndex: 'status',
         render: (status, record) => {
-            if (status !== "ส่งเอกสารให้การเงินแล้ว" && status !== "ไม่อนุมัติ" && status !== "รอเข้ารับบริการ") {
+            if (status !== "ส่งเอกสารให้การเงินแล้ว" && status !== "ไม่อนุมัติ") {
                 return (
                     <Space size="middle">
                         <Button onClick={() => {
