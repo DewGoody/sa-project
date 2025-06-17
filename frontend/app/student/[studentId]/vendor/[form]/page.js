@@ -248,7 +248,7 @@ function Page() {
                         name="nameTH"
                         disabled
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="ชื่อและนามสกุล (NameSurname)"
+                        placeholder="ชื่อและนามสกุล (Name-Surname)"
                         value={profileData ? profileData?.fnameTH + " " + profileData?.lnameTH : vendorData?.nameTH}
                       />
                     </div>
