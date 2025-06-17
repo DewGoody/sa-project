@@ -13,8 +13,7 @@ export async function editServicePeriod(data) {
             id: data.id
         },
         data: {
-            start_at: data.start_at,
-            end_at: data.end_at,
+            active: data.active,
         }
     })
     return period;
