@@ -327,7 +327,7 @@ const App = () => {
         title: 'แก้ไข',
         dataIndex: 'status',
         render: (status, record) => {
-            if (status !== "ส่งเอกสารให้การเงินแล้ว" && status !== "ไม่อนุมัติ") {
+            if (status !== "ส่งเอกสารให้การเงินแล้ว" && status !== "ไม่อนุมัติ" && status !== "รอเข้ารับบริการ") {
                 return (
                     <Space size="middle">
                         <Button onClick={() => {
@@ -378,8 +378,8 @@ const App = () => {
             } else if (status === 'รอเจ้าหน้าที่ดำเนินการ') {
                 options = [
                     { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                    { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' }},
-                    { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'black' }},
+                    { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
+                    { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'black' } },
                 ];
             } else if (status === 'ไม่อนุมัติ') {
                 options = [
