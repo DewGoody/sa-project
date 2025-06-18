@@ -211,7 +211,7 @@ const App = () => {
 
     const handleYearChange = async (year) => {
         console.log("year", year);
-        router.push(`/Admin/prakan/${year}`);
+        router.push(`/Admin/prakan-inter/${year}`);
     }
 
     const handleDownload = async (record) => {
