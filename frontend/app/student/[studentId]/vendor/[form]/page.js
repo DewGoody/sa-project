@@ -116,8 +116,6 @@ function Page() {
         console.error(error);
       }
     }
-
-    //TODO admin edit from router push back
   };
   const handleChange = (event, field) => {
     console.log(field + " : " + event.target.value);
@@ -126,6 +124,11 @@ function Page() {
       const id = event.target.selectedOptions[0]?.dataset.id;
       fetchAmphuresById(id);
     }
+    // Set claimOtherReason to null when claimType changes
+    if (field === "claimType") {
+      setVendorData({ ...vendorData, [field]: event.target.value, claimOtherReason: "" });
+    }
+
   };
   const fetchProvinces = async () => {
     try {
