@@ -917,7 +917,7 @@ export async function getRequestVendorAdmin(year) {
                         lnameEN: true
                     },
                 },
-                prakan_inter_info: true
+                vendor_info: true
             }
         })
     }
@@ -965,13 +965,10 @@ export async function changeStatusVendor(id, newStatus) {
 
         // Define valid status transitions for vendor requests
         const validTransitions = {
-            'รอจองคิว': ['รอนิสิตส่งเอกสาร'],
-            'รอเข้ารับบริการ': ['รอนิสิตส่งเอกสาร'],
-            'รอนิสิตส่งเอกสาร': ['รับเอกสารแล้ว'],
-            'รับเอกสารแล้ว': ['เจ้าหน้าที่จัดทำข้อมูล'],
-            'เจ้าหน้าที่จัดทำข้อมูล': ['ไม่อนุมัติ', 'ส่งเอกสารให้การเงินแล้ว'],
-            'ไม่อนุมัติ': [], // Terminal status
-            'ส่งเอกสารให้การเงินแล้ว': [] // Terminal status
+            'รอเข้ารับบริการ': [], // Waiting transition from booking system - no transitions allowed
+            'รอเจ้าหน้าที่ดำเนินการ': ['ไม่อนุมัติ', 'ส่งเอกสารให้การเงินแล้ว'],
+            'ไม่อนุมัติ': [], // Terminal status - no transitions allowed
+            'ส่งเอกสารให้การเงินแล้ว': [] // Terminal status - no transitions allowed
         };
 
         // Check if current status exists in valid transitions

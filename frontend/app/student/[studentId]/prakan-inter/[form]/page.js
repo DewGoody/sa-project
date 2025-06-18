@@ -68,7 +68,7 @@ function page() {
         ...prakanData,
         [field]: event.target.value,
         OPDTreatmentDateCount: event.target.value === "outpatient" ? 1 : null, // Reset the count when treatment type changes
-        IPDAdmittedDate: null,
+        IPDAmittedDate: null,
         IPDDischargedDate: null,
         OPDTreatmentDate1: null,
         OPDTreatmentDate2: null,
@@ -80,6 +80,7 @@ function page() {
         ...alreadyData,
         [field]: event.target.value,
         OPDTreatmentDateCount: event.target.value === "outpatient" ? 1 : null, // Reset the count when treatment type changes
+        IPDAmittedDate: null,
         IPDDischargedDate: null,
         OPDTreatmentDate1: null,
         OPDTreatmentDate2: null,
@@ -89,13 +90,6 @@ function page() {
       });
     }
   };
-
-  useEffect(() => {
-    console.log("title :", prakanData.title)
-  }, [prakanData.title]);
-
-
-
 
   const handleSubmit = async (event) => {
     // event.preventDefault(); // Prevent the default form submission behavior
@@ -169,6 +163,15 @@ function page() {
           alert(`Please fill in the treatment date ${i}`);
           return;
         }
+
+        // Validate that each subsequent date is greater than or equal to the previous one
+        if (i > 1) {
+          const previousDate = dataToCheck[`OPDTreatmentDate${i - 1}`];
+          if (previousDate && new Date(date) < new Date(previousDate)) {
+            alert(`Treatment date ${i} cannot be earlier than treatment date ${i - 1}`);
+            return;
+          }
+        }
       }
     }
 
@@ -210,7 +213,7 @@ function page() {
         .then((response) => {
           console.log("Form submitted successfully:", response.data);
           const req_id = response.data.data.req_id
-          router.push(`/Admin/prakan/0`);
+          router.push(`/Admin/prakan-inter/0`);
         })
 
         .catch((error) => {
@@ -370,7 +373,7 @@ function page() {
                       onChange={(event) => handleChange(event, "phone_num")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Phone number"
-                      defaultValue={profileData?.tel_num || alreadyData?.phone_num}
+                      defaultValue={alreadyData?.phone_num}
                     />
                   </div>
                   <div>

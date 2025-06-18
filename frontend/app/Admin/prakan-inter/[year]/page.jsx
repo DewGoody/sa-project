@@ -156,7 +156,7 @@ const App = () => {
                     key: index,
                     id: data.id,
                     reqId: data.reqId,
-                    name: data.Student.fnameEN + " " + data.Student.lnameEN,
+                    name: data.prakan_inter_info[0].title + data.Student.fnameEN + " " + data.Student.lnameEN,
                     student_ID: data.Student.id,
                     phone_num: data.prakan_inter_info[0].phone_num || "-",
                     hospitalName: data.prakan_inter_info[0].hospitalName || "-",
@@ -212,7 +212,7 @@ const App = () => {
 
     const handleYearChange = async (year) => {
         console.log("year", year);
-        router.push(`/Admin/prakan/${year}`);
+        router.push(`/Admin/prakan-inter/${year}`);
     }
 
     const handleDownload = async (record) => {
@@ -369,7 +369,7 @@ const App = () => {
                 let options = [];
                 if (status === 'รอเข้ารับบริการ') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'black' }, },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' }, disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
@@ -427,7 +427,7 @@ const App = () => {
                             onChange={(value) => handleChangeStatus({ ...record, status: value })}
                         />
 
-                        {record.status === "ขอข้อมูลเพิ่มเติม" ?
+                        {record.status === "ขอข้อมูลเพิ่มเติม" || record.status === "ไม่อนุมัติ" ?
                             <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
                             : null}
 

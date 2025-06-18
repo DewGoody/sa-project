@@ -46,10 +46,10 @@ async function prakanFormBuilder(data) {
     const day = String(date.getDate()).padStart(2, "0"); // Ensure 2-digit day
     const month = String(date.getMonth() + 1).padStart(2, "0"); // Ensure 2-digit month
     const year = date.getFullYear();
-    const buddhistYear = year + 543; // Convert to Buddhist year
+
 
     // Return the formatted date
-    return `${day}/${month}/${buddhistYear}`;
+    return `${day}/${month}/${year}`;
   };
   const stu_id = String(data.Student.id);
   const drawTextOnPage = (
@@ -134,7 +134,7 @@ async function prakanFormBuilder(data) {
     firstPage,
     data.treatmentType === "outpatient" ? "/" : "",
     55,
-    height - 290,
+    height - 294,
     thSarabunFont,
     24
   );
