@@ -373,7 +373,7 @@ function page() {
                       onChange={(event) => handleChange(event, "phone_num")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Phone number"
-                      defaultValue={profileData?.tel_num || alreadyData?.phone_num}
+                      defaultValue={alreadyData?.phone_num}
                     />
                   </div>
                   <div>
