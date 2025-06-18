@@ -53,11 +53,13 @@ const App = () => {
     }
     const showModal = (record) => {
         setReqMoreInfo(record);
+        console.log("recordModal :", record);
         console.log("recordModalJa :", typeof record);
         setIsModalOpen(true);
     };
 
     const handleOk = () => {
+        console.log("reqMoreInfo :", reqMoreInfo);
         const response = axios.post('/api/request/createMoreInfo', { id: parseInt(reqMoreInfo), more_info: moreInfoValue });
 
         setIsModalOpen(false);
@@ -158,7 +160,7 @@ const App = () => {
                 return {
                     key: index,
                     id: data.id || "-",
-                    reqId: data.reqId,
+                    reqId: data.id,
                     name: (vendor.titleTH) + (data.Student?.fnameTH || "") + " " + (data.Student?.lnameTH || "-"),
                     student_ID: data.Student?.id || "-",
                     nameTH: vendor.nameTH || "-",
@@ -404,7 +406,7 @@ const App = () => {
                         onChange={(value) => handleChangeStatus({ ...record, status: value })}
                     />
 
-                    {record.status === "ขอข้อมูลเพิ่มเติม" ?
+                    {record.status === "ไม่อนุมัติ" ?
                         <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
                         : null}
 

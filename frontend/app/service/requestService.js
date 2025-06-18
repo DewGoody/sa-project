@@ -917,7 +917,7 @@ export async function getRequestVendorAdmin(year) {
                         lnameEN: true
                     },
                 },
-                prakan_inter_info: true
+                vendor_info: true
             }
         })
     }
