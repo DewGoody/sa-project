@@ -155,7 +155,7 @@ const App = () => {
                     key: index,
                     id: data.id,
                     reqId: data.reqId,
-                    name: data.Student.fnameEN + " " + data.Student.lnameEN,
+                    name: data.prakan_inter_info[0].title + data.Student.fnameEN + " " + data.Student.lnameEN,
                     student_ID: data.Student.id,
                     phone_num: data.prakan_inter_info[0].phone_num || "-",
                     hospitalName: data.prakan_inter_info[0].hospitalName || "-",
