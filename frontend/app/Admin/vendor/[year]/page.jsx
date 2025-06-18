@@ -161,7 +161,7 @@ const App = () => {
                     key: index,
                     id: data.id || "-",
                     reqId: data.id,
-                    name: (vendor.titleTH) + (data.Student?.fnameTH || "") + " " + (data.Student?.lnameTH || "-"),
+                    name: (vendor.titleTH) + vendor.nameTH || "-",
                     student_ID: data.Student?.id || "-",
                     nameTH: vendor.nameTH || "-",
                     faculty: vendor.faculty || "-",
