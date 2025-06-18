@@ -53,11 +53,13 @@ const App = () => {
     }
     const showModal = (record) => {
         setReqMoreInfo(record);
+        console.log("recordModal :", record);
         console.log("recordModalJa :", typeof record);
         setIsModalOpen(true);
     };
 
     const handleOk = () => {
+        console.log("reqMoreInfo :", reqMoreInfo);
         const response = axios.post('/api/request/createMoreInfo', { id: parseInt(reqMoreInfo), more_info: moreInfoValue });
 
         setIsModalOpen(false);
@@ -158,8 +160,8 @@ const App = () => {
                 return {
                     key: index,
                     id: data.id || "-",
-                    reqId: data.reqId,
-                    name: (vendor.titleTH) + (data.Student?.fnameTH || "") + " " + (data.Student?.lnameTH || "-"),
+                    reqId: data.id,
+                    name: (vendor.titleTH) + vendor.nameTH || "-",
                     student_ID: data.Student?.id || "-",
                     nameTH: vendor.nameTH || "-",
                     faculty: vendor.faculty || "-",
@@ -226,7 +228,7 @@ const App = () => {
 
     const handleYearChange = async (year) => {
         console.log("year", year);
-        router.push(`/Admin/prakan/${year}`);
+        router.push(`/Admin/vendor/${year}`);
     }
 
     const handleDownload = async (record) => {
@@ -369,52 +371,28 @@ const App = () => {
         render: (status, record) => {
             let options = [];
             if (status === 'รอเข้ารับบริการ') {
+                //รอเข้ารับบริการ , รอเจ้าหน้าที่ดำเนินการ , เจ้าหน้าที่ส่งเอกสารให้การเงินแล้ว vendor
                 options = [
-                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'black' }, },
-                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
+                    { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                     { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
                     { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
                 ];
-            } else if (status === 'รอนิสิตส่งเอกสาร') {
+            } else if (status === 'รอเจ้าหน้าที่ดำเนินการ') {
                 options = [
-                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
-                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'black' } },
-                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
-                    { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                    { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
-                ];
-            } else if (status === 'รับเอกสารแล้ว') {
-                options = [
-                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
-                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'black' } },
-                    { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
-                    { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
-                ];
-            }
-            else if (status === 'เจ้าหน้าที่จัดทำข้อมูล') {
-                options = [
-                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
-                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'black' }, disabled: true },
+                    { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                     { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
                     { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'black' } },
                 ];
             } else if (status === 'ไม่อนุมัติ') {
                 options = [
-                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
-                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
+                    { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                     { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
                     { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
                 ];
             }
             else if (status === 'ส่งเอกสารให้การเงินแล้ว') {
                 options = [
-                    { value: 'รอนิสิตส่งเอกสาร', label: 'รอนิสิตส่งเอกสาร', style: { color: 'gray' }, disabled: true },
-                    { value: 'รับเอกสารแล้ว', label: 'รับเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
-                    { value: 'เจ้าหน้าที่จัดทำข้อมูล', label: 'เจ้าหน้าที่จัดทำข้อมูล', style: { color: 'gray' }, disabled: true },
+                    { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                     { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
                     { value: 'ส่งเอกสารให้การเงินแล้ว', label: 'ส่งเอกสารให้การเงินแล้ว', style: { color: 'gray' }, disabled: true },
                 ];
@@ -428,7 +406,7 @@ const App = () => {
                         onChange={(value) => handleChangeStatus({ ...record, status: value })}
                     />
 
-                    {record.status === "ขอข้อมูลเพิ่มเติม" ?
+                    {record.status === "ไม่อนุมัติ" ?
                         <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
                         : null}
 
@@ -439,7 +417,7 @@ const App = () => {
         },
         filters: [
             { text: "รอเข้ารับบริการ", value: "รอเข้ารับบริการ" },
-            { text: "รอนิสิตส่งเอกสาร", value: "รอนิสิตส่งเอกสาร" },
+            { text: "รอเจ้าหน้าที่ดำเนินการ", value: "รอเจ้าหน้าที่ดำเนินการ" },
             { text: "รับเอกสารแล้ว", value: "รับเอกสารแล้ว" },
             { text: "เจ้าหน้าที่จัดทำข้อมูล", value: "เจ้าหน้าที่จัดทำข้อมูล" },
             { text: "ไม่อนุมัติ", value: "ไม่อนุมัติ" },

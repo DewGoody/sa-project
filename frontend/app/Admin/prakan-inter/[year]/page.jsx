@@ -67,6 +67,7 @@ const App = () => {
         setIsModalOpen(false);
     };
     const exportToExcel = (number) => {
+        console.log("exportToExcel", number);
         // กำหนดชื่อ Columns ที่ต้องการ
         const columnHeaders = [
             { header: "ลำดับ", key: "index" },
@@ -132,7 +133,7 @@ const App = () => {
             const res = await axios.post('/api/request/getPrakanInterAdmin', { year: parseInt(year) });
             console.log("stuData", res.data.data);
             setStuData(res.data.data);
-            setDataSource(...dataSource, res.data.data.map((data, index) => {
+            setDataSource(res.data.data.map((data, index) => {
                 const formatDate = (dateString) => {
                     if (!dateString) return "-";
                     const date = new Date(dateString);
@@ -155,7 +156,7 @@ const App = () => {
                     key: index,
                     id: data.id,
                     reqId: data.reqId,
-                    name: data.Student.fnameEN + " " + data.Student.lnameEN,
+                    name: data.prakan_inter_info[0].title + data.Student.fnameEN + " " + data.Student.lnameEN,
                     student_ID: data.Student.id,
                     phone_num: data.prakan_inter_info[0].phone_num || "-",
                     hospitalName: data.prakan_inter_info[0].hospitalName || "-",
@@ -211,7 +212,7 @@ const App = () => {
 
     const handleYearChange = async (year) => {
         console.log("year", year);
-        router.push(`/Admin/prakan/${year}`);
+        router.push(`/Admin/prakan-inter/${year}`);
     }
 
     const handleDownload = async (record) => {
@@ -368,7 +369,7 @@ const App = () => {
                 let options = [];
                 if (status === 'รอเข้ารับบริการ') {
                     options = [
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'black' }, },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
                         { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารแล้ว', style: { color: 'gray' }, disabled: true },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'gray' }, disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'gray' }, disabled: true },
@@ -426,7 +427,7 @@ const App = () => {
                             onChange={(value) => handleChangeStatus({ ...record, status: value })}
                         />
 
-                        {record.status === "ขอข้อมูลเพิ่มเติม" ?
+                        {record.status === "ขอข้อมูลเพิ่มเติม" || record.status === "ไม่อนุมัติ" ?
                             <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
                             : null}
 
@@ -632,6 +633,25 @@ const App = () => {
 
 
     ];
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+    const onSelectChange = (newSelectedRowKeys, selectedRows) => {
+        console.log('selectedRowKeys changed:', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+        setSelectedRowReqid(selectedRows.map(row => row)); // อัปเดตรายการที่เลือก
+        setSelectedRowReqidapi(selectedRows.map(row => row.reqId)); // อัปเดตรายการที่เลือก
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+
+        selections: [
+            Table.SELECTION_ALL,
+            Table.SELECTION_INVERT,
+            Table.SELECTION_NONE,
+        ],
+    };
 
 
 
@@ -677,14 +697,13 @@ const App = () => {
                         {selectedRowReqid.length > 0 ? (
                             <>
                                 <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
-                                    Export Excel ที่เลือกไว้
+                                    Export Excel ที่เลือก
                                 </Button>
-                                {dropdown()}
                             </>
                         ) : (
                             <>
-                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
-                                    Export Excel ทั้งหมด
+                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }} disabled>
+                                    Export Excel ที่เลือก
                                 </Button>
                             </>
                         )}
@@ -693,6 +712,7 @@ const App = () => {
                     </div>
 
                     <Table
+                        rowSelection={rowSelection}
                         dataSource={dataSource}
                         columns={columns}
                         style={{ borderRadius: borderRadiusLG }}

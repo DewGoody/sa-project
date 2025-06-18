@@ -122,15 +122,15 @@ const App = () => {
     };
 
     function getStudentEntryYear(currentStudentYear) {
-    const now = new Date();
-    const signBEYear = now.getFullYear() + 543 - currentStudentYear;
+        const now = new Date();
+        const signBEYear = now.getFullYear() + 543 - currentStudentYear;
 
-    // ถ้าเดือน > สิงหาคม (เดือน 8) แปลว่าขึ้นปีใหม่การศึกษาแล้ว
-    const adjustedYear = now.getMonth() > 8 ? currentStudentYear   : currentStudentYear -1 ;
+        // ถ้าเดือน > สิงหาคม (เดือน 8) แปลว่าขึ้นปีใหม่การศึกษาแล้ว
+        const adjustedYear = now.getMonth() > 8 ? currentStudentYear : currentStudentYear - 1;
 
-    // ปีที่เข้าเรียน = ปีปัจจุบัน - adjustedYear + 1
-    return signBEYear + adjustedYear ;
-}
+        // ปีที่เข้าเรียน = ปีปัจจุบัน - adjustedYear + 1
+        return signBEYear + adjustedYear;
+    }
 
 
     const formatDateToDMY = (dateString) => {
@@ -171,7 +171,7 @@ const App = () => {
 
         try {
             const response = await axios.post(`/api/Admin/getgoldenbyreq_id`, { year: parseInt(year) })
-            setData(...Data, response.data.map((item, index) => ({
+            setData(response.data.map((item, index) => ({
                 key: index, // Unique key for each row
                 fullname: `${item.Student?.fnameTH || ''} ${item.Student?.lnameTH || ''}`, //check
                 student_ID: item.stu_id?.toString(), //check
@@ -230,10 +230,10 @@ const App = () => {
             setLoading(true);
             let res;
             if (record.status === "รอเจ้าหน้าที่ดำเนินการ") {
-                res = await axios.post('/api/request/changeStatusProcess', { id: parseInt(record.reqId) });
+                res = await axios.post('/api/request/changeStatusToProcess', { id: parseInt(record.reqId) });
             } else if (record.status === "ขอข้อมูลเพิ่มเติม") {
                 res = await axios.post('/api/request/changeStatusToWantInfo', { id: parseInt(record.reqId) });
-            }else if (record.status === "ส่งข้อมูลให้ รพ. แล้ว") {
+            } else if (record.status === "ส่งข้อมูลให้ รพ. แล้ว") {
                 res = await axios.post('/api/request/changeStatusToHospital', { id: parseInt(record.reqId) });
             } else if (record.status === "ย้ายสิทธิ์สำเร็จ") {
                 res = await axios.post('/api/request/changeToTranApprove', { id: parseInt(record.reqId) });
@@ -260,11 +260,11 @@ const App = () => {
     };
 
     useEffect(() => {
-            const matched = Data.find((item) => item.reqId === reqMoreInfo);
-            if (matched) {
-                setMoreInfoValue(matched.more_info || "");
-            }
-        }, [reqMoreInfo, Data]);
+        const matched = Data.find((item) => item.reqId === reqMoreInfo);
+        if (matched) {
+            setMoreInfoValue(matched.more_info || "");
+        }
+    }, [reqMoreInfo, Data]);
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, confirm }) => (
@@ -303,7 +303,7 @@ const App = () => {
     const columns = [
 
         {
-        
+
             width: 100,
             title: 'แก้ไข',
             dataIndex: 'status',
@@ -339,7 +339,7 @@ const App = () => {
         },
         {
             title: 'สถานะ',
-        
+
             dataIndex: 'status',
             width: 200,
             render: (status, record) => {
@@ -367,7 +367,7 @@ const App = () => {
                 else if (status == "ขอข้อมูลเพิ่มเติม") {
                     options = [
                         { value: 'ยังไม่ได้ Upload เอกสาร', label: 'ยังไม่ได้ Upload เอกสาร', disabled: true },
-                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', disabled: true },
+                        { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', },
                         { value: 'ส่งข้อมูลให้ รพ. แล้ว', label: 'ส่งข้อมูลให้ รพ. แล้ว', },
                         { value: 'ย้ายสิทธิ์สำเร็จ', label: 'ย้ายสิทธิ์สำเร็จ', disabled: true },
@@ -438,7 +438,7 @@ const App = () => {
             title: 'วันที่อัปโหลดเอกสาร',
             dataIndex: 'updateat',
             width: 200,
-        
+
             sorter: (a, b) => new Date(a.updateat) - new Date(b.updateat),
             sortIcon: (sorted) => (
                 <div>
@@ -450,28 +450,28 @@ const App = () => {
             title: 'ชั้นปี',
             dataIndex: 'year',
             width: 140,
-        
+
             ...getColumnSearchProps('year'),
         },
         {
             title: 'รหัสนิสิต',
             dataIndex: 'student_ID',
             width: 180,
-        
+
             ...getColumnSearchProps('student_ID'),
         },
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'fullname',
             width: 200,
-        
+
             ...getColumnSearchProps('fullname'),
         },
         {
             title: 'คณะ',
             dataIndex: 'facultyNameTH',
             width: 180,
-        
+
             ...getColumnSearchProps('facultyNameTH'),
         },
 
@@ -480,58 +480,58 @@ const App = () => {
             title: 'เลขบัตรประชาชน',
             dataIndex: 'citizen_ID',
             width: 180,
-        
+
             ...getColumnSearchProps('citizen_ID'),
         },
         {
             title: 'วันเดือนปีเกิด',
             dataIndex: 'birthdate',
             width: 180,
-        
+
         },
         {
             title: 'อำเภอ/เขต',
             dataIndex: 'district',
             width: 150,
-        
+
             ...getColumnSearchProps('district'),
         },
         {
             title: 'จังหวัด',
             dataIndex: 'province',
             width: 150,
-        
+
             ...getColumnSearchProps('province'),
         },
         {
             title: 'เบอร์มือถือ',
             dataIndex: 'phone',
             width: 150,
-        
+
             ...getColumnSearchProps('phone'),
         },
         {
             title: 'Email',
             dataIndex: 'email',
             width: 180,
-        
+
             ...getColumnSearchProps('email'),
         },
         {
             title: 'ชื่อสถานพยาบาลก่อนลงทะเบียน',
             dataIndex: 'hospital',
             width: 250,
-        
+
             ...getColumnSearchProps('hospital'),
         },
     ];
 
     const exportToExcel = (number) => {
         // กำหนดชื่อ Columns ที่ต้องการ
-        console.log(number , "number");
-        
+        console.log(number, "number");
+
         const columnHeaders = [
-            { header: "ลำดับ", key: "index" }, 
+            { header: "ลำดับ", key: "index" },
             { header: "ปี", key: "college_year" },
             { header: "รหัสนิสิต", key: "student_ID" },
             { header: "ชื่อ-นามสกุล", key: "fullname" },
@@ -599,9 +599,9 @@ const App = () => {
     };
 
     // ตรวจสอบค่าที่อัปเดตล่าสุด
-    useEffect(() => {
-        console.log("Updated selected reqids:", selectedRowReqid);
-    }, [selectedRowReqid]);
+    // useEffect(() => {
+    //     console.log("Updated selected reqids:", selectedRowReqid);
+    // }, [selectedRowReqid]);
     // const handleChangeStatusAll = async (ids, status) => {
     //     try {
     //         setLoading(true);
@@ -623,25 +623,25 @@ const App = () => {
         try {
             setLoading(true);
             await axios.post('/api/request/changeStatusAll', { ids, status });
-    
+
             setData((prevDataSource) => {
                 const updatedData = prevDataSource.map((item) =>
                     ids.includes(item.reqId) ? { ...item, status } : item
                 );
-                return [...updatedData]; 
+                return [...updatedData];
             });
-    
-            setRefreshKey(prev => prev + 1); 
+
+            setRefreshKey(prev => prev + 1);
         } catch (error) {
             console.log(error);
         } finally {
             setLoading(false);
         }
     };
-    
-    
-    
-    
+
+
+
+
     const dropdown = () => {
         const handleSelect = async (value) => {
             try {
@@ -711,14 +711,14 @@ const App = () => {
                         {selectedRowReqid.length > 0 ? (
                             <>
                                 <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
-                                    Export Excel ที่เลือกไว้
+                                    Export Excel ที่เลือก
                                 </Button>
                                 {dropdown()}
                             </>
                         ) : (
                             <>
-                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
-                                    Export Excel ทั้งหมด
+                                <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }} disabled>
+                                    Export Excel ที่เลือก
                                 </Button>
                             </>
                         )}
@@ -745,17 +745,17 @@ const App = () => {
                         ]}
                     >
                         <textarea
-                        style={{
-                            width: "100%",
-                            height: "200px",
-                            border: "gray solid",
-                            borderRadius: "15px",
-                            padding: "15px",
-                            fontSize: "18px"
-                        }}
-                        value={moreInfoValue}
-                        onChange={(e) => setMoreInfoValue(e.target.value)}
-                    />
+                            style={{
+                                width: "100%",
+                                height: "200px",
+                                border: "gray solid",
+                                borderRadius: "15px",
+                                padding: "15px",
+                                fontSize: "18px"
+                            }}
+                            value={moreInfoValue}
+                            onChange={(e) => setMoreInfoValue(e.target.value)}
+                        />
                     </Modal>
                 </Content>
             </Layout>

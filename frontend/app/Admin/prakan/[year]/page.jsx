@@ -41,7 +41,7 @@ const App = () => {
     console.log("year", year);
     console.log("fetchYear :", fetchYear);
     console.log("moreInfoValue :", moreInfoValue);
-
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     useEffect(() => {
         if (shouldReload) {
             window.location.reload();
@@ -225,6 +225,40 @@ const App = () => {
         }
     };
 
+    const onSelectChange = (newSelectedRowKeys, selectedRows) => {
+        console.log('selectedRowKeys changed:', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+        setSelectedRowReqid(selectedRows.map(row => row)); // อัปเดตรายการที่เลือก
+        setSelectedRowReqidapi(selectedRows.map(row => row.reqId)); // อัปเดตรายการที่เลือก
+    };
+
+const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+
+    selections: [
+        {
+            key: 'all-data',
+            text: 'เลือกทั้งหมด',
+            onSelect: () => {
+                setSelectedRowKeys(dataSource.map((item) => item.key));
+                setSelectedRowReqid(dataSource.map((item) => item));
+                setSelectedRowReqidapi(dataSource.map((item) => item.reqId));
+            },
+        },
+        // Table.SELECTION_INVERT,
+        {
+            key: 'none',
+            text: 'ไม่เลือกทั้งหมด',
+            onSelect: () => {
+                setSelectedRowKeys([]);
+                setSelectedRowReqid([]);
+                setSelectedRowReqidapi([]);
+            },
+        },
+    ],
+};
+
     const exportToExcel = (number) => {
                 // กำหนดชื่อ Columns ที่ต้องการ
                 const columnHeaders = [
@@ -261,7 +295,36 @@ const App = () => {
                     dataWithHeaders = [
                         columnHeaders.map(col => col.header), // แถวแรกเป็นหัวตาราง
                         ...selectedRowReqid.map((item, index) =>
-                            columnHeaders.map(col => col.key === "index" ? index + 1 : item[col.key] || '') // Auto Running Number
+                            columnHeaders.map(col => {
+                                if (col.key === "index") {
+                                  return index + 1;
+                                } 
+                                 else if (col.key === "time_acc") {
+                                    const timePart = item[col.key]?.split("T")[1]; // ได้ "16:58:00.000Z"
+                                    const hhmm = timePart ? timePart.substring(0, 5) : ''; // ดึง "16:58"
+                                    return hhmm;
+                                } 
+                                else if (col.key === "hospital_type") {
+                                    const typeMap = {
+                                      0: "โรงพยาบาลรัฐ",
+                                      1: "โรงพยาบาลเอกชน",
+                                      2: "คลินิก",
+                                    };
+                                    return typeMap[item[col.key]] || '';
+                                  }
+                                  else if (col.key === "hospital_type2") {
+                                    const typeMap = {
+                                      0: "โรงพยาบาลรัฐ",
+                                      1: "โรงพยาบาลเอกชน",
+                                      2: "คลินิก",
+                                    };
+                                    return typeMap[item[col.key]] || '';
+                                  }
+                                else {
+                                  return item[col.key] || '';
+                                }
+                              })
+                              
                         )
                     ];
                 }
@@ -362,7 +425,7 @@ const App = () => {
                 else if (status === 'ขอข้อมูลเพิ่มเติม') {
                     options = [
                         { value: 'รอเจ้าหน้าที่ดำเนินการ', label: 'รอเจ้าหน้าที่ดำเนินการ', style: { color: 'gray' }, disabled: true },
-                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารไปบริษัทประกันแล้ว', style: { color: 'gray' }, disabled: true },
+                        { value: 'ส่งเอกสารแล้ว', label: 'ส่งเอกสารไปบริษัทประกันแล้ว', style: { color: 'black' } },
                         { value: 'ขอข้อมูลเพิ่มเติม', label: 'ขอข้อมูลเพิ่มเติม', style: { color: 'black' }, disabled: true },
                         { value: 'ไม่อนุมัติ', label: 'ไม่อนุมัติ', style: { color: 'black' } },
                         { value: 'โอนเงินเรียบร้อย', label: 'โอนเงินเรียบร้อย', style: { color: 'black' } },
@@ -567,15 +630,14 @@ const App = () => {
                                 <>
                                     <div className='flex'>
                                     <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("1")} style={{ marginBottom: '16px' }}>
-                                        Export Excel ที่เลือกไว้
+                                        Export Excel ที่เลือก
                                     </Button>
-                                    {dropdown()}
                                     </div>
                                 </>
                             ) : (
                                 <>
-                                    <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }}>
-                                    Export Excel ทั้งหมด
+                                    <Button className="mt-1 mb-6 px-4" type="primary" onClick={() => exportToExcel("0")} style={{ marginBottom: '16px' }} disabled>
+                                    Export Excel ที่เลือก
                                     </Button>
                                 </>
                             )}
@@ -590,6 +652,7 @@ const App = () => {
                         style={{ borderRadius: borderRadiusLG }}
                         scroll={{ x: 'max-content' }}
                         bordered
+                        rowSelection={rowSelection}
 
                     />
                     

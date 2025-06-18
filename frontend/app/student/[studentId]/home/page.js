@@ -36,8 +36,6 @@ export const Form = () => {
   const [deleteNotQueueId, setDeleteNotQueueId] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [prakanDataLength, setPrakanDataLength] = useState(0);
-  const [hasPonpan, setHasPonpan] = useState(false);
-  const [hasStudentloan, setHasStudentloan] = useState(false);
   const [formId, setFormId] = useState(0);
   const [notQueueLength, setNotQueueLength] = useState(0);
   const [notQueue, setNotQueue] = useState([]);
@@ -47,7 +45,40 @@ export const Form = () => {
   const [isModalSheduleNotQueueOpen, setIsModalScheduleNotQueueOpen] = useState(false);
   const [RD, SETRD] = useState(false)
   const [GC, SETGC] = useState(false)
+  const [Vendor, setVendor] = useState(false)
+  const [Accident, setAccident] = useState(false)
+  const [Health, setHealth] = useState(false)
+  const [hasPonpan, setHasPonpan] = useState(false);
+  const [hasStudentloan, setHasStudentloan] = useState(false);
   const [GC_time, SETGC_time] = useState({ id: "", created_at: "", status: "" });
+
+  const fetchServices = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post('/api/servicePeriod/getAll');
+
+      const processed = response.data.data.map(s => {
+        const id = Number(s.id) && s.active === false ? Number(s.id) : 0;
+        if (id === 1) { setAccident(true); }
+        else if (id === 2) { SETRD(true); }
+        else if (id === 3) { setHasPonpan(true); }
+        else if (id === 4) { SETGC(true); }
+        else if (id === 5) { setHealth(true); }
+        else if (id === 6) { setHasStudentloan(true); }
+        else if (id === 7) { setVendor(true); }
+        return { ...s, id };
+      });
+    } catch (error) {
+      message.error('เกิดข้อผิดพลาดในการดึงข้อมูลบริการ');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
+
   const router = useRouter();
   const showModal = (item) => {
     // console.log("item :", item);
@@ -246,6 +277,7 @@ export const Form = () => {
       await fetchNotQueue();
       await fetchQueue();
       await fetchGolden();
+      await fetchServices();
     } catch (error) {
       setError(error.message);
     } finally {
@@ -514,7 +546,7 @@ export const Form = () => {
             ฝ่ายทุนการศึกษาและบริการนิสิต สำนักบริหารกิจการนิสิต จุฬาลงกรณ์มหาวิทยาลัย
           </div>
           <div className="text-xs font-medium ml-9">
-          Division of Scholarships & Student Services, Office of the Student Affairs, Chulalongkorn University
+            Division of Scholarships & Student Services, Office of the Student Affairs, Chulalongkorn University
           </div>
         </div>
       </div>
@@ -654,8 +686,9 @@ export const Form = () => {
 
             <p className="text-xl font-bold py-4">บริการ (Service)</p>
             <div className="-mt-8">
-              <a onClick={() => router.push(`/student/${studentId}/prakan/0`)}
-                className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+              <a onClick={() => !Accident && router.push(`/student/${studentId}/prakan/0`)}
+                className={`block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg
+                  ${Accident ? "pointer-events-none opacity-50" : ""}`}
               >
                 <ServiceCard
                   title="1. การเบิกจ่ายประกันอุบัติเหตุ (Accident insurance claim)"
@@ -691,8 +724,9 @@ export const Form = () => {
                   title="4. โครงการหลักประกันสุขภาพถ้วนหน้า (Universal Health Coverage Scheme)"
                 />
               </a>
-              <a onClick={() => router.push(`/student/${studentId}/prakan-inter/0`)}
-                className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+              <a onClick={() => !Health && router.push(`/student/${studentId}/prakan-inter/0`)}
+                className={`block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg
+                  ${Health ? "pointer-events-none opacity-50" : ""}`}
               >
                 <ServiceCard
                   title="5. Health Insurance for Foreigner Student"
@@ -706,8 +740,9 @@ export const Form = () => {
                   title="6. กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.) "
                 />
               </a>
-              <a onClick={() => router.push(`/student/${studentId}/vendor/0`)}
-                className="block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg"
+              <a onClick={() => !Vendor && router.push(`/student/${studentId}/vendor/0`)}
+                className={`block cursor-pointer transition-transform transform hover:scale-105 hover:shadow-lg
+                  ${Vendor ? "pointer-events-none opacity-50" : ""}`}
               >
                 <ServiceCard
                   title="7. แบบคำขอรับเงินผ่านธนาคาร (Vendor)"
