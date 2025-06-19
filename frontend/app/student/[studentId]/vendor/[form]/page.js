@@ -159,20 +159,20 @@ function Page() {
       response.data.phone_num = response.data.tel_num;
       setProfileData(response.data);
       console.log("profileData", response.data);
-      setLoading(false);
 
-      const updatedData = {};
-      Object.keys(response.data).forEach((key) => {
-        updatedData[key] = response.data[key];
-      });
-
-      setVendorData(updatedData);
-      setVendorData((vendorData) => ({
-        ...vendorData,
-        titleTH: response.data.title,
-        nameTH: response.data.fnameTH + " " + response.data.lnameTH,
-        faculty: response.data.facultyNameTH,
-      }));
+      // Only set profile data if form is "0" (new form)
+      if (form === "0") {
+        const profileVendorData = {
+          titleTH: response.data.title || "",
+          nameTH: response.data.fnameTH + " " + response.data.lnameTH || "",
+          faculty: response.data.facultyNameTH || "",
+          stu_id: response.data.id || "",
+          ...response.data
+        };
+        
+        setVendorData(profileVendorData);
+        setLoading(false);
+      }
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -185,7 +185,17 @@ function Page() {
         id: form,
       });
       console.log("getVendorData", response.data);
-      setVendorData(response.data.data);
+      
+      // Ensure all critical fields have default values to prevent undefined
+      const vendorDataWithDefaults = {
+        subDistrict: "",
+        district: "",
+        bankAccountNumber: "",
+        amount: "",
+        ...response.data.data
+      };
+      
+      setVendorData(vendorDataWithDefaults);
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -196,14 +206,24 @@ function Page() {
   console.log("vendorData", vendorData);
 
   useEffect(() => {
-    if (studentId !== "0") {
-      fetchProfile();
-      if (form !== "0") {
-        fetchVendorData();
+    const initializeData = async () => {
+      if (studentId !== "0") {
+        // For logged in students
+        if (form !== "0") {
+          // Edit existing form - fetch vendor data first, then profile for reference
+          await fetchVendorData();
+          await fetchProfile();
+        } else {
+          // New form - fetch profile data to pre-populate
+          await fetchProfile();
+        }
+      } else {
+        // For admin editing
+        await fetchVendorData();
       }
-    } else {
-      fetchVendorData();
-    }
+    };
+    
+    initializeData();
   }, []);
 
   if (loading) return <div>Loading...</div>;
@@ -415,11 +435,14 @@ function Page() {
                     </label>
                     <select
                       name="district"
-                      value={vendorData?.district}
+                      value={vendorData?.district || ""}
                       onChange={(event) => handleChange(event, "district")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
-                      <option value={vendorData?.district}>{vendorData?.district}</option>
+                      <option value="">เลือกเขต/อำเภอ (Choose district)</option>
+                      {vendorData?.district && (
+                        <option value={vendorData.district}>{vendorData.district}</option>
+                      )}
                       {amphures.map((amphure, index) => (
                         <option key={index} data-id={amphure.id} value={amphure.name_th}>{amphure.name_th}</option>
                       ))}
@@ -433,7 +456,7 @@ function Page() {
                     <input
                       type="text"
                       name="subDistrict"
-                      value={vendorData?.subDistrict}
+                      value={vendorData?.subDistrict || ""}
                       onChange={(event) => handleChange(event, "subDistrict")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="แขวง/ตำบล (Sub-district)"
@@ -557,7 +580,7 @@ function Page() {
                       <input
                         type="text"
                         name="claimOtherReason"
-                        value={vendorData?.claimOtherReason}
+                        value={vendorData?.claimOtherReason || ""}
                         onChange={(event) =>
                           handleChange(event, "claimOtherReason")
                         }
@@ -568,7 +591,7 @@ function Page() {
                       <input
                         type="text"
                         name="claimOtherReason"
-                        value={vendorData?.claimOtherReason}
+                        value={vendorData?.claimOtherReason || ""}
                         disabled
                         onChange={(event) =>
                           handleChange(event, "claimOtherReason")
