@@ -22,6 +22,7 @@ export default function Form() {
   const [isEditTime, setIsEditTime] = useState(false);
   const [isTypeHos2, setIsTypeHos2] = useState(false);
   const [isPlace2, setIsPlace2] = useState(false);
+  const [errorSelect, setErrorSelect] = useState(false);
 
 
 
@@ -147,11 +148,17 @@ export default function Form() {
 
   // ถ้า input ว่าง → ตั้งค่า hospital_type2 = 3
   if (isEmpty) {
-    setAlreadyData({ ...alreadyData, treatment_place2: "", hospital_type2: 3 });
-    setPrakanData({ ...prakanData, treatment_place2: "", hospital_type2: 3 });
+    setAlreadyData({ ...alreadyData, treatment_place2: "", hospital_type2: '' });
+    setPrakanData({ ...prakanData, treatment_place2: "", hospital_type2: '' });
   } else {
     setAlreadyData({ ...alreadyData, treatment_place2: value });
     setPrakanData({ ...prakanData, treatment_place2: value });
+  }
+  // เช็ค error ทุกครั้งเมื่อ input เปลี่ยน
+  if (isEmpty && alreadyData.hospital_type2 === 3) {
+    setErrorSelect(true);
+  } else {
+    setErrorSelect(false);
   }
 };
 
@@ -165,14 +172,16 @@ export default function Form() {
     console.log("event", value);
   
     // ถ้าเลือก 3 → เคลียร์ input
-    if (value === 3) {
-      setAlreadyData({ ...alreadyData, hospital_type2: 3, treatment_place2: "" });
-      setPrakanData({ ...prakanData, hospital_type2: 3, treatment_place2: "" });
+    if (value === '') {
+      setAlreadyData({ ...alreadyData, hospital_type2: '', treatment_place2: "" });
+      setPrakanData({ ...prakanData, hospital_type2: '', treatment_place2: "" });
       setIsTypeHos2(false);
+      setErrorSelect(true); // ตั้งค่า errorSelect เป็น true
     } else {
       setAlreadyData({ ...alreadyData, hospital_type2: value });
       setPrakanData({ ...prakanData, hospital_type2: value });
       setIsTypeHos2(true);
+      setErrorSelect(false); // ตั้งค่า errorSelect เป็น false
     }
   };
   
@@ -335,7 +344,7 @@ export default function Form() {
                 </div>
                 <div className="flex flex-col">
                 <label className="block text-gray-700 mt-1" >
-                    อีเมล (Email) :
+                    อีเมล (Email)
                     <input
                       type="email"
                       name="email"
@@ -568,10 +577,10 @@ export default function Form() {
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       value={alreadyData?.hospital_type2 ?? 3}
                       disabled={alreadyData?.treatment_place2 === null || alreadyData?.treatment_place2 === "" || isTypeHos2 === false  }
-                      
+                      required
                       
                     >
-                      <option value={3}>
+                      <option value="">
                         เลือกประเภท (select type)
                        </option>
                       <option value={0} className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>
