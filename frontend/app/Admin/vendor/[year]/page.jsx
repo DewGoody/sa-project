@@ -51,21 +51,49 @@ const App = () => {
         console.log("editFormResponse :", response.data.data.path);
         router.push(`/student/0/vendor/${response.data.data.form}`);
     }
-    const showModal = (record) => {
-        setReqMoreInfo(record);
-        console.log("recordModal :", record);
-        console.log("recordModalJa :", typeof record);
+    const showModal = (reqId) => {
+        setReqMoreInfo(reqId);
+
+        // Find the record with the matching reqId and get its more_info
+        const record = dataSource.find(item => item.reqId === reqId);
+        const existingMoreInfo = record?.more_info || '';
+
+        setMoreInfoValue(existingMoreInfo); // Set existing more_info or empty string
+        console.log("recordModal :", reqId);
+        console.log("recordModalJa :", typeof reqId);
+        console.log("existing more_info:", existingMoreInfo);
         setIsModalOpen(true);
     };
 
-    const handleOk = () => {
-        console.log("reqMoreInfo :", reqMoreInfo);
-        const response = axios.post('/api/request/createMoreInfo', { id: parseInt(reqMoreInfo), more_info: moreInfoValue });
+    const handleOk = async () => {
+        try {
+            setLoading(true);
+            console.log("reqMoreInfo :", reqMoreInfo);
+            const response = await axios.post('/api/request/createMoreInfo', {
+                id: parseInt(reqMoreInfo),
+                more_info: moreInfoValue
+            });
 
-        setIsModalOpen(false);
+            // Update the dataSource to reflect the new more_info
+            setDataSource(prevDataSource =>
+                prevDataSource.map(item =>
+                    item.reqId === reqMoreInfo
+                        ? { ...item, more_info: moreInfoValue }
+                        : item
+                )
+            );
+
+            setMoreInfoValue(''); // Clear after submission
+            setIsModalOpen(false);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error updating more_info:', error);
+            setLoading(false);
+        }
     };
 
     const handleCancel = () => {
+        setMoreInfoValue(''); // Clear when cancelling
         setIsModalOpen(false);
     };
     const exportToExcel = (number) => {
@@ -188,7 +216,8 @@ const App = () => {
                     bankAccountNumber: vendor.bankAccountNumber || "-",
                     stu_id: vendor.stu_id || "-",
                     status: data.status || "-",
-                    vendorId: vendor.id
+                    vendorId: vendor.id,
+                    more_info: data.more_info || "",
                 };
             });
 
@@ -706,8 +735,9 @@ const App = () => {
                     >
                         <textarea
                             style={{ width: "100%", height: "200px", border: "gray solid", borderRadius: "15px", padding: "15px", fontSize: "18px" }}
-
+                            value={moreInfoValue}
                             onChange={(e) => setMoreInfoValue(e.target.value)}
+                            placeholder="กรุณากรอกรายละเอียด..."
                         >
                         </textarea>
                     </Modal>
