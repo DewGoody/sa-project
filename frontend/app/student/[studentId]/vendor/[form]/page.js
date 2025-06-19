@@ -477,7 +477,7 @@ function Page() {
                       value={vendorData?.citizenId}
                       onChange={(event) => handleChange(event, "citizenId")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      format="#-####-#####-##-#"
+                      format="#############"
                       allowEmptyFormatting
                       mask="_"
                     />
