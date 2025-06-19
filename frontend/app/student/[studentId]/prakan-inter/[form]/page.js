@@ -160,7 +160,7 @@ function page() {
       for (let i = 1; i <= dataToCheck.OPDTreatmentDateCount; i++) {
         const date = dataToCheck[`OPDTreatmentDate${i}`];
         if (!date) {
-          alert(`Please fill in the treatment date ${i}`);
+          alert(`Please fill in the treatment date in all ${i} fields.`);
           return;
         }
 
@@ -168,7 +168,7 @@ function page() {
         if (i > 1) {
           const previousDate = dataToCheck[`OPDTreatmentDate${i - 1}`];
           if (previousDate && new Date(date) < new Date(previousDate)) {
-            alert(`Treatment date ${i} cannot be earlier than treatment date ${i - 1}`);
+            alert(`Treatment date must be in ascending order.`);
             return;
           }
         }
