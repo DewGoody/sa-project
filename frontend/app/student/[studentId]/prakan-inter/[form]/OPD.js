@@ -48,6 +48,19 @@ function OPD({ handleChange, prakanData, alreadyData }) {
 
   const removeDatePicker = () => {
     if (datePickers.length > 1) {
+      const fieldToRemove = `OPDTreatmentDate${datePickers.length}`;
+
+      // Clear the data from the field being removed by setting to null
+      handleChange(
+        {
+          target: {
+            name: fieldToRemove,
+            value: null,
+          },
+        },
+        fieldToRemove
+      );
+
       setDatePickers(datePickers.slice(0, -1)); // Remove the last date picker
       handleChange(
         {
@@ -72,15 +85,12 @@ function OPD({ handleChange, prakanData, alreadyData }) {
       {datePickers.map((_, i) => (
         <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 ">
           <div>
-            <label className="block text-gray-700 mb-2">
-              {i + 1}
-            </label>
+
             <DatePicker
               format="DD/MM/YYYY"
               name={`OPDTreatmentDate${i + 1}`}
               value={
                 (prakanData?.[`OPDTreatmentDate${i + 1}`] && dayjs(prakanData[`OPDTreatmentDate${i + 1}`])) ||
-                (alreadyData?.[`OPDTreatmentDate${i + 1}`] && dayjs(alreadyData[`OPDTreatmentDate${i + 1}`])) ||
                 null
               }
               onChange={(date) => {
@@ -98,7 +108,7 @@ function OPD({ handleChange, prakanData, alreadyData }) {
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
-          <div className="hidden md:flex gap-4 mt-8">
+          <div className="hidden md:flex gap-4">
             {datePickers.length < 5 && i === datePickers.length - 1 ? (
               <button
                 type="button"
@@ -129,7 +139,7 @@ function OPD({ handleChange, prakanData, alreadyData }) {
           </div>
         </div>
       ))}
-      <div className="md:hidden flex gap-4 mt-8">
+      <div className="md:hidden flex gap-4 mt-4">
         {datePickers.length < 5 && (
           <button
             type="button"

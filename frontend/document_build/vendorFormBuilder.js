@@ -170,7 +170,7 @@ async function vendorFormBuilder(data) {
   drawTextOnPage(firstPage, data.bankAccountNumber[8], 507, height - 490);
   drawTextOnPage(firstPage, data.bankAccountNumber[9], 540, height - 490);
 
-  drawTextOnPage(firstPage, data.nameTH, 315, height - 627);
+  drawTextOnPage(firstPage, data.titleTH + data.nameTH, 310, height - 627);
   const pdfBytes = await pdfDoc.save();
   /*
   fs.writeFileSync("public/documents/vendor/" + data.Student.id + "_vendor.pdf", pdfBytes);
