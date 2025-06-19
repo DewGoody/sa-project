@@ -68,11 +68,13 @@ export default function Form() {
     const fetchDataForm = async () => {
       const response = await axios.post(`/api/ponpan/getDataById`, { id: parseInt(form) });
       console.log("resFormData",response.data);
+      response.data.data.house_moo = response.data.data.house_moo === "0" ? "-" : response.data.data.house_moo;
+      response.data.data.house_moo_sd = response.data.data.house_moo_sd === "0" ? "-" : response.data.data.house_moo_sd;
       setPrepareData(response.data.data);
       setAlreadyData(response.data.data);
       setProfileData(response.data.data.Student);
       setLoading(false);
-      console.log(response.data);
+      console.log("hee",response.data.data);
     }
           
 
@@ -224,8 +226,13 @@ const handleChangeHouseNum = (e) => {
 };
 
 const handleChangeHouseMoo = (e) => {
-  setHouseMoo(e.target.value);
-  setAlreadyData({ ...alreadyData, house_moo: e.target.value });
+ if( e.target.value === null || e.target.value === ''){
+    setHouseMoo('');
+    setAlreadyData({ ...alreadyData, house_moo:'' });
+  }else{
+    setHouseMoo(e.target.value);
+    setAlreadyData({ ...alreadyData, house_moo: e.target.value });
+  }
   console.log("houseMoo : ", houseMoo);
 }
 
@@ -236,8 +243,13 @@ const handleChangeHouseNumSD9 = (e) => {
 }
 
 const handleChangeHouseMooSD9 = (e) => {
-  setHouseMooSD9(e.target.value);
-  setAlreadyData({ ...alreadyData, house_moo_sd: e.target.value });
+  if( e.target.value === null || e.target.value === ''){
+    setHouseMooSD9('');
+  setAlreadyData({ ...alreadyData, house_moo_sd:'' });
+  }else{
+    setHouseMooSD9(e.target.value);
+    setAlreadyData({ ...alreadyData, house_moo_sd: e.target.value });
+  }
   console.log ("houseMooSD9 : ", houseMooSD9);
 }
 
@@ -261,9 +273,9 @@ const handleSubmit = async (e) => {
         father_name: fatherName,
         mother_name: motherName,
         house_num: houseNum,
-        house_moo: houseMoo,
+        house_moo: houseMoo === '' || houseMoo === null ? 0 : houseMoo,
         house_num_sd: houseNumSD9,
-        house_moo_sd: houseMooSD9,
+        house_moo_sd: houseMooSD9 === '' || houseMooSD9 === null ? 0 : houseMooSD9,
         sdnine_id: sd9Num,
         province: province,
         district: amphure,
@@ -290,9 +302,9 @@ const handleSubmit = async (e) => {
         father_name: alreadyData.father_name,
         mother_name: alreadyData.mother_name,
         house_num: alreadyData.house_num,
-        house_moo: alreadyData.house_moo,
+        house_moo: alreadyData.house_moo === '-' || alreadyData.house_moo === null ? 0 : alreadyData.house_moo,
         house_num_sd: alreadyData.house_num_sd,
-        house_moo_sd: alreadyData.house_moo_sd,
+        house_moo_sd: alreadyData.house_moo_sd === '-' || alreadyData.house_moo_sd === null ? 0 : alreadyData.house_moo_sd,
         sdnine_id: alreadyData.sdnine_id,
         province: alreadyData.province,
         district: alreadyData.district,
@@ -321,9 +333,9 @@ const handleSubmit = async (e) => {
       father_name: alreadyData.father_name,
       mother_name: alreadyData.mother_name,
       house_num: alreadyData.house_num,
-      house_moo: alreadyData.house_moo,
+      house_moo: alreadyData.house_moo === '' || alreadyData.house_moo === null ? 0 : alreadyData.house_moo,
       house_num_sd: alreadyData.house_num_sd,
-      house_moo_sd: alreadyData.house_moo_sd,
+      house_moo_sd: alreadyData.house_moo_sd === '' || alreadyData.house_moo_sd === null ? 0 : alreadyData.house_moo_sd,
       sdnine_id: alreadyData.sdnine_id,
       province: alreadyData.province,
       district: alreadyData.district,
@@ -344,6 +356,8 @@ const handleSubmit = async (e) => {
 console.log("province : ", province);
 console.log("amphure : ", amphures);
 console.log("district : ", district);
+console.log("hoseMoo : ", houseMoo);
+console.log("houseMooSD9 : ", houseMooSD9);
 const handleProvinceChange = (e) => {
   const selectedProvince = e.target.value;
   console.log("selectedProvince", selectedProvince);
@@ -448,8 +462,8 @@ const handleDistrictSD9Change = (e) => {
                   <div className="">
                     <input
                       type="number"
-                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={prepareData?.Student?.thai_id || null}
+                      className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      value={prepareData?.Student?.thai_id === "0" ? "-" : prepareData?.Student?.thai_id || null}
                       onChange={handleChangeCitizenId}
                     />
                   </div>
@@ -461,7 +475,7 @@ const handleDistrictSD9Change = (e) => {
                       type="number"
                       name="phone"
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={alreadyData?.year}
+                      value={alreadyData?.year === "0" ? "-" : alreadyData?.year}
                       onChange={handleChangeYearLevel}
                       required
                     />
@@ -473,7 +487,7 @@ const handleDistrictSD9Change = (e) => {
                     <select
                       name="degree"
                        className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={alreadyData?.degree}
+                      value={alreadyData?.degree === "0" ? "-" : alreadyData?.degree}
                       onChange={handleChangeDegree}
                     >
                     <option value="">เลือกระดับการศึกษา (select degree)</option>
@@ -584,11 +598,11 @@ const handleDistrictSD9Change = (e) => {
                   <div>
                     <input
                       type="number"
-                      name="name"
+                      name="moo"
                       value={alreadyData.house_moo}
                        className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseMoo}
-                      required
+                      
                     />
                   </div>
                 </div>
@@ -686,8 +700,7 @@ const handleDistrictSD9Change = (e) => {
                   <div>
                     <input
                       type="number"
-                      name="name"
-                      required
+                      name="mooSD9"
                       value={alreadyData.house_moo_sd}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       onChange={handleChangeHouseMooSD9}

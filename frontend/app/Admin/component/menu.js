@@ -24,7 +24,7 @@ const Menubar = () => {
         { key: "/Admin/ponpan/0", label: "การขอผ่อนผันการเข้ารับราชการทหาร" },
         { key: "/Admin/goldencard/page/0", label: "บัตรทอง" },
         { key: "/Admin/prakan-inter/0", label: "Health Insurance For Foreigner Student" },
-        { key: "/Admin/student-loan/0", label: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ)" },
+        { key: "/Admin/student-loan/0", label: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)" },
         { key: "/Admin/vendor/0", label: "แบบคำขอรับเงินผ่านธนาคาร (Vendor)" },
         { key: "/Admin/dashboard/0", label: "สรุปการนัดหมาย" },
         { key: "/Admin/editMaxStudent", label: "จัดการจำนวนผู้เข้ารับบริการ" },
