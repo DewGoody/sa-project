@@ -48,6 +48,19 @@ function OPD({ handleChange, prakanData, alreadyData }) {
 
   const removeDatePicker = () => {
     if (datePickers.length > 1) {
+      const fieldToRemove = `OPDTreatmentDate${datePickers.length}`;
+
+      // Clear the data from the field being removed by setting to null
+      handleChange(
+        {
+          target: {
+            name: fieldToRemove,
+            value: null,
+          },
+        },
+        fieldToRemove
+      );
+
       setDatePickers(datePickers.slice(0, -1)); // Remove the last date picker
       handleChange(
         {
@@ -78,7 +91,6 @@ function OPD({ handleChange, prakanData, alreadyData }) {
               name={`OPDTreatmentDate${i + 1}`}
               value={
                 (prakanData?.[`OPDTreatmentDate${i + 1}`] && dayjs(prakanData[`OPDTreatmentDate${i + 1}`])) ||
-                (alreadyData?.[`OPDTreatmentDate${i + 1}`] && dayjs(alreadyData[`OPDTreatmentDate${i + 1}`])) ||
                 null
               }
               onChange={(date) => {
