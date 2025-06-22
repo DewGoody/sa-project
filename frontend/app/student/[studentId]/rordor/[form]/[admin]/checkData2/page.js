@@ -146,8 +146,8 @@ const CheckData = () => {
                     RD_type: parseInt(formData.YearGradeRD),
                     Branches: formData.Branches,
                     corps: formData.corps || "",
-                    man_right: formData.man_right ,
-                    women_right: formData.women_right ,
+                    man_right: formData.man_right,
+                    women_right: formData.women_right,
                 },
                 guardian_info: {
                     id: id,
@@ -305,7 +305,20 @@ const CheckData = () => {
                                             name="registermyself"
                                             onChange={handleChange}
                                             checked={formData.registermyself}
+                                            disabled
+                                            className={`
+    h-4 w-4 rounded border border-gray-300 
+    appearance-none cursor-not-allowed
+    relative
+    ${formData.registermyself ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+    ${formData.registermyself
+                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
+                                                    : ""}
+  `}
                                         />
+
+
                                         <label htmlFor="registermyself" className="text-gray-700">
                                             สมัครใจเข้ารับการฝึกวิชาทหาร (Voluntary enlistment for military training)
                                         </label>
@@ -318,6 +331,16 @@ const CheckData = () => {
                                             name="notmilitary"
                                             onChange={handleChange}
                                             checked={formData.notmilitary}
+                                            disabled
+                                            className={`
+    h-4 w-4 rounded border border-gray-300 
+    appearance-none cursor-not-allowed relative
+    ${formData.notmilitary ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+    ${formData.notmilitary
+                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
+                                                    : ""}
+  `}
                                         />
                                         <label htmlFor="notmilitary" className="text-gray-700">
                                             ไม่เป็นทหารประจำการ กองประจำการ หรือถูกกำหนดตัวเข้ากองประจำการ (Not being a regular soldier, active duty or being assigned to active duty)
@@ -331,6 +354,17 @@ const CheckData = () => {
                                             name="readymilitary"
                                             onChange={handleChange}
                                             checked={formData.readymilitary}
+                                            disabled
+                                            className={`
+    h-4 w-4 rounded border border-gray-300 
+    appearance-none cursor-not-allowed relative
+    ${formData.readymilitary ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+    ${formData.readymilitary
+                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
+                                                    : ""}
+  `}
+
                                         />
                                         <label htmlFor="readymilitary" className="text-gray-700">
                                             พร้อมปฏิบัติตามเงื่อนไขบังคับในการรายงานตัวเข้าฝึกวิชาทหารทุกประการ (Ready to comply with all the mandatory conditions for reporting for military training)
@@ -338,14 +372,22 @@ const CheckData = () => {
                                     </div>
 
                                     <div className="flex items-start space-x-2">
-                                        <input
+                                         <input
                                             type="checkbox"
                                             id="man_right"
                                             name="man_right"
                                             onChange={handleChange}
                                             checked={formData.man_right}
                                             disabled
-
+                                            className={`
+    h-4 w-4 rounded border border-gray-300 
+    appearance-none cursor-not-allowed relative
+    ${formData.man_right ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+    ${formData.man_right
+                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
+                                                    : ""}
+  `}
                                         />
                                         <label htmlFor="man_right" className="text-gray-700">
                                             ชาย ชั้นปีที่ ๒ - ๓ ไว้ทรงผมรองทรงสูง ความยาวด้านบนไม่เกิน ๕ ซม.หรือสั้นกว่า ชาย ชั้นปีที่ ๔ - ๕ ไว้ทรงผมรองทรง ความยาวด้านบนไม่เกิน๗ ซม. หรือสั้นกว่า (Males in Year 2-3 wear a high crew cut hairstyle with the top length not exceeding 5 cm. or shorter. Males in Year 4-5 wear a crew cut hairstyle with the top length not exceeding 7 cm. or shorter.)
@@ -360,6 +402,15 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             checked={formData.women_right}
                                             disabled
+                                            className={`
+    h-4 w-4 rounded border border-gray-300 
+    appearance-none cursor-not-allowed relative
+    ${formData.women_right ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+    ${formData.women_right
+                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
+                                                    : ""}
+  `}
                                         />
                                         <label htmlFor="women_right" className="text-gray-700">
                                             หญิง ไว้ทรงผมตามที่ระเบียบกำหนด (Women must have their hair style as prescribed by the regulations.)

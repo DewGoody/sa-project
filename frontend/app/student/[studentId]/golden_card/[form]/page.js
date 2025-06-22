@@ -301,10 +301,22 @@ const page = () => {
                                             type="text"
                                             name="citizenId"
                                             value={Data.citizenId}
-                                            onChange={handleChange}
+                                            onChange={(e) => {
+                                                const onlyNums = e.target.value.replace(/\D/g, '');
+                                                if (onlyNums.length <= 13) {
+                                                    updateData({ citizenId: onlyNums });
+                                                }
+                                            }}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                             placeholder="Identification number"
+                                            inputMode="numeric"
+                                            maxLength={13}
                                         />
+                                        {Data.citizenId && Data.citizenId.length > 0 && Data.citizenId.length !== 13 && (
+                                            <p className="text-red-500 text-sm mt-1">กรุณากรอกให้ครบ 13 หลัก</p>
+                                        )}
+
+
                                     </div>
 
                                     <div>

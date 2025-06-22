@@ -8,6 +8,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import { useRouter, useParams } from 'next/navigation';
 import RedirectOnBack from './RedirectOnBack';
+import { set } from 'date-fns';
 const { Dragger } = Upload;
 
 
@@ -37,7 +38,13 @@ const gold = () => {
     const [selectedFilesfast, setSelectedFilesfast] = useState([]);
     const [selectedFileshouse, setSelectedFileshouse] = useState([]);
 
-
+    useEffect(() => {
+        setSelectedFiles(['']);
+        setSelectedFilescitizen(['']);
+        setSelectedFilesstudent(['']);
+        setSelectedFilesfast(['']);
+        setSelectedFileshouse(['']);
+    }, []);
 
     const handleFileChange = (info) => {
         const { status } = info.file;
@@ -95,7 +102,6 @@ const gold = () => {
         }
     };
 
-
     const handleConfirm = async (event) => {
         event.preventDefault();
         if (!allChecked()) {
@@ -129,6 +135,8 @@ const gold = () => {
         try {
             console.log(int_req_id)
             if (int_req_id !== 0) {
+                console.log(formData);
+
                 const response = await axios.post(
                     `/api/POSTPDF/update?id=${int_req_id}`, // เรียก API endpoint
                     formData,
@@ -155,7 +163,7 @@ const gold = () => {
             router.push(`/student/${studentId}/home`)
         } catch (error) {
             console.error("Upload failed:", error);
-            toast.error("การอัปโหลดล้มเหลว");
+            toast.error("กรุณาอัปโหลดไฟล์ก่อนดำเนินการต่อ");
         }
     };
 
@@ -341,7 +349,7 @@ const gold = () => {
         return Object.values(checkboxes).every((isChecked) => isChecked);
     };
     const notifyerror = () => {
-        toast.error('👆🏻 ติ๊กให้ครบทุกช่อง', {
+        toast.error('กรุณาอัปโหลดไฟล์ก่อนดำเนินการต่อ', {
             position: "bottom-right",
             autoClose: 2000,
             hideProgressBar: false,
@@ -376,7 +384,7 @@ const gold = () => {
 
     return (
         <>
-        <RedirectOnBack />
+            <RedirectOnBack />
             <div>
                 <Header req1="แบบคำขอรับรองคุณสมบัติในการเข้าร่วมโครงการประกันสุขภาพถ้วนหน้า (กรุงเทพมหานคร) สำหรับนิสิตจุฬาลงกรณ์มหาวิทยาลัย และ หนังสือข้อตกลงขอขึ้นทะเบียนบัตรประกันสุขภาพถ้วนหน้า โรงพยาบาลจุฬาลงกรณ์ สภากาชาดไทย" req2="" />
                 <div className="min-h-screen bg-white">
