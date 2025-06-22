@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { PatternFormat } from "react-number-format";
 import axios from 'axios';
 import { Header } from '../../../../components/Header';
 import { useGoldenContext } from '../../../../contexts/GoldenData';
@@ -149,6 +150,18 @@ const page = () => {
         const id = Data.id
         e.preventDefault();
         try {
+
+            const cleanedCitizenId = Data.citizenId.replace(/_/g, '');
+
+            if (!cleanedCitizenId || cleanedCitizenId.length !== 13) {
+                toast.error("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
+                return;
+            }
+            const cleanedzipCode = Data.zipCode.replace(/_/g, '');
+            if (!cleanedzipCode || cleanedzipCode.length !== 5) {
+                toast.error("กรุณากรอกรหัสไปรษณีย์ให้ครบ 5 หลัก");
+                return;
+            }
             notifyinprocess()
             await axios.put(`/api/UHC?id=${int_req_id}`, {
                 Student: {
@@ -297,25 +310,17 @@ const page = () => {
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">เลขบัตรประชาชน (Identification number)</label>
-                                        <input
+
+                                        <PatternFormat
                                             type="text"
                                             name="citizenId"
                                             value={Data.citizenId}
-                                            onChange={(e) => {
-                                                const onlyNums = e.target.value.replace(/\D/g, '');
-                                                if (onlyNums.length <= 13) {
-                                                    updateData({ citizenId: onlyNums });
-                                                }
-                                            }}
+                                            onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Identification number"
-                                            inputMode="numeric"
-                                            maxLength={13}
+                                            format="#############"
+                                            allowEmptyFormatting
+                                            mask="_"
                                         />
-                                        {Data.citizenId && Data.citizenId.length > 0 && Data.citizenId.length !== 13 && (
-                                            <p className="text-red-500 text-sm mt-1">กรุณากรอกให้ครบ 13 หลัก</p>
-                                        )}
-
 
                                     </div>
 
@@ -513,13 +518,15 @@ const page = () => {
                                     </div>
                                     <div>
                                         <label className="block text-gray-700 mb-2">รหัสไปรษณีย์ (Zip code)</label>
-                                        <input
+                                        <PatternFormat
                                             type="text"
                                             name="zipCode"
                                             value={Data.zipCode}
                                             onChange={handleChange}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                            placeholder="Zip code"
+                                            format="#####"
+                                            allowEmptyFormatting
+                                            mask="_"
                                         />
                                     </div>
                                     <div >
