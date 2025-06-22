@@ -102,7 +102,7 @@ const CheckData = () => {
         return date.toISOString();
     };
     useEffect(() => {
-        console.log(formData);
+        console.log(formData.women_right);
 
     }, [formData])
     const id = formData.id
@@ -111,6 +111,12 @@ const CheckData = () => {
         console.log("ทดสอบ formData.Parentconsent1", formData.Parentconsent1);
 
         try {
+            const cleanedCitizenId = formData.citizenId.replace(/_/g, '');
+
+            if (!cleanedCitizenId || cleanedCitizenId.length !== 13) {
+                toast.error("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
+                return;
+            }
             notifyinprocess()
             await axios.put(`/api/militaryapi/student?id=${int_form}`, {
                 fnameTH: formData.Name,
@@ -327,15 +333,15 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             checked={formData.man_right}
                                             disabled
-                                            className={`
-    h-4 w-4 rounded border border-gray-300 
-    appearance-none cursor-not-allowed relative
-    ${formData.man_right ? 'bg-blue-600 border-blue-600' : 'bg-white'}
-    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
-    ${formData.man_right
-                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
-                                                    : ""}
-  `}
+//                                             className={`
+//     h-4 w-4 rounded border border-gray-300 
+//     appearance-none cursor-not-allowed relative
+//     ${formData.man_right ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+//     after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+//     ${formData.man_right
+//                                                     ? "after:content-['✔'] after:text-white after:text-[10px]"
+//                                                     : ""}
+//   `}
                                         />
                                         <label htmlFor="man_right" className="text-gray-700">
                                             ชาย ไว้ทรงผมรองทรงสูง ความยาวด้านบนไม่เกิน ๕ ซม. หรือสั้นกว่า (Men have a high crew cut hairstyle with the top length not exceeding 5 cm. or shorter.)
@@ -350,15 +356,15 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             checked={formData.women_right}
                                             disabled
-                                            className={`
-    h-4 w-4 rounded border border-gray-300 
-    appearance-none cursor-not-allowed relative
-    ${formData.women_right ? 'bg-blue-600 border-blue-600' : 'bg-white'}
-    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
-    ${formData.women_right
-                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
-                                                    : ""}
-  `}
+//                                             className={`
+//     h-4 w-4 rounded border border-gray-300 
+//     appearance-none cursor-not-allowed relative
+//     ${formData.women_right ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+//     after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+//     ${formData.women_right
+//                                                     ? "after:content-['✔'] after:text-white after:text-[10px]"
+//                                                     : ""}
+//   `}
                                         />
                                         <label htmlFor="women_right" className="text-gray-700">
                                             หญิง ไว้ทรงผมตามที่ระเบียบกำหนด (Women must have their hair style as prescribed by the regulations.)

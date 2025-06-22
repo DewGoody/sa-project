@@ -101,6 +101,12 @@ const CheckData = () => {
         const id = formData.id
 
         try {
+            const cleanedCitizenId = formData.citizenId.replace(/_/g, '');
+
+            if (!cleanedCitizenId || cleanedCitizenId.length !== 13) {
+                toast.error("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
+                return;
+            }
             notifyinprocess()
             await axios.put(`/api/militaryapi/student?id=${int_form}`, {
                 fnameTH: formData.Name,
@@ -372,7 +378,7 @@ const CheckData = () => {
                                     </div>
 
                                     <div className="flex items-start space-x-2">
-                                         <input
+                                        <input
                                             type="checkbox"
                                             id="man_right"
                                             name="man_right"
