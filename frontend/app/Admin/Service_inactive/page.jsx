@@ -75,7 +75,7 @@ const App = () => {
                     }}
                 >
                     <div className='mb-5'>
-                        <h1 className='font-extrabold text-3xl'>จัดการบริการ</h1>
+                        <h1 className='font-extrabold text-3xl'>เปิดปิดการให้บริการ </h1>
                         <p className='text-gray-500'>เปิด/ปิดการใช้งานบริการต่างๆ</p>
                     </div>
 
@@ -100,7 +100,18 @@ const App = () => {
                     </div>
 
                     <div className="mt-6 text-gray-500 text-sm">
-                        <p>หมายเหตุ: สถานะ "เปิด" หมายถึงบริการนั้นนิสิตสามารถใช้งานได้</p>
+                        <div className="mt-6 flex items-center space-x-3 text-sm text-gray-500">
+                            <span>สถานะ</span>
+                            <Switch
+                                checked
+                                disabled
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
+                            <span>หมายถึงนิสิตสามารถขอรับบริการได้</span>
+                        </div>
+
+
                     </div>
                 </Content>
             </Layout>

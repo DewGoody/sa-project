@@ -29,8 +29,9 @@ const Menubar = () => {
         { key: "/Admin/dashboard/0", label: "สรุปการนัดหมาย" },
         { key: "/Admin/editMaxStudent", label: "จัดการจำนวนผู้เข้ารับบริการ" },
         { key: "/Admin/editServiceDate", label: "เปิด-ปิดวันให้บริการ" },
+        { key: "/Admin/Service_inactive", label: "เปิดปิดการให้บริการ" },
         { key: "/Admin/user", label: "จัดการผู้ใช้งาน" },
-        { key: "/Admin/Service_inactive", label: "เปิดปิดระบบ" },
+        
         
     ];
 

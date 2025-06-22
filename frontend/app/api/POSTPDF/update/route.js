@@ -86,10 +86,13 @@ export async function POST(req) {
         }
         let pdf = ""
         if (file_fast) {
+            console.log("มีไฟล์เร่งด่วน");
             const fileBufferfast = await file_fast.arrayBuffer();
             pdf = await prisma.uHC_request.update({
                 where: { id: parseInt(formId) },
+                
                 data: {
+                    created_at: new Date(),
                     student_id: id,
                     binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
                     file_citizen: Buffer.from(fileBuffercitizen),
@@ -99,14 +102,19 @@ export async function POST(req) {
                 },
             });
         } else {
+            console.log("ไม่มีไฟล์เร่งด่วน");
+            
             pdf = await prisma.uHC_request.update({
                 where: { id: parseInt(formId) },
                 data: {
+                    created_at: new Date(),
                     student_id: id,
                     binary_file_data: Buffer.from(fileBuffer), // แปลงไฟล์เป็น Buffer
                     file_citizen: Buffer.from(fileBuffercitizen),
                     file_house: Buffer.from(fileBufferhouse),
                     file_student: Buffer.from(fileBufferstudent),
+                    file_fast: null
+
                 },
             });
         }

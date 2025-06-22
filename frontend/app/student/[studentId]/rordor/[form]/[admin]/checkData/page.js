@@ -278,6 +278,17 @@ const CheckData = () => {
                                             name="registermyself"
                                             onChange={handleChange}
                                             checked={formData.registermyself}
+                                            disabled
+                                            className={`
+    h-4 w-4 rounded border border-gray-300 
+    appearance-none cursor-not-allowed relative
+    ${formData.registermyself ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+    ${formData.registermyself
+                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
+                                                    : ""}
+  `}
+
                                         />
                                         <label htmlFor="registermyself" className="text-gray-700">
                                             สมัครใจเข้ารับการฝึกวิชาทหาร (Voluntary enlistment for military training)
@@ -291,6 +302,17 @@ const CheckData = () => {
                                             name="notmilitary"
                                             onChange={handleChange}
                                             checked={formData.notmilitary}
+                                            disabled
+                                            className={`
+    h-4 w-4 rounded border border-gray-300 
+    appearance-none cursor-not-allowed relative
+    ${formData.notmilitary ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+    ${formData.notmilitary
+                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
+                                                    : ""}
+  `}
+
                                         />
                                         <label htmlFor="notmilitary" className="text-gray-700">
                                             ไม่เป็นทหารประจำการ กองประจำการ หรือถูกกำหนดตัวเข้ากองประจำการ (Not being a regular soldier, active duty or being assigned to active duty)
@@ -305,6 +327,15 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             checked={formData.man_right}
                                             disabled
+                                            className={`
+    h-4 w-4 rounded border border-gray-300 
+    appearance-none cursor-not-allowed relative
+    ${formData.man_right ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+    ${formData.man_right
+                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
+                                                    : ""}
+  `}
                                         />
                                         <label htmlFor="man_right" className="text-gray-700">
                                             ชาย ไว้ทรงผมรองทรงสูง ความยาวด้านบนไม่เกิน ๕ ซม. หรือสั้นกว่า (Men have a high crew cut hairstyle with the top length not exceeding 5 cm. or shorter.)
@@ -319,6 +350,15 @@ const CheckData = () => {
                                             onChange={handleChange}
                                             checked={formData.women_right}
                                             disabled
+                                            className={`
+    h-4 w-4 rounded border border-gray-300 
+    appearance-none cursor-not-allowed relative
+    ${formData.women_right ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+    ${formData.women_right
+                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
+                                                    : ""}
+  `}
                                         />
                                         <label htmlFor="women_right" className="text-gray-700">
                                             หญิง ไว้ทรงผมตามที่ระเบียบกำหนด (Women must have their hair style as prescribed by the regulations.)
@@ -332,6 +372,17 @@ const CheckData = () => {
                                             name="ready_right"
                                             onChange={handleChange}
                                             checked={formData.ready_right}
+                                            disabled
+                                            className={`
+    h-4 w-4 rounded border border-gray-300 
+    appearance-none cursor-not-allowed relative
+    ${formData.ready_right ? 'bg-blue-600 border-blue-600' : 'bg-white'}
+    after:content-[''] after:absolute after:inset-0 after:flex after:items-center after:justify-center
+    ${formData.ready_right
+                                                    ? "after:content-['✔'] after:text-white after:text-[10px]"
+                                                    : ""}
+  `}
+
                                         />
                                         <label htmlFor="ready_right" className="text-gray-700">
                                             พร้อมปฏิบัติตามเงื่อนไขบังคับในการสมัครเป็น นศท.ทุกประการ (Ready to comply with all the mandatory conditions for applying for ROTC.)

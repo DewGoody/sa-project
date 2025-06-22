@@ -147,7 +147,8 @@ const App = () => {
     };
     const formatDateToDMYWithTime = (dateString) => {
         if (!dateString) return 'N/A'; // Handle null or undefined dates
-
+        console.log("dateString", dateString);
+        
         const date = new Date(dateString); // Parse the input date string
 
         const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits for day
@@ -168,7 +169,7 @@ const App = () => {
         return studentClass
     }
     const fetchData = async () => {
-
+        
         try {
             const response = await axios.post(`/api/Admin/getgoldenbyreq_id`, { year: parseInt(year) })
             setData(response.data.map((item, index) => ({
@@ -180,7 +181,7 @@ const App = () => {
                 reqId: item.id,
                 more_info: item.more_info,
                 status: item.status,
-                updateat: formatDateToDMYWithTime(item.created_at),
+                updateat: formatDateToDMYWithTime(item.UHC_request?.[0]?.created_at),
                 province: item.UHC_request?.[0]?.province,
                 district: item.UHC_request?.[0]?.district,
                 hospital: item.UHC_request?.[0]?.hospital || "N/A",
@@ -200,7 +201,7 @@ const App = () => {
 
     // console.log("reqMoreInfo", reqMoreInfo);
     useEffect(() => {
-        // console.log("Data", Data)
+        console.log("Data", Data.updateat)
         // console.log("Status",Data.Objectkeys(0).status)
     }, [Data])
     useEffect(() => {
