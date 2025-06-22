@@ -18,15 +18,15 @@ export const FormDataProvider = ({ children }) => {
       // router.push("/home")
       return
     };
-  
+
     setForm(int_form);
-  
+
     if (int_form !== null && int_form !== undefined) {
       fetchdataapi(int_form);
     }
   };
-  
-  
+
+
   useEffect(() => {
     // console.log(form);
 
@@ -35,7 +35,7 @@ export const FormDataProvider = ({ children }) => {
   const fetchdataapi = async (form) => {
     try {
       console.log("Fetching data for form ID:", form);
-      
+
       const response = await axios.get(`/api/militaryapi/student?id=${form}`);
       setdatafromapiprofile(response.data);
       const responsemilitary = await axios.get(`/api/military?id=${form}`)
@@ -45,7 +45,7 @@ export const FormDataProvider = ({ children }) => {
       console.log(err);
     }
   };
-  
+
   const calculateAge = (birthDate) => {
     const today = new Date();
     const birth = new Date(birthDate);
@@ -65,13 +65,13 @@ export const FormDataProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("Context RD", datafromapimilitary.rD_info?.citizenRD);
+    console.log("Context RD", datafromapiprofile.title);
   }, [datafromapimilitary])
   useEffect(() => {
 
     if (datafromapiprofile.bd) {
       const formattedBirthDate = formatDate(datafromapiprofile.bd);
-  
+
       setFormData((prevData) => ({
         ...prevData,
         id: datafromapiprofile.id,
@@ -113,19 +113,22 @@ export const FormDataProvider = ({ children }) => {
         Parentconsent2: datafromapimilitary.guardian_info?.consent2,
         Parentconsent21: datafromapimilitary.guardian_info?.consent21,
         //คำรับรอง
-        registermyself: datafromapimilitary.rD_info?.registermyself || true, 
-        notmilitary: datafromapimilitary.rD_info?.notmilitary || true, 
+        registermyself: datafromapimilitary.rD_info?.registermyself || true,
+        notmilitary: datafromapimilitary.rD_info?.notmilitary || true,
         readymilitary: datafromapimilitary.rD_info?.readymilitary || true,
 
-        man_right:datafromapimilitary.rD_info?.man_right || datafromapiprofile.title === "นาย" ? true : false,
-        women_right:datafromapimilitary.rD_info?.women_right || datafromapiprofile.title === "นางสาว" ? true : false,
-        ready_right:datafromapimilitary.rD_info?.ready_right || true,
+        man_right: datafromapimilitary.rD_info?.man_right || datafromapiprofile.title === "นาย" ? true : false,
+        women_right: datafromapimilitary.rD_info?.women_right || datafromapiprofile.title === "นางสาว" ? true : false,
+        ready_right: datafromapimilitary.rD_info?.ready_right || true,
 
       }));
       // console.log("Context RD", datafromapimilitary);
-      
+
     }
   }, [datafromapiprofile, datafromapimilitary]);
+  useEffect(() => {
+    console.log("women", women_right);
+  }, [])
 
   const updateFormData = (newData) => {
     setFormData((prevData) => ({
