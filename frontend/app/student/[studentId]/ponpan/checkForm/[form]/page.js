@@ -68,6 +68,12 @@ export default function Form() {
   const fetchDataForm = async () => {
     const response = await axios.post(`/api/ponpan/getDataById`, { id: parseInt(form) });
     console.log("resFormData", response.data);
+    if (response.data.data.house_moo === "0") {
+      response.data.data.house_moo = "-";
+    }
+    if (response.data.data.house_moo_sd === "0") {
+      response.data.data.house_moo_sd = "-";
+    }
     setPrepareData(response.data.data);
     setAlreadyData(response.data.data);
     setProfileData(response.data.data.Student);
@@ -119,9 +125,9 @@ export default function Form() {
           father_name: fatherName,
           mother_name: motherName,
           house_num: houseNum,
-          house_moo: houseMoo,
+          house_moo: houseMoo === "-" ? "0" : houseMoo,
           house_num_sd: houseNumSD9,
-          house_moo_sd: houseMooSD9,
+          house_moo_sd: houseMooSD9 === "-" ? "0" : houseMooSD9,
           sdnine_id: sd9Num,
           province: province,
           district: amphure,
@@ -148,9 +154,9 @@ export default function Form() {
           father_name: alreadyData.father_name,
           mother_name: alreadyData.mother_name,
           house_num: alreadyData.house_num,
-          house_moo: alreadyData.house_moo,
+          house_moo: alreadyData.house_moo === "-" ? "0" : alreadyData.house_moo,
           house_num_sd: alreadyData.house_num_sd,
-          house_moo_sd: alreadyData.house_moo_sd,
+          house_moo_sd: alreadyData.house_moo_sd === "-" ? "0" : alreadyData.house_moo_sd,
           sdnine_id: alreadyData.sdnine_id,
           province: alreadyData.province,
           district: alreadyData.district,
@@ -179,9 +185,9 @@ export default function Form() {
         father_name: alreadyData.father_name,
         mother_name: alreadyData.mother_name,
         house_num: alreadyData.house_num,
-        house_moo: alreadyData.house_moo,
+        house_moo: alreadyData.house_moo === "-" ? "0" : alreadyData.house_moo,
         house_num_sd: alreadyData.house_num_sd,
-        house_moo_sd: alreadyData.house_moo_sd,
+        house_moo_sd: alreadyData.house_moo_sd === "-" ? "0" : alreadyData.house_moo_sd,
         sdnine_id: alreadyData.sdnine_id,
         province: alreadyData.province,
         district: alreadyData.district,

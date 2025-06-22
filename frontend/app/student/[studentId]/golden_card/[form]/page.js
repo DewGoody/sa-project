@@ -5,6 +5,7 @@ import { Header } from '../../../../components/Header';
 import { useGoldenContext } from '../../../../contexts/GoldenData';
 import { useParams, useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { DatePicker } from 'antd';
 import dayjs from "dayjs";
 import { parseISO, format } from "date-fns";
@@ -300,10 +301,22 @@ const page = () => {
                                             type="text"
                                             name="citizenId"
                                             value={Data.citizenId}
-                                            onChange={handleChange}
+                                            onChange={(e) => {
+                                                const onlyNums = e.target.value.replace(/\D/g, '');
+                                                if (onlyNums.length <= 13) {
+                                                    updateData({ citizenId: onlyNums });
+                                                }
+                                            }}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                             placeholder="Identification number"
+                                            inputMode="numeric"
+                                            maxLength={13}
                                         />
+                                        {Data.citizenId && Data.citizenId.length > 0 && Data.citizenId.length !== 13 && (
+                                            <p className="text-red-500 text-sm mt-1">กรุณากรอกให้ครบ 13 หลัก</p>
+                                        )}
+
+
                                     </div>
 
                                     <div>
@@ -527,6 +540,21 @@ const page = () => {
                                 <h3 className="text-lg font-semibold mb-4 pt-10 ">
                                     สถานะก่อนลงทะเบียน (Pre-registration status)
                                 </h3>
+                                <div className='flex items-center'>
+                                    <div
+                                        className="text-red-500 text-sm"
+                                    >
+                                        สามารถตรวจสอบสิทธิ์เดิมได้ที่เว็บไซต์ของ สปสช.
+                                    </div>
+                                    <a
+                                        href="/Goldencard.JPG"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className='mt-1'
+                                    >
+                                        <QuestionCircleOutlined style={{ color: "red", fontSize: "larger", marginLeft: "10px" }} />
+                                    </a>
+                                </div>
                                 <div>
 
                                     <div className="flex items-center space-x-4 py-2">
@@ -550,14 +578,7 @@ const page = () => {
                                                 disabled={Data.benefitStatus !== "existing"}
                                             />
                                             <br />
-                                            <a
-                                                href="/Goldencard.JPG"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-red-500 hover:underline"
-                                            >
-                                                สามารถเช็กสิทธิ์เดิมได้ที่เว็บไซต์ของ สปสช.
-                                            </a>
+
                                         </label>
 
                                     </div>

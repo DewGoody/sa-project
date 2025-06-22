@@ -73,7 +73,7 @@ export async function POST(req,res) {
                 id: request.id.toString(), // Convert BigInt to string
                 req_id: convertBigIntToString(request.req_id), // Handle nullable BigInt
                 student_id: convertBigIntToString(request.student_id.toString()), // Convert Decimal to string
-
+                created_at: request.created_at ? request.created_at.toISOString() : null, // Convert Date to ISO string
             })),
             
         }));

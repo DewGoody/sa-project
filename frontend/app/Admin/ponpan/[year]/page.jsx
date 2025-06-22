@@ -66,19 +66,18 @@ const AppointmentManagement = () => {
                     mother_name: item.Ponpan[0].mother_name,
                     sdnine_id: item.Ponpan[0].sdnine_id,
                     house_num: item.Ponpan[0].house_num,
-                    house_moo: item.Ponpan[0].house_moo,
+                    house_moo: item.Ponpan[0].house_moo === "0" ? "-" : item.Ponpan[0].house_moo,
                     sub_district: item.Ponpan[0].sub_district,
                     district: item.Ponpan[0].district,
                     province: item.Ponpan[0].province,
                     house_num_sd: item.Ponpan[0].house_num_sd,
-                    house_moo_sd: item.Ponpan[0].house_moo_sd,
+                    house_moo_sd: item.Ponpan[0].house_moo_sd === "0" ? "-" : item.Ponpan[0].house_moo_sd,
                     subdistrict_sd: item.Ponpan[0].subdistrict_sd,
                     district_sd: item.Ponpan[0].district_sd,
                     province_sd: item.Ponpan[0].province_sd,
                     email: item.Ponpan[0].email,
                     status: item.status,
                     reqId: item.id
-
                 };
             }));
             console.log("dataSource :", dataSource);
@@ -248,7 +247,7 @@ const AppointmentManagement = () => {
         // เขียนไฟล์ Excel และดาวน์โหลด
         const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
         const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-        saveAs(data, "exported_data.xlsx");
+        saveAs(data, "การผ่อนผันเข้ารับราชการทหาร.xlsx");
     };
 
     const dropdown = () => {

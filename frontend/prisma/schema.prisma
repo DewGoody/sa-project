@@ -513,3 +513,12 @@ model prakan_inter_info_old {
   Student                Student? @relation(fields: [stu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
+
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Service_period {
+  id     BigInt   @id @default(autoincrement())
+  type   String?
+  active Boolean? @default(false)
+}
+
