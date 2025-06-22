@@ -44,12 +44,14 @@ function page() {
   };
 
   useEffect(() => {
-    const studentData = alreadyData?.Student;
-    setPrakanData((prevData) => ({
-      ...prevData,
-      ...alreadyData,
-      ...studentData,
-    }))
+    if (alreadyData) {
+      const studentData = alreadyData?.Student;
+      setPrakanData((prevData) => ({
+        ...prevData,
+        ...studentData, // Student data first (as base)
+        ...alreadyData, // Then alreadyData to override with form-specific data
+      }));
+    }
   }, [alreadyData]);
 
 
@@ -63,6 +65,22 @@ function page() {
     console.log("alreadydata inside :", event.target.value);
     setPrakanData({ ...prakanData, [field]: event.target.value });
     setAlreadyData({ ...alreadyData, [field]: event.target.value });
+
+    // Clear OPD date fields when count is reduced
+    if (field === "OPDTreatmentDateCount") {
+      const newCount = parseInt(event.target.value);
+      const fieldsToUpdate = {};
+
+      // Clear fields beyond the new count
+      for (let i = newCount + 1; i <= 5; i++) {
+        fieldsToUpdate[`OPDTreatmentDate${i}`] = null;
+      }
+
+      setPrakanData({ ...prakanData, [field]: event.target.value, ...fieldsToUpdate });
+      setAlreadyData({ ...alreadyData, [field]: event.target.value, ...fieldsToUpdate });
+      return; // Return early to prevent treatmentType logic
+    }
+
     if (field === "treatmentType") {
       setPrakanData({
         ...prakanData,
@@ -160,7 +178,7 @@ function page() {
       for (let i = 1; i <= dataToCheck.OPDTreatmentDateCount; i++) {
         const date = dataToCheck[`OPDTreatmentDate${i}`];
         if (!date) {
-          alert(`Please fill in the treatment date ${i}`);
+          alert(`Please fill in the treatment date in all ${i} fields.`);
           return;
         }
 
@@ -168,7 +186,7 @@ function page() {
         if (i > 1) {
           const previousDate = dataToCheck[`OPDTreatmentDate${i - 1}`];
           if (previousDate && new Date(date) < new Date(previousDate)) {
-            alert(`Treatment date ${i} cannot be earlier than treatment date ${i - 1}`);
+            alert(`Treatment date must be in ascending order.`);
             return;
           }
         }
