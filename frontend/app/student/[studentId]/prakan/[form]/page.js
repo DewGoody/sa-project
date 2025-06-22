@@ -148,8 +148,8 @@ export default function Form() {
 
   // ถ้า input ว่าง → ตั้งค่า hospital_type2 = 3
   if (isEmpty) {
-    setAlreadyData({ ...alreadyData, treatment_place2: "", hospital_type2: '' });
-    setPrakanData({ ...prakanData, treatment_place2: "", hospital_type2: '' });
+    setAlreadyData({ ...alreadyData, treatment_place2: "", hospital_type2: 3 });
+    setPrakanData({ ...prakanData, treatment_place2: "", hospital_type2: 3 });
   } else {
     setAlreadyData({ ...alreadyData, treatment_place2: value });
     setPrakanData({ ...prakanData, treatment_place2: value });
