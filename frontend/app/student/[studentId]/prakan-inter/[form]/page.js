@@ -130,7 +130,7 @@ function page() {
       "phone_num", // Mobile phone number
       "email", // Email address
       "hospitalName", // Place of treatment
-      "totalMedicalFees", // Total Medical Fees (Bath)
+      "totalMedicalFees", // Total Medical Fees (Baht)
       "treatmentType", // Type of treatment
       "illnessDescription", // Description of illness
     ];
@@ -479,7 +479,7 @@ function page() {
                     </div>
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        Total Medical Fees (Bath)
+                        Total Medical Fees Baht)
                       </label>
                       <input
                         type="number"
@@ -505,7 +505,7 @@ function page() {
                         }}
                         step="0.01"
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Total Medical Fees (Bath)"
+                        placeholder="Total Medical Fees (Baht)"
                         min={0}
                       />
                     </div>
