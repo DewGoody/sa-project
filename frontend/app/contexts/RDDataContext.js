@@ -117,8 +117,8 @@ export const FormDataProvider = ({ children }) => {
         notmilitary: datafromapimilitary.rD_info?.notmilitary || true,
         readymilitary: datafromapimilitary.rD_info?.readymilitary || true,
 
-        man_right: datafromapimilitary.rD_info?.man_right || datafromapiprofile.title === "นาย" ? true : false,
-        women_right: datafromapimilitary.rD_info?.women_right || datafromapiprofile.title === "นางสาว" ? true : false,
+        man_right:  datafromapiprofile.title === "นาย" ? true : false,
+        women_right:  datafromapiprofile.title === "นางสาว" ? true : false,
         ready_right: datafromapimilitary.rD_info?.ready_right || true,
 
       }));
@@ -127,7 +127,7 @@ export const FormDataProvider = ({ children }) => {
     }
   }, [datafromapiprofile, datafromapimilitary]);
   useEffect(() => {
-    console.log("women", women_right);
+    console.log("women", formData.women_right);
   }, [])
 
   const updateFormData = (newData) => {

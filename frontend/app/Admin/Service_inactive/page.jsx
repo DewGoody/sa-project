@@ -75,8 +75,7 @@ const App = () => {
                     }}
                 >
                     <div className='mb-5'>
-                        <h1 className='font-extrabold text-3xl'>เปิดปิดการให้บริการ </h1>
-                        <p className='text-gray-500'>เปิด/ปิดการใช้งานบริการต่างๆ</p>
+                        <h1 className='font-extrabold text-3xl'>เปิด-ปิดการให้บริการ</h1>
                     </div>
 
                     <div className="space-y-4">
