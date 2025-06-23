@@ -544,26 +544,22 @@ const page = () => {
                                 </div>
 
 
-                                <h3 className="text-lg font-semibold mb-4 pt-10 ">
+                                <h3 className="text-lg flex font-semibold mb-4 pt-10 ">
                                     สถานะก่อนลงทะเบียน (Pre-registration status)
-                                </h3>
-                                <div className='flex items-center'>
-                                    <div
-                                        className="text-red-500 text-sm"
-                                    >
-                                        สามารถตรวจสอบสิทธิ์เดิมได้ที่เว็บไซต์ของ สปสช.
-                                    </div>
-                                    <a
-                                        href="/Goldencard.JPG"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className='mt-1'
-                                    >
-                                        <QuestionCircleOutlined style={{ color: "red", fontSize: "larger", marginLeft: "10px" }} />
-                                    </a>
-                                </div>
-                                <div>
+                                    <div className='flex items-center'>
 
+                                        <a
+                                            href="/Goldencard.JPG"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className='mt-1'
+                                        >
+                                            <QuestionCircleOutlined style={{ color: "red", fontSize: "larger", marginLeft: "10px" }} />
+                                        </a>
+                                    </div>
+                                </h3>
+
+                                <div>
                                     <div className="flex items-center space-x-4 py-2">
                                         <input
                                             type="radio"
@@ -573,22 +569,28 @@ const page = () => {
                                             checked={Data.benefitStatus === "existing"}
                                             onChange={handleChange}
                                         />
-                                        <label htmlFor="existing" className="block text-gray-700">
-                                            สิทธิหลักประกันสุขภาพแห่งชาติ โรงพยาบาล
-                                            <input
-                                                type="text"
-                                                name="hospitalName"
-                                                onChange={handleChange}
-                                                value={Data.hospitalName}
-                                                className="border rounded-lg px-2 py-1 ml-2"
-                                                placeholder="ชื่อโรงพยาบาล"
-                                                disabled={Data.benefitStatus !== "existing"}
-                                            />
-                                            <br />
-
-                                        </label>
-
+                                        <div>
+                                            <label htmlFor="existing" className="block text-gray-700">
+                                                สิทธิหลักประกันสุขภาพแห่งชาติ โรงพยาบาล
+                                                <input
+                                                    type="text"
+                                                    name="hospitalName"
+                                                    onChange={handleChange}
+                                                    value={Data.hospitalName}
+                                                    className="border rounded-lg px-2 py-1 ml-2"
+                                                    placeholder="ชื่อโรงพยาบาล"
+                                                    disabled={Data.benefitStatus !== "existing"}
+                                                />
+                                                <br />
+                                            </label>
+                                            <div
+                                                className="text-red-500 text-sm"
+                                            >
+                                                สามารถตรวจสอบสิทธิ์เดิมได้ที่เว็บไซต์ของ สปสช.
+                                            </div>
+                                        </div>
                                     </div>
+
 
 
                                     <div className="flex items-center space-x-4 py-2">
@@ -629,7 +631,7 @@ const page = () => {
                                             onChange={handleChange}
                                         />
                                         <label htmlFor="other" className="block text-gray-700">
-                                            อื่นๆ ระบุ
+                                            อื่น ๆ ระบุ
                                             <input
                                                 type="text"
                                                 name="otherStatus"
