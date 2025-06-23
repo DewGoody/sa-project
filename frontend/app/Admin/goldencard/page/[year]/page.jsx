@@ -158,7 +158,7 @@ const App = () => {
         const hours = String(date.getHours()).padStart(2, '0'); // Ensure 2 digits for hours
         const minutes = String(date.getMinutes()).padStart(2, '0'); // Ensure 2 digits for minutes
 
-        return `${day}/${month}/${year} เวลา:${hours}:${minutes}`; // Return in dd/mm/yy-hour:min format
+        return `${day}/${month}/${year} เวลา ${hours}:${minutes}`; // Return in dd/mm/yy-hour:min format
     };
 
     const [Data, setData] = useState([])

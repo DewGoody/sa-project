@@ -101,12 +101,6 @@ const CheckData = () => {
         const id = formData.id
 
         try {
-            const cleanedCitizenId = formData.citizenId.replace(/_/g, '');
-
-            if (!cleanedCitizenId || cleanedCitizenId.length !== 13) {
-                toast.error("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
-                return;
-            }
             notifyinprocess()
             await axios.put(`/api/militaryapi/student?id=${int_form}`, {
                 fnameTH: formData.Name,
@@ -395,9 +389,13 @@ const CheckData = () => {
                                                     : ""}
   `}
                                         />
-                                        <label htmlFor="man_right" className="text-gray-700">
-                                            ชาย ชั้นปีที่ ๒ - ๓ ไว้ทรงผมรองทรงสูง ความยาวด้านบนไม่เกิน ๕ ซม.หรือสั้นกว่า ชาย ชั้นปีที่ ๔ - ๕ ไว้ทรงผมรองทรง ความยาวด้านบนไม่เกิน๗ ซม. หรือสั้นกว่า (Males in Year 2-3 wear a high crew cut hairstyle with the top length not exceeding 5 cm. or shorter. Males in Year 4-5 wear a crew cut hairstyle with the top length not exceeding 7 cm. or shorter.)
-                                        </label>
+                                        <div>
+                                            <label htmlFor="man_right" className="text-gray-700">
+                                                ชาย ชั้นปีที่ ๒ - ๓ ไว้ทรงผมรองทรงสูง ความยาวด้านบนไม่เกิน ๕ ซม.หรือสั้นกว่า ชาย ชั้นปีที่ ๔ - ๕ ไว้ทรงผมรองทรง ความยาวด้านบนไม่เกิน๗ ซม. หรือสั้นกว่า
+                                            </label>
+                                            <br></br>
+                                            <div>(Males in Year 2-3 wear a high crew cut hairstyle with the top length not exceeding 5 cm. or shorter. Males in Year 4-5 wear a crew cut hairstyle with the top length not exceeding 7 cm. or shorter.)</div>
+                                        </div>
                                     </div>
 
                                     <div className="flex items-start space-x-2">
