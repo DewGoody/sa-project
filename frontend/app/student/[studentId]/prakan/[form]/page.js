@@ -20,6 +20,7 @@ export default function Form() {
   const [date, setDate] = useState("");
   const [yearLevel, setYearLevel] = useState('');
   const [isEditTime, setIsEditTime] = useState(false);
+  const [isTypeHos, setIsTypeHos] = useState(false);
   const [isTypeHos2, setIsTypeHos2] = useState(false);
   const [isPlace2, setIsPlace2] = useState(false);
   const [errorSelect, setErrorSelect] = useState(false);
@@ -43,6 +44,7 @@ export default function Form() {
       }
       else{
         setIsTypeHos2(true);
+        setIsTypeHos(true);
       }
       const isoDate = response.data.data.acc_date;
       const formattedDate = isoDate.split("T")[0];
@@ -135,9 +137,26 @@ export default function Form() {
     }
   };
   const handleChangePlaceTreat = (event) => {
-    console.log(event.target.value);
-    setPrakanData({ ...prakanData, treatment_place: event.target.value });
-    setAlreadyData({ ...alreadyData, treatment_place: event.target.value });
+    const value = event.target.value;
+    console.log(value);
+
+    const isEmpty = value === "" || value === null;
+    setIsTypeHos(!isEmpty);
+
+    // ถ้า input ว่าง → ตั้งค่า hospital_type2 = 3
+    if (isEmpty) {
+      setAlreadyData({ ...alreadyData, treatment_place: "", hospital_type: '' });
+      setPrakanData({ ...prakanData, treatment_place: "", hospital_type: '' });
+    } else {
+      setAlreadyData({ ...alreadyData, treatment_place: value });
+      setPrakanData({ ...prakanData, treatment_place: value });
+    }
+    // เช็ค error ทุกครั้งเมื่อ input เปลี่ยน
+    if (isEmpty && alreadyData.hospital_type2 === 3) {
+      setErrorSelect(true);
+    } else {
+      setErrorSelect(false);
+    }
   };
   const handleChangePlaceTreat2 = (event) => {
   const value = event.target.value;
@@ -163,9 +182,21 @@ export default function Form() {
 };
 
   const handleChangeTypeHos1 = (event) => {
-    console.log("event",event.target.value);
-    setPrakanData({ ...prakanData, hospital_type: event.target.value });
-    setAlreadyData({ ...alreadyData, hospital_type: event.target.value });
+    const value = parseInt(event.target.value); // แปลงเป็น number
+    console.log("event", value);
+  
+    // ถ้าเลือก 3 → เคลียร์ input
+    if (value === '') {
+      setAlreadyData({ ...alreadyData, hospital_type: '', treatment_place: "" });
+      setPrakanData({ ...prakanData, hospital_type: '', treatment_place: "" });
+      setIsTypeHos(false);
+      setErrorSelect(true); // ตั้งค่า errorSelect เป็น true
+    } else {
+      setAlreadyData({ ...alreadyData, hospital_type: value });
+      setPrakanData({ ...prakanData, hospital_type: value });
+      setIsTypeHos(true);
+      setErrorSelect(false); // ตั้งค่า errorSelect เป็น false
+    }
   };
   const handleChangeTypeHos2 = (event) => {
     const value = parseInt(event.target.value); // แปลงเป็น number
@@ -186,10 +217,22 @@ export default function Form() {
   };
   
   const handleChangeMedicalFeeNum = (event) => {
-    console.log("medicalFee",event.target.value);
-    setPrakanData({ ...prakanData, medical_fee: (event.target.value)});
-    setAlreadyData({ ...alreadyData, medical_fee: (event.target.value)});
+    let value = event.target.value;
+  
+    // ตรวจสอบและจำกัดทศนิยมไม่เกิน 2 ตำแหน่ง
+    if (value.includes('.')) {
+      const [intPart, decimalPart] = value.split('.');
+      if (decimalPart.length > 2) {
+        value = `${intPart}.${decimalPart.slice(0, 2)}`;
+      }
+    }
+  
+    console.log("medicalFee", value);
+  
+    setPrakanData({ ...prakanData, medical_fee: value });
+    setAlreadyData({ ...alreadyData, medical_fee: value });
   };
+  
   const handleChangeTimeAcc = (event) => {
     console.log("time",event.target.value);
     console.log("typeTime",typeof event.target.value);
@@ -542,11 +585,12 @@ export default function Form() {
                       onChange={handleChangeTypeHos1}
                       required
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      value={alreadyData?.hospital_type ?? 3}
+                      value={alreadyData?.hospital_type ?? ''}
+                      disabled={alreadyData?.treatment_place === null || alreadyData?.treatment_place === "" || isTypeHos === false  }
                       
                       
                     >
-                        <option value={3} disabled>
+                        <option value='' disabled>
                         เลือกประเภท (select type)
                        </option>
                       <option value={0} className="text-gray-800">โรงพยาบาลรัฐ (public hospital)</option>
@@ -601,6 +645,7 @@ export default function Form() {
                     <input
                       type="number"
                       onChange={handleChangeMedicalFeeNum}
+                      step="0.01"
                       name="medical_fee"
                       required
                       value={alreadyData.medical_fee}

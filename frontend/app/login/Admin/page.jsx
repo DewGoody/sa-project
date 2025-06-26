@@ -39,7 +39,7 @@ const login = () => {
     return (
         <div className="h-screen">
             <div className="flex justify-center items-end h-1/6 ">
-                <p className="text-xl font-extrabold"> ฝ่ายทุนการศึกษาและบริการนิสิตสำนักบริหารกิจการนิสิตจุฬาลงกรณ์มหาวิทยาลัย</p>
+                <p className="text-3xl font-extrabold"> ฝ่ายทุนการศึกษาและบริการนิสิต</p>
             </div>
 
             <div className="flex justify-center items-center h-4/6 space-x-6">
