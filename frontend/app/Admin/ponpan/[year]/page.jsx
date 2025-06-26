@@ -247,7 +247,7 @@ const AppointmentManagement = () => {
         // เขียนไฟล์ Excel และดาวน์โหลด
         const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
         const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-        saveAs(data, "การผ่อนผันเข้ารับราชการทหาร.xlsx");
+        saveAs(data, "ข้อมูลผู้ขอผ่อนผันเข้ารับราชการทหาร.xlsx");
     };
 
     const dropdown = () => {
