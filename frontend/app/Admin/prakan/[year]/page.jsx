@@ -343,7 +343,7 @@ const rowSelection = {
                 // เขียนไฟล์ Excel และดาวน์โหลด
                 const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
                 const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-                saveAs(data, "การเบิกจ่ายประกันอุบัติเหตุ.xlsx");
+                saveAs(data, "accident_insurance.xlsx");
             };
 
     

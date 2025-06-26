@@ -575,7 +575,7 @@ const App = () => {
         // เขียนไฟล์ Excel และดาวน์โหลด
         const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
         const data = new Blob([excelBuffer], { type: "application/octet-stream" });
-        saveAs(data, "บัตรทอง.xlsx");
+        saveAs(data, "ข้อมูลผู้ขอย้ายสิทธิ์บัตรทอง.xlsx");
     };
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [selectedRowReqid, setSelectedRowReqid] = useState([]);
