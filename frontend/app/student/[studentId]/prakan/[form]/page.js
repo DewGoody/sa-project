@@ -512,10 +512,9 @@ export default function Form() {
                     onChange={handleChangePlaceAcc}
                     required
                     className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    defaultValue="เลือกสถานที่เกิดอุบัติเหตุ"
                     value={alreadyData.in_university}
                   >
-                    <option value="เลือกสถานที่เกิดอุบัติเหตุ" disabled>
+                    <option value="">
                       เลือกสถานที่เกิดอุบัติเหตุ (Select place of accident)
                     </option>
                     <option value={true} className="text-gray-800">ภายในมหาวิทยาลัย (In the university)</option>
@@ -659,16 +658,27 @@ export default function Form() {
 
           </div>
           <div>
-          {studentId === '0' && (
-                <div className="flex justify-start">
-                  <button
-                    onClick={() => router.push('/Admin/ponpan/0')}
-                    className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
-                  >
-                    Back
-                  </button>
-                </div>
-              )}
+          {studentId === '0' ? (
+                      <div className="flex justify-start">
+                        <button
+                        type="button"
+                          onClick={() => router.push('/Admin/prakan/0')}
+                          className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                        >
+                          Back
+                        </button>
+                      </div>
+                    ):
+                      <div className="flex justify-start">
+                        <button
+                        type="button"
+                          onClick={() => router.push(`/student/${studentId}/home`)}
+                          className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                        >
+                          Back
+                        </button>
+                      </div>
+                    }
           </div>
           <div className="flex justify-end">
         
