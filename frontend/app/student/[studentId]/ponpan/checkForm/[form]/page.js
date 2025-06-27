@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { use } from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Header } from '../../../../../components/Header.js';
@@ -25,8 +25,6 @@ export default function Form() {
   const [houseMooSD9, setHouseMooSD9] = useState('');
   const [sd9Num, setSd9Num] = useState('');
   const [provinces, setProvinces] = useState([]);
-  const [amphures, setAmphures] = useState([]);
-  const [districts, setDistricts] = useState([]);
   const [province, setProvince] = useState('');
   const [amphure, setAmphure] = useState('');
   const [district, setDistrict] = useState('');
@@ -34,8 +32,6 @@ export default function Form() {
   const [amphureSD9, setAmphureSD9] = useState('');
   const [districtSD9, setDistrictSD9] = useState('');
   const [provincesSD9, setProvincesSD9] = useState([]);
-  const [amphuresSD9, setAmphuresSD9] = useState([]);
-  const [districtsSD9, setDistrictsSD9] = useState([]);
   const [provinceSelected, setProvinceSelected] = useState('');
   const [amphureSelected, setAmphureSelected] = useState('');
   const [districtSelected, setDistrictSelected] = useState('');
@@ -61,8 +57,9 @@ export default function Form() {
     const response = await axios.get('/api/profile');
     console.log(response.data);
     setProfileData(response.data);
+    setCitizenId(response.data.thai_id);
     setLoading(false);
-    console.log(response.data);
+    console.log("stukub",response.data);
   }
 
   const fetchDataForm = async () => {
@@ -78,7 +75,7 @@ export default function Form() {
     setAlreadyData(response.data.data);
     setProfileData(response.data.data.Student);
     setLoading(false);
-    console.log(response.data);
+    console.log('myres',response.data);
   }
 
 
@@ -110,6 +107,24 @@ export default function Form() {
 
   console.log("profileData : ", profileData);
 
+  const fetchProvinces = async () => {
+    try {
+      const response = await axios.get("/api/Province");
+      setProvinces(response.data);
+      setProvinceSD9(response.data); // Set default province for SD9
+    } catch (err) {
+      console.log("Error fetching provinces: " + err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProvinces();
+  }, []);
+
+  console.log("provinces : ", provinces);
+
+
+  
 
 
   const handleSubmit = async () => {
@@ -401,12 +416,24 @@ export default function Form() {
                 </div>
                 <div className="flex flex-col">
                   <label className=" text-gray-700 mb-2">จังหวัด (Province)</label>
-                  <input
+                  {/* <input
                     name="province"
                     disabled
                     value={alreadyData.province}
                     className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  />
+                  /> */}
+                  {provinces?.map((item) =>
+                    item.id === parseInt(alreadyData?.province) ? (
+                      <input
+                        key={item.id}
+                        name="province"
+                        disabled
+                        value={item.name_th}
+                        className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      />
+                    ) : null
+                  )}
+
 
                 </div>
                 <div className="flex flex-col">
@@ -490,12 +517,17 @@ export default function Form() {
                 </div>
                 <div className="flex flex-col">
                   <label className=" text-gray-700 mb-2">จังหวัด (Province)</label>
-                  <input
-                    name="province"
-                    value={alreadyData.province_sd}
-                    disabled
-                    className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  />
+                  {provinces?.map((item) =>
+                    item.id === parseInt(alreadyData?.province_sd) ? (
+                      <input
+                        key={item.id}
+                        name="province_sd"
+                        disabled
+                        value={item.name_th}
+                        className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      />
+                    ) : null
+                  )}
                 </div>
                 <div className="flex flex-col">
                   <label className=" text-gray-700 mb-2">เขต/อำเภอ (District)</label>
@@ -525,7 +557,28 @@ export default function Form() {
 
 
         </main>
-
+        <div className="flex justify-between items-center mt-4 mb-4">
+        <div>
+                    {studentId === '0' ? (
+                      <div className="flex justify-start">
+                        <button
+                          onClick={() => router.push('/Admin/ponpan/0')}
+                          className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                        >
+                          Back
+                        </button>
+                      </div>
+                    ):
+                      <div className="flex justify-start">
+                        <button
+                          onClick={() => router.push(`/student/${studentId}/ponpan/${form}`)}
+                          className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                        >
+                          Back
+                        </button>
+                      </div>
+                    }
+                  </div>          
 
         <div className="flex justify-end">
 
@@ -548,6 +601,7 @@ export default function Form() {
             </button>
           }
 
+        </div>
         </div>
       </div>
     </div></>
