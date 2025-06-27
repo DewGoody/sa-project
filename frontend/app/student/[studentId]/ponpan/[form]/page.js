@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { use } from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Header } from '../../../../components/Header.js';
@@ -52,6 +52,7 @@ export default function Form() {
   const [alreadyData, setAlreadyData] = useState('');
 
   console.log("provinceSelected : ", provinceSelected);
+  console.log("citizenId : ", citizenId);
 
 
   const router = useRouter();
@@ -63,6 +64,7 @@ export default function Form() {
   const fetchStudentData = async () => {
     const response = await axios.get('/api/profile');
     console.log(response.data);
+    setCitizenId(response.data.thai_id);
     setProfileData(response.data);
     setLoading(false);
     console.log(response.data);
@@ -76,10 +78,16 @@ export default function Form() {
     setPrepareData(response.data.data);
     setAlreadyData(response.data.data);
     setProfileData(response.data.data.Student);
+    setProvinceSelected(response.data.data.province);
+    setProvinceSD9Selected(response.data.data.province_sd);
+    setAmphureSelected(response.data.data.district);
+    setAmphureSD9Selected(response.data.data.district_sd);
+    setCitizenId(response.data.data.Student.thai_id);
     setLoading(false);
     console.log("hee", response.data.data);
   }
-
+  console.log("provinces : ", provinces);
+  console.log("amphures : ", amphures);
 
   useEffect(() => {
     if (studentId !== '0') {
@@ -93,6 +101,23 @@ export default function Form() {
     }
 
   }, []);
+
+  console.log("amphureSelected : ", amphureSelected);
+  console.log("amphureSD9Selected : ", amphureSD9Selected);
+  useEffect(() => {
+    
+    setAmphureSelected('');
+    setAmphureSD9Selected ('');
+  }, [provinces]);
+
+  useEffect(() => {
+    if (provinceSelected) {
+      fetchAmphuresById(provinceSelected);
+    }
+    if (provinceSD9Selected) {
+      fetchAmphuresSD9ById(provinceSD9Selected);
+    }
+  }, [provinceSelected]);
 
   console.log("prepareData : ", prepareData);
   console.log("alreadyData : ", alreadyData);
@@ -113,6 +138,7 @@ export default function Form() {
     try {
       const response = await axios.get("/api/Province");
       setProvinces(response.data);
+      setProvinceSD9(response.data); // Set default province for SD9
     } catch (err) {
       console.log("Error fetching provinces: " + err);
     }
@@ -288,10 +314,10 @@ export default function Form() {
           house_num_sd: houseNumSD9,
           house_moo_sd: houseMooSD9 === '' || houseMooSD9 === null ? 0 : houseMooSD9,
           sdnine_id: sd9Num,
-          province: province,
-          district: amphure,
+          province: provinceSelected,
+          district: amphure ,
           sub_district: district,
-          province_sd: provinceSD9,
+          province_sd: provinceSD9Selected,
           district_sd: amphureSD9,
           subdistrict_sd: districtSD9,
         };
@@ -370,19 +396,30 @@ export default function Form() {
   const handleProvinceChange = (e) => {
     const selectedProvince = e.target.value;
     console.log("selectedProvince", selectedProvince);
+  
+    // ตั้งค่าจังหวัดใหม่
     setProvinceSelected(selectedProvince);
-    setProvince(provinces[selectedProvince - 1].name_th);
-    setAlreadyData({ ...alreadyData, province: provinces[selectedProvince - 1].name_th });
+  
+    // ล้างค่าอำเภอที่เคยเลือกไว้
+    setAmphureSelected("");
+    // setAmphure("");
+    setAlreadyData({
+      ...alreadyData,
+      province: selectedProvince,
+      district: "",
+    });
+  
+    // โหลดข้อมูลอำเภอของจังหวัดใหม่
     fetchAmphuresById(selectedProvince);
-  }
+  };
+  
 
   const handleAmphureChange = (e) => {
     const selectedAmphure = e.target.value;
     console.log("selectedAmphure", selectedAmphure);
     setAmphureSelected(selectedAmphure);
-    setAmphure(amphures.find((amphure) => amphure.id === selectedAmphure).name_th);
-    setAlreadyData({ ...alreadyData, district: amphures.find((amphure) => amphure.id === selectedAmphure).name_th });
-    fetchDistrictsById(selectedAmphure);
+    setAmphure(selectedAmphure);
+    setAlreadyData({ ...alreadyData, district: e.target.value });
   }
 
   const handleDistrictChange = (e) => {
@@ -391,21 +428,30 @@ export default function Form() {
   }
   const handleProvinceSD9Change = (e) => {
     const selectedProvince = e.target.value;
-    console.log("selectedProvince", selectedProvince);
+    console.log("selectedProvinceSD", selectedProvince);
+  
+    // ตั้งค่าจังหวัดใหม่
     setProvinceSD9Selected(selectedProvince);
-    setProvinceSD9(provincesSD9[selectedProvince - 1].name_th);
-    setAlreadyData({ ...alreadyData, province_sd: provincesSD9[selectedProvince - 1].name_th });
-    setAlreadyData({ ...alreadyData, province_sd: provincesSD9[selectedProvince - 1].name_th });
+  
+    // ล้างค่าอำเภอ SD9 ที่เคยเลือกไว้
+    setAmphureSD9Selected("");
+    // setAmphureSD9("");
+    setAlreadyData({
+      ...alreadyData,
+      province_sd: selectedProvince,
+      district_sd: "",
+    });
+  
+    // โหลดข้อมูลอำเภอของจังหวัดใหม่
     fetchAmphuresSD9ById(selectedProvince);
-  }
+  };
 
   const handleAmphureSD9Change = (e) => {
     const selectedAmphure = e.target.value;
     console.log("selectedAmphure", selectedAmphure);
     setAmphureSD9Selected(selectedAmphure);
-    setAmphureSD9(amphuresSD9.find((amphure) => amphure.id === selectedAmphure).name_th);
-    setAlreadyData({ ...alreadyData, district_sd: amphuresSD9.find((amphure) => amphure.id === selectedAmphure).name_th });
-    fetchDistrictsSD9ById(selectedAmphure);
+    setAmphureSD9(selectedAmphure);
+    setAlreadyData({ ...alreadyData, district_sd: e.target.value });
   }
 
   const handleDistrictSD9Change = (e) => {
@@ -626,13 +672,13 @@ export default function Form() {
                       name="province"
                       value={provinceSelected || alreadyData?.province}
                       onChange={handleProvinceChange}
-                      // required
+                      required
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
                       <option value="" >{alreadyData.province !== undefined ? alreadyData.province : 'เลือกจังหวัด (select province)'}</option>
 
                       {provinces.map((item, index) => (
-                        <option key={index} data-id={item.id} value={item.id}>{item.name_th + " (" + item.name_en + ")"}</option>
+                        <option key={index} data-id={item.id} value={item.id}>{item.name_th}</option>
                       ))}
                     </select>
                   </div>
@@ -641,13 +687,13 @@ export default function Form() {
                     <select
                       name="amphure"
                       value={amphureSelected || alreadyData?.district}
-                      // required
+                      required
                       onChange={handleAmphureChange}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
-                      <option value="" >{alreadyData.district !== undefined ? alreadyData.district : 'เลือกอำเภอ (select district)'}</option>
+                      <option value="" >{alreadyData.district !== undefined && alreadyData.district !== '' ? alreadyData.district : 'เลือกอำเภอ (select district)'}</option>
                       {amphures.map((amphure, index) => (
-                        <option key={index} data-id={amphure.id} value={amphure.id}>{amphure.name_th + " (" + amphure.name_en + ")"}</option>
+                        <option key={index} data-id={amphure.id} value={amphure.name_th}>{amphure.name_th}</option>
                       ))}
                     </select>
                   </div>
@@ -725,14 +771,14 @@ export default function Form() {
                     <label className=" text-gray-700 mb-2">จังหวัด (Province)</label>
                     <select
                       name="province"
-                      value={provinceSD9Selected}
-                      // required
+                      value={provinceSD9Selected|| alreadyData?.province_sd}
+                      required
                       onChange={handleProvinceSD9Change}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
                       <option value="" >{alreadyData.province_sd !== undefined ? alreadyData.province_sd : 'เลือกจังหวัด (select province)'}</option>
                       {provincesSD9.map((item, index) => (
-                        <option key={index} data-id={item.id} value={item.id}>{item.name_th + " (" + item.name_en + ")"}</option>
+                        <option key={index} data-id={item.id} value={item.id}>{item.name_th}</option>
                       ))}
                     </select>
                   </div>
@@ -740,14 +786,14 @@ export default function Form() {
                     <label className=" text-gray-700 mb-2">เขต/อำเภอ (District)</label>
                     <select
                       name="amphure"
-                      // required
+                      required
                       value={amphureSD9Selected}
                       onChange={handleAmphureSD9Change}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     >
-                      <option value="" >{alreadyData.district_sd !== undefined ? alreadyData.district_sd : 'เลือกอำเภอ (select district)'}</option>
+                      <option value="" >{alreadyData.district_sd !== undefined && alreadyData.district_sd !== '' ? alreadyData.district_sd : 'เลือกอำเภอ (select district)'}</option>
                       {amphuresSD9.map((amphure, index) => (
-                        <option key={index} data-id={amphure.id} value={amphure.id}>{amphure.name_th + " (" + amphure.name_en + ")"}</option>
+                        <option key={index} data-id={amphure.id} value={amphure.name_th}>{amphure.name_th}</option>
                       ))}
                     </select>
                   </div>
@@ -759,21 +805,34 @@ export default function Form() {
 
                   </div>
                   <div>
-                    {studentId === '0' && (
+                    {studentId === '0' ? (
                       <div className="flex justify-start">
                         <button
-                          // onClick={() => router.push('/Admin/ponpan/0')}
+                        type="button"
+                          onClick={() => router.push('/Admin/ponpan/0')}
                           className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
                         >
                           Back
                         </button>
                       </div>
-                    )}
+                    ):
+                      <div className="flex justify-start">
+                        <button
+                        type="button"
+                          onClick={() => router.push(`/student/${studentId}/home`)}
+                          className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                        >
+                          Back
+                        </button>
+                      </div>
+                    }
                   </div>
                   <div className="flex justify-end">
 
                     {studentId !== '0' ?
-                      (<button
+                      (
+                        
+                      <button
 
                         htmlType="submit"
 

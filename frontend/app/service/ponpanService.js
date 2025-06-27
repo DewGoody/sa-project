@@ -68,6 +68,12 @@ export async function updatePonpan(data){
             year: data.year
         }
     })
+    await prisma.student.update({
+        where: {id: data.stu_id},
+        data: {
+            thai_id: data.thai_id
+        }
+    })
     return updatedPonpan
 }
 
