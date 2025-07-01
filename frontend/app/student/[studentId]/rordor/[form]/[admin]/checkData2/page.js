@@ -476,7 +476,7 @@ const CheckData = () => {
 
                                             className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                         >
-                                            Confirm
+                                            Check data
                                             <ToastContainer />
                                         </button>
                                     </div>
