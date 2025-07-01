@@ -47,10 +47,18 @@ const AppointmentManagement = () => {
     const fetchStuData = async () => {
         try {
             const res = await axios.post('/api/request/getPonpanAdmin', { year: parseInt(year) });
+            const ah  = await axios.get("/api/Province");
             console.log("stuData", res.data.data);
+
             setStuData(res.data.data);
             setDataSource(...dataSource, res.data.data.map((item, index) => {
                 const buddhistYear = new Date(item.Student.bd).getFullYear() + 543;
+                const jangwad = parseInt(item.Ponpan[0].province);
+                const jangwad_sd = parseInt(item.Ponpan[0].province_sd);
+                console.log("jangwad :", jangwad);
+                console.log("jangwad_sd :", jangwad_sd);
+
+                console.log("province.id:", ah.data?.map(province => province?.id));
                 return {
                     key: index,
                     id: item.Ponpan[0].id,
@@ -69,17 +77,18 @@ const AppointmentManagement = () => {
                     house_moo: item.Ponpan[0].house_moo === "0" ? "-" : item.Ponpan[0].house_moo,
                     sub_district: item.Ponpan[0].sub_district,
                     district: item.Ponpan[0].district,
-                    province: item.Ponpan[0].province,
+                    province: ah.data?.find(province => province?.id === jangwad)?.name_th ,
                     house_num_sd: item.Ponpan[0].house_num_sd,
                     house_moo_sd: item.Ponpan[0].house_moo_sd === "0" ? "-" : item.Ponpan[0].house_moo_sd,
                     subdistrict_sd: item.Ponpan[0].subdistrict_sd,
                     district_sd: item.Ponpan[0].district_sd,
-                    province_sd: item.Ponpan[0].province_sd,
+                    province_sd: ah.data?.find(province => province?.id ===jangwad_sd)?.name_th,
                     email: item.Ponpan[0].email,
                     status: item.status,
                     reqId: item.id
                 };
-            }));
+            }
+        ));
             console.log("dataSource :", dataSource);
         } catch (error) {
             console.error('Error fetching student data:', error);
@@ -154,8 +163,9 @@ const AppointmentManagement = () => {
     };
 
     useEffect(() => {
-        fetchStuData()
-    }, [])
+       fetchStuData();   // ค่อยทำอันนี้
+      }, []);
+      
 
     useEffect(() => {
         fetchUniqueYear()
