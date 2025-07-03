@@ -78,7 +78,7 @@ function OPD({ handleChange, prakanData, alreadyData }) {
     <div>
 
       <h3 className="text-lg font-semibold my-4 pt-8 flex gap-4 ">
-        Date of Treatment
+        Date of treatment
       </h3>
 
 

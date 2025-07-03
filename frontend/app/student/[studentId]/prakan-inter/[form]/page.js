@@ -479,7 +479,7 @@ function page() {
                     </div>
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        Total Medical Fees (Baht)
+                        Total medical fees (Baht)
                       </label>
                       <input
                         type="number"
