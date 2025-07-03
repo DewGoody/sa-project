@@ -18,7 +18,7 @@ function IPD({ handleChange, prakanData, alreadyData }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 ">
         <div>
-          <label className="block text-gray-700 mb-2">Date of Admission</label>
+          <label className="block text-gray-700 mb-2">Date of admission</label>
           <DatePicker
             format="DD/MM/YYYY"
             name="IPDAmittedDate"
@@ -44,7 +44,7 @@ function IPD({ handleChange, prakanData, alreadyData }) {
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-2">Date of Discharge</label>
+          <label className="block text-gray-700 mb-2">Date of discharge</label>
           <DatePicker
             format="DD/MM/YYYY"
             name="IPDDischargedDate"

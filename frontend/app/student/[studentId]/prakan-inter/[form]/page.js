@@ -391,7 +391,7 @@ function page() {
                       onChange={(event) => handleChange(event, "phone_num")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Phone number"
-                      defaultValue={alreadyData?.phone_num}
+                      defaultValue={alreadyData?.Student.phone_num || alreadyData?.phone_num}
                     />
                   </div>
                   <div>
@@ -469,7 +469,7 @@ function page() {
                         onChange={(event) =>
                           handleChange(event, "treatmentType")
                         }
-                        value={prakanData.treatmentType}
+                        value={prakanData.treatmentType || alreadyData?.treatmentType}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       >
                         <option value="null">Select type of treatment</option>
@@ -479,7 +479,7 @@ function page() {
                     </div>
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        Total Medical Fees Baht)
+                        Total medical fees (Baht)
                       </label>
                       <input
                         type="number"
@@ -511,9 +511,9 @@ function page() {
                     </div>
                   </div>
                 </div>
-                {prakanData?.treatmentType === "inpatient" ? (
+                {prakanData?.treatmentType === "inpatient" || alreadyData?.treatmentType === "inpatient" ? (
                   <IPD handleChange={handleChange} prakanData={prakanData} alreadyData={alreadyData} />
-                ) : prakanData?.treatmentType === "outpatient" ? (
+                ) : prakanData?.treatmentType === "outpatient" || alreadyData?.treatmentType === "outpatient" ? (
                   <OPD handleChange={handleChange} prakanData={prakanData} alreadyData={alreadyData} />
                 ) : null}
                 <h3 className="text-lg font-semibold my-4 pt-8">
