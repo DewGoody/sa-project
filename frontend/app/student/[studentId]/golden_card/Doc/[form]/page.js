@@ -8,7 +8,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import { useRouter, useParams } from 'next/navigation';
 import RedirectOnBack from './RedirectOnBack';
-import { set } from 'date-fns';
+import { max, set } from 'date-fns';
 const { Dragger } = Upload;
 
 
@@ -171,6 +171,8 @@ const gold = () => {
     const props = {
         name: 'file',
         multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        maxCount: 1, // จำกัดจำนวนไฟล์ที่อัปโหลดได้
+        accept: '.pdf', // จำกัดประเภทไฟล์ที่อัปโหลดเป็น PDF เท่านั้น
         beforeUpload(file) {
             const isPDF = file.type === 'application/pdf';
             if (!isPDF) {
@@ -199,6 +201,8 @@ const gold = () => {
     const citizen = {
         name: 'file',
         multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        maxCount: 1, // จำกัดจำนวนไฟล์ที่อัปโหลดได้
+        accept: '.pdf', // จำกัดประเภทไฟล์ที่อัปโหลดเป็น PDF เท่านั้น
         beforeUpload(file) {
             const isPDF = file.type === 'application/pdf';
             if (!isPDF) {
@@ -226,6 +230,8 @@ const gold = () => {
     const house = {
         name: 'file',
         multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        maxCount: 1, // จำกัดจำนวนไฟล์ที่อัปโหลดได้
+        accept: '.pdf', // จำกัดประเภทไฟล์ที่อัปโหลดเป็น PDF เท่านั้น
         beforeUpload(file) {
             const isPDF = file.type === 'application/pdf';
             if (!isPDF) {
@@ -253,6 +259,8 @@ const gold = () => {
     const student = {
         name: 'file',
         multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        maxCount: 1, // จำกัดจำนวนไฟล์ที่อัปโหลดได้
+        accept: '.pdf', // จำกัดประเภทไฟล์ที่อัปโหลดเป็น PDF เท่านั้น
         beforeUpload(file) {
             const isPDF = file.type === 'application/pdf';
             if (!isPDF) {
@@ -280,6 +288,8 @@ const gold = () => {
     const fast = {
         name: 'file',
         multiple: false, // อนุญาตให้อัปโหลดหลายไฟล์
+        maxCount: 1, // จำกัดจำนวนไฟล์ที่อัปโหลดได้
+        accept: '.pdf', // จำกัดประเภทไฟล์ที่อัปโหลดเป็น PDF เท่านั้น
         beforeUpload(file) {
             const isPDF = file.type === 'application/pdf';
             if (!isPDF) {
