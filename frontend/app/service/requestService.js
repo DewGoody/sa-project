@@ -146,7 +146,7 @@ export async function getShowRequestNotQueueGoldenCard(data) {
         where: {
             type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
             status: {
-                notIn: ["ประวัติการแก้ไข"]
+                notIn: ["ประวัติการแก้ไข","ยกเลิก"]
             },
             stu_id: data,
             deleted_at: null

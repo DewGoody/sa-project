@@ -23,7 +23,7 @@ export async function POST(req,res) {
                 where: {
                     type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
                     status :{
-                        notIn:["ประวัติการแก้ไข"]
+                        notIn:["ประวัติการแก้ไข","ยกเลิก"]
                     }
                 },
 
@@ -41,7 +41,7 @@ export async function POST(req,res) {
                         lt: endOfYear, // Less than start of the next year
                     },
                     status :{
-                        notIn:["ประวัติการแก้ไข"]
+                        notIn:["ประวัติการแก้ไข","ยกเลิก"]
                     }
                 },
                 include: {
