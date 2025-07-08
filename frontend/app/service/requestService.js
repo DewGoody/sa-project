@@ -146,7 +146,7 @@ export async function getShowRequestNotQueueGoldenCard(data) {
         where: {
             type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
             status: {
-                notIn: ["ประวัติการแก้ไข","ยกเลิก"]
+                notIn: ["ประวัติการแก้ไข", "ยกเลิก"]
             },
             stu_id: data,
             deleted_at: null
@@ -541,11 +541,21 @@ export async function getUniqueYearPrakan() {
     });
 
     // Extract unique years
-    const uniqueYears = Array.from(
-        new Set(requests.map((request) => request.created_at.getFullYear()))
-    );
 
-    return uniqueYears;
+    const academicYearSet = new Set();
+
+    for (const req of requests) {
+        const date = req.created_at;
+        const yearAD = date.getFullYear();
+
+        // คำนวณปีการศึกษาแบบ พ.ศ.
+        const academicYearBE = ((date.getMonth() + 1) < 8 ? yearAD - 1 : yearAD) + 543;
+
+        academicYearSet.add(academicYearBE);
+    }
+
+    // แปลงเป็น array แล้วเรียงจากน้อยไปมาก
+    return Array.from(academicYearSet).sort((a, b) => a - b);
 }
 
 export async function getRequestPonpanInAdmin(year) {
@@ -699,11 +709,21 @@ export async function getUniqueYearPonpan() {
     });
 
     // Extract unique years
-    const uniqueYears = Array.from(
-        new Set(requests.map((request) => request.created_at.getFullYear()))
-    );
 
-    return uniqueYears;
+    const academicYearSet = new Set();
+
+    for (const req of requests) {
+        const date = req.created_at;
+        const yearAD = date.getFullYear();
+
+        // คำนวณปีการศึกษาแบบ พ.ศ.
+        const academicYearBE = ((date.getMonth() + 1) < 8 ? yearAD - 1 : yearAD) + 543;
+
+        academicYearSet.add(academicYearBE);
+    }
+
+    // แปลงเป็น array แล้วเรียงจากน้อยไปมาก
+    return Array.from(academicYearSet).sort((a, b) => a - b);
 }
 export async function getUniqueYearStudentLoan() {
     const requests = await prisma.request.findMany({
@@ -717,11 +737,21 @@ export async function getUniqueYearStudentLoan() {
     });
 
     // Extract unique years
-    const uniqueYears = Array.from(
-        new Set(requests.map((request) => request.created_at.getFullYear()))
-    );
 
-    return uniqueYears;
+    const academicYearSet = new Set();
+
+    for (const req of requests) {
+        const date = req.created_at;
+        const yearAD = date.getFullYear();
+
+        // คำนวณปีการศึกษาแบบ พ.ศ.
+        const academicYearBE = ((date.getMonth() + 1) < 8 ? yearAD - 1 : yearAD) + 543;
+
+        academicYearSet.add(academicYearBE);
+    }
+
+    // แปลงเป็น array แล้วเรียงจากน้อยไปมาก
+    return Array.from(academicYearSet).sort((a, b) => a - b);
 }
 export async function getUniqueYearGoldencard() {
     const requests = await prisma.request.findMany({
@@ -734,14 +764,23 @@ export async function getUniqueYearGoldencard() {
         },
     });
 
-    // Extract unique years
-    const uniqueYears = Array.from(
-        new Set(requests.map((request) => request.created_at.getFullYear()))
-    );
+    const academicYearSet = new Set();
 
-    return uniqueYears;
+    for (const req of requests) {
+        const date = req.created_at;
+        const yearAD = date.getFullYear();
+
+        // คำนวณปีการศึกษาแบบ พ.ศ.
+        const academicYearBE = ((date.getMonth() + 1) < 8 ? yearAD - 1 : yearAD) + 543;
+
+        academicYearSet.add(academicYearBE);
+    }
+
+    // แปลงเป็น array แล้วเรียงจากน้อยไปมาก
+    return Array.from(academicYearSet).sort((a, b) => a - b);
 }
 export async function getUniqueYearRD() {
+    // แก้ขาออกให้มันเป็นปีการศ฿กษาไปเลย แล้วค่อทยไปแยกท
     const requests = await prisma.request.findMany({
         where: {
             type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
@@ -752,12 +791,21 @@ export async function getUniqueYearRD() {
         },
     });
 
-    // Extract unique years
-    const uniqueYears = Array.from(
-        new Set(requests.map((request) => request.created_at.getFullYear()))
-    );
 
-    return uniqueYears;
+    const academicYearSet = new Set();
+
+    for (const req of requests) {
+        const date = req.created_at;
+        const yearAD = date.getFullYear();
+
+        // คำนวณปีการศึกษาแบบ พ.ศ.
+        const academicYearBE = ((date.getMonth() + 1) < 8 ? yearAD - 1 : yearAD) + 543;
+
+        academicYearSet.add(academicYearBE);
+    }
+
+    // แปลงเป็น array แล้วเรียงจากน้อยไปมาก
+    return Array.from(academicYearSet).sort((a, b) => a - b);
 }
 
 export async function getRequestPrakanInterInAdmin(year) {

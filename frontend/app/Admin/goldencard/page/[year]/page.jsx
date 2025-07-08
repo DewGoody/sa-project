@@ -169,7 +169,7 @@ const App = () => {
         return studentClass
     }
     const fetchData = async () => {
-
+    // fetch ตรงนี้การศึกษาแก้สองจุด
         try {
             const response = await axios.post(`/api/Admin/getgoldenbyreq_id`, { year: parseInt(year) })
             setData(response.data.map((item, index) => ({
