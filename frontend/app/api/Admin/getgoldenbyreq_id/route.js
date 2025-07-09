@@ -10,48 +10,59 @@ export async function POST(req, res) {
         const data = await req.json();
         const year = Number(data.year); // เช่น 2567
         let queue = null;
+        const today = new Date();
+        const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        // เงื่อนไขสำหรับการกรองข้อมูลหลัก
+        const baseCondition = {
+            type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
+            AND: [
+                {
+                    OR: [
+                        { status: { notIn: ["คำขอถูกยกเลิก"] } },
+                        {
+                            AND: [
+                                { status: "คำขอถูกยกเลิก" },
+                                { created_at: { gte: startOfToday } }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    status: {
+                        notIn: ["ประวัติการแก้ไข", "ยกเลิก"]
+                    }
+                }
+            ]
+        };
 
         console.log("ปีการศึกษา:", year);
 
-        if (year === 0) {
-            // กรณีขอทั้งหมด
-            queue = await prisma.request.findMany({
-                where: {
-                    type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
-                    status: {
-                        notIn: ["ประวัติการแก้ไข", "ยกเลิก"]
-                    }
-                },
-                include: {
-                    UHC_request: true,
-                    Student: true,
-                },
-            });
-        } else {
-            // แปลง พ.ศ. → ค.ศ.
+        let dateRangeCondition = {};
+
+        if (year !== 0) {
             const academicYearAD = year - 543;
-
-            // ปีการศึกษาเริ่ม 1 ส.ค. ปีที่แล้ว ถึง 31 ก.ค. ปีนี้
             const startOfAcademicYear = new Date(academicYearAD, 7, 1); // 1 สิงหาคม
-            const endOfAcademicYear = new Date(academicYearAD + 1, 7, 1); // 1 สิงหาคม ปีถัดไป
+            const endOfAcademicYear = new Date(academicYearAD + 1, 7, 1); // 1 สิงหาคมถัดไป
 
-            queue = await prisma.request.findMany({
-                where: {
-                    type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
-                    created_at: {
-                        gte: startOfAcademicYear,
-                        lt: endOfAcademicYear,
-                    },
-                    status: {
-                        notIn: ["ประวัติการแก้ไข", "ยกเลิก"]
-                    }
-                },
-                include: {
-                    UHC_request: true,
-                    Student: true,
-                },
-            });
+            dateRangeCondition = {
+                created_at: {
+                    gte: startOfAcademicYear,
+                    lt: endOfAcademicYear,
+                }
+            };
         }
+
+        queue = await prisma.request.findMany({
+            where: {
+                ...baseCondition,
+                ...dateRangeCondition
+            },
+            include: {
+                UHC_request: true,
+                Student: true,
+            },
+        });
 
 
         // console.log("Fetched data:", queue); // Debug log for inspection
