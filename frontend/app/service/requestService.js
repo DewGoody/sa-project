@@ -231,68 +231,55 @@ export async function getRequestByIdFast(data) {
 }
 
 export async function getRequestPrakanInAdmin(year) {
-    const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
-    const endOfYear = new Date(year + 1, 0, 1);
-    let requests = null
-    if (year !== 0) {
-        requests = await prisma.request.findMany({
-            where: {
-                status: {
-                    notIn: ["คำขอถูกยกเลิก"]
-                },
-                type: "การเบิกจ่ายประกันอุบัติเหตุ",
-                deleted_at: null,
+    let requests = null;
+
+    // เตรียม filter เงื่อนไข created_at เฉพาะเมื่อ year ≠ 0
+    let dateFilter = {};
+
+    if (year && year !== 0) {
+        const academicYearAD = year - 543;
+
+        if (academicYearAD > 1900 && academicYearAD < 3000) {
+            const startOfAcademicYear = new Date(academicYearAD, 7, 1); // 1 ส.ค.
+            const endOfAcademicYear = new Date(academicYearAD + 1, 7, 1); // 1 ส.ค. ปีถัดไป
+
+            dateFilter = {
                 created_at: {
-                    gte: startOfYear, // Greater than or equal to start of year
-                    lt: endOfYear, // Less than start of the next year
+                    gte: startOfAcademicYear,
+                    lt: endOfAcademicYear
+                }
+            };
+        }
+    }
+
+    // ดึงข้อมูลตามเงื่อนไข
+    requests = await prisma.request.findMany({
+        where: {
+            status: {
+                notIn: ["คำขอถูกยกเลิก"]
+            },
+            type: "การเบิกจ่ายประกันอุบัติเหตุ",
+            deleted_at: null,
+            ...dateFilter
+        },
+        orderBy: {
+            created_at: 'desc',
+        },
+        include: {
+            Student: {
+                select: {
+                    id: true,
+                    fnameTH: true,
+                    lnameTH: true
                 },
             },
-            orderBy: {
-                created_at: 'desc', // or 'asc' for ascending order
-            },
-            include: {
-                Student: {
-                    select: {
-                        id: true,
-                        fnameTH: true,
-                        lnameTH: true
-                    },
-                },
-                accident_info: true
-            }
-        })
-    }
-    else {
-        requests = await prisma.request.findMany({
-            where: {
-                status: {
-                    notIn: ["คำขอถูกยกเลิก"]
-                },
-                type: "การเบิกจ่ายประกันอุบัติเหตุ",
-                deleted_at: null
-            },
-            orderBy: {
-                created_at: 'desc', // or 'asc' for ascending order
-            },
-            include: {
-                Student: {
-                    select: {
-                        id: true,
-                        fnameTH: true,
-                        lnameTH: true
-                    },
-                },
-                accident_info: true
-            }
-        })
-    }
-    if (requests) {
-        return requests
-    }
-    else {
-        return "Not found"
-    }
+            accident_info: true
+        }
+    });
+
+    return requests.length ? requests : "Not found";
 }
+
 
 export async function changeStatusToWaitBook(id) {
     if (id) {
@@ -559,65 +546,56 @@ export async function getUniqueYearPrakan() {
 }
 
 export async function getRequestPonpanInAdmin(year) {
-    const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
-    const endOfYear = new Date(year + 1, 0, 1);
-    let requests = null
-    if (year !== 0) {
-        requests = await prisma.request.findMany({
-            where: {
-                status: {
-                    notIn: ["คำขอถูกยกเลิก"]
-                },
-                type: "การผ่อนผันเข้ารับราชการทหาร",
-                deleted_at: null,
+    let requests = null;
+
+    // เงื่อนไขช่วงเวลา ถ้า year !== 0
+    let dateFilter = {};
+
+    if (year && year !== 0) {
+        const academicYearAD = year - 543;
+
+        // เช็กว่า academicYearAD เป็นปีที่ valid ก่อนใช้
+        if (academicYearAD > 1900 && academicYearAD < 3000) {
+            const startOfAcademicYear = new Date(academicYearAD, 7, 1); // 1 ส.ค.
+            const endOfAcademicYear = new Date(academicYearAD + 1, 7, 1); // 1 ส.ค. ปีถัดไป
+
+            dateFilter = {
                 created_at: {
-                    gte: startOfYear, // Greater than or equal to start of year
-                    lt: endOfYear, // Less than start of the next year
-                },
-            },
-            orderBy: {
-                created_at: 'desc', // or 'asc' for ascending order
-            },
-            include: {
-                Student: {
-                    select: {
-                        id: true,
-                        fnameTH: true,
-                        lnameTH: true,
-                        thai_id: true,
-                        bd: true
-                    },
-                },
-                Ponpan: true
-            }
-        })
+                    gte: startOfAcademicYear,
+                    lt: endOfAcademicYear
+                }
+            };
+        }
     }
-    else {
-        requests = await prisma.request.findMany({
-            where: {
-                status: {
-                    notIn: ["คำขอถูกยกเลิก"]
-                },
-                type: "การผ่อนผันเข้ารับราชการทหาร",
-                deleted_at: null
+
+    // Query
+    requests = await prisma.request.findMany({
+        where: {
+            status: {
+                notIn: ["คำขอถูกยกเลิก"]
             },
-            orderBy: {
-                created_at: 'desc', // or 'asc' for ascending order
-            },
-            include: {
-                Student: {
-                    select: {
-                        id: true,
-                        fnameTH: true,
-                        lnameTH: true,
-                        thai_id: true,
-                        bd: true
-                    },
+            type: "การผ่อนผันเข้ารับราชการทหาร",
+            deleted_at: null,
+            ...dateFilter
+        },
+        orderBy: {
+            created_at: 'desc',
+        },
+        include: {
+            Student: {
+                select: {
+                    id: true,
+                    fnameTH: true,
+                    lnameTH: true,
+                    thai_id: true,
+                    bd: true
                 },
-                Ponpan: true
-            }
-        })
-    }
+            },
+            Ponpan: true
+        }
+    });
+
+    // เรียงตามจังหวัด + อำเภอ
     const sorted = requests.sort((a, b) => {
         const provA = a.Ponpan[0]?.province_sd || "";
         const provB = b.Ponpan[0]?.province_sd || "";
@@ -627,75 +605,62 @@ export async function getRequestPonpanInAdmin(year) {
         if (provA !== provB) return provA.localeCompare(provB, 'th', { sensitivity: 'base' });
         return distA.localeCompare(distB, 'th', { sensitivity: 'base' });
     });
-    if (sorted) {
-        return sorted
-    }
-    else {
-        return "Not found"
-    }
+
+    return sorted.length ? sorted : "Not found";
 }
 
+
 export async function getRequestStudentLoanInAdmin(year) {
-    const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
-    const endOfYear = new Date(year + 1, 0, 1);
-    let requests = null
-    if (year !== 0) {
-        requests = await prisma.request.findMany({
-            where: {
-                status: {
-                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
-                },
-                type: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)",
-                deleted_at: null,
+    let requests = null;
+
+    // เตรียมช่วงวันที่ถ้า year ≠ 0 (คือมีการเลือกปีการศึกษา)
+    let dateFilter = {};
+
+    if (year && year !== 0) {
+        const academicYearAD = year - 543;
+
+        // เช็กว่า academicYearAD เป็นปีที่ valid ก่อนใช้
+        if (academicYearAD > 1900 && academicYearAD < 3000) {
+            const startOfAcademicYear = new Date(academicYearAD, 7, 1); // 1 ส.ค.
+            const endOfAcademicYear = new Date(academicYearAD + 1, 7, 1); // 1 ส.ค. ปีถัดไป
+
+            dateFilter = {
                 created_at: {
-                    gte: startOfYear, // Greater than or equal to start of year
-                    lt: endOfYear, // Less than start of the next year
+                    gte: startOfAcademicYear,
+                    lt: endOfAcademicYear
+                }
+            };
+        }
+    }
+
+    // Query รวมกรณีทั้งมีและไม่มี year
+    requests = await prisma.request.findMany({
+        where: {
+            status: {
+                notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
+            },
+            type: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)",
+            deleted_at: null,
+            ...dateFilter
+        },
+        orderBy: {
+            created_at: 'desc',
+        },
+        include: {
+            Student: {
+                select: {
+                    id: true,
+                    fnameTH: true,
+                    lnameTH: true,
                 },
             },
-            orderBy: {
-                created_at: 'desc', // or 'asc' for ascending order
-            },
-            include: {
-                Student: {
-                    select: {
-                        id: true,
-                        fnameTH: true,
-                        lnameTH: true,
-                    },
-                },
-            }
-        })
-    }
-    else {
-        requests = await prisma.request.findMany({
-            where: {
-                status: {
-                    notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
-                },
-                type: "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)",
-                deleted_at: null
-            },
-            orderBy: {
-                created_at: 'desc', // or 'asc' for ascending order
-            },
-            include: {
-                Student: {
-                    select: {
-                        id: true,
-                        fnameTH: true,
-                        lnameTH: true,
-                    },
-                },
-            }
-        })
-    }
-    if (requests) {
-        return requests
-    }
-    else {
-        return "Not found"
-    }
+        }
+    });
+    console.log('requests', requests);
+
+    return requests.length ? requests : "Not found";
 }
+
 
 export async function getUniqueYearPonpan() {
     const requests = await prisma.request.findMany({

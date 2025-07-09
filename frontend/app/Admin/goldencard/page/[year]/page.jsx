@@ -169,7 +169,7 @@ const App = () => {
         return studentClass
     }
     const fetchData = async () => {
-    // fetch ตรงนี้การศึกษาแก้สองจุด
+        // fetch ตรงนี้การศึกษาแก้สองจุด
         try {
             const response = await axios.post(`/api/Admin/getgoldenbyreq_id`, { year: parseInt(year) })
             setData(response.data.map((item, index) => ({
@@ -223,7 +223,7 @@ const App = () => {
         console.log("editFormResponse :", response.data.data.path);
         router.push(`/Admin/goldencard/${response.data.data.form}`);
     }
-    const handledeletereq= async (id) => {
+    const handledeletereq = async (id) => {
         console.log("deleteReqId : ", id);
         try {
             setLoading(true);
@@ -324,7 +324,7 @@ const App = () => {
             render: (status, record) => {
                 console.log("status", status);
 
-                if (status !== "ย้ายสิทธิ์สำเร็จ") {
+                if (status !== "ย้ายสิทธิ์สำเร็จ" && status !== "ส่งข้อมูลให้ รพ. แล้ว") {
                     if (status == "ย้ายสิทธิ์ไม่สำเร็จ") {
                         console.log("status", status);
 
