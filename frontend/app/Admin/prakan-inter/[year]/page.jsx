@@ -53,11 +53,11 @@ const App = () => {
     }
     const showModal = (reqId) => {
         setReqMoreInfo(reqId);
-        
+
         // Find the record with the matching reqId and get its more_info
         const record = dataSource.find(item => item.reqId === reqId);
         const existingMoreInfo = record?.more_info || '';
-        
+
         setMoreInfoValue(existingMoreInfo); // Set existing more_info or empty string
         console.log("recordModalJa :", typeof reqId);
         console.log("existing more_info:", existingMoreInfo);
@@ -67,11 +67,11 @@ const App = () => {
     const handleOk = async () => {
         try {
             setLoading(true);
-            const response = await axios.post('/api/request/createMoreInfo', { 
-                id: parseInt(reqMoreInfo), 
-                more_info: moreInfoValue 
+            const response = await axios.post('/api/request/createMoreInfo', {
+                id: parseInt(reqMoreInfo),
+                more_info: moreInfoValue
             });
-            
+
             // Update the dataSource to reflect the new more_info
             setDataSource(prevDataSource =>
                 prevDataSource.map(item =>
@@ -80,7 +80,7 @@ const App = () => {
                         : item
                 )
             );
-            
+
             setMoreInfoValue(''); // Clear after submission
             setIsModalOpen(false);
             setLoading(false);
@@ -217,7 +217,7 @@ const App = () => {
 
     const fetchUniqueYear = async () => {
         try {
-            const res = await axios.post('/api/request/getUniqueYearPrakan');
+            const res = await axios.post('/api/request/getUniqueYearPrakanInter');
             setfetchYear(res.data.data);
         }
         catch (error) {

@@ -229,7 +229,7 @@ const App = () => {
 
     const fetchUniqueYear = async () => {
         try {
-            const res = await axios.post('/api/request/getUniqueYearPrakan');
+            const res = await axios.post('/api/request/getUniqueYearVendor');
             setfetchYear(res.data.data);
         }
         catch (error) {

@@ -256,7 +256,7 @@ export async function getRequestPrakanInAdmin(year) {
     requests = await prisma.request.findMany({
         where: {
             status: {
-                notIn: ["คำขอถูกยกเลิก","รอจองคิว"]
+                notIn: ["คำขอถูกยกเลิก", "รอจองคิว"]
             },
             type: "การเบิกจ่ายประกันอุบัติเหตุ",
             deleted_at: null,
@@ -543,6 +543,68 @@ export async function getUniqueYearPrakan() {
 
     // แปลงเป็น array แล้วเรียงจากน้อยไปมาก
     return Array.from(academicYearSet).sort((a, b) => a - b);
+}
+export async function getUniqueYearPrakanInter() {
+    const requests = await prisma.request.findMany({
+        where: {
+            type: "Health insurance",
+            deleted_at: null
+        },
+        select: {
+            created_at: true,
+        },
+    });
+
+    // Extract unique years
+
+    const academicYearSet = new Set();
+
+    for (const req of requests) {
+        const date = req.created_at;
+        const yearAD = date.getFullYear();
+
+        // คำนวณปีการศึกษาแบบ พ.ศ.
+        const academicYearBE = ((date.getMonth() + 1) < 8 ? yearAD - 1 : yearAD) + 543;
+
+        academicYearSet.add(academicYearBE);
+    }
+    // Fix: Convert Set to Array before sorting
+    const sortedYears = Array.from(academicYearSet).sort((a, b) => a - b);
+    console.log('academicYearSet', sortedYears);
+
+    // แปลงเป็น array แล้วเรียงจากน้อยไปมาก
+    return sortedYears;
+}
+export async function getUniqueYearVendor() {
+    const requests = await prisma.request.findMany({
+        where: {
+            type: "แบบคำขอรับเงินผ่านธนาคารสำหรับผู้ขาย",
+            deleted_at: null
+        },
+        select: {
+            created_at: true,
+        },
+    });
+
+    // Extract unique years
+
+    const academicYearSet = new Set();
+
+    for (const req of requests) {
+        const date = req.created_at;
+        const yearAD = date.getFullYear();
+
+        // คำนวณปีการศึกษาแบบ พ.ศ.
+        const academicYearBE = ((date.getMonth() + 1) < 8 ? yearAD - 1 : yearAD) + 543;
+
+        academicYearSet.add(academicYearBE);
+    }
+    // Fix: Convert Set to Array before sorting
+    const sortedYears = Array.from(academicYearSet).sort((a, b) => a - b);
+    console.log('academicYearSet', sortedYears);
+
+    // แปลงเป็น array แล้วเรียงจากน้อยไปมาก
+    return sortedYears;
 }
 
 export async function getRequestPonpanInAdmin(year) {
