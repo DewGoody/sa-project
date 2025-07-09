@@ -41,7 +41,7 @@ const AppointmentManagement = () => {
 
     const fetchStuData = async () => {
         try {
-            const res = await axios.post('/api/request/getStudentLoanAdmin', { year: 0 });
+            const res = await axios.post('/api/request/getStudentLoanAdmin', { year: year });
             console.log("stuData", res.data.data);
             setDataSource(...dataSource, 
                     res.data.data.map((item) => ({

@@ -309,7 +309,7 @@ const AppointmentManagement = () => {
 
     const handleYearChange = async (year) => {
         console.log("year", year);
-        router.push(`/Admin/prakan/${year}`);
+        router.push(`/Admin/ponpan/${year}`);
     }
 
     const handleChangeStatus = async (record) => {

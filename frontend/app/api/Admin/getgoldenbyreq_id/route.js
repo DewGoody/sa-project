@@ -5,52 +5,54 @@ import { convertBigIntToString } from '../../../../utills/convertBigInt';
 
 const prisma = new PrismaClient();
 
-export async function POST(req,res) {
+export async function POST(req, res) {
     try {
-        const data = await req.json()
-        console.log(data);
-        
-        const year = data.year
-        
-        const startOfYear = new Date(year, 0, 1); // January 1st of the specified year
-        const endOfYear = new Date(year + 1, 0, 1);
-        let queue = null
-        console.log("YEARRRRRRRRR",year);
-        
-        if (year == 0) {
+        const data = await req.json();
+        const year = Number(data.year); // เช่น 2567
+        let queue = null;
+
+        console.log("ปีการศึกษา:", year);
+
+        if (year === 0) {
+            // กรณีขอทั้งหมด
             queue = await prisma.request.findMany({
-                
                 where: {
                     type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
-                    status :{
-                        notIn:["ประวัติการแก้ไข"]
+                    status: {
+                        notIn: ["ประวัติการแก้ไข", "ยกเลิก"]
                     }
                 },
-
                 include: {
-                    UHC_request: true, // Fixed case sensitivity
+                    UHC_request: true,
                     Student: true,
                 },
             });
         } else {
+            // แปลง พ.ศ. → ค.ศ.
+            const academicYearAD = year - 543;
+
+            // ปีการศึกษาเริ่ม 1 ส.ค. ปีที่แล้ว ถึง 31 ก.ค. ปีนี้
+            const startOfAcademicYear = new Date(academicYearAD, 7, 1); // 1 สิงหาคม
+            const endOfAcademicYear = new Date(academicYearAD + 1, 7, 1); // 1 สิงหาคม ปีถัดไป
+
             queue = await prisma.request.findMany({
                 where: {
                     type: "โครงการหลักประกันสุขภาพถ้วนหน้า",
                     created_at: {
-                        gte: startOfYear, // Greater than or equal to start of year
-                        lt: endOfYear, // Less than start of the next year
+                        gte: startOfAcademicYear,
+                        lt: endOfAcademicYear,
                     },
-                    status :{
-                        notIn:["ประวัติการแก้ไข"]
+                    status: {
+                        notIn: ["ประวัติการแก้ไข", "ยกเลิก"]
                     }
                 },
                 include: {
-                    UHC_request: true, // Fixed case sensitivity
+                    UHC_request: true,
                     Student: true,
                 },
             });
-
         }
+
 
         // console.log("Fetched data:", queue); // Debug log for inspection
 
@@ -67,20 +69,20 @@ export async function POST(req,res) {
             } : null,
             UHC_request: row.UHC_request.map((request) => ({
                 ...request,
-                province:request.province ? request.province.toString() : null,
-                district:request.district ? request.district.toString() : null,
-                hospital: request.hospital? request.hospital.toString() : null,
+                province: request.province ? request.province.toString() : null,
+                district: request.district ? request.district.toString() : null,
+                hospital: request.hospital ? request.hospital.toString() : null,
                 id: request.id.toString(), // Convert BigInt to string
                 req_id: convertBigIntToString(request.req_id), // Handle nullable BigInt
                 student_id: convertBigIntToString(request.student_id.toString()), // Convert Decimal to string
                 created_at: request.created_at ? request.created_at.toISOString() : null, // Convert Date to ISO string
             })),
-            
+
         }));
 
         // Return the serialized data
         // console.log(serializedQueue);
-        
+
         return NextResponse.json(serializedQueue, { status: 200 });
     } catch (error) {
         console.error("Error fetching data:", error); // Error log for debugging
