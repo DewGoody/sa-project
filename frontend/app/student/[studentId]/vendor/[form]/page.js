@@ -3,6 +3,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import axios from "axios";
+import dayjs from "dayjs";
+import { parseISO, format } from "date-fns";
 import { Header } from "../../../../components/Header.js";
 import numberToThaiText from "../../../../components/numberToThaiText.js";
 import { PatternFormat } from "react-number-format";
@@ -513,8 +515,9 @@ function Page() {
                     <DatePicker
                       type="date"
                       name="citizenIssueDate"
+                      format="DD/MM/YYYY"
                       value={
-                        (vendorData?.citizenIssueDate && dayjs(prakanData.IPDAmittedDate, "YYYY-MM-DD")) || null
+                        (vendorData?.citizenIssueDate && dayjs(vendorData.citizenIssueDate)) || null
                       }
                       onChange={(date) => {
                         handleChange(
@@ -539,8 +542,9 @@ function Page() {
                     <DatePicker
                       type="date"
                       name="citizenExpireDate"
+                      format="DD/MM/YYYY"
                       value={
-                        (vendorData?.citizenExpireDate && dayjs(prakanData.IPDAmittedDate, "YYYY-MM-DD")) || null
+                        (vendorData?.citizenExpireDate && dayjs(vendorData.citizenExpireDate)) || null
                       }
                       onChange={(date) => {
                         handleChange(
