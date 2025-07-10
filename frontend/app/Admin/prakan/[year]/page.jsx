@@ -361,7 +361,7 @@ const rowSelection = {
             title: 'แก้ไข',
             dataIndex: 'status',
             render: (status, record) => {
-                if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ") {
+                if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ" && status !== "ส่งเอกสารแล้ว") {
                     return (
                         <Space size="middle">
                             <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
@@ -609,9 +609,9 @@ const rowSelection = {
                         </div>
                     </div>
                     <div className='flex mt-12'>
-                        {/* <div className='mt-2 ml-3 font-normal text-base'>
+                        <div className='mt-2 ml-3 font-normal text-base'>
                             เลือกปีการศึกษา
-                        </div> */}
+                        </div>
                         <div className='mt-1 mb-6'>
                             <Select
                                 defaultValue={year}

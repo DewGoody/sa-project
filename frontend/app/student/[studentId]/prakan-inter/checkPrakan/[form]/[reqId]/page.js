@@ -238,7 +238,7 @@ const RD = () => {
                   type="submit"
                   className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                 >
-                  Book queue
+                  Next
                   <ToastContainer />
                 </button>
               </a>

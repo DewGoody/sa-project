@@ -5,7 +5,7 @@ export const Header = ({ req1, req2 }) => {
       <header className=" p-8">
         <div className='flex justify-start'>
           <div>
-            <img src="https://www.car.chula.ac.th/carweb2/images/chula_logo.png" alt="profile"
+            <img src="/cuIcon.svg.png" alt="profile"
               className=" h-26 w-16 mx-auto "
 
             />

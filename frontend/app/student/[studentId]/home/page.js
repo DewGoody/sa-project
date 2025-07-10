@@ -537,8 +537,8 @@ export const Form = () => {
       <div className="absolute -top-2/4 -left-3/4 w-11/12 h-4/6 bg-pink-200 rounded-full"></div>
       <div className="flex justify-center items-center">
         <div className="mt-8">
-          <img src="https://www.car.chula.ac.th/carweb2/images/chula_logo.png" alt="profile"
-            className=" h-32 w-20 mx-auto "
+          <img src="/cuIcon.svg.png" alt="profile"
+            className=" h-32 w-18 mx-auto "
           />
         </div>
         <div className="mt-8 ml-4 items-center">

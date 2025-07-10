@@ -148,7 +148,7 @@ const App = () => {
     const formatDateToDMYWithTime = (dateString) => {
         if (!dateString) return 'N/A'; // Handle null or undefined dates
         console.log("dateString", dateString);
-        
+
         const date = new Date(dateString); // Parse the input date string
 
         const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits for day
@@ -169,7 +169,7 @@ const App = () => {
         return studentClass
     }
     const fetchData = async () => {
-        
+        // fetch ตรงนี้การศึกษาแก้สองจุด
         try {
             const response = await axios.post(`/api/Admin/getgoldenbyreq_id`, { year: parseInt(year) })
             setData(response.data.map((item, index) => ({
@@ -223,7 +223,21 @@ const App = () => {
         console.log("editFormResponse :", response.data.data.path);
         router.push(`/Admin/goldencard/${response.data.data.form}`);
     }
-
+    const handledeletereq = async (id) => {
+        console.log("deleteReqId : ", id);
+        try {
+            setLoading(true);
+            const response = await axios.put('/api/Admin/deletegoldenbyreq_id', { req_id: id });
+            console.log("deleteResponse :", response.data);
+            setData((prevDataSource) =>
+                prevDataSource.filter((item) => item.reqId !== id)
+            );
+        } catch (error) {
+            console.error('Error deleting request:', error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
 
     const handleChangeStatus = async (record) => {
@@ -304,17 +318,34 @@ const App = () => {
     const columns = [
 
         {
-
             width: 100,
             title: 'แก้ไข',
             dataIndex: 'status',
             render: (status, record) => {
-                if (status !== "ประวัติการแก้ไข") {
+                console.log("status", status);
+
+                if (status !== "ย้ายสิทธิ์สำเร็จ" && status !== "ส่งข้อมูลให้ รพ. แล้ว") {
+                    if (status == "ย้ายสิทธิ์ไม่สำเร็จ") {
+                        console.log("status", status);
+
+                        return (
+                            <Space size="middle">
+                                <Button onClick={() => handledeletereq(record.reqId)}>ยกเลิก</Button>
+                            </Space>)
+                    }
                     return (
                         <Space size="middle">
                             <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
                         </Space>)
                 }
+                // else if (status == "ย้ายสิทธิ์ไม่สำเร็จ") {
+                //     console.log("status", status);
+
+                //     return (
+                //         <Space size="middle">
+                //             <Button onClick={() => handleEditForm(record.reqId)}>ยกเลิก</Button>
+                //         </Space>)
+                // }
             },
         },
         {

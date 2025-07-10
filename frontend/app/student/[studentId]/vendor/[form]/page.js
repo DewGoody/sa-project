@@ -6,6 +6,7 @@ import axios from "axios";
 import { Header } from "../../../../components/Header.js";
 import numberToThaiText from "../../../../components/numberToThaiText.js";
 import { PatternFormat } from "react-number-format";
+import { DatePicker } from 'antd';
 
 function Page() {
   const [vendorData, setVendorData] = useState({});
@@ -169,7 +170,7 @@ function Page() {
           stu_id: response.data.id || "",
           ...response.data
         };
-        
+
         setVendorData(profileVendorData);
         setLoading(false);
       }
@@ -185,7 +186,7 @@ function Page() {
         id: form,
       });
       console.log("getVendorData", response.data);
-      
+
       // Ensure all critical fields have default values to prevent undefined
       const vendorDataWithDefaults = {
         subDistrict: "",
@@ -194,7 +195,7 @@ function Page() {
         amount: "",
         ...response.data.data
       };
-      
+
       setVendorData(vendorDataWithDefaults);
       setLoading(false);
     } catch (error) {
@@ -222,7 +223,7 @@ function Page() {
         await fetchVendorData();
       }
     };
-    
+
     initializeData();
   }, []);
 
@@ -509,13 +510,24 @@ function Page() {
                     <label className="block text-gray-700 mb-2">
                       วันที่ออกบัตร (Issue date)
                     </label>
-                    <input
+                    <DatePicker
                       type="date"
                       name="citizenIssueDate"
-                      value={vendorData?.citizenIssueDate?.slice(0, 10)}
-                      onChange={(event) =>
-                        handleChange(event, "citizenIssueDate")
+                      value={
+                        (vendorData?.citizenIssueDate && dayjs(prakanData.IPDAmittedDate, "YYYY-MM-DD")) || null
                       }
+                      onChange={(date) => {
+                        handleChange(
+                          {
+                            target: {
+                              name: "citizenIssueDate",
+                              value: date ? format(date, "yyyy-MM-dd") : "",
+                            },
+                          },
+                          "citizenIssueDate"
+                        );
+                      }}
+
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       max={new Date()?.toISOString()?.slice(0, 10)}
                     />
@@ -524,15 +536,28 @@ function Page() {
                     <label className="block text-gray-700 mb-2">
                       วันหมดอายุบัตร (Expire date)
                     </label>
-                    <input
+                    <DatePicker
                       type="date"
                       name="citizenExpireDate"
-                      value={vendorData?.citizenExpireDate?.slice(0, 10)}
-                      onChange={(event) =>
-                        handleChange(event, "citizenExpireDate")
+                      value={
+                        (vendorData?.citizenExpireDate && dayjs(prakanData.IPDAmittedDate, "YYYY-MM-DD")) || null
                       }
+                      onChange={(date) => {
+                        handleChange(
+                          {
+                            target: {
+                              name: "citizenExpireDate",
+                              value: date ? format(date, "yyyy-MM-dd") : "",
+                            },
+                          },
+                          "citizenExpireDate"
+                        );
+                      }}
+
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      max={new Date()?.toISOString()?.slice(0, 10)}
                     />
+
                   </div>
                 </div>
                 <h3 className="text-lg font-semibold my-4 pt-4 flex gap-4">

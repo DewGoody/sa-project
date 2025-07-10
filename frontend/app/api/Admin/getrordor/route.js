@@ -6,23 +6,22 @@ const prisma = new PrismaClient();
 export async function POST(req, res) {
     try {
         const data = await req.json();
-        const year = data.year;
-        const startOfYear = new Date(year, 0, 1);
-        const endOfYear = new Date(year + 1, 0, 1);
+        const year = Number(data.year); // รับเป็นปีการศึกษา (พ.ศ.)
 
         // หาเที่ยงคืนของวันนี้ (00:00:00)
         const today = new Date();
         const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
         let queue = null;
-        // เงื่อนไขสำหรับการกรองข้อมูล
+
+        // เงื่อนไขสำหรับการกรองข้อมูลหลัก
         const whereCondition = {
             type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร",
             OR: [
-                // กรณีที่ไม่ใช่คำขอถูกยกเลิก
-                { status: { not: "คำขอถูกยกเลิก" } },
+                // คำขอปกติ
+                { status: { notIn: ["คำขอถูกยกเลิก", "กำลังดำเนินการจองคิว"] } },
 
-                // กรณีที่เป็นคำขอถูกยกเลิก แต่ถูกสร้างหลังเที่ยงคืนของวันนี้
+                // คำขอถูกยกเลิกแต่ถูกสร้างวันนี้
                 {
                     AND: [
                         { status: "คำขอถูกยกเลิก" },
@@ -32,7 +31,8 @@ export async function POST(req, res) {
             ]
         };
 
-        if (year == 0) {
+        if (year === 0) {
+            // ถ้าไม่ได้เลือกปีการศึกษา (เอาทั้งหมด)
             queue = await prisma.request.findMany({
                 where: whereCondition,
                 include: {
@@ -41,12 +41,17 @@ export async function POST(req, res) {
                 },
             });
         } else {
+            // คำนวณช่วงวันที่ของปีการศึกษา
+            const academicYearAD = year - 543; // แปลงเป็น ค.ศ.
+            const startOfAcademicYear = new Date(academicYearAD, 7, 1); // 1 ส.ค.
+            const endOfAcademicYear = new Date(academicYearAD + 1, 7, 1); // 1 ส.ค. ปีถัดไป
+
             queue = await prisma.request.findMany({
                 where: {
                     ...whereCondition,
                     created_at: {
-                        gte: startOfYear,
-                        lt: endOfYear
+                        gte: startOfAcademicYear,
+                        lt: endOfAcademicYear
                     }
                 },
                 include: {
@@ -62,6 +67,7 @@ export async function POST(req, res) {
         ));
 
         return NextResponse.json(serializedQueue, { status: 200 });
+
     } catch (error) {
         console.error("Error fetching data:", error);
         return NextResponse.json(
