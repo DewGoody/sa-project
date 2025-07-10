@@ -392,7 +392,7 @@ const AppointmentManagement = () => {
             title: 'แก้ไข',
             dataIndex: 'status',
             render: (status, record) => {
-                if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ") {
+                if (status !== "ประวัติการแก้ไข" && status !== "ส่งเอกสารแล้ว" && status !== "ติดต่อรับเอกสาร" && status !== "รับเอกสารเรียบร้อย") {
                     return (
                         <Space >
                             <Button style={{marginLeft:"-10px"}} onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>

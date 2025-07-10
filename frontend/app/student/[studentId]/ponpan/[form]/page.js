@@ -519,7 +519,7 @@ export default function Form() {
 
                       <PatternFormat
                         type="text"
-                        value={prepareData?.Student?.thai_id === "0" ? "-" : prepareData?.Student?.thai_id || null}
+                        value={prepareData?.Student?.thai_id === "0" ? "-" : prepareData?.Student?.thai_id || null || citizenId === "0" ? "-" : citizenId}
                         onChange={handleChangeCitizenId}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         format="#############"

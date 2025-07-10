@@ -361,7 +361,7 @@ const rowSelection = {
             title: 'แก้ไข',
             dataIndex: 'status',
             render: (status, record) => {
-                if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ") {
+                if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ" && status !== "ส่งเอกสารแล้ว") {
                     return (
                         <Space size="middle">
                             <Button onClick={() => handleEditForm(record.reqId)}>แก้ไข</Button>
