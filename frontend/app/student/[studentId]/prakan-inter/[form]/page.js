@@ -113,13 +113,7 @@ function page() {
     // event.preventDefault(); // Prevent the default form submission behavior
 
     // Option 2: Use a local variable for validation and submission
-    let dataToCheck = { ...prakanData };
-
-    // Ensure title is filled from alreadyData if missing
-    if (!dataToCheck.title || dataToCheck.title === '') {
-      dataToCheck.title = alreadyData?.title || "";
-      setPrakanData(dataToCheck); // Optionally update state for UI consistency
-    }
+    let dataToCheck = { ...prakanData, ...alreadyData };
 
     // List of required fields
     const requiredFields = [
@@ -195,7 +189,7 @@ function page() {
 
     console.log(dataToCheck);
     let allData = { ...dataToCheck };
-    let dataUpdate = { ...alreadyData, formId: form, ...profileData };
+    let dataUpdate = { ...profileData, ...alreadyData, ...prakanData, formId: form, };
     console.log("allData", allData);
     console.log("dataUpdate", dataUpdate);
     if (studentId != '0') {
@@ -391,7 +385,7 @@ function page() {
                       onChange={(event) => handleChange(event, "phone_num")}
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="Phone number"
-                      defaultValue={alreadyData?.Student.phone_num || alreadyData?.phone_num}
+                      defaultValue={alreadyData?.Student?.phone_num || alreadyData?.phone_num}
                     />
                   </div>
                   <div>

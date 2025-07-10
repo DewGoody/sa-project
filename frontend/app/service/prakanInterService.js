@@ -85,15 +85,14 @@ export async function updatePrakanForm(data) {
   const prakanUpdated = await prisma.prakan_inter_info.update({
     where: { id: data.formId },
     data: {
-      stu_id: data.stu_id,
       phone_num: data.phone_num,
       treatmentType: data.treatmentType,
       hospitalName: data.hospitalName,
       hospitalName2: data.hospitalName2 || null,
       title: data.title,
       email: data.email,
-      illnessDescription: data.illnessDescription,
       totalMedicalFees: data.totalMedicalFees,
+      illnessDescription: data.illnessDescription,
       IPDAmittedDate: data.IPDAmittedDate
         ? new Date(`${data.IPDAmittedDate}T00:00:00.000Z`)
         : null, // Convert to ISO datetime or set to null
