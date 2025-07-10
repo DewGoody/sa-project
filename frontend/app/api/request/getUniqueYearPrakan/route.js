@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { getUniqueYearVendor } from '../../../service/requestService'
+import { getUniqueYearPrakan } from '../../../service/requestService'
 import { NextResponse } from "next/server"
 import { convertBigIntToString } from '../../../../utills/convertBigInt'
 
@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req, res) {
     try {
-        const years = await getUniqueYearVendor()
+        const years = await getUniqueYearPrakan()
         return NextResponse.json({ data: convertBigIntToString(years) });
     }
     catch (error) {
