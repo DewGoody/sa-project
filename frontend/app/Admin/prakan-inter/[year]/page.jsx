@@ -456,7 +456,7 @@ const App = () => {
                             onChange={(value) => handleChangeStatus({ ...record, status: value })}
                         />
 
-                        {record.status === "ขอข้อมูลเพิ่มเติม" || record.status === "ไม่อนุมัติ" ?
+                        {record.status === "ขอข้อมูลเพิ่มเติม" || record.status === "ไม่อนุมัติ" || record.status === "โอนเงินเรียบร้อย" ?
                             <Button type="primary" style={{ marginLeft: "10px" }} onClick={() => showModal(record.reqId)}>เขียนรายละเอียด</Button>
                             : null}
 
@@ -750,7 +750,15 @@ const App = () => {
 
                     />
                     <Modal
-                        title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม"
+                        title={
+                            dataSource.find(item => item.reqId === reqMoreInfo)?.status === "ขอข้อมูลเพิ่มเติม"
+                                ? "เขียนรายละเอียดขอข้อมูลเพิ่มเติม"
+                                : dataSource.find(item => item.reqId === reqMoreInfo)?.status === "ไม่อนุมัติ"
+                                    ? "เขียนรายละเอียดการไม่อนุมัติ"
+                                    : dataSource.find(item => item.reqId === reqMoreInfo)?.status === "โอนเงินเรียบร้อย"
+                                        ? "เขียนรายละเอียดเพิ่มเติม"
+                                        : "เขียนรายละเอียด"
+                        }
                         open={isModalOpen}
                         onOk={handleOk}
                         loading={loading}
