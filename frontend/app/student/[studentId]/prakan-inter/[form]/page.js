@@ -541,7 +541,7 @@ function page() {
                   onClick={handleSubmit}
                   className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
                 >
-                  {studentId != '0' ? "Next" : "Save"}
+                  {studentId != '0' ? "Check Data" : "Save"}
 
                 </button>
               </div>
