@@ -239,7 +239,7 @@ const App = () => {
 
     useEffect(() => {
         fetchStuData()
-    }, [])
+    }, [year])
 
     useEffect(() => {
         fetchUniqueYear()
