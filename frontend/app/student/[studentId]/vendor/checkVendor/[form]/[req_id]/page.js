@@ -246,7 +246,7 @@ const Page = () => {
                   type="submit"
                   className="px-6 py-3 bg-pink-400 text-white font-semibold ml-3 rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                 >
-                  Next
+                  Book Queue
                   <ToastContainer />
                 </button>
               </a>

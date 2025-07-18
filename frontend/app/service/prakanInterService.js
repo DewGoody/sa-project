@@ -5,7 +5,24 @@ const prisma = new PrismaClient();
 
 export async function createPrakanInter(data) {
   console.log("data", data);
-
+  
+  // Clean title data - convert Thai titles to English
+  let englishTitle = data.title;
+  if (data.title) {
+    // Map of Thai titles to English equivalents
+    const titleMappings = {
+      'นาย': 'Mr.',
+      'นาง': 'Mrs.',
+      'นางสาว': 'Miss',
+      'นส': 'Miss',
+      'นส.': 'Miss',
+    };
+    
+    // Check if the title is in the mapping and replace it
+    if (titleMappings[data.title]) {
+      englishTitle = titleMappings[data.title];
+    }
+  }
 
   const createRequest = await prisma.request.create({
     data: {
@@ -22,7 +39,7 @@ export async function createPrakanInter(data) {
       treatmentType: data.treatmentType,
       hospitalName: data.hospitalName,
       hospitalName2: data.hospitalName2 || null,
-      title: data.title,
+      title: englishTitle,
       email: data.email,
       totalMedicalFees: data.totalMedicalFees,
       illnessDescription: data.illnessDescription,
@@ -81,6 +98,24 @@ export async function getPrakanDataById(id) {
 }
 
 export async function updatePrakanForm(data) {
+  // Clean title data - convert Thai titles to English
+  let cleanedTitle = data.title;
+  if (data.title) {
+    // Map of Thai titles to English equivalents
+    const titleMappings = {
+      'นาย': 'Mr.',
+      'นาง': 'Mrs.',
+      'นางสาว': 'Miss',
+      'นส': 'Miss',
+      'นส.': 'Miss',
+    };
+    
+    // Check if the title is in the mapping and replace it
+    if (titleMappings[data.title]) {
+      cleanedTitle = titleMappings[data.title];
+    }
+  }
+
   await prakanFormBuilder(data);
   const prakanUpdated = await prisma.prakan_inter_info.update({
     where: { id: data.formId },
@@ -89,7 +124,7 @@ export async function updatePrakanForm(data) {
       treatmentType: data.treatmentType,
       hospitalName: data.hospitalName,
       hospitalName2: data.hospitalName2 || null,
-      title: data.title,
+      title: cleanedTitle, // Use the cleaned title
       email: data.email,
       totalMedicalFees: data.totalMedicalFees,
       illnessDescription: data.illnessDescription,
