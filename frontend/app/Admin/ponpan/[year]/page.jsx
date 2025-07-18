@@ -389,7 +389,7 @@ const AppointmentManagement = () => {
     const columns = [
         {         
             width: 75,
-            title: 'แก้ไข',
+            title: '',
             dataIndex: 'status',
             render: (status, record) => {
                 if (status !== "ประวัติการแก้ไข" && status !== "ส่งเอกสารแล้ว" && status !== "ติดต่อรับเอกสาร" && status !== "รับเอกสารเรียบร้อย") {

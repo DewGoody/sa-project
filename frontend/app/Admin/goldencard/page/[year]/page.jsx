@@ -319,7 +319,7 @@ const App = () => {
 
         {
             width: 100,
-            title: 'แก้ไข',
+            title: '',
             dataIndex: 'status',
             render: (status, record) => {
                 console.log("status", status);
