@@ -44,7 +44,9 @@ export async function getShowQueueByStuId(studentId) {
         where: {stu_id: studentId, deleted_at: null},
         include: {
             Timeslot: true,
-            Request: true
+            Request: true,
+            RD_info: true
+            
         }
     })
     if(queue){

@@ -28,7 +28,7 @@ const Menubar = () => {
         { key: "/Admin/vendor/0", label: "แบบคำขอรับเงินผ่านธนาคาร (Vendor)" },
         { key: "/Admin/dashboard/0", label: "สรุปการนัดหมาย" },
         { key: "/Admin/editMaxStudent", label: "จัดการจำนวนผู้เข้ารับบริการ" },
-        { key: "/Admin/editServiceDate", label: "เปิด-ปิดวันให้บริการ" },
+        { key: "/Admin/editServiceDate", label: "เปิด-ปิดวันเวลาให้บริการ" },
         { key: "/Admin/Service_inactive", label: "เปิด-ปิดการให้บริการ" },
         { key: "/Admin/user", label: "จัดการผู้ใช้งาน" },
         

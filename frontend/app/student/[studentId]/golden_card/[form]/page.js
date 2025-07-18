@@ -67,6 +67,8 @@ const page = () => {
     }, [form, updateData]);
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log(`Name: ${name}, Value: ${value}`);
+
         updateData({ [name]: value });
         if (name === "province") {
             const id = e.target.selectedOptions[0]?.dataset.id;
@@ -126,6 +128,76 @@ const page = () => {
         const date = new Date(dateString);
         return date.toISOString();
     };
+    const validateForm = () => {
+        // รายการฟิลด์ที่ต้องไม่เป็น ""
+        if (!Data.citizenId || Data.citizenId.replace(/_/g, '').length !== 13) {
+            toast.error("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
+            return false;
+        }
+
+        if (!Data.zipCode || Data.zipCode.replace(/_/g, '').length !== 5) {
+            toast.error("กรุณากรอกรหัสไปรษณีย์ให้ครบ 5 หลัก");
+            return false;
+        }
+
+        if (!Data.Nametitle) {
+            toast.error("กรุณากรอกคำนำหน้า");
+            return false;
+        }
+
+        if (!Data.Name) {
+            toast.error("กรุณากรอกชื่อ");
+            return false;
+        }
+
+        if (!Data.Surname) {
+            toast.error("กรุณากรอกนามสกุล");
+            return false;
+        }
+
+        if (!Data.birthDate) {
+            toast.error("กรุณากรอกวันเกิด");
+            return false;
+        }
+
+        if (!Data.Telnumber) {
+            toast.error("กรุณากรอกเบอร์โทรศัพท์");
+            return false;
+        }
+
+        if (!Data.Contactphone) {
+            toast.error("กรุณากรอกเบอร์ที่ติดต่อได้");
+            return false;
+        }
+
+        if (!Data.province || !Data.amphure || !Data.district) {
+            toast.error("กรุณากรอกที่อยู่ให้ครบ (จังหวัด/เขต/แขวง)");
+            return false;
+        }
+
+        if (!Data.domicileNumber) {
+            toast.error("กรุณากรอกเลขที่บ้าน");
+            return false;
+        }
+
+        if (!Data.road) {
+            toast.error("กรุณากรอกถนน");
+            return false;
+        }
+
+        if (Data.benefitStatus === "existing" && !Data.hospitalName) {
+            toast.error("กรุณากรอกชื่อโรงพยาบาลที่มีสิทธิ์");
+            return false;
+        }
+
+        if (Data.benefitStatus === "other" && !Data.otherStatus) {
+            toast.error("กรุณาระบุสิทธิ์อื่น ๆ");
+            return false;
+        }
+
+        return true; // ถ้าไม่เจออะไรผิด
+    };
+
     const handleSubmit = async (e) => {
         console.log(int_req_id)
 
@@ -151,16 +223,8 @@ const page = () => {
         e.preventDefault();
         try {
 
-            const cleanedCitizenId = Data.citizenId.replace(/_/g, '');
-
-            if (!cleanedCitizenId || cleanedCitizenId.length !== 13) {
-                toast.error("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
-                return;
-            }
-            const cleanedzipCode = Data.zipCode.replace(/_/g, '');
-            if (!cleanedzipCode || cleanedzipCode.length !== 5) {
-                toast.error("กรุณากรอกรหัสไปรษณีย์ให้ครบ 5 หลัก");
-                return;
+            if (!validateForm()) {
+                return; // หยุดตรงนี้ถ้า validate ไม่ผ่าน
             }
             notifyinprocess()
             await axios.put(`/api/UHC?id=${int_req_id}`, {
@@ -644,57 +708,6 @@ const page = () => {
                                         </label>
                                     </div>
                                 </div>
-
-
-                                {/* <h3 className="text-lg font-semibold mb-4 pt-10 ">
-                                    หลักฐานที่ยื่นมากับแบบคำขอลงทะเบียน (Identification document)
-                                </h3>
-
-                                <div className="flex space-x-4 w-full pt-2 ">
-                                    <div className="flex items-center space-x-4 w-1/3">
-                                        <input
-                                            type="checkbox"
-                                            id="CiticenidforDoc"
-                                            name="CiticenidforDoc"
-                                            value="true"
-                                            onChange={handleChange}
-                                            checked={Data.CiticenidforDoc === "true"}
-                                        />
-                                        <label htmlFor="CiticenidforDoc" className="block text-gray-700">
-                                            สำเนาบัตรประชาชนพร้อมเซ็นรับรองสำเนา
-                                        </label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4 w-1/3">
-                                        <input
-                                            type="checkbox"
-                                            id="house"
-                                            name="house"
-                                            value="true"
-                                            onChange={handleChange}
-                                            checked={Data.house === "true"}
-                                        />
-                                        <label htmlFor="house" className="block text-gray-700">
-                                            สำเนาทะเบียนที่ผู้ขอมีชื่ออยู่
-                                        </label>
-                                    </div>
-
-                                    <div className="flex items-center space-x-4 w-1/3">
-                                        <input
-                                            type="checkbox"
-                                            id="Studentcard"
-                                            name="Studentcard"
-                                            value="true"
-                                            onChange={handleChange}
-                                            checked={Data.Studentcard === "true"}
-                                        />
-                                        <label htmlFor="Studentcard" className="block text-gray-700">
-                                            สำเนาบัตรประจำตัวนิสิต
-                                        </label>
-                                    </div>
-                                </div> */}
-
-
                                 <div className="pt-10"><label className="text-lg font-semibold text-black pt-10">ท่านมีแนวโน้มที่จะใช้บริการ รพ.จุฬาลงกรณ์</label></div>
                                 <div className="flex space-x-4 w-full pt-4">
                                     <div className="flex items-center space-x-4 w-1/3">

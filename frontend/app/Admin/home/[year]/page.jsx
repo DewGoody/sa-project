@@ -292,21 +292,21 @@ const AppointmentManagement = () => {
                 </div>
             ),
         },
-        {
-            title: 'เวลา',
-            dataIndex: 'period',
-            width: 130,
-            sorter: (a, b) => {
-                const timeA = timeSlots.indexOf(a.period.split(' ')[0]);
-                const timeB = timeSlots.indexOf(b.period.split(' ')[0]);
-                return timeA - timeB;
-            },
-            sortIcon: (sorted) => (
-                <div>
-                    <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
-                </div>
-            ),
-        },
+        // {
+        //     title: 'เวลา',
+        //     dataIndex: 'period',
+        //     width: 130,
+        //     sorter: (a, b) => {
+        //         const timeA = timeSlots.indexOf(a.period.split(' ')[0]);
+        //         const timeB = timeSlots.indexOf(b.period.split(' ')[0]);
+        //         return timeA - timeB;
+        //     },
+        //     sortIcon: (sorted) => (
+        //         <div>
+        //             <OrderedListOutlined style={{ color: "white", fontSize: "18px" }} />
+        //         </div>
+        //     ),
+        // },
         {
             title: 'ชื่อ-นามสกุล',
             dataIndex: 'name',

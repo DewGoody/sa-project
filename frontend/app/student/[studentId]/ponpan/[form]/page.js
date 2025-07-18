@@ -105,9 +105,9 @@ export default function Form() {
   console.log("amphureSelected : ", amphureSelected);
   console.log("amphureSD9Selected : ", amphureSD9Selected);
   useEffect(() => {
-    
+
     setAmphureSelected('');
-    setAmphureSD9Selected ('');
+    setAmphureSD9Selected('');
   }, [provinces]);
 
   useEffect(() => {
@@ -297,7 +297,7 @@ export default function Form() {
       toast.error("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
       return;
     }
-    
+
     if (studentId !== '0') {
       if (form === '0') {
         const data = {
@@ -315,7 +315,7 @@ export default function Form() {
           house_moo_sd: houseMooSD9 === '' || houseMooSD9 === null ? 0 : houseMooSD9,
           sdnine_id: sd9Num,
           province: provinceSelected,
-          district: amphure ,
+          district: amphure,
           sub_district: district,
           province_sd: provinceSD9Selected,
           district_sd: amphureSD9,
@@ -396,10 +396,10 @@ export default function Form() {
   const handleProvinceChange = (e) => {
     const selectedProvince = e.target.value;
     console.log("selectedProvince", selectedProvince);
-  
+
     // ตั้งค่าจังหวัดใหม่
     setProvinceSelected(selectedProvince);
-  
+
     // ล้างค่าอำเภอที่เคยเลือกไว้
     setAmphureSelected("");
     // setAmphure("");
@@ -408,11 +408,11 @@ export default function Form() {
       province: selectedProvince,
       district: "",
     });
-  
+
     // โหลดข้อมูลอำเภอของจังหวัดใหม่
     fetchAmphuresById(selectedProvince);
   };
-  
+
 
   const handleAmphureChange = (e) => {
     const selectedAmphure = e.target.value;
@@ -429,10 +429,10 @@ export default function Form() {
   const handleProvinceSD9Change = (e) => {
     const selectedProvince = e.target.value;
     console.log("selectedProvinceSD", selectedProvince);
-  
+
     // ตั้งค่าจังหวัดใหม่
     setProvinceSD9Selected(selectedProvince);
-  
+
     // ล้างค่าอำเภอ SD9 ที่เคยเลือกไว้
     setAmphureSD9Selected("");
     // setAmphureSD9("");
@@ -441,7 +441,7 @@ export default function Form() {
       province_sd: selectedProvince,
       district_sd: "",
     });
-  
+
     // โหลดข้อมูลอำเภอของจังหวัดใหม่
     fetchAmphuresSD9ById(selectedProvince);
   };
@@ -463,7 +463,7 @@ export default function Form() {
   }
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <div className=" bg-white min-h-screen">
         <Header req1="การขอผ่อนผันการเข้ารับราชการทหาร" req2="Request for deferral of military service" />
         <div className=" mx-24 ">
@@ -519,13 +519,22 @@ export default function Form() {
 
                       <PatternFormat
                         type="text"
-                        value={prepareData?.Student?.thai_id === "0" ? "-" : prepareData?.Student?.thai_id || null || citizenId === "0" ? "-" : citizenId}
+                        value={
+                          prepareData?.Student?.thai_id === "0"
+                            ? "-"
+                            : prepareData?.Student?.thai_id
+                              ? prepareData.Student.thai_id
+                              : citizenId === "0"
+                                ? "-"
+                                : citizenId
+                        }
                         onChange={handleChangeCitizenId}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         format="#############"
                         allowEmptyFormatting
                         mask="_"
                       />
+
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -771,7 +780,7 @@ export default function Form() {
                     <label className=" text-gray-700 mb-2">จังหวัด (Province)</label>
                     <select
                       name="province"
-                      value={provinceSD9Selected|| alreadyData?.province_sd}
+                      value={provinceSD9Selected || alreadyData?.province_sd}
                       required
                       onChange={handleProvinceSD9Change}
                       className="w-full px-2 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -808,17 +817,17 @@ export default function Form() {
                     {studentId === '0' ? (
                       <div className="flex justify-start">
                         <button
-                        type="button"
+                          type="button"
                           onClick={() => router.push('/Admin/ponpan/0')}
                           className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
                         >
                           Back
                         </button>
                       </div>
-                    ):
+                    ) :
                       <div className="flex justify-start">
                         <button
-                        type="button"
+                          type="button"
                           onClick={() => router.push(`/student/${studentId}/home`)}
                           className="bg-gray-400 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded-md mb-11"
                         >
@@ -831,15 +840,15 @@ export default function Form() {
 
                     {studentId !== '0' ?
                       (
-                        
-                      <button
 
-                        htmlType="submit"
+                        <button
 
-                        className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
-                      >
-                        Check data
-                      </button>) :
+                          htmlType="submit"
+
+                          className="bg-pink-500 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
+                        >
+                          Review
+                        </button>) :
 
                       <button
 
