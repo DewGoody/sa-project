@@ -239,7 +239,7 @@ const App = () => {
 
     useEffect(() => {
         fetchStuData()
-    }, [])
+    }, [year])
 
     useEffect(() => {
         fetchUniqueYear()
@@ -355,7 +355,7 @@ const App = () => {
     const columns = [{
         align: 'center',
         width: 100,
-        title: 'แก้ไข',
+        title: '',
         dataIndex: 'status',
         render: (status, record) => {
             if (status !== "ส่งเอกสารให้การเงินแล้ว" && status !== "ไม่อนุมัติ") {
@@ -718,7 +718,11 @@ const App = () => {
 
                     />
                     <Modal
-                        title="เขียนรายละเอียดขอข้อมูลเพิ่มเติม"
+                        title={
+                            dataSource.find(item => item.reqId === reqMoreInfo)?.status === "ไม่อนุมัติ"
+                                ? "เขียนรายละเอียดการไม่อนุมัติ"
+                                : "เขียนรายละเอียด"
+                        }
                         open={isModalOpen}
                         onOk={handleOk}
                         loading={loading}

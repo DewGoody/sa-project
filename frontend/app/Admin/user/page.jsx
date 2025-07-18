@@ -190,7 +190,7 @@ const App = () => {
           ...getColumnSearchProps('username'),
       },
         {
-            title: 'แก้ไข / ลบ',
+            title: '',
             dataIndex: 'edit',
             render: (text, record) => (
                 <Space size="middle">

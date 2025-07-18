@@ -360,7 +360,7 @@ function Page() {
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                         placeholder="หมู่ที่ (Moo)"
                       />
-                      <span className="text text-xs text-red-600 mt-2">
+                      <span className="text text-xs text-pink-500 mt-2">
                         * หากไม่มีโปรดใส่ขีด (-) / If none, please enter a dash (-)
                       </span>
                     </div>
@@ -380,7 +380,7 @@ function Page() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="อาคาร/หมู่บ้าน (Building/Village)"
                     />
-                    <span className="text text-xs text-red-600 mt-2">
+                    <span className="text text-xs text-pink-500 mt-2">
                       * หากไม่มีโปรดใส่ขีด (-) / If none, please enter a dash (-)
                     </span>
                   </div>
@@ -396,7 +396,7 @@ function Page() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="ตรอก/ซอย (Soi)"
                     />
-                    <span className="text text-xs text-red-600 mt-2">
+                    <span className="text text-xs text-pink-500 mt-2">
                       * หากไม่มีโปรดใส่ขีด (-) / If none, please enter a dash (-)
                     </span>
                   </div>
@@ -412,7 +412,7 @@ function Page() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="ถนน (Road)"
                     />
-                    <span className="text text-xs text-red-600 mt-2">
+                    <span className="text text-xs text-pink-500 mt-2">
                       * หากไม่มีโปรดใส่ขีด (-) / If none, please enter a dash (-)
                     </span>
                   </div>
@@ -670,7 +670,7 @@ function Page() {
                       className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                       placeholder="จำนวนเงิน (Amount)"
                     />
-                    <span className="text text-xs text-red-600 mt-2">
+                    <span className="text text-xs text-pink-500 mt-2">
                       * โปรดใส่จำนวนเงินโดยไม่มีเครื่องหมาย comma (,) /
                       Please enter the amount without comma (,)
                     </span>
@@ -703,7 +703,7 @@ function Page() {
                       <option value="อิสลามแห่งประเทศไทย">อิสลามแห่งประเทศไทย</option>
                       <option value="แลนด์ แอนด์ เฮ้าส์">แลนด์ แอนด์ เฮ้าส์</option>
                     </select>
-                    <span className="text text-xs text-red-600 mt-2">
+                    <span className="text text-xs text-pink-500 mt-2">
                       * หากไม่มีธนาคารที่ท่านใช้โปรดติดต่อเจ้าหน้าที่ / If your bank is not listed, please contact the staff
                     </span>
 
@@ -771,15 +771,15 @@ function Page() {
                       placeholder="เลขที่บัญชี (Account number)"
                       maxLength={10} // Limit to 10 digits
                     />
-                    <span className="text text-xs text-red-600 mt-2">
+                    <span className="text text-xs text-pink-500 mt-2">
                       * โปรดใส่เลขที่บัญชีโดยไม่มีเครื่องหมายขีด (-) / Please enter the account number without dashes (-)
                     </span>
                     <br></br>
-                    <span className="text text-xs text-red-600 mt-2">
+                    <span className="text text-xs text-pink-500 mt-2">
                       ** ระบบรับเลขที่บัญชีที่มี 10 หลักเท่านั้น หากบัญชีของท่านมีเลขที่บัญชีมากกว่า 10 หลัก โปรดติดต่อเจ้าหน้าที่
                     </span>
                     <br></br>
-                    <span className="text text-xs text-red-600 mt-2">
+                    <span className="text text-xs text-pink-500 mt-2">
                       The system accepts account numbers with only 10 digits.
                       If your account has more than 10 digits, please contact the staff
                     </span>
@@ -807,7 +807,7 @@ function Page() {
                   onClick={handleSubmit}
                   className="bg-pink-400 hover:bg-ping-400 text-white font-bold py-2 px-4 rounded-md mb-11"
                 >
-                  {studentId != '0' ? "Next" : "Save"}
+                  {studentId != '0' ? "Check Data" : "Save"}
 
                 </button>
               </div>

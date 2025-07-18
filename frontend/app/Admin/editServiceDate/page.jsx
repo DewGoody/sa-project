@@ -209,7 +209,7 @@ const AppointmentManagement = () => {
             render: (text) => <p>{text}</p>
         },
         {
-            title: 'แก้ไข / ลบ',
+            title: '',
             dataIndex: 'edit',
             render: (text, record) => (
                 <Space size="middle">
@@ -251,7 +251,7 @@ const AppointmentManagement = () => {
                     <div>
                         <div className='flex mb-5 justify-between'>
                             <div className='font-extrabold text-3xl'>
-                                เพิ่มช่วงเวลาปิดให้บริการ
+                                เพิ่มวันเวลาปิดให้บริการ
                             </div>
                         </div>
 

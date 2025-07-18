@@ -132,7 +132,7 @@ const RD = () => {
 
 
                                         <div>
-                                            <strong className="font-medium text-gray-900">3. สำเนาบัตรประจำตัวประชาชน (Copy of ID card)</strong>
+                                            <strong className="font-medium text-gray-900">3. สำเนาบัตรประจำตัวประชาชน (Copy of citizen ID)</strong>
                                         </div>
                                     </label>
                                     <label
@@ -186,7 +186,7 @@ const RD = () => {
                                     </div>
 
                                     <div>
-                                        <strong className="font-medium text-gray-900">จัดเตรียมเอกสารตามข้อมูลข้างต้น (Prepare the  above documents)</strong>
+                                        <strong className="font-medium text-gray-900">จัดเตรียมเอกสารตามข้อมูลข้างต้นอย่างละ 2 ชุด (Prepare two sets of the above documents)</strong>
                                     </div>
                                 </label>
 
