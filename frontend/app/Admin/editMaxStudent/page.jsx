@@ -263,7 +263,7 @@ const AppointmentManagement = () => {
                                     key: 'max_stu',
                                 },
                                 {
-                                    title: 'แก้ไข / ลบ',
+                                    title: '',
                                     dataIndex: 'edit',
                                     render: (text, record) => (
                                         <Space size="middle">

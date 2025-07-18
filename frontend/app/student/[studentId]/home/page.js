@@ -11,7 +11,7 @@ import {
   FaGlobeAmericas,
 } from "react-icons/fa";
 import { DeleteOutlined, EditOutlined, FormOutlined, CalendarOutlined } from '@ant-design/icons';
-import { Modal, Spin } from 'antd';
+import { message, Modal, Spin } from 'antd';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { set } from "date-fns";
@@ -51,6 +51,7 @@ export const Form = () => {
   const [hasPonpan, setHasPonpan] = useState(false);
   const [hasStudentloan, setHasStudentloan] = useState(false);
   const [GC_time, SETGC_time] = useState({ id: "", created_at: "", status: "" });
+  const [RD_info, SETRD_info] = useState({ date: "", money: "" });
 
   const fetchServices = async () => {
     setLoading(true);
@@ -170,13 +171,17 @@ export const Form = () => {
     try {
       setLoading(true);
       const response = await axios.post('/api/queue/getByStuId', { studentId: profileData.id }); // Example API
-      // console.log("fetchQueue :", response.data.data);
+      console.log("fetchQueue :", response.data.data);
       response.data.data.map((item) => {
         if (item.Request.type === "การผ่อนผันเข้ารับราชการทหาร") {
           setHasPonpan(true);
         }
         if (item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
           SETRD(true);
+          SETRD_info({
+            date: formatDate(item.RD_info.date),
+            money: item.RD_info.money
+          });
         }
         if (item.Request.type === "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)") {
           setHasStudentloan(true);
@@ -193,7 +198,7 @@ export const Form = () => {
       setLoading(false);
     }
   }
-
+ 
   const fetchNotQueue = async () => {
     try {
       setLoading(true);
@@ -477,6 +482,10 @@ export const Form = () => {
         condition: requestType === 'กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)' && status === 'รอเจ้าหน้าที่ดำเนินการ',
         message: "เข้ารับบริการแล้ว"
       },
+      {
+        condition: requestType === 'การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร' && status === 'เสร็จสิ้น',
+        message: `เสร็จสิ้น วันที่ ${RD_info.date} จำนวนเงิน ${RD_info.money} บาท`
+      }
 
     ];
 
@@ -518,7 +527,16 @@ export const Form = () => {
         </div>
       );
     }
-
+    // if (item.Request.status === "เสร็จสิ้น" && item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
+    //   console.log("item.Request", item.RD_info);
+      
+    //   return (
+    //     <div className="ml-3 mb-3 font-semibold text-base text-blue-500">
+    //       <p>วันที่ {formatDate(item.RD_info.date)}</p>
+    //       <p>จำนวนเงิน {item.RD_info.money} บาท</p>
+    //     </div>
+    //   );
+    // }
     return null;
   };
 

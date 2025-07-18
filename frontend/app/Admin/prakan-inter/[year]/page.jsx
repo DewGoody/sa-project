@@ -357,7 +357,7 @@ const App = () => {
     const columns = [
         {
             width: 100,
-            title: 'แก้ไข',
+            title: '',
             dataIndex: 'status',
             render: (status, record) => {
                 if (status !== "ประวัติการแก้ไข" && status !== "โอนเงินเรียบร้อย" && status !== "ไม่อนุมัติ") {

@@ -172,10 +172,10 @@ const App = () => {
     const fetchData = async () => {
         try {
             const response = await axios.post(`/api/Admin/getrordor`, { year: parseInt(year) })
-            response.data.map((item) => {
-                console.log("กหดหกดกหดกหดกหดหก", item);
+            // response.data.map((item) => {
+            //     console.log("กหดหกดกหดกหดกหดหก", item);
 
-            });
+            // });
 
             setData(...Data, response.data.map((item, index) => ({
                 key: index, // Unique key for each row
@@ -198,10 +198,10 @@ const App = () => {
         fetchData()
 
     }, [])
-    useEffect(() => {
-        console.log("reqId", Data);
+    // useEffect(() => {
+    //     console.log("reqId", Data);
 
-    }, [Data])
+    // }, [Data])
     const [collapsed, setCollapsed] = useState(false);
 
 
@@ -269,7 +269,7 @@ const App = () => {
         if (pdfBlob) {
             const link = document.createElement('a');
             link.href = URL.createObjectURL(pdfBlob);
-            link.download = `RD${year} ${student_ID}.pdf`;
+            link.download = `${student_ID}_รด${year} .pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -278,7 +278,7 @@ const App = () => {
     };
     const columns = [
         {
-            title: 'แก้ไข',
+            title: '',
             dataIndex: 'status',
             render: (status, record) => {
                 if (status !== "ประวัติการแก้ไข" && status !== "เสร็จสิ้น" && status !== "คำขอถูกยกเลิก") {
@@ -479,7 +479,7 @@ const App = () => {
                 console.error("Error:", error);
             }
         };
-
+        const isDisabled = !selectedRowReqidapi || selectedRowReqidapi.length === 0;
         return (
             <Select
                 className="w-full mt-1 mb-6 "
@@ -493,6 +493,7 @@ const App = () => {
                     { value: 'เสร็จสิ้น', label: 'เสร็จสิ้น' },
                 ]}
                 onSelect={handleSelect} // ใช้ฟังก์ชัน handleSelect
+                disabled={isDisabled}
             />
         );
     };
@@ -582,7 +583,7 @@ const App = () => {
                             />
                         </Modal>
                         <div >
-                            {selectedRowReqidapi.length > 0 && dropdown()}
+                            {dropdown()}
                         </div>
                     </div>
                     <Table

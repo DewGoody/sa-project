@@ -355,7 +355,7 @@ const App = () => {
     const columns = [{
         align: 'center',
         width: 100,
-        title: 'แก้ไข',
+        title: '',
         dataIndex: 'status',
         render: (status, record) => {
             if (status !== "ส่งเอกสารให้การเงินแล้ว" && status !== "ไม่อนุมัติ") {
