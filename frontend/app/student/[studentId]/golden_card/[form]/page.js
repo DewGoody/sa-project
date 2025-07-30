@@ -11,45 +11,54 @@ import { DatePicker } from 'antd';
 import dayjs from "dayjs";
 import { parseISO, format } from "date-fns";
 import 'react-toastify/dist/ReactToastify.css';
-const notifyerror = () => {
-    toast.error('👆🏻 กรอกข้อมูลไม่ครบถ้วน', {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-    });
-}
-const notifyinprocess = () => {
-    toast.info('Inprocess', {
-        position: "bottom-right",
+let errorToastId = null;
+let inprocessToastId = null;
+let successToastId = null;
 
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        // transition: Bounce,
-    });
-}
-const notifysuccess = () => {
-    toast.success('Succes', {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        // transition: Bounce,
-    });
-}
+export const notifyerror = (param) => {
+    if (!toast.isActive(errorToastId)) {
+        errorToastId = toast.error(param, {
+            toastId: "error-toast",
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+        });
+    }
+};
+
+export const notifyinprocess = () => {
+    if (!toast.isActive(inprocessToastId)) {
+        inprocessToastId = toast.info('Inprocess', {
+            toastId: "inprocess-toast",
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+        });
+    }
+};
+
+export const notifysuccess = () => {
+    if (!toast.isActive(successToastId)) {
+        successToastId = toast.success('Success', {
+            toastId: "success-toast",
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+        });
+    }
+};
 const page = () => {
     const { form } = useParams()
     const { studentId } = useParams()
@@ -129,74 +138,146 @@ const page = () => {
         return date.toISOString();
     };
     const validateForm = () => {
-        // รายการฟิลด์ที่ต้องไม่เป็น ""
-        if (!Data.citizenId || Data.citizenId.replace(/_/g, '').length !== 13) {
-            toast.error("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
-            return false;
+        const requiredFields = {
+            // ----------------- Student -----------------
+            Nametitle: "คำนำหน้า (Title)",
+            Name: "ชื่อ (Name)",
+            Surname: "นามสกุล (Surname)",
+            citizenId: "เลขบัตรประชาชน (Identification number)",
+            Idcardissuedate: "วันที่ออกบัตรประชาชน (Issue date of ID card)",
+            Idcardexpiraiton: "วันหมดอายุบัตรประชาชน (Exp date of Id card )",
+            birthDate: "วันเกิด (Date of birth)",
+            facultyNameTH: "คณะ (Faculty name)",
+            year: "ชั้นปี (Year)",
+            Job: "อาชีพ (Occupation)",
+            Telnumber: "โทรศัพท์ (Phone number)",
+            Phonenumber: "เบอร์มือถือ (Mobile number)",
+            Contactphone: "เบอร์ที่ติดต่อได้ (Contactable phone)",
+            email: "อีเมล (Email)",
+
+            // ----------------- DOPA_address -----------------
+            domicileNumber: "เลขที่บ้าน (Address number)",
+            house_moo: "หมู่ (Moo)",
+            soi: "ซอย (Soi)",
+            road: "ถนน (Road)",
+            province: "จังหวัด (Province)",
+            amphure: "เขต/อำเภอ (District)",
+            district: "แขวง/ตำบล (Subdistrict)",
+            zipCode: "รหัสไปรษณีย์ (Zip Code)",
+
+            // ----------------- UHC_reg_info -----------------
+            benefitStatus: "สถานะสิทธิ (Benefit status)",
+            hospitalService: "แนวโน้มใช้บริการ รพ.จุฬาฯ",
+            usedHospitalBefore: "เคยใช้บริการ รพ.จุฬาฯ หรือไม่",
+            hasChronicDisease: "มีโรคประจำตัวหรือไม่",
+        };
+
+        // ตรวจ field พื้นฐาน
+        for (const [key, label] of Object.entries(requiredFields)) {
+            const value = Data[key];
+            if (
+                value === null ||
+                value === undefined ||
+                value === "" 
+            ) {
+                notifyerror(`กรุณากรอกข้อมูล: ${label}`);
+                return false;
+            }
         }
 
+        // ตรวจความยาวเลขบัตรประชาชน
+        const cleanedCitizenId = Data.citizenId?.replace(/_/g, '');
+        if (!cleanedCitizenId || cleanedCitizenId.length !== 13) {
+            notifyerror("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
+            return false;
+        }
         if (!Data.zipCode || Data.zipCode.replace(/_/g, '').length !== 5) {
             toast.error("กรุณากรอกรหัสไปรษณีย์ให้ครบ 5 หลัก");
             return false;
         }
 
-        if (!Data.Nametitle) {
-            toast.error("กรุณากรอกคำนำหน้า");
+        // ตรวจกรณี benefitStatus เป็น "existing" หรือ "other"
+        if (Data.benefitStatus === "existing" && (!Data.hospitalName || Data.hospitalName.trim() === "")) {
+            notifyerror("กรุณาระบุชื่อโรงพยาบาลเดิมที่เคยใช้สิทธิ");
+            return false;
+        }
+        if (Data.benefitStatus === "other" && (!Data.otherStatus || Data.otherStatus.trim() === "")) {
+            notifyerror("กรุณาระบุสถานะสิทธิอื่น ๆ");
             return false;
         }
 
-        if (!Data.Name) {
-            toast.error("กรุณากรอกชื่อ");
-            return false;
-        }
-
-        if (!Data.Surname) {
-            toast.error("กรุณากรอกนามสกุล");
-            return false;
-        }
-
-        if (!Data.birthDate) {
-            toast.error("กรุณากรอกวันเกิด");
-            return false;
-        }
-
-        if (!Data.Telnumber) {
-            toast.error("กรุณากรอกเบอร์โทรศัพท์");
-            return false;
-        }
-
-        if (!Data.Contactphone) {
-            toast.error("กรุณากรอกเบอร์ที่ติดต่อได้");
-            return false;
-        }
-
-        if (!Data.province || !Data.amphure || !Data.district) {
-            toast.error("กรุณากรอกที่อยู่ให้ครบ (จังหวัด/เขต/แขวง)");
-            return false;
-        }
-
-        if (!Data.domicileNumber) {
-            toast.error("กรุณากรอกเลขที่บ้าน");
-            return false;
-        }
-
-        if (!Data.road) {
-            toast.error("กรุณากรอกถนน");
-            return false;
-        }
-
-        if (Data.benefitStatus === "existing" && !Data.hospitalName) {
-            toast.error("กรุณากรอกชื่อโรงพยาบาลที่มีสิทธิ์");
-            return false;
-        }
-
-        if (Data.benefitStatus === "other" && !Data.otherStatus) {
-            toast.error("กรุณาระบุสิทธิ์อื่น ๆ");
-            return false;
-        }
-
-        return true; // ถ้าไม่เจออะไรผิด
+        return true;
     };
+
+    // const validateForm = () => {
+    //     // รายการฟิลด์ที่ต้องไม่เป็น ""
+    //     if (!Data.citizenId || Data.citizenId.replace(/_/g, '').length !== 13) {
+    //         toast.error("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
+    //         return false;
+    //     }
+
+    //     if (!Data.zipCode || Data.zipCode.replace(/_/g, '').length !== 5) {
+    //         toast.error("กรุณากรอกรหัสไปรษณีย์ให้ครบ 5 หลัก");
+    //         return false;
+    //     }
+
+    //     if (!Data.Nametitle) {
+    //         toast.error("กรุณากรอกคำนำหน้า");
+    //         return false;
+    //     }
+
+    //     if (!Data.Name) {
+    //         toast.error("กรุณากรอกชื่อ");
+    //         return false;
+    //     }
+
+    //     if (!Data.Surname) {
+    //         toast.error("กรุณากรอกนามสกุล");
+    //         return false;
+    //     }
+
+    //     if (!Data.birthDate) {
+    //         toast.error("กรุณากรอกวันเกิด");
+    //         return false;
+    //     }
+
+    //     if (!Data.Telnumber) {
+    //         toast.error("กรุณากรอกเบอร์โทรศัพท์");
+    //         return false;
+    //     }
+
+    //     if (!Data.Contactphone) {
+    //         toast.error("กรุณากรอกเบอร์ที่ติดต่อได้");
+    //         return false;
+    //     }
+
+    //     if (!Data.province || !Data.amphure || !Data.district) {
+    //         toast.error("กรุณากรอกที่อยู่ให้ครบ (จังหวัด/เขต/แขวง)");
+    //         return false;
+    //     }
+
+    //     if (!Data.domicileNumber) {
+    //         toast.error("กรุณากรอกเลขที่บ้าน");
+    //         return false;
+    //     }
+
+    //     if (!Data.road) {
+    //         toast.error("กรุณากรอกถนน");
+    //         return false;
+    //     }
+
+    //     if (Data.benefitStatus === "existing" && !Data.hospitalName) {
+    //         toast.error("กรุณากรอกชื่อโรงพยาบาลที่มีสิทธิ์");
+    //         return false;
+    //     }
+
+    //     if (Data.benefitStatus === "other" && !Data.otherStatus) {
+    //         toast.error("กรุณาระบุสิทธิ์อื่น ๆ");
+    //         return false;
+    //     }
+
+    //     return true; // ถ้าไม่เจออะไรผิด
+    // };
 
     const handleSubmit = async (e) => {
         console.log(int_req_id)
