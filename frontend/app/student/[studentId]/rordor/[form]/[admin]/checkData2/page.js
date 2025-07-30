@@ -9,47 +9,54 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Parent } from '../component/parent';
 import { Personal } from '../component/personal';
-const notifyerror = () => {
-    toast.error('👆🏻 กรอกข้อมูลไม่ครบถ้วน', {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        // transition: Bounce,
-    });
-}
-const notifyinprocess = () => {
-    toast.info('Inprocess', {
-        position: "bottom-right",
+let errorToastId = null;
+let inprocessToastId = null;
+let successToastId = null;
 
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        // transition: Bounce,
-    });
-}
-const notifysuccess = () => {
-    toast.success('Succes', {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        // transition: Bounce,
-    });
-}
+export const notifyerror = (param) => {
+    if (!toast.isActive(errorToastId)) {
+        errorToastId = toast.error(param, {
+            toastId: "error-toast",
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+        });
+    }
+};
 
+export const notifyinprocess = () => {
+    if (!toast.isActive(inprocessToastId)) {
+        inprocessToastId = toast.info('Inprocess', {
+            toastId: "inprocess-toast",
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+        });
+    }
+};
+
+export const notifysuccess = () => {
+    if (!toast.isActive(successToastId)) {
+        successToastId = toast.success('Success', {
+            toastId: "success-toast",
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+        });
+    }
+};
 const CheckData = () => {
 
     const { updateDataid } = useFormData()
@@ -94,13 +101,75 @@ const CheckData = () => {
     const id = formData.id
     console.log("dadshkfjshfkjashfkashfjkadshfjkashkd", formData.RD2_Grade1);
 
+    const validateFormData = (formData) => {
+        const requiredFields = {
+            // ข้อมูลส่วนบุคคล
+            Name: "ชื่อ (Name)",
+            Surname: "นามสกุล (Surname)",
+            Nametitle: "คำนำหน้า (Title)",
+            citizenId: "เลขบัตรประชาชน (Identification Number)",
+            birthDate: "วันเกิด (Date of birth)",
+            religion: "ศาสนา (Religion)",
+            ethnicity: "เชื้อชาติ (Ethnicity)",
+            nationality: "สัญชาติ (Nationality)",
+            phone_num: "โทรศัพท์มือถือ (Mobile number)",
+            YearGradeRD: "ชั้นปี (Year level)",
+            citizenRD: "เลขประจำตัว นศท (Reserve officer training corps student ID)",
+            register_type: "ประเภทรายงานตัว (Type of requeue)",
 
+            // ข้อมูลผู้ปกครอง
+            ParentName: "ชื่อผู้ปกครอง (Guardian First Name)",
+            ParentSurname: "นามสกุลผู้ปกครอง (Guardian Last Name)",
+            Parenttitle: "คำนำหน้าผู้ปกครอง (Guardian Title)",
+            Parentrelated: "ความสัมพันธ์กับผู้ปกครอง (Relation to Guardian)",
+            ParentPhone: "เบอร์โทรผู้ปกครอง (Guardian Mobile Number)",
+            Parentconsent21: "ยินยอมให้ผู้รายงานตัว รายงานตัว และฝึกวิชาทหารในปีการศึกษานี้ (Allow the reporter to report and train in this academic year)",
+
+            // สิทธิ์ นศท.
+            registermyself: "สมัครใจเข้ารับการฝึกวิชาทหาร (Voluntary enlistment for military training)",
+            notmilitary: "ไม่เป็นทหารประจำการ กองประจำการ หรือถูกกำหนดตัวเข้ากองประจำการ (Not being a regular soldier, active duty or being assigned to active duty)",
+            ready_right: "พร้อมปฏิบัติตามเงื่อนไขบังคับในการสมัครเป็น นศท.ทุกประการ (Ready to comply with all the mandatory conditions for applying for ROTC)",
+
+            // บิดา
+            fatherName: "ชื่อบิดา (Father's First Name)",
+            fatherSurname: "นามสกุลบิดา (Father's Last Name)",
+            fathertitle: "คำนำหน้าบิดา (Father's Title)",
+            fatherphone: "เบอร์บิดา (Father's Mobile Number)",
+
+            // มารดา
+            motherName: "ชื่อมารดา (Mother's First Name)",
+            motherSurname: "นามสกุลมารดา (Mother's Last Name)",
+            mothertitle: "คำนำหน้ามารดา (Mother's Title)",
+            motherphone: "เบอร์มารดา (Mother's Mobile Number)",
+        };
+
+
+        for (const [key, label] of Object.entries(requiredFields)) {
+            const value = formData[key];
+            if (value === null || value === undefined || value === "" || value === false) {
+                notifyerror(`กรุณากรอกข้อมูล: ${label}`);
+                return false;
+            }
+        }
+
+        // ตรวจสอบเลขบัตรประชาชนแยกต่างหาก
+        const cleanedCitizenId = formData.citizenId.replace(/_/g, '');
+        if (cleanedCitizenId.length !== 13) {
+            notifyerror("กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก");
+            return false;
+        }
+
+        return true;
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         // console.log(formData)
         const id = formData.id
 
         try {
+            if (!validateFormData(formData)) {
+                return;
+            }
             notifyinprocess()
             await axios.put(`/api/militaryapi/student?id=${int_form}`, {
                 fnameTH: formData.Name,
