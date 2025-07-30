@@ -484,7 +484,7 @@ export const Form = () => {
       },
       {
         condition: requestType === 'การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร' && status === 'เสร็จสิ้น',
-        message: `เสร็จสิ้น วันที่ ${RD_info.date} จำนวนเงิน ${RD_info.money} บาท`
+        message: `เสร็จสิ้น วันรายงานตัว นศท ${RD_info.date} จำนวนเงิน ${RD_info.money} บาท`
       }
 
     ];

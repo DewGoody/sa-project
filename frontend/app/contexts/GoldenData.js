@@ -43,42 +43,41 @@ export const GoldenDataProvider = ({ children }) => {
       const formattedBirthDate = formatDate(datafromapi.Student.bd);
       setData((prevData) => ({
         ...prevData,
-        id: datafromapi.Student.id,
-        Nametitle: datafromapi.Student.title,
-        Name: datafromapi.Student.fnameTH,
-        Surname: datafromapi.Student.lnameTH,
-        citizenId: datafromapi.Student.thai_id,
-        birthDate: formattedBirthDate,
-        Idcardissuedate: formatDate(datafromapi.Student.thai_id_card_issured),
-        Idcardexpiraiton: formatDate(datafromapi.Student.thai_id_card_expired),
-        Job: "นิสิต",
-        Phonenumber: datafromapi.Student.phone_num,
-        Contactphone: datafromapi.Student.contactable_tel,
-        email: datafromapi.Student.personal_email,
-        year: datafromapi.Student.year,
-        facultyNameTH: datafromapi.Student.facultyNameTH,
+        id: datafromapi.Student.id ?? null,
+        Nametitle: datafromapi.Student.title ?? null,
+        Name: datafromapi.Student.fnameTH ?? null,
+        Surname: datafromapi.Student.lnameTH ?? null,
+        citizenId: datafromapi.Student.thai_id ?? null,
+        birthDate: formattedBirthDate ?? null,
+        Idcardissuedate: formatDate(datafromapi.Student.thai_id_card_issured) ?? null,
+        Idcardexpiraiton: formatDate(datafromapi.Student.thai_id_card_expired) ?? null,
+        Job: "นิสิต" ?? null,
+        Phonenumber: datafromapi.Student.phone_num ?? null,
+        Contactphone: datafromapi.Student.contactable_tel ?? null,
+        email: datafromapi.Student.personal_email ?? null,
+        year: datafromapi.Student.year ?? null,
+        facultyNameTH: datafromapi.Student.facultyNameTH ?? null,
 
-        domicileNumber: datafromapi.DOPA_address.house_num,
-        house_moo: datafromapi.DOPA_address.house_moo,
-        soi: datafromapi.DOPA_address.soi,
-        road: datafromapi.DOPA_address.street,
-        province: datafromapi.DOPA_address.province,
-        amphure: datafromapi.DOPA_address.district,
-        district: datafromapi.DOPA_address.subdistrict,
-        zipCode: datafromapi.DOPA_address.postal_code,
-        Telnumber: datafromapi.Student.tel_num,
+        domicileNumber: datafromapi.DOPA_address.house_num ?? null,
+        house_moo: datafromapi.DOPA_address.house_moo ?? null,
+        soi: datafromapi.DOPA_address.soi ?? null,
+        road: datafromapi.DOPA_address.street ?? null,
+        province: datafromapi.DOPA_address.province ?? null,
+        amphure: datafromapi.DOPA_address.district ?? null,
+        district: datafromapi.DOPA_address.subdistrict ?? null,
+        zipCode: datafromapi.DOPA_address.postal_code ?? null,
+        Telnumber: datafromapi.Student.tel_num ?? null,
 
-        benefitStatus: datafromapi.UHC_reg_info.status_before_reg,
-        hospitalName: datafromapi.UHC_reg_info.status_before_reg === "existing"
-          ? datafromapi.UHC_reg_info.status_info
-          : "",
-
-        otherStatus: datafromapi.UHC_reg_info.status_before_reg === "other"
-          ? datafromapi.UHC_reg_info.status_info
-          : "",
-        hospitalService: datafromapi.UHC_reg_info.frequence_uses,
-        usedHospitalBefore: datafromapi.UHC_reg_info.is_been,
-        hasChronicDisease: datafromapi.UHC_reg_info.is_congenital_disease,
+        benefitStatus: datafromapi.UHC_reg_info.status_before_reg ?? null,
+        hospitalName: datafromapi.UHC_reg_info?.status_before_reg === "existing"
+          ? datafromapi.UHC_reg_info?.status_info ?? null
+          : null,
+        otherStatus: datafromapi.UHC_reg_info?.status_before_reg === "other"
+          ? datafromapi.UHC_reg_info?.status_info ?? null
+          : null,
+        hospitalService: datafromapi.UHC_reg_info.frequence_uses ?? null,
+        usedHospitalBefore: datafromapi.UHC_reg_info.is_been ?? null,
+        hasChronicDisease: datafromapi.UHC_reg_info.is_congenital_disease ?? null,
 
       }));
     }
