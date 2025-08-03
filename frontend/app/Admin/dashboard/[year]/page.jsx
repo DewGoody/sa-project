@@ -672,7 +672,7 @@ const AppointmentManagement = () => {
                     </div>
                     <div className="flex justify-end">
                         <Button type="primary" onClick={handleExportExcel}>
-                            Export to Excel
+                            Export Excel
                         </Button>
                     </div>
 
