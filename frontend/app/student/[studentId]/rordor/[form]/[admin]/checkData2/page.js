@@ -526,7 +526,7 @@ const CheckData = () => {
 
                                             className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                         >
-                                            หน้าถัดไป
+                                            Next
                                             <ToastContainer />
                                         </button>
                                     </div>
@@ -545,7 +545,7 @@ const CheckData = () => {
 
                                             className="px-6 py-3 bg-pink-400 text-white font-semibold rounded-lg shadow-md hover:bg-pink-500 transition duration-300"
                                         >
-                                            Check data
+                                            Save
                                             <ToastContainer />
                                         </button>
                                     </div>
