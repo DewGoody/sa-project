@@ -52,7 +52,9 @@ export const Form = () => {
   const [hasStudentloan, setHasStudentloan] = useState(false);
   const [GC_time, SETGC_time] = useState({ id: "", created_at: "", status: "" });
   const [RD_info, SETRD_info] = useState({ date: "", money: "" });
-
+  useEffect(() => {
+    console.log("RD_info", RD_info);
+  }, [RD_info])
   const fetchServices = async () => {
     setLoading(true);
     try {
@@ -178,17 +180,30 @@ export const Form = () => {
         }
         if (item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
           SETRD(true);
-          SETRD_info({
-            date: formatDate(item.RD_info.date),
-            money: item.RD_info.money
-          });
+          try {
+            const datemoneyResponse = axios.get('/api/militaryapi/datemoney', { studentId: profileData.id });
+            datemoneyResponse.then((res) => {
+              const data = res.data.data;
+              SETRD_info({
+                date: data.date,
+                money: data.firstPayment
+              });
+            }).catch((error) => {
+              console.error("Error fetching RD_info:", error);
+            });
+          } catch (error) {
+            console.error("Error fetching RD_info:", error);
+          }
         }
         if (item.Request.type === "กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ.)") {
           setHasStudentloan(true);
         }
       })
       // console.log("hasPonpan", hasPonpan);
+      // console.log("gkjshlsjfhjldshg;jfjghjdf;lsds",response.data.data);
+
       setPrakanData(response.data.data);
+      // console.log('prakandata', prakanData);
       setPrakanDone(true);
       setPeriod(response.data.data[0].Timeslot.period);
       setLoading(false);
@@ -198,7 +213,7 @@ export const Form = () => {
       setLoading(false);
     }
   }
- 
+
   const fetchNotQueue = async () => {
     try {
       setLoading(true);
@@ -279,8 +294,8 @@ export const Form = () => {
   const fetchAllData = async () => {
     setLoading(true);
     try {
-      await fetchNotQueue();
       await fetchQueue();
+      await fetchNotQueue();
       await fetchGolden();
       await fetchServices();
     } catch (error) {
@@ -295,8 +310,11 @@ export const Form = () => {
   }, [notQueue]);
 
 
+
+
   useEffect(() => {
     fetchAllData();
+    console.log("prakanData", prakanData);
   }, [profileData, deleteQueueId, deleteNotQueueId]);
 
   const formatDate = (dateString) => {
@@ -529,7 +547,7 @@ export const Form = () => {
     }
     // if (item.Request.status === "เสร็จสิ้น" && item.Request.type === "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร") {
     //   console.log("item.Request", item.RD_info);
-      
+
     //   return (
     //     <div className="ml-3 mb-3 font-semibold text-base text-blue-500">
     //       <p>วันที่ {formatDate(item.RD_info.date)}</p>

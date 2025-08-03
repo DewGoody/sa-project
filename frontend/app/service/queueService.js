@@ -45,8 +45,7 @@ export async function getShowQueueByStuId(studentId) {
         include: {
             Timeslot: true,
             Request: true,
-            RD_info: true
-            
+            // RD_info: true
         }
     })
     if(queue){
