@@ -109,7 +109,7 @@ const CheckData = () => {
             Nametitle: "คำนำหน้า (Title)",
             citizenId: "เลขบัตรประชาชน (Identification Number)",
             birthDate: "วันเกิด (Date of birth)",
-            religion: "ศาสนา (Religion)",
+            // religion: "ศาสนา (Religion)",
             ethnicity: "เชื้อชาติ (Ethnicity)",
             nationality: "สัญชาติ (Nationality)",
             phone_num: "โทรศัพท์มือถือ (Mobile number)",

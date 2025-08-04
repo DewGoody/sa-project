@@ -86,7 +86,7 @@ export async function GET(req) {
         const currentYear = new Date().getFullYear() + 543;
         const studentYearPrefix = parseInt(info.studentId.substring(0, 2), 10);
         let Convert_Student_Year = currentYear - (studentYearPrefix + 2500);
-        if (currentDate.getMonth() > 8) {
+        if (currentDate.getMonth() > 7) {
             Convert_Student_Year += 1;
         }
 

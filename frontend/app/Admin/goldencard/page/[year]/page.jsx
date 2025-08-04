@@ -126,7 +126,7 @@ const App = () => {
         const signBEYear = now.getFullYear() + 543 - currentStudentYear;
 
         // ถ้าเดือน > สิงหาคม (เดือน 8) แปลว่าขึ้นปีใหม่การศึกษาแล้ว
-        const adjustedYear = now.getMonth() > 8 ? currentStudentYear : currentStudentYear - 1;
+        const adjustedYear = now.getMonth() > 7 ? currentStudentYear : currentStudentYear - 1;
 
         // ปีที่เข้าเรียน = ปีปัจจุบัน - adjustedYear + 1
         return signBEYear + adjustedYear;
