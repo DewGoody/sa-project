@@ -66,7 +66,7 @@ const CheckData = () => {
     const int_form = parseInt(form)
     useEffect(() => {
         if (form) {
-            console.log("เลขform", int_form)
+            // console.log("เลขform", int_form)
             updateDataid({ int_form })
         }
     }, [form, updateDataid])
@@ -74,13 +74,13 @@ const CheckData = () => {
     const { formData, updateFormData } = useFormData();
     const router = useRouter();
 
-    useEffect(() => {
-        console.log(formData)
-    }, [formData])
+    // useEffect(() => {
+    //     // console.log(formData)
+    // }, [formData])
 
     const handleChange = (e) => {
         const { name, type, checked, value } = e.target;
-        console.log(`[DEBUG] ${name} changed:`, type === 'checkbox' ? checked : value);
+        // console.log(`[DEBUG] ${name} changed:`, type === 'checkbox' ? checked : value);
         updateFormData({
             [name]: type === 'checkbox' ? checked : value
         });
@@ -99,7 +99,7 @@ const CheckData = () => {
         return { year, month, day };
     }
     const id = formData.id
-    console.log("dadshkfjshfkjashfkashfjkadshfjkashkd", formData.RD2_Grade1);
+    // console.log("dadshkfjshfkjashfkashfjkadshfjkashkd", formData.RD2_Grade1);
 
     const validateFormData = (formData) => {
         const requiredFields = {
@@ -110,8 +110,8 @@ const CheckData = () => {
             citizenId: "เลขบัตรประชาชน (Identification Number)",
             birthDate: "วันเกิด (Date of birth)",
             // religion: "ศาสนา (Religion)",
-            ethnicity: "เชื้อชาติ (Ethnicity)",
-            nationality: "สัญชาติ (Nationality)",
+            // ethnicity: "เชื้อชาติ (Ethnicity)",
+            // nationality: "สัญชาติ (Nationality)",
             phone_num: "โทรศัพท์มือถือ (Mobile number)",
             YearGradeRD: "ชั้นปี (Year level)",
             citizenRD: "เลขประจำตัว นศท (Reserve officer training corps student ID)",
@@ -253,7 +253,7 @@ const CheckData = () => {
                 else {
                     const response = await axios.post(`/api/request/create`, { type: "การสมัครนศท.รายใหม่และรายงานตัวนักศึกษาวิชาทหาร", status: "รอจองคิว", stuId: id, formId: tttsd.data.id });
                     const formId = response.data.data.id
-                    console.log("generate formID", formId);
+                    // console.log("generate formID", formId);
                     router.push(`/student/${studentId}/rordor/${formId}/Doc2`)
                 }
             }
@@ -262,13 +262,13 @@ const CheckData = () => {
             }
         } catch (error) {
             notifyerror()
-            console.log(formData)
+            // console.log(formData)
             console.error('Form submission error:', error);
             // router.push("/rordor/Doc2")
         }
     };
     const handleback = () => {
-        console.log("Doc", int_form);
+        // console.log("Doc", int_form);
         if (admin == 1) {
             router.push(`/Admin/rd/0`);
             return
