@@ -485,7 +485,7 @@ const gold = () => {
                                             </div>
 
                                             <div>
-                                                <strong className="font-medium text-gray-900">อัปโหลดไฟล์แล้ว</strong>
+                                                <strong className="font-medium text-gray-900">ดาวน์โหลดและอัปโหลดเอกสารแล้ว</strong>
                                             </div>
                                         </label>
                                     </div>
