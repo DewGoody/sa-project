@@ -168,8 +168,8 @@ const page = () => {
             // ----------------- UHC_reg_info -----------------
             benefitStatus: "สถานะสิทธิ (Benefit status)",
             hospitalService: "แนวโน้มใช้บริการ รพ.จุฬาฯ",
-            usedHospitalBefore: "เคยใช้บริการ รพ.จุฬาฯ หรือไม่",
-            hasChronicDisease: "มีโรคประจำตัวหรือไม่",
+            // usedHospitalBefore: "เคยใช้บริการ รพ.จุฬาฯ หรือไม่",
+            // hasChronicDisease: "มีโรคประจำตัวหรือไม่",
         };
 
         // ตรวจ field พื้นฐาน
