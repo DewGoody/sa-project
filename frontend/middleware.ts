@@ -1,93 +1,96 @@
-import { NextResponse, NextRequest } from 'next/server';
+// middleware.ts
+import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify, SignJWT } from 'jose';
-import { cookies } from 'next/headers';
 
-const protectedRoutes = ['/home', '/profile', '/rordor', '/api', '/Admin'];
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_REFRESH = Number(process.env.JWT_REFRESH) || 15 * 60; // 15 minutes refresh window
-const JWT_TIMEOUT = process.env.JWT_TIMEOUT || '1h'; // 2 hours token validity
+const JWT_SECRET = process.env.JWT_SECRET || '';
+const JWT_TIMEOUT = process.env.JWT_TIMEOUT || '1h';
+const JWT_REFRESH = Number(process.env.JWT_REFRESH) || 15 * 60;
+
+// หน้า/เส้นทางที่ไม่ต้องล็อกอิน
+const PUBLIC_PATHS = [
+  '/login',
+  '/callback',
+  '/callback-admin',
+  '/',               // ให้หน้าแรกเป็น public ถ้าต้องการ
+];
+
+function isPublic(pathname: string) {
+  // อนุญาตไฟล์สแตติกเสมอ
+  if (
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/favicon') ||
+    pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/)
+  ) return true;
+
+  return PUBLIC_PATHS.some(p => pathname === p || pathname.startsWith(p));
+}
 
 export default async function middleware(req: NextRequest) {
-  const BASE_URL = process.env.BASE_URL || 'http://161.200.199.69';
-  const url = new URL(req.url);
-  const path = url.pathname;
-  const cookieStore = cookies()
-  console.log('Cookies:', cookieStore);
-  
-  console.log(`Middleware route: ${path}`);
+  const { pathname } = new URL(req.url);
 
-  // Skip middleware for the /callback route
-  if (path === '/callback' || path === '/callback-admin') {
-    return NextResponse.next();
-  }
+  // ข้าม middleware สำหรับ public paths
+  if (isPublic(pathname)) return NextResponse.next();
 
-  const token = cookieStore.get('token')?.value;
+  const token = req.cookies.get('token')?.value;
 
-  if (!token && protectedRoutes.includes(path)) {
-    return NextResponse.redirect(`${BASE_URL}/login`);
+  // ✅ ถ้าไม่มีคุกกี้ (ถูกลบ/ไม่เคยล็อกอิน) → เด้งไป login ทันที
+  if (!token) {
+    return NextResponse.redirect(new URL('/login', req.url));
   }
 
   try {
-    if (!token) {
-      return NextResponse.redirect(`${BASE_URL}/login`);
-    }
     const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET));
-    const currentTime = Math.floor(Date.now()/ 1000);
-    const expTime = payload.exp;
-    console.log('Payload:', payload,"\n", "path:",path,"\n", "token",token,"\n", "pathStartAdmin:", path.startsWith('/Admin'));
+    const now = Math.floor(Date.now() / 1000);
+    const exp = payload.exp ?? 0;
+    const timeLeft = exp - now;
 
-    // Check if the token is already expired
-    if (expTime !== undefined) {
-      console.log('Time left:', expTime - currentTime);
-      if (expTime <= currentTime) {
-        console.log('Token has expired, redirecting to login');
-        return NextResponse.redirect(`${BASE_URL}/login`);
+    // ถ้าหมดอายุ → ส่งไป login
+    if (timeLeft <= 0) {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+
+    // ตัวอย่างตรวจสิทธิ์เพิ่ม (ถ้าต้องการ)
+    const userId = payload.id;
+    const role = payload.role;
+
+    if (pathname.startsWith('/student')) {
+      const segs = pathname.split('/');
+      const pathId = segs[2];
+      if (role !== 'admin' && pathId !== String(userId)) {
+        return NextResponse.redirect(new URL('/login', req.url));
       }
-    } else {
-      console.log('Token expiration time is undefined, redirecting to login');
-      return NextResponse.redirect(`${BASE_URL}/login`);
     }
 
-    if (path.startsWith('/student') && !path.includes(String(payload.id))&& payload.role !== 'admin') {
-      // If the token is not included in the path, redirect to login
-      return NextResponse.redirect('${BASE_URL}/login');
+    if (pathname.startsWith('/Admin') && role !== 'admin') {
+      return NextResponse.redirect(new URL(`/student/${userId}/home`, req.url));
     }
 
-    if (token && path.startsWith('/Admin') && payload.role !== 'admin') {
-      console.log('User is not admin, redirecting to home');
-      return NextResponse.redirect(`${BASE_URL}/student/${token}/home`);
-    }
-    // Check if the token needs to be refreshed
-    const timeRemaining = expTime - currentTime;
-    console.log(timeRemaining)
-    if (timeRemaining < JWT_REFRESH) {
-      console.log('Token is close to expiration, refreshing');
-      const newToken = await new SignJWT({ id: payload.id })
+    // ต่ออายุโทเค็นถ้าใกล้หมด
+    if (timeLeft < JWT_REFRESH) {
+      const newToken = await new SignJWT({ id: userId, role })
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
         .setExpirationTime(JWT_TIMEOUT)
         .sign(new TextEncoder().encode(JWT_SECRET));
 
-      const response = NextResponse.next();
-      response.cookies.set('token', newToken, {
-        httpOnly: false,
+      const res = NextResponse.next();
+      res.cookies.set('token', newToken, {
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
+        path: '/',
       });
-
-      
-
-
-      return response;
+      return res;
     }
 
     return NextResponse.next();
-  } catch (error) {
-    console.error('JWT Verification Error:', error);
-    return NextResponse.redirect(`${BASE_URL}/login`);
+  } catch {
+    return NextResponse.redirect(new URL('/login', req.url));
   }
 }
 
+// ให้ middleware ไม่ไปรันบนไฟล์สแตติก/รูป/หน้า login/api
 export const config = {
-  matcher: ['/((?!api|login|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
+
